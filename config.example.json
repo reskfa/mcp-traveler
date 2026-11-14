@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "providers": {
+    "tushare": {
+      "enabled": true,
+      "token_env": "TUSHARE_TOKEN",
+      "timeout_seconds": 60
+    },
+    "akshare": {
+      "enabled": true,
+      "timeout_seconds": 60
+    },
+    "wind": {
+      "enabled": true,
+      "api_key_env": "WIND_API_KEY",
+      "timeout_seconds": 60,
+      "mcp_servers": {
+        "stock_data": {
+          "url": "https://mcp.wind.com.cn/vserver_stock_data/mcp/",
+          "auth_header": "Authorization",
+          "auth_prefix": "Bearer "
+        }
+      }
+    },
+    "ifind": {
+      "enabled": true,
+      "api_key_env": "IFIND_API_KEY",
+      "timeout_seconds": 60,
+      "mcp_servers": {
+        "stock_data": {
+          "url": "",
+          "auth_header": "Authorization",
+          "auth_prefix": ""
+        }
+      }
+    },
+    "tdx": {
+      "enabled": true,
+      "api_key_env": "TDX_API_KEY",
+      "timeout_seconds": 60,
+      "mcp_servers": {
+        "stock_data": {
+          "url": "",
+          "auth_header": "Authorization",
+          "auth_prefix": "Bearer "
+        }
+      }
+    }
+  },
+  "routes": {
+    "daily_prices": ["tushare", "akshare", "wind", "ifind", "tdx"],
+    "valuations": ["tushare", "wind", "ifind", "tdx", "akshare"],
+    "financials": ["tushare", "wind", "ifind", "tdx", "akshare"]
+  }
+}
