@@ -114,3 +114,37 @@ HTTP 使用 `POST /api/query`，请求结构同 `Query`。本地网页与 MCP �
 ## 许可证
 
 代码使用 [MIT License](LICENSE)。各数据源的账户、数据使用及再分发权限仍由相应厂商条款决定，MIT 不授予上游数据的使用权。本项目与上述数据厂商无隶属关系。
+
+
+## 项目级数据字典
+
+[总字典表](docs/data-dictionary.md) 列出全部 193 个分类字段（量价 7、估值与每日指标 17、财务 169）在五家来源的取法、返回列、单位转换及缺项。
+
+唯一配置源是 `gateway/data/dictionary.json`，人读的 Markdown 由它生成；取数执行器、数据目录和字段解析也读取同一份 JSON。
+
+- `datasets.*.fields`：统一字段含义、单位、别名及每家来源的绑定。
+- `recipes`：SDK 方法或 MCP 工具、参数模板、分页、备用接口及问句模板。
+- `gateway/dictionary.py`：校验字典并按请求字段生成调用计划。
+- `gateway/acquisition.py`：执行计划、标准化数据、合并同一来源的多个接口返回。
+- `gateway/providers.py`：凭证、MCP 传输与 SDK 初始化，不再维护业务字段列表。
+
+字段绑定指定 `recipe`、`columns`、可选 `multiplier`、`prompt` 等。一个接口的多个字段合并调用；独立接口分别调用。缺少取法的字段不发出猜测请求。新增已有接口的字段通常只需编辑字典；接入新的返回结构或协议仍需扩展执行器。
+
+修改字典后重启服务，并同步文档：
+
+```bash
+python scripts/render_dictionary.py
+python scripts/render_dictionary.py --check
+```
+
+完整机器字典：`GET /api/dictionary`。单字段查询示例：`GET /api/dictionary?dataset=financials&field=net_profit_excl`；MCP 使用 `data_catalog(dataset="financials", field="net_profit_excl")`。字典不包含密钥；用户路由仍独立保存在本机 `config.json`。
+
+### Tushare 字段扩展
+
+估值与每日指标覆盖 [daily_basic](https://tushare.pro/document/2?doc_id=32) 的全部 17 个业务字段，包括股息率、股本和非默认返回的涨跌停状态。财务覆盖 [fina_indicator](https://tushare.pro/document/2?doc_id=79) 的全部 163 个业务字段，保留原有报表字段后共 169 项。证券代码、公告日期、报告期及更新标记不计入指标数；逐项对应见 [覆盖清单](docs/tushare-coverage.json)。
+
+默认仍查询原有常用字段（量价 7、估值 4、财务 9）；API / MCP 传入 `fields=["*"]` 可查询该类别全部字段，或指定如 `fields=["dt_eps", "q_netprofit_yoy"]`。网页可按中文名称或代码搜索，再选择字段；全选会包含搜索结果之外的字段。其他来源的对应关系与留空原因见[跨来源核对记录](docs/cross-source-review.md)。
+
+财务指标包含期末数、累计数、单季度数及增长率，具体口径见字典。官方文档未说明单位的新增指标标为“未确认”，保留原始数值，不推断比例和百分数的换算。非金融企业与银行的适用字段不同，空值原样保留。
+
+跨源映射统一业务含义与单位，保留供应商自己的计算算法及数值；Tushare仅作为字段目录参照。查询结果通过`field_sources`标明逐值来源，`fields.<字段>.source_definitions`说明来源口径。iFinD历史配对已验证表格日期和值随查询改变，参数说明中的“最新/MRQ”不再单独作为拒绝理由；没有实际日期证据或返回错误日期仍不接受。详见[跨来源核对记录](docs/cross-source-review.md)。

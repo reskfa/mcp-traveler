@@ -9,7 +9,8 @@ from datetime import datetime,timezone,date
 from pydantic import BaseModel,Field,model_validator
 from typing import Literal
 from . import config
-from .catalog import FIELDS,UNITS
+from .catalog import FIELDS,UNITS,DEFAULT_FIELDS,source_definitions
+from .dictionary import plan
 
 def now():return datetime.now(timezone.utc).isoformat()
 
@@ -30,7 +31,7 @@ class Query(BaseModel):
         if self.dataset=='daily_prices' and (not self.start_date or not self.end_date):raise ValueError('日线需要起止日期')
         if self.start_date and self.end_date and self.start_date>self.end_date:raise ValueError('开始日期不能晚于结束日期')
         if self.dataset=='financials' and not self.period:raise ValueError('财务查询需要报告期')
-        self.fields=self.fields or list(FIELDS[self.dataset])
+        self.fields=list(FIELDS[self.dataset]) if self.fields==['*'] else (self.fields or list(DEFAULT_FIELDS[self.dataset]))
         if set(self.fields)-set(FIELDS[self.dataset]):raise ValueError('包含不支持的字段')
         return self
 
@@ -83,6 +84,8 @@ async def query(request:Query):
     for name in order:
         p=c['providers'][name]
         if not available(name,p):attempts.append({'provider':name,'status':'skipped','error':'未启用或配置未完成'});continue
+        if not plan(name,q['dataset'],missing):
+            attempts.append({'provider':name,'status':'skipped','error':'字典中没有所缺字段的取数方案'});continue
         tick=time.monotonic();subquery={**q,'fields':missing}
         # Latest snapshots must refer to the same trading date when filled.
         if data and q['dataset']=='valuations' and not q.get('date'):
@@ -123,7 +126,7 @@ async def query(request:Query):
     data=[r for r,_ in paired];provenance=[p for _,p in paired]
     rid=uuid.uuid4().hex;folder=config.ROOT/'local/results';folder.mkdir(parents=True,exist_ok=True)
     config.write_json(folder/f'{rid}.raw.json',config.redact(raws[0]['raw'] if len(raws)==1 else raws))
-    answer={'id':rid,'dataset':q['dataset'],'provider':contributors[0] if len(contributors)==1 else 'mixed','providers':contributors,'upstream':' + '.join(upstreams),'query':q,'fetched_at':now(),'elapsed_seconds':round(time.monotonic()-start,2),'row_count':len(data),'data':data[:100],'field_sources':provenance[:100],'missing_fields':missing,'complete':not missing,'fields':{f:{'label':FIELDS[q['dataset']][f],'unit':UNITS[f]} for f in request.fields},'notes':notes,'attempts':attempts,'raw_path':str(folder/f'{rid}.raw.json'),'data_path':str(folder/f'{rid}.json'),'download_url':f'/api/results/{rid}/csv','raw_url':f'/api/results/{rid}/raw'}
+    answer={'id':rid,'dataset':q['dataset'],'provider':contributors[0] if len(contributors)==1 else 'mixed','providers':contributors,'upstream':' + '.join(upstreams),'query':q,'fetched_at':now(),'elapsed_seconds':round(time.monotonic()-start,2),'row_count':len(data),'data':data[:100],'field_sources':provenance[:100],'missing_fields':missing,'complete':not missing,'fields':{f:{'label':FIELDS[q['dataset']][f],'unit':UNITS[q['dataset']][f],'source_definitions':source_definitions(q['dataset'],f,contributors)} for f in request.fields},'notes':notes,'attempts':attempts,'raw_path':str(folder/f'{rid}.raw.json'),'data_path':str(folder/f'{rid}.json'),'download_url':f'/api/results/{rid}/csv','raw_url':f'/api/results/{rid}/raw'}
     config.write_json(folder/f'{rid}.json',{**answer,'data':data,'field_sources':provenance})
     return answer
 

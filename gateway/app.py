@@ -10,24 +10,24 @@ from fastapi.responses import FileResponse,JSONResponse,Response
 from fastapi.staticfiles import StaticFiles
 from mcp.server.fastmcp import FastMCP
 from . import config,core
-from .catalog import catalog
+from .catalog import catalog,dictionary_view
 
 mcp=FastMCP('A股数据网关',stateless_http=True,json_response=True)
 @mcp.tool()
-def data_catalog()->dict:
-    """查看数据集、字段单位及五家来源能力。"""
-    return catalog()
+def data_catalog(dataset:str|None=None,field:str|None=None)->dict:
+    """查看数据目录。传 dataset 和可选 field 可查询字段取法、来源映射、单位转换与接口参数。"""
+    return dictionary_view(dataset,field) if dataset else catalog()
 @mcp.tool()
 async def query_daily_prices(symbol:str,start_date:str,end_date:str,fields:list[str]|None=None,provider:str='auto',adjust:str='none')->dict:
     """查询 A 股历史日线。日期 YYYY-MM-DD，代码如 600519.SH。大结果返回预览和本地路径。"""
     return await core.query(core.Query(dataset='daily_prices',symbol=symbol,start_date=start_date,end_date=end_date,fields=fields,provider=provider,adjust=adjust))
 @mcp.tool()
 async def query_valuations(symbol:str,date:str|None=None,fields:list[str]|None=None,provider:str='auto')->dict:
-    """查询 PE TTM、PB、市值。date 为空查询最新可用数据，不代替指定历史日期。"""
+    """查询每日估值、股本和交易状态。fields 省略取常用项，["*"] 取全部；date 为空取最新。"""
     return await core.query(core.Query(dataset='valuations',symbol=symbol,date=date,fields=fields,provider=provider))
 @mcp.tool()
 async def query_financials(symbol:str,period:str,fields:list[str]|None=None,provider:str='auto')->dict:
-    """查询合并报表报告期累计财务数据。period 如 2024-12-31。未覆盖字段留空。"""
+    """查询报告期财务数据（含累计、单季度和比率，见字段定义）。fields 省略取常用项，["*"] 取全部。period 如 2024-12-31。"""
     return await core.query(core.Query(dataset='financials',symbol=symbol,period=period,fields=fields,provider=provider))
 @mcp.tool()
 def provider_status()->dict:
@@ -66,6 +66,8 @@ async def value_error(request,exc):return JSONResponse({'error':config.redact(st
 def home():return FileResponse(Path(__file__).parent/'static/index.html')
 @app.get('/api/catalog')
 def get_catalog():return catalog()
+@app.get('/api/dictionary')
+def get_dictionary(dataset:str|None=None,field:str|None=None):return dictionary_view(dataset,field)
 @app.get('/api/config')
 def get_config():return config.public()
 @app.get('/api/status')
