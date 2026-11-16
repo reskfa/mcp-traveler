@@ -2,9 +2,9 @@
 
 由 `gateway/data/dictionary.json` 生成。该 JSON 同时驱动实际取数；不要直接编辑本表。
 
-现有 193 个分类字段：daily_prices 7 项、valuations 17 项、financials 169 项。跨类别同名字段分开计数。空缺项明确保留，不等于来源永远不支持。
+现有 196 个分类字段：daily_prices 7 项、valuations 17 项、financials 169 项、technical_indicators 3 项。跨类别同名字段分开计数。空缺项明确保留，不等于来源永远不支持。
 
-修改 JSON 后重启服务；运行 `python scripts/render_dictionary.py` 更新本表。各来源覆盖是当前实现配置，并非所有字段均经过全市场验证。
+修改 JSON 后下一次查询自动加载；运行 `python scripts/render_dictionary.py` 更新本表。各来源覆盖是当前实现配置，并非所有字段均经过全市场验证。
 
 ## daily_prices
 
@@ -1201,6 +1201,34 @@
 | `rd_exp` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `rd_exp` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 
+## technical_indicators
+
+日线实际交易日；来源最近5000根范围，厂商未披露复权方式
+
+| 字段 | 名称 | 单位 | 含义与单位说明 |
+| --- | --- | --- | --- |
+| `kdj_k` | KDJ K值 | 无量纲 | 通达信随机指标K分量；日线，来源原生算法，复权方式未披露。  |
+| `kdj_d` | KDJ D值 | 无量纲 | 通达信随机指标D分量；日线，来源原生算法，复权方式未披露。  |
+| `kdj_j` | KDJ J值 | 无量纲 | 通达信随机指标J分量；日线，来源原生算法，复权方式未披露。  |
+
+| 字段 | 来源 | 取数方案 → 方法 | 返回列／问句指标 | 转换／说明 |
+| --- | --- | --- | --- | --- |
+| `kdj_k` | tushare | — | — | 尚未确认同口径取法 |
+| `kdj_k` | akshare | — | — | 尚未确认同口径取法 |
+| `kdj_k` | wind | — | — | 尚未确认同口径取法 |
+| `kdj_k` | ifind | — | — | 尚未确认同口径取法 |
+| `kdj_k` | tdx | `tdx_kdj` → `tdx_technical_indicator_query` | K | 原单位：无量纲；×1；KDJ原生算法；复权方式未披露 |
+| `kdj_d` | tushare | — | — | 尚未确认同口径取法 |
+| `kdj_d` | akshare | — | — | 尚未确认同口径取法 |
+| `kdj_d` | wind | — | — | 尚未确认同口径取法 |
+| `kdj_d` | ifind | — | — | 尚未确认同口径取法 |
+| `kdj_d` | tdx | `tdx_kdj` → `tdx_technical_indicator_query` | D | 原单位：无量纲；×1；KDJ原生算法；复权方式未披露 |
+| `kdj_j` | tushare | — | — | 尚未确认同口径取法 |
+| `kdj_j` | akshare | — | — | 尚未确认同口径取法 |
+| `kdj_j` | wind | — | — | 尚未确认同口径取法 |
+| `kdj_j` | ifind | — | — | 尚未确认同口径取法 |
+| `kdj_j` | tdx | `tdx_kdj` → `tdx_technical_indicator_query` | J | 原单位：无量纲；×1；KDJ原生算法；复权方式未披露 |
+
 ## 取数方案详情
 
 参数以 `$` 开头时从查询上下文读取，其他值原样传递。模板仅做字符串替换，不执行代码。
@@ -2002,5 +2030,38 @@
     "iFinD indicators_params中最新/MRQ为默认说明，配对历史实测值及表格日期随请求变化；日期以实际数据表显式日期为准。数字可能为4位小数的亿级展示精度。",
     "历史对照已验证：参数说明可能显示最新/MRQ，实际表格日期优先；没有表格日期时须有该指标自身的明确日期。"
   ]
+}
+```
+
+### tdx_kdj
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线KDJ；复权方式厂商未披露；显式传递N/M1/M2并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "KDJ",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "n": 9,
+      "m1": 3,
+      "m2": 3
+    },
+    "parameter_keys": {
+      "n": "N",
+      "m1": "M1",
+      "m2": "M2"
+    }
+  }
 }
 ```

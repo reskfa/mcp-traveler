@@ -53,15 +53,21 @@ Windows PowerShell 中将 `python3` 换为 `python`，将 `.venv/bin/python` 换
 }
 ```
 
-具体客户端的配置位置可能不同；远端云端 Agent 无法直接访问你电脑的 localhost，本版面向本机 Agent。
+这是通用 Streamable HTTP 配置示例；具体客户端的配置位置、传输类型选项可能不同，按客户端要求填写。远端云端 Agent 无法直接访问你电脑的 localhost，本版面向本机 Agent。
 
-提供五个工具：`data_catalog`、`query_daily_prices`、`query_valuations`、`query_financials`、`provider_status`。
+常规查询工具：`data_catalog`、`query_daily_prices`、`query_valuations`、`query_financials`、`query_technical_indicators`、`provider_status`。
 
 可直接提问：
 
 > 用 ashare-gateway 查贵州茅台 2025-11-03 到 2025-11-05 的不复权日线，再查 2024 年年报营业收入和归母净利润，注明来源。
 
-查询只返回前 100 行预览及完整结果路径，避免把大量数据放入上下文。查看字段时调用 `data_catalog`，无需重复探索上游工具。
+查询只返回前 100 行预览及完整结果路径，避免把大量数据放入上下文。Agent 先用 `search_metrics` 搜索需要的指标，已有字段直接查询；需要详细口径时再用 `data_catalog(dataset, field)` 查单字段，不必加载整本字典。未知指标可用 `explore_metric` 探索，有成功证据且用户已授权加入常用字典时，用 `save_metric` 保存，之后普通查询复用取法，无需每次重新探索或重复请求保存审批。
+
+### 配套 Skill
+
+[ashare-gateway Skill](skills/ashare-gateway/SKILL.md) 教 Agent 搜索、查询、探索及复用个人字典，并保留逐值来源、单位和日期口径。将整个 `skills/ashare-gateway` 文件夹复制到客户端支持的 skills 目录；例如支持该约定的客户端可放到 `~/.agents/skills/ashare-gateway/`，Codex 也可放到 `~/.codex/skills/ashare-gateway/`。以客户端自己的发现规则为准。
+
+Skill 是使用说明，安装它不会自动配置 MCP。先完成上面的 MCP 连接，再让 Agent 使用 `ashare-gateway` Skill；厂商密钥继续由本机网关管理。
 
 ## Python / HTTP
 
@@ -118,9 +124,9 @@ HTTP 使用 `POST /api/query`，请求结构同 `Query`。本地网页与 MCP �
 
 ## 项目级数据字典
 
-[总字典表](docs/data-dictionary.md) 列出全部 193 个分类字段（量价 7、估值与每日指标 17、财务 169）在五家来源的取法、返回列、单位转换及缺项。
+[总字典表](docs/data-dictionary.md) 列出全部 196 个内置分类字段（量价 7、估值与每日指标 17、财务 169、技术指标 3）在五家来源的取法、返回列、单位转换及缺项。
 
-唯一配置源是 `gateway/data/dictionary.json`，人读的 Markdown 由它生成；取数执行器、数据目录和字段解析也读取同一份 JSON。
+内置字典是 `gateway/data/dictionary.json`，人读的 Markdown 由它生成；个人扩展保存在 `local/user_dictionary.json`。运行时合并两者，取数执行器、数据目录和字段解析共用合并后的字典。
 
 - `datasets.*.fields`：统一字段含义、单位、别名及每家来源的绑定。
 - `recipes`：SDK 方法或 MCP 工具、参数模板、分页、备用接口及问句模板。
@@ -130,7 +136,7 @@ HTTP 使用 `POST /api/query`，请求结构同 `Query`。本地网页与 MCP �
 
 字段绑定指定 `recipe`、`columns`、可选 `multiplier`、`prompt` 等。一个接口的多个字段合并调用；独立接口分别调用。缺少取法的字段不发出猜测请求。新增已有接口的字段通常只需编辑字典；接入新的返回结构或协议仍需扩展执行器。
 
-修改字典后重启服务，并同步文档：
+字典修改会在下一次查询或搜索时加载，无需重启。修改内置字典后同步文档：
 
 ```bash
 python scripts/render_dictionary.py
@@ -148,3 +154,48 @@ python scripts/render_dictionary.py --check
 财务指标包含期末数、累计数、单季度数及增长率，具体口径见字典。官方文档未说明单位的新增指标标为“未确认”，保留原始数值，不推断比例和百分数的换算。非金融企业与银行的适用字段不同，空值原样保留。
 
 跨源映射统一业务含义与单位，保留供应商自己的计算算法及数值；Tushare仅作为字段目录参照。查询结果通过`field_sources`标明逐值来源，`fields.<字段>.source_definitions`说明来源口径。iFinD历史配对已验证表格日期和值随查询改变，参数说明中的“最新/MRQ”不再单独作为拒绝理由；没有实际日期证据或返回错误日期仍不接受。详见[跨来源核对记录](docs/cross-source-review.md)。
+
+
+## 搜索、探索与个人字典
+
+网页进入 **指标字典**，按中文名、字段 ID 或别名搜索。已有指标可以直接“选到试查”；找不到时展开“探索未知指标”，填写证券、日期或报告期、指标名，可选填单位、别名和指定来源。
+
+探索成功后先展示数值、单位、实际来源和尝试记录，再点击保存，写入自己的常用字典。可以自定义英文 ID，例如 `net_interest_margin`。之后通过普通试查或财务 MCP 查询这个 ID，执行已保存的取法，不再重新探索。删除个人指标只移除本地扩展。
+
+新增 MCP 工具：
+
+- `search_metrics(query, dataset?, limit=10)`：只返回匹配的简短指标资料，建议 Agent 先搜索，不必每次读取整份字典。
+- `explore_metric(name, dataset, symbol, period?/date?/start_date?/end_date?, unit?, aliases?, provider="auto", max_attempts=2)`：已知名称直接用字典；未知指标按路由尝试，返回候选及证据。
+- `save_metric(exploration_id, field?)`：将成功候选写入个人字典。保存后普通查询和搜索立即可用。
+
+例如先搜索“净息差”，没有时探索 `financials / 000001.SZ / 2024-12-31`，再保存为 `net_interest_margin`；之后可调用 `query_financials(symbol="000001.SZ", period="2023-12-31", fields=["net_interest_margin"])`。
+
+HTTP 对应 `GET /api/metrics/search?q=净息差`、`POST /api/explore`、`POST /api/explorations/{id}/save`（请求体可含 `field`）和 `DELETE /api/metrics/{dataset}/{field}`。探索请求的其他参数与普通查询相同，以 `name` 指定指标。
+
+### 当前探索边界
+
+只探索 A 股数值指标；一般指标使用已接入的 Wind、iFinD、通达信自然语言工具，技术指标使用已适配的厂商接口（见下节）。Tushare、AKShare 继续走明确的字典映射，不猜 SDK 方法。默认最多尝试两个已配置来源，可设为 1–3；每来源最多一次、最长 60 秒。尝试次数不等于厂商扣费次数。
+
+候选必须匹配证券、实际日期、指标名称或用户提供的别名，并能确认数值及单位；明确要求单季度、累计、期末或 TTM 时还会检查对应说明。缺证据时展示待确认原因，不自动保存。来源计算方法允许不同，保留来源和原生口径说明。一次样例成功并不代表该来源覆盖所有股票、年份；后续查询仍可能为空。
+
+保存的是可复用的字段绑定与参数模板，不是当次答案。当前每次保存一个新指标及一个成功来源，已有 ID 不覆盖；其他来源的对应取法可后续补入个人字典。个人字典使用与内置字典相同的字段结构；自定义执行配方仅允许复用已支持的取法。新的 SDK 接口或全新返回结构仍需要开发适配。
+
+`local/user_dictionary.json` 保存常用指标，`local/explorations/` 保存探索证据，均被 Git 忽略。更新代码不覆盖个人字典；迁移电脑时请自行备份该文件。
+
+本轮真实验证：Wind 返回平安银行 2024 年净息差 1.87%，网页保存后，从 MCP 普通财务查询取得 2023 年 2.38%。该验证只证明这个指标在这两个报告期的流程，不代表其他指标已验证。
+
+## 厂商技术指标
+
+新增类别 `technical_indicators`，目前接入通达信原生日线 KDJ，包含 `kdj_k`、`kdj_d`、`kdj_j`。数值来自厂商工具，不在本地重算。MCP 示例：
+
+```text
+query_technical_indicators(
+  symbol="600519.SH", start_date="2026-11-12", end_date="2026-11-13",
+  fields=["kdj_k", "kdj_d", "kdj_j"], provider="tdx",
+  parameters={"n":9,"m1":3,"m2":3}, frequency="daily", adjust="native"
+)
+```
+
+`n`、`m1`、`m2` 为 1–1000 的整数，内置默认 9/3/3；返回参数必须与厂商 `params_used` 一致才接受。当前仅支持日线与 `native` 来源原生口径；厂商未披露复权方式，不能将其理解为不复权，不支持 `qfq` / `hfq`。查询按起日估算所需的最近日线数量，再按实际日期筛选。接口声明上限 5000 根，但本轮直接请求 5000 根失败；已验证近期小范围取数，较长历史区间仍受厂商实际返回限制。K、D、J 是指标值，单位不是百分比收益率。HTTP 使用相同 `POST /api/query`，指定该类别及上述参数。
+
+也可用 `explore_metric` 探索 `dataset="technical_indicators"`、`name="KDJ J"`，传证券、起止日期和 `parameters`，确认成功后保存一个分量及其默认参数。后续用保存的字段 ID 调用 `query_technical_indicators`，省略 `parameters` 即复用保存参数，显式传入的参数局部覆盖保存默认值。其他技术指标尚无适配时会报告缺项，不猜厂商接口，也不以本地公式补算。

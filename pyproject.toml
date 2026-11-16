@@ -20,3 +20,5 @@ mcp-traveler = "gateway.__main__:main"
 include = ["gateway*"]
 [tool.setuptools.package-data]
 gateway = ["static/*", "data/*.json"]
+[tool.setuptools.data-files]
+"share/mcp-traveler/skills/ashare-gateway" = ["skills/ashare-gateway/SKILL.md"]

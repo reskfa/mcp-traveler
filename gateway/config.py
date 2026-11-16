@@ -32,7 +32,7 @@ def load():
     if 'global_route' not in c:
         c['global_route']=list(c['routes']['valuations'])
         c['route_overrides']={k:v for k,v in c['routes'].items() if v!=c['global_route']}
-    c['routes']={k:c.get('route_overrides',{}).get(k,c['global_route']) for k in ['daily_prices','valuations','financials']}
+    c['routes']={k:c.get('route_overrides',{}).get(k,c['global_route']) for k in ['daily_prices','valuations','financials','technical_indicators']}
     return c
 
 def secrets():

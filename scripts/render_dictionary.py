@@ -8,7 +8,7 @@ def render():
     d=json.loads((ROOT/'gateway/data/dictionary.json').read_text())
     out=['# 项目数据字典','', '由 `gateway/data/dictionary.json` 生成。该 JSON 同时驱动实际取数；不要直接编辑本表。','',
          f"现有 {sum(len(g['fields']) for g in d['datasets'].values())} 个分类字段："+'、'.join(f"{ds} {len(g['fields'])} 项" for ds,g in d['datasets'].items())+'。跨类别同名字段分开计数。空缺项明确保留，不等于来源永远不支持。','',
-         '修改 JSON 后重启服务；运行 `python scripts/render_dictionary.py` 更新本表。各来源覆盖是当前实现配置，并非所有字段均经过全市场验证。','']
+         '修改 JSON 后下一次查询自动加载；运行 `python scripts/render_dictionary.py` 更新本表。各来源覆盖是当前实现配置，并非所有字段均经过全市场验证。','']
     for ds,g in d['datasets'].items():
         out += ['## '+ds,'',g['date_semantics'],'','| 字段 | 名称 | 单位 | 含义与单位说明 |','| --- | --- | --- | --- |']
         for f,m in g['fields'].items():out.append(f"| `{f}` | {m['label']} | {m['unit']} | {m['description']} {m.get('unit_note','')} |")

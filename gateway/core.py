@@ -6,16 +6,16 @@ import sys
 import time
 import uuid
 from datetime import datetime,timezone,date
-from pydantic import BaseModel,Field,model_validator
+from pydantic import BaseModel,Field,model_validator,StrictInt
 from typing import Literal
 from . import config
 from .catalog import FIELDS,UNITS,DEFAULT_FIELDS,source_definitions
-from .dictionary import plan
+from .dictionary import plan,reload_dictionary
 
 def now():return datetime.now(timezone.utc).isoformat()
 
 class Query(BaseModel):
-    dataset: Literal['daily_prices','valuations','financials']
+    dataset: Literal['daily_prices','valuations','financials','technical_indicators']
     symbol: str = Field(pattern=r'^\d{6}\.(SH|SZ|BJ)$')
     start_date: str | None = None
     end_date: str | None = None
@@ -23,9 +23,24 @@ class Query(BaseModel):
     period: str | None = None
     fields: list[str] | None = None
     provider: Literal['auto','tushare','akshare','wind','ifind','tdx']='auto'
-    adjust: Literal['none','qfq','hfq']='none'
+    adjust: Literal['none','qfq','hfq','native'] | None = None
+    parameters: dict[str,StrictInt] | None = None
+    frequency: Literal['daily']='daily'
     @model_validator(mode='after')
     def validate_request(self):
+        reload_dictionary(force=False)
+        if self.dataset=='technical_indicators':
+            from .technical import normalized_parameters
+            self.adjust=self.adjust or 'native'
+            if self.adjust!='native':raise ValueError('技术指标仅支持来源原生口径 native；厂商未披露复权方式')
+            if self.parameters is not None:normalized_parameters(self.parameters)
+            if self.date:
+                self.start_date=self.end_date=self.date
+            if not self.start_date or not self.end_date:raise ValueError('技术指标需要起止日期或date')
+        else:
+            self.adjust=self.adjust or 'none'
+            if self.adjust=='native':raise ValueError('native仅适用于技术指标')
+            if self.parameters:raise ValueError('parameters仅适用于技术指标')
         for value in [self.start_date,self.end_date,self.date,self.period]:
             if value and date.fromisoformat(value).isoformat()!=value:raise ValueError('日期使用 YYYY-MM-DD')
         if self.dataset=='daily_prices' and (not self.start_date or not self.end_date):raise ValueError('日线需要起止日期')
@@ -77,7 +92,15 @@ async def probe(name):
         return {'ok':False,'error':msg}
 
 async def query(request:Query):
+    request=Query.model_validate(request.model_dump())
     c=config.load();q=request.model_dump();attempts=[];start=time.monotonic()
+    if request.dataset=='technical_indicators':
+        from .technical import normalized_parameters
+        from .dictionary import fields as metric_fields
+        defaults=[metric_fields(request.dataset)[f].get('parameters',{}) for f in request.fields]
+        if any(p!=defaults[0] for p in defaults) and set(request.parameters or {})!={'n','m1','m2'}:
+            raise ValueError('所选字段保存的默认参数不同，请明确传入全部parameters')
+        q['parameters']=normalized_parameters({**defaults[0],**(request.parameters or {})})
     order=c['routes'][q['dataset']] if request.provider=='auto' else [request.provider]
     data=None; provenance=[];raws=[];notes=[];contributors=[];upstreams=[]
     missing=list(request.fields)
@@ -121,7 +144,7 @@ async def query(request:Query):
     if data is None:raise QueryFailure(attempts)
     if missing:notes.append('仍有缺失字段：'+', '.join(missing))
     if len(contributors)>1:notes.append('按证券和日期逐项补齐，保留优先来源已有值；每个数值的来源见字段来源。')
-    if request.adjust!='none':notes.append('复权价格不跨来源补齐；其他字段仍可补齐。')
+    if request.dataset=='daily_prices' and request.adjust!='none':notes.append('复权价格不跨来源补齐；其他字段仍可补齐。')
     paired=sorted(zip(data,provenance),key=lambda pair:pair[0].get('date') or '')
     data=[r for r,_ in paired];provenance=[p for _,p in paired]
     rid=uuid.uuid4().hex;folder=config.ROOT/'local/results';folder.mkdir(parents=True,exist_ok=True)

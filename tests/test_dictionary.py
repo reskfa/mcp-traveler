@@ -1,4 +1,6 @@
 import copy
+import json
+from pathlib import Path
 import pandas as pd
 import pytest
 from gateway.dictionary import DICTIONARY,validate,plan
@@ -7,7 +9,8 @@ from gateway.core import Query
 
 
 def test_dictionary_complete_and_invalid_reference():
-    assert {ds:len(g['fields']) for ds,g in DICTIONARY['datasets'].items()}=={'daily_prices':7,'valuations':17,'financials':169}
+    builtin=json.loads((Path(__file__).parents[1]/'gateway/data/dictionary.json').read_text())
+    assert {ds:len(g['fields']) for ds,g in builtin['datasets'].items()}=={'daily_prices':7,'valuations':17,'financials':169,'technical_indicators':3}
     d=copy.deepcopy(DICTIONARY)
     d['datasets']['daily_prices']['fields']['close']['sources']['wind'][0]['recipe']='not_a_recipe'
     with pytest.raises(KeyError):validate(d)
@@ -108,7 +111,7 @@ def test_official_coverage_and_defaults():
             bindings=DICTIONARY['datasets'][ds]['fields'][field]['sources']['tushare']
             assert any(source in b['columns'] for b in bindings) or (source=='eps' and field=='eps')
     assert len(Query(dataset='financials',symbol='600519.SH',period='2024-12-31').fields)==9
-    assert len(Query(dataset='financials',symbol='600519.SH',period='2024-12-31',fields=['*']).fields)==169
+    assert len(Query(dataset='financials',symbol='600519.SH',period='2024-12-31',fields=['*']).fields)==len(DICTIONARY['datasets']['financials']['fields'])
     assert len(Query(dataset='valuations',symbol='600519.SH').fields)==4
 
 

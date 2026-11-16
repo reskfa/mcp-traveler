@@ -5,12 +5,15 @@ import re
 from contextlib import asynccontextmanager
 from pathlib import Path
 from urllib.parse import urlsplit
-from fastapi import FastAPI,Request,HTTPException
+from fastapi import FastAPI,Request,HTTPException,Query as QueryParam
+from pydantic import BaseModel
 from fastapi.responses import FileResponse,JSONResponse,Response
 from fastapi.staticfiles import StaticFiles
 from mcp.server.fastmcp import FastMCP
 from . import config,core
 from .catalog import catalog,dictionary_view
+from .dictionary import search_metrics as find_metrics,delete_user_metric
+from .exploration import ExplorationRequest,explore,save_exploration
 
 mcp=FastMCP('A股数据网关',stateless_http=True,json_response=True)
 @mcp.tool()
@@ -21,6 +24,10 @@ def data_catalog(dataset:str|None=None,field:str|None=None)->dict:
 async def query_daily_prices(symbol:str,start_date:str,end_date:str,fields:list[str]|None=None,provider:str='auto',adjust:str='none')->dict:
     """查询 A 股历史日线。日期 YYYY-MM-DD，代码如 600519.SH。大结果返回预览和本地路径。"""
     return await core.query(core.Query(dataset='daily_prices',symbol=symbol,start_date=start_date,end_date=end_date,fields=fields,provider=provider,adjust=adjust))
+@mcp.tool()
+async def query_technical_indicators(symbol:str,start_date:str,end_date:str,fields:list[str]|None=None,provider:str='auto',parameters:dict[str,int]|None=None,frequency:str='daily',adjust:str='native')->dict:
+    """查询厂商日线KDJ：kdj_k/kdj_d/kdj_j；parameters n/m1/m2默认9/3/3。仅native，复权方式未披露；最近5000根日线。"""
+    return await core.query(core.Query(dataset='technical_indicators',symbol=symbol,start_date=start_date,end_date=end_date,fields=fields,provider=provider,parameters=parameters,frequency=frequency,adjust=adjust))
 @mcp.tool()
 async def query_valuations(symbol:str,date:str|None=None,fields:list[str]|None=None,provider:str='auto')->dict:
     """查询每日估值、股本和交易状态。fields 省略取常用项，["*"] 取全部；date 为空取最新。"""
@@ -34,11 +41,28 @@ def provider_status()->dict:
     """查看连接状态、手动账户记录、本地调用统计；不会自动读取官方余额。"""
     return config.redact(config.status())
 
+@mcp.tool()
+def search_metrics(query:str='',dataset:str|None=None,limit:int=10)->dict:
+    """搜索A股数值指标的中文名称、字段代码、别名和来源列；优先使用此工具，不必读取完整目录。返回个人及内置字典的紧凑结果。"""
+    return find_metrics(query,dataset,limit)
+
+@mcp.tool()
+async def explore_metric(name:str,dataset:str,symbol:str,period:str|None=None,date:str|None=None,start_date:str|None=None,end_date:str|None=None,unit:str|None=None,aliases:list[str]|None=None,provider:str='auto',max_attempts:int=2,parameters:dict[str,int]|None=None,frequency:str='daily',adjust:str|None=None)->dict:
+    """探索尚未入字典的A股数值指标。先查已有取法，再按路由尝试可能支持的MCP；每来源最多一次。名称应是一个明确指标，提供日期/报告期。成功返回数据和可保存的取法；不会自动写入个人字典。"""
+    return await explore(ExplorationRequest(name=name,dataset=dataset,symbol=symbol,period=period,date=date,start_date=start_date,end_date=end_date,unit=unit,aliases=aliases or [],provider=provider,max_attempts=max_attempts,parameters=parameters,frequency=frequency,adjust=adjust))
+
+@mcp.tool()
+async def save_metric(exploration_id:str,field:str|None=None)->dict:
+    """将成功探索的取法保存到本机个人字典，之后搜索及常规查询立即可用。field可选，填写稳定英文代码；不保存无法核实的候选，不覆盖内置字典。"""
+    return await save_exploration(exploration_id,field)
+
 mcp_app=mcp.streamable_http_app()
 @asynccontextmanager
 async def lifespan(app):
     async with mcp.session_manager.run():yield
 app=FastAPI(title='MCP Traveler',lifespan=lifespan)
+from .agent_access import router as agent_router
+app.include_router(agent_router)
 
 @app.middleware('http')
 async def local_only(request:Request,call_next):
@@ -68,6 +92,25 @@ def home():return FileResponse(Path(__file__).parent/'static/index.html')
 def get_catalog():return catalog()
 @app.get('/api/dictionary')
 def get_dictionary(dataset:str|None=None,field:str|None=None):return dictionary_view(dataset,field)
+class SaveMetricRequest(BaseModel):
+    field:str|None=None
+
+@app.get('/api/metrics/search')
+def metric_search(q:str='',dataset:str|None=None,limit:int=QueryParam(10,ge=1,le=50)):
+    return find_metrics(q,dataset,limit)
+
+@app.post('/api/explore')
+async def metric_explore(request:ExplorationRequest):
+    return await explore(request)
+
+@app.post('/api/explorations/{exploration_id}/save')
+async def metric_save(exploration_id:str,request:SaveMetricRequest):
+    return await save_exploration(exploration_id,request.field)
+
+@app.delete('/api/metrics/{dataset}/{field}')
+def metric_delete(dataset:str,field:str):
+    return delete_user_metric(dataset,field)
+
 @app.get('/api/config')
 def get_config():return config.public()
 @app.get('/api/status')

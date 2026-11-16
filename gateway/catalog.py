@@ -1,15 +1,31 @@
 """Public catalog is a view of the same dictionary used by acquisition."""
 from .dictionary import DICTIONARY
-FIELDS = {ds:{f:m['label'] for f,m in g['fields'].items()} for ds,g in DICTIONARY['datasets'].items()}
-UNITS = {ds:{f:m['unit'] for f,m in g['fields'].items()} for ds,g in DICTIONARY['datasets'].items()}
-DEFAULT_FIELDS = {ds:g.get('default_fields',list(g['fields'])) for ds,g in DICTIONARY['datasets'].items()}
-CAPABILITIES = DICTIONARY['providers']
+FIELDS = {}
+UNITS = {}
+DEFAULT_FIELDS = {}
+CAPABILITIES = {}
+
+def refresh_catalog():
+    for target, value in (
+        (FIELDS, {ds:{f:m['label'] for f,m in g['fields'].items()} for ds,g in DICTIONARY['datasets'].items()}),
+        (UNITS, {ds:{f:m['unit'] for f,m in g['fields'].items()} for ds,g in DICTIONARY['datasets'].items()}),
+        (DEFAULT_FIELDS, {ds:list(g.get('default_fields',[])) for ds,g in DICTIONARY['datasets'].items()}),
+        (CAPABILITIES, DICTIONARY['providers']),
+    ):
+        target.clear()
+        target.update(value)
+
+refresh_catalog()
 
 def catalog():
+    from .dictionary import reload_dictionary
+    reload_dictionary(force=False)
     return {'datasets':{ds:{'default_fields':DEFAULT_FIELDS[ds],'date_semantics':g['date_semantics'],'fields':{f:{'label':m['label'],'unit':m['unit'],'description':m['description'],'unit_status':m.get('unit_status','existing'),'unit_note':m.get('unit_note',''),'available_sources':[p for p,b in m['sources'].items() if b]} for f,m in g['fields'].items()}} for ds,g in DICTIONARY['datasets'].items()},'providers':CAPABILITIES,
             'dictionary_url':'/api/dictionary','notes':['自动路由逐字段补齐，保留已有值；field_sources 与数据行对应。','字段取法、参数、别名和单位转换由 gateway/data/dictionary.json 定义。']}
 
 def dictionary_view(dataset=None,field=None):
+    from .dictionary import reload_dictionary
+    reload_dictionary(force=False)
     if dataset is None:return DICTIONARY
     if dataset not in DICTIONARY['datasets']:raise ValueError('未知数据类别')
     group=DICTIONARY['datasets'][dataset]

@@ -8696,6 +8696,109 @@
         "roe"
       ],
       "reference_url": "https://tushare.pro/document/2?doc_id=79"
+    },
+    "technical_indicators": {
+      "date_semantics": "日线实际交易日；来源最近5000根范围，厂商未披露复权方式",
+      "default_fields": [
+        "kdj_k",
+        "kdj_d",
+        "kdj_j"
+      ],
+      "fields": {
+        "kdj_k": {
+          "label": "KDJ K值",
+          "unit": "无量纲",
+          "aliases": [
+            "KDJ K",
+            "KDJK值"
+          ],
+          "description": "通达信随机指标K分量；日线，来源原生算法，复权方式未披露。",
+          "parameters": {
+            "n": 9,
+            "m1": 3,
+            "m2": 3
+          },
+          "sources": {
+            "tushare": [],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": [
+              {
+                "recipe": "tdx_kdj",
+                "columns": [
+                  "K"
+                ],
+                "component": "K",
+                "source_unit": "无量纲",
+                "note": "KDJ原生算法；复权方式未披露"
+              }
+            ]
+          }
+        },
+        "kdj_d": {
+          "label": "KDJ D值",
+          "unit": "无量纲",
+          "aliases": [
+            "KDJ D",
+            "KDJD值"
+          ],
+          "description": "通达信随机指标D分量；日线，来源原生算法，复权方式未披露。",
+          "parameters": {
+            "n": 9,
+            "m1": 3,
+            "m2": 3
+          },
+          "sources": {
+            "tushare": [],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": [
+              {
+                "recipe": "tdx_kdj",
+                "columns": [
+                  "D"
+                ],
+                "component": "D",
+                "source_unit": "无量纲",
+                "note": "KDJ原生算法；复权方式未披露"
+              }
+            ]
+          }
+        },
+        "kdj_j": {
+          "label": "KDJ J值",
+          "unit": "无量纲",
+          "aliases": [
+            "KDJ J",
+            "KDJJ值"
+          ],
+          "description": "通达信随机指标J分量；日线，来源原生算法，复权方式未披露。",
+          "parameters": {
+            "n": 9,
+            "m1": 3,
+            "m2": 3
+          },
+          "sources": {
+            "tushare": [],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": [
+              {
+                "recipe": "tdx_kdj",
+                "columns": [
+                  "J"
+                ],
+                "component": "J",
+                "source_unit": "无量纲",
+                "note": "KDJ原生算法；复权方式未披露"
+              }
+            ]
+          }
+        }
+      }
     }
   },
   "recipes": {
@@ -9313,6 +9416,34 @@
         "iFinD indicators_params中最新/MRQ为默认说明，配对历史实测值及表格日期随请求变化；日期以实际数据表显式日期为准。数字可能为4位小数的亿级展示精度。",
         "历史对照已验证：参数说明可能显示最新/MRQ，实际表格日期优先；没有表格日期时须有该指标自身的明确日期。"
       ]
+    },
+    "tdx_kdj": {
+      "provider": "tdx",
+      "dataset": "technical_indicators",
+      "kind": "mcp",
+      "method": "tdx_technical_indicator_query",
+      "params": {},
+      "upstream": "通达信技术指标原生算法",
+      "notes": [
+        "日线KDJ；复权方式厂商未披露；显式传递N/M1/M2并核对params_used；最近5000根日线。"
+      ],
+      "technical": {
+        "indicator_id": "KDJ",
+        "set": "0",
+        "period": "4",
+        "max_limit": 5000,
+        "min_limit": 30,
+        "default_parameters": {
+          "n": 9,
+          "m1": 3,
+          "m2": 3
+        },
+        "parameter_keys": {
+          "n": "N",
+          "m1": "M1",
+          "m2": "M2"
+        }
+      }
     }
   },
   "mapping_policy": {

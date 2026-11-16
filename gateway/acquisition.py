@@ -74,6 +74,9 @@ def indicator_dates(obj):
 
 
 def execute_recipe(rid,recipe,bindings,q,sdk,remote):
+    if recipe['method']=='tdx_technical_indicator_query':
+        from .technical import fetch
+        return fetch(remote,q,bindings)
     ctx=context(q,recipe,bindings);kind=recipe['kind'];raw=[];table=[]
     if kind.startswith('sdk'):
         batches=[{f:b} for f,b in bindings.items()] if kind=='sdk_per_field' else [bindings]
