@@ -49,6 +49,7 @@ def test_origin_and_paths(home):
         assert c.post('/api/query',json={'dataset':'daily_prices','symbol':'600519.SH'}).status_code==422
 
 def test_fallback_and_empty(home,monkeypatch):
+    config.save_routes({"daily_prices":["tushare","akshare"]})
     async def fake(name,q,timeout):
         if name=='tushare':raise RuntimeError('simulated failure')
         return {'data':[],'raw':{},'notes':[]}
@@ -158,3 +159,12 @@ def test_wind_separate_deduction_blocks(monkeypatch):
     r=remote_fetch('wind',q,{},'')
     assert len(calls)==2 and len(r['data'])==1
     assert r['data'][0]['net_profit_parent']==1e9 and r['data'][0]['net_profit_excl']==8e8
+
+
+def test_global_route_inheritance(home):
+    config.save_routes({'global_route':['wind','akshare','tushare'],'route_overrides':{'financials':['tushare','wind']}})
+    c=config.load()
+    assert c['routes']['valuations']==['wind','akshare','tushare']
+    assert c['routes']['financials']==['tushare','wind']
+    config.save_routes({'global_route':['akshare','wind'],'route_overrides':{}})
+    assert all(v==['akshare','wind'] for v in config.load()['routes'].values())

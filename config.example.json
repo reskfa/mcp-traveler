@@ -48,8 +48,34 @@
     }
   },
   "routes": {
-    "daily_prices": ["tushare", "akshare", "wind", "ifind", "tdx"],
-    "valuations": ["tushare", "wind", "ifind", "tdx", "akshare"],
-    "financials": ["tushare", "wind", "ifind", "tdx", "akshare"]
-  }
+    "daily_prices": [
+      "tushare",
+      "wind",
+      "ifind",
+      "tdx",
+      "akshare"
+    ],
+    "valuations": [
+      "tushare",
+      "wind",
+      "ifind",
+      "tdx",
+      "akshare"
+    ],
+    "financials": [
+      "tushare",
+      "wind",
+      "ifind",
+      "tdx",
+      "akshare"
+    ]
+  },
+  "global_route": [
+    "tushare",
+    "wind",
+    "ifind",
+    "tdx",
+    "akshare"
+  ],
+  "route_overrides": {}
 }

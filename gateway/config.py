@@ -28,7 +28,12 @@ def write_json(path, value):
     atomic(path, json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False) + '\n')
 
 def load():
-    return json.loads((ROOT / 'config.json').read_text())
+    c=json.loads((ROOT / 'config.json').read_text())
+    if 'global_route' not in c:
+        c['global_route']=list(c['routes']['valuations'])
+        c['route_overrides']={k:v for k,v in c['routes'].items() if v!=c['global_route']}
+    c['routes']={k:c.get('route_overrides',{}).get(k,c['global_route']) for k in ['daily_prices','valuations','financials']}
+    return c
 
 def secrets():
     return {k: v or '' for k, v in dotenv_values(ROOT / '.env').items()}
@@ -84,10 +89,17 @@ def save_provider(name, patch):
 def save_routes(routes):
     with LOCK:
         c = load()
-        for category, order in routes.items():
-            if category not in c['routes'] or not order or len(order) != len(set(order)) or set(order) - set(PROVIDERS):
-                raise ValueError('路由类别或来源顺序无效')
-            c['routes'][category] = order
+        def valid(order):
+            return isinstance(order,list) and bool(order) and all(isinstance(n,str) for n in order) and len(order)==len(set(order)) and not set(order)-set(PROVIDERS)
+        if 'global_route' in routes:
+            order=routes['global_route'];overrides=routes.get('route_overrides',{})
+            if not valid(order) or not isinstance(overrides,dict) or any(k not in c['routes'] or not valid(v) for k,v in overrides.items()):raise ValueError('来源顺序无效')
+            c['global_route']=order;c['route_overrides']=overrides
+        else:
+            for category,order in routes.items():
+                if category not in c['routes'] or not valid(order):raise ValueError('路由类别或来源顺序无效')
+                c['route_overrides'][category]=order
+        c['routes']={k:c['route_overrides'].get(k,c['global_route']) for k in c['routes']}
         write_json(ROOT / 'config.json', c)
     return public()
 
