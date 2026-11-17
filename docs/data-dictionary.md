@@ -2,7 +2,7 @@
 
 由 `gateway/data/dictionary.json` 生成。该 JSON 同时驱动实际取数；不要直接编辑本表。
 
-现有 196 个分类字段：daily_prices 7 项、valuations 17 项、financials 169 项、technical_indicators 3 项。跨类别同名字段分开计数。空缺项明确保留，不等于来源永远不支持。
+现有 574 个分类字段：daily_prices 7 项、valuations 17 项、financials 169 项、technical_indicators 381 项。跨类别同名字段分开计数。空缺项明确保留，不等于来源永远不支持。
 
 修改 JSON 后下一次查询自动加载；运行 `python scripts/render_dictionary.py` 更新本表。各来源覆盖是当前实现配置，并非所有字段均经过全市场验证。
 
@@ -1203,31 +1203,2299 @@
 
 ## technical_indicators
 
-日线实际交易日；来源最近5000根范围，厂商未披露复权方式
+按来源实际交易日返回；历史字段需要日期范围，最新快照仅代表实际返回日。参数、复权及历史覆盖以各来源字段定义为准。
 
 | 字段 | 名称 | 单位 | 含义与单位说明 |
 | --- | --- | --- | --- |
 | `kdj_k` | KDJ K值 | 无量纲 | 通达信随机指标K分量；日线，来源原生算法，复权方式未披露。  |
 | `kdj_d` | KDJ D值 | 无量纲 | 通达信随机指标D分量；日线，来源原生算法，复权方式未披露。  |
 | `kdj_j` | KDJ J值 | 无量纲 | 通达信随机指标J分量；日线，来源原生算法，复权方式未披露。  |
+| `macd_dif` | MACD DIF | 元 | 通达信MACD DIF分量；来源原生算法，复权方式未披露。 接口未返回单位标签；按指标含义标注：MACD为价格差、布林线为价格，单位元；RSI为0至100无量纲标度，不是收益率百分比。 |
+| `macd_dea` | MACD DEA | 元 | 通达信MACD DEA分量；来源原生算法，复权方式未披露。 接口未返回单位标签；按指标含义标注：MACD为价格差、布林线为价格，单位元；RSI为0至100无量纲标度，不是收益率百分比。 |
+| `macd_macd` | MACD MACD | 元 | 通达信MACD MACD分量；来源原生算法，复权方式未披露。 接口未返回单位标签；按指标含义标注：MACD为价格差、布林线为价格，单位元；RSI为0至100无量纲标度，不是收益率百分比。 |
+| `rsi_rsi1` | RSI RSI1 | 无量纲 | 通达信RSI RSI1分量；来源原生算法，复权方式未披露。 接口未返回单位标签；按指标含义标注：MACD为价格差、布林线为价格，单位元；RSI为0至100无量纲标度，不是收益率百分比。 |
+| `rsi_rsi2` | RSI RSI2 | 无量纲 | 通达信RSI RSI2分量；来源原生算法，复权方式未披露。 接口未返回单位标签；按指标含义标注：MACD为价格差、布林线为价格，单位元；RSI为0至100无量纲标度，不是收益率百分比。 |
+| `rsi_rsi3` | RSI RSI3 | 无量纲 | 通达信RSI RSI3分量；来源原生算法，复权方式未披露。 接口未返回单位标签；按指标含义标注：MACD为价格差、布林线为价格，单位元；RSI为0至100无量纲标度，不是收益率百分比。 |
+| `boll_boll` | 布林线 BOLL | 元 | 通达信布林线 BOLL分量；来源原生算法，复权方式未披露。 接口未返回单位标签；按指标含义标注：MACD为价格差、布林线为价格，单位元；RSI为0至100无量纲标度，不是收益率百分比。 |
+| `boll_ub` | 布林线 UB | 元 | 通达信布林线 UB分量；来源原生算法，复权方式未披露。 接口未返回单位标签；按指标含义标注：MACD为价格差、布林线为价格，单位元；RSI为0至100无量纲标度，不是收益率百分比。 |
+| `boll_lb` | 布林线 LB | 元 | 通达信布林线 LB分量；来源原生算法，复权方式未披露。 接口未返回单位标签；按指标含义标注：MACD为价格差、布林线为价格，单位元；RSI为0至100无量纲标度，不是收益率百分比。 |
+| `ma_ma1` | MA MA1 | 元 | 通达信均线，输出线MA1；日线原生算法，复权方式未披露。M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 |
+| `ma_ma2` | MA MA2 | 元 | 通达信均线，输出线MA2；日线原生算法，复权方式未披露。M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 |
+| `ma_ma3` | MA MA3 | 元 | 通达信均线，输出线MA3；日线原生算法，复权方式未披露。M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 |
+| `ma_ma4` | MA MA4 | 元 | 通达信均线，输出线MA4；日线原生算法，复权方式未披露。M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 |
+| `ma_ma5` | MA MA5 | 元 | 通达信均线，输出线MA5；日线原生算法，复权方式未披露。M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 |
+| `ma_ma6` | MA MA6 | 元 | 通达信均线，输出线MA6；日线原生算法，复权方式未披露。M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 |
+| `ma_ma7` | MA MA7 | 元 | 通达信均线，输出线MA7；日线原生算法，复权方式未披露。M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 |
+| `ma_ma8` | MA MA8 | 元 | 通达信均线，输出线MA8；日线原生算法，复权方式未披露。M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 |
+| `expma_exp1` | EXPMA EXP1 | 元 | 通达信指数平均线，输出线EXP1；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `expma_exp2` | EXPMA EXP2 | 元 | 通达信指数平均线，输出线EXP2；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `bbi_bbi` | BBI BBI | 元 | 通达信多空均线，输出线BBI；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `dmi_pdi` | DMI PDI | 无量纲 | 通达信趋向指标，输出线PDI；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `dmi_mdi` | DMI MDI | 无量纲 | 通达信趋向指标，输出线MDI；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `dmi_adx` | DMI ADX | 无量纲 | 通达信趋向指标，输出线ADX；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `dmi_adxr` | DMI ADXR | 无量纲 | 通达信趋向指标，输出线ADXR；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `cci_cci` | CCI CCI | 无量纲 | 通达信商品路径指标，输出线CCI；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `roc_roc` | ROC ROC | % | 通达信变动率指标，输出线ROC；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `roc_maroc` | ROC MAROC | % | 通达信变动率指标，输出线MAROC；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `mtm_mtm` | MTM MTM | 元 | 通达信动量线，输出线MTM；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `mtm_mtmma` | MTM MTMMA | 元 | 通达信动量线，输出线MTMMA；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `wr_wr1` | WR WR1 | 无量纲 | 通达信威廉指标，输出线WR1；日线原生算法，复权方式未披露。通达信0至100反向标度，数值越小越靠近区间高点；不转为负值Williams %R。 通达信0至100反向标度，数值越小越靠近区间高点；不转为负值Williams %R。 |
+| `wr_wr2` | WR WR2 | 无量纲 | 通达信威廉指标，输出线WR2；日线原生算法，复权方式未披露。通达信0至100反向标度，数值越小越靠近区间高点；不转为负值Williams %R。 通达信0至100反向标度，数值越小越靠近区间高点；不转为负值Williams %R。 |
+| `bias_bias1` | BIAS BIAS1 | % | 通达信乖离率，输出线BIAS1；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `bias_bias2` | BIAS BIAS2 | % | 通达信乖离率，输出线BIAS2；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `bias_bias3` | BIAS BIAS3 | % | 通达信乖离率，输出线BIAS3；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `trix_trix` | TRIX TRIX | % | 通达信三重指数平均线，输出线TRIX；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `trix_matrix` | TRIX MATRIX | % | 通达信三重指数平均线，输出线MATRIX；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `psy_psy` | PSY PSY | % | 通达信心理线，输出线PSY；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `psy_psyma` | PSY PSYMA | % | 通达信心理线，输出线PSYMA；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `obv_obv` | OBV OBV | 手 | 通达信累积能量线，输出线OBV；日线原生算法，复权方式未披露。有符号成交量累计，单位手；起始累计基准由厂商决定。样本相邻差值与VOL一致。 有符号成交量累计，单位手；起始累计基准由厂商决定。样本相邻差值与VOL一致。 |
+| `obv_maobv` | OBV MAOBV | 手 | 通达信累积能量线，输出线MAOBV；日线原生算法，复权方式未披露。有符号成交量累计，单位手；起始累计基准由厂商决定。样本相邻差值与VOL一致。 有符号成交量累计，单位手；起始累计基准由厂商决定。样本相邻差值与VOL一致。 |
+| `vr_vr` | VR VR | % | 通达信成交量变异率，输出线VR；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 成交量比率乘100的原生标度；100表示比率1，不是证券收益率。 成交量比率乘100的原生标度；100表示比率1，不是证券收益率。 |
+| `vr_mavr` | VR MAVR | % | 通达信成交量变异率，输出线MAVR；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 成交量比率乘100的原生标度；100表示比率1，不是证券收益率。 成交量比率乘100的原生标度；100表示比率1，不是证券收益率。 |
+| `vol_volume` | VOL VOLUME | 手 | 通达信成交量，输出线VOLUME；日线原生算法，复权方式未披露。A股成交量单位按通达信手计；1手=100股。 A股成交量单位按通达信手计；1手=100股。 |
+| `vol_mavol1` | VOL MAVOL1 | 手 | 通达信成交量，输出线MAVOL1；日线原生算法，复权方式未披露。A股成交量单位按通达信手计；1手=100股。 A股成交量单位按通达信手计；1手=100股。 |
+| `vol_mavol2` | VOL MAVOL2 | 手 | 通达信成交量，输出线MAVOL2；日线原生算法，复权方式未披露。A股成交量单位按通达信手计；1手=100股。 A股成交量单位按通达信手计；1手=100股。 |
+| `atr_mtr` | ATR MTR | 元 | 通达信真实波幅，输出线MTR；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `atr_atr` | ATR ATR | 元 | 通达信真实波幅，输出线ATR；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `dma_dif` | DMA DIF | 元 | 通达信平均差，输出线DIF；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `dma_difma` | DMA DIFMA | 元 | 通达信平均差，输出线DIFMA；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `emv_emv` | EMV EMV | 来源原生值 | 通达信简易波动指标，输出线EMV；日线原生算法，复权方式未披露。接口未披露该分量公式量纲及缩放，保留厂商原生值，不认定为元或百分比。 接口未披露该分量公式量纲及缩放，保留厂商原生值，不认定为元或百分比。 |
+| `emv_maemv` | EMV MAEMV | 来源原生值 | 通达信简易波动指标，输出线MAEMV；日线原生算法，复权方式未披露。接口未披露该分量公式量纲及缩放，保留厂商原生值，不认定为元或百分比。 接口未披露该分量公式量纲及缩放，保留厂商原生值，不认定为元或百分比。 |
+| `dpo_dpo` | DPO DPO | 元 | 通达信区间震荡线，输出线DPO；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `dpo_madpo` | DPO MADPO | 元 | 通达信区间震荡线，输出线MADPO；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `brar_br` | BRAR BR | % | 通达信情绪指标，输出线BR；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `brar_ar` | BRAR AR | % | 通达信情绪指标，输出线AR；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `mfi_mfi` | MFI MFI | 无量纲 | 通达信资金流量指标，输出线MFI；日线原生算法，复权方式未披露。N2为厂商公开参数；本接口仅输出MFI一线。 N2为厂商公开参数；本接口仅输出MFI一线。 |
+| `cr_cr` | CR CR | % | 通达信带状能量线，输出线CR；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `cr_ma1` | CR MA1 | % | 通达信带状能量线，输出线MA1；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `cr_ma2` | CR MA2 | % | 通达信带状能量线，输出线MA2；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `cr_ma3` | CR MA3 | % | 通达信带状能量线，输出线MA3；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `cr_ma4` | CR MA4 | % | 通达信带状能量线，输出线MA4；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `asi_asi` | ASI ASI | 来源原生值 | 通达信振动升降指标，输出线ASI；日线原生算法，复权方式未披露。接口未披露公式量纲及缩放，保留厂商原生值，不认定为元或百分比。 接口未披露公式量纲及缩放，保留厂商原生值，不认定为元或百分比。 |
+| `asi_ma` | ASI MA | 来源原生值 | 通达信振动升降指标，输出线MA；日线原生算法，复权方式未披露。接口未披露公式量纲及缩放，保留厂商原生值，不认定为元或百分比。 接口未披露公式量纲及缩放，保留厂商原生值，不认定为元或百分比。 |
+| `mass_mass` | MASS MASS | 无量纲 | 通达信梅斯线，输出线MASS；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `mass_mamass` | MASS MAMASS | 无量纲 | 通达信梅斯线，输出线MAMASS；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `xsii_td1` | XS2 通道1 | 元 | 通达信薛斯通道II，输出线通道1；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `xsii_td2` | XS2 通道2 | 元 | 通达信薛斯通道II，输出线通道2；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `xsii_td3` | XS2 通道3 | 元 | 通达信薛斯通道II，输出线通道3；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `xsii_td4` | XS2 通道4 | 元 | 通达信薛斯通道II，输出线通道4；日线原生算法，复权方式未披露。接口未返回单位标签；按该分量的指标含义标注。 接口未返回单位标签；按该分量的指标含义标注。 |
+| `donchian_upper` | 唐奇安 周期高点 | 元 | 通达信唐奇安通道，输出线周期高点；日线原生算法，复权方式未披露。X1高点周期、X2低点周期不同；不冒称Tushare TAQ的三线通道。 X1高点周期、X2低点周期不同；不冒称Tushare TAQ的三线通道。 |
+| `donchian_lower` | 唐奇安 周期低点 | 元 | 通达信唐奇安通道，输出线周期低点；日线原生算法，复权方式未披露。X1高点周期、X2低点周期不同；不冒称Tushare TAQ的三线通道。 X1高点周期、X2低点周期不同；不冒称Tushare TAQ的三线通道。 |
+| `ts_asi_bfq` | Tushare ASI 不复权 | 未确认 | 振动升降指标-OPEN, CLOSE, HIGH, LOW, M1=26, M2=10；不复权；来源预计算参数固定。 来源未明确缩放单位，保留原值 |
+| `ts_asit_bfq` | Tushare ASIT 不复权 | 未确认 | 振动升降指标-OPEN, CLOSE, HIGH, LOW, M1=26, M2=10；不复权；来源预计算参数固定。 来源未明确缩放单位，保留原值 |
+| `ts_atr_bfq` | Tushare ATR 不复权 | 元 | 真实波动N日平均值-CLOSE, HIGH, LOW, N=20；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_bbi_bfq` | Tushare BBI 不复权 | 元 | BBI多空指标-CLOSE, M1=3, M2=6, M3=12, M4=20；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_bias1_bfq` | Tushare BIAS1 不复权 | 无量纲 | BIAS乖离率-CLOSE, L1=6, L2=12, L3=24；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_bias2_bfq` | Tushare BIAS2 不复权 | 无量纲 | BIAS乖离率-CLOSE, L1=6, L2=12, L3=24；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_bias3_bfq` | Tushare BIAS3 不复权 | 无量纲 | BIAS乖离率-CLOSE, L1=6, L2=12, L3=24；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_boll_lower_bfq` | Tushare BOLL_LOWER 不复权 | 元 | BOLL指标，布林带-CLOSE, N=20, P=2；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_boll_mid_bfq` | Tushare BOLL_MID 不复权 | 元 | BOLL指标，布林带-CLOSE, N=20, P=2；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_boll_upper_bfq` | Tushare BOLL_UPPER 不复权 | 元 | BOLL指标，布林带-CLOSE, N=20, P=2；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_brar_ar_bfq` | Tushare BRAR_AR 不复权 | 无量纲 | BRAR情绪指标-OPEN, CLOSE, HIGH, LOW, M1=26；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_brar_br_bfq` | Tushare BRAR_BR 不复权 | 无量纲 | BRAR情绪指标-OPEN, CLOSE, HIGH, LOW, M1=26；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_cci_bfq` | Tushare CCI 不复权 | 无量纲 | 顺势指标又叫CCI指标-CLOSE, HIGH, LOW, N=14；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_cr_bfq` | Tushare CR 不复权 | 无量纲 | CR价格动量指标-CLOSE, HIGH, LOW, N=20；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dfma_dif_bfq` | Tushare DFMA_DIF 不复权 | 元 | 平行线差指标-CLOSE, N1=10, N2=50, M=10；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dfma_difma_bfq` | Tushare DFMA_DIFMA 不复权 | 元 | 平行线差指标-CLOSE, N1=10, N2=50, M=10；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dmi_adx_bfq` | Tushare DMI_ADX 不复权 | 无量纲 | 动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dmi_adxr_bfq` | Tushare DMI_ADXR 不复权 | 无量纲 | 动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dmi_mdi_bfq` | Tushare DMI_MDI 不复权 | 无量纲 | 动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dmi_pdi_bfq` | Tushare DMI_PDI 不复权 | 无量纲 | 动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dpo_bfq` | Tushare DPO 不复权 | 元 | 区间震荡线-CLOSE, M1=20, M2=10, M3=6；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_madpo_bfq` | Tushare MADPO 不复权 | 元 | 区间震荡线-CLOSE, M1=20, M2=10, M3=6；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_bfq_10` | Tushare EMA_10 不复权 | 元 | 指数移动平均-N=10；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_bfq_20` | Tushare EMA_20 不复权 | 元 | 指数移动平均-N=20；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_bfq_250` | Tushare EMA_250 不复权 | 元 | 指数移动平均-N=250；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_bfq_30` | Tushare EMA_30 不复权 | 元 | 指数移动平均-N=30；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_bfq_5` | Tushare EMA_5 不复权 | 元 | 指数移动平均-N=5；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_bfq_60` | Tushare EMA_60 不复权 | 元 | 指数移动平均-N=60；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_bfq_90` | Tushare EMA_90 不复权 | 元 | 指数移动平均-N=90；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_emv_bfq` | Tushare EMV 不复权 | 未确认 | 简易波动指标-HIGH, LOW, VOL, N=14, M=9；不复权；来源预计算参数固定。 来源未明确缩放单位，保留原值 |
+| `ts_maemv_bfq` | Tushare MAEMV 不复权 | 未确认 | 简易波动指标-HIGH, LOW, VOL, N=14, M=9；不复权；来源预计算参数固定。 来源未明确缩放单位，保留原值 |
+| `ts_expma_12_bfq` | Tushare EXPMA_12 不复权 | 元 | EMA指数平均数指标-CLOSE, N1=12, N2=50；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_expma_50_bfq` | Tushare EXPMA_50 不复权 | 元 | EMA指数平均数指标-CLOSE, N1=12, N2=50；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_kdj_bfq` | Tushare KDJ 不复权 | 无量纲 | KDJ指标-CLOSE, HIGH, LOW, N=9, M1=3, M2=3；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_kdj_d_bfq` | Tushare KDJ_D 不复权 | 无量纲 | KDJ指标-CLOSE, HIGH, LOW, N=9, M1=3, M2=3；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_kdj_k_bfq` | Tushare KDJ_K 不复权 | 无量纲 | KDJ指标-CLOSE, HIGH, LOW, N=9, M1=3, M2=3；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ktn_down_bfq` | Tushare KTN_DOWN 不复权 | 元 | 肯特纳交易通道, N选20日，ATR选10日-CLOSE, HIGH, LOW, N=20, M=10；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ktn_mid_bfq` | Tushare KTN_MID 不复权 | 元 | 肯特纳交易通道, N选20日，ATR选10日-CLOSE, HIGH, LOW, N=20, M=10；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ktn_upper_bfq` | Tushare KTN_UPPER 不复权 | 元 | 肯特纳交易通道, N选20日，ATR选10日-CLOSE, HIGH, LOW, N=20, M=10；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_bfq_10` | Tushare MA_10 不复权 | 元 | 简单移动平均-N=10；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_bfq_20` | Tushare MA_20 不复权 | 元 | 简单移动平均-N=20；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_bfq_250` | Tushare MA_250 不复权 | 元 | 简单移动平均-N=250；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_bfq_30` | Tushare MA_30 不复权 | 元 | 简单移动平均-N=30；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_bfq_5` | Tushare MA_5 不复权 | 元 | 简单移动平均-N=5；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_bfq_60` | Tushare MA_60 不复权 | 元 | 简单移动平均-N=60；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_bfq_90` | Tushare MA_90 不复权 | 元 | 简单移动平均-N=90；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_macd_bfq` | Tushare MACD 不复权 | 元 | MACD指标-CLOSE, SHORT=12, LONG=26, M=9；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_macd_dea_bfq` | Tushare MACD_DEA 不复权 | 元 | MACD指标-CLOSE, SHORT=12, LONG=26, M=9；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_macd_dif_bfq` | Tushare MACD_DIF 不复权 | 元 | MACD指标-CLOSE, SHORT=12, LONG=26, M=9；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_mass_bfq` | Tushare MASS 不复权 | 无量纲 | 梅斯线-HIGH, LOW, N1=9, N2=25, M=6；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_mass_bfq` | Tushare MA_MASS 不复权 | 元 | 梅斯线-HIGH, LOW, N1=9, N2=25, M=6；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_mfi_bfq` | Tushare MFI 不复权 | 无量纲 | MFI指标是成交量的RSI指标-CLOSE, HIGH, LOW, VOL, N=14；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_mtm_bfq` | Tushare MTM 不复权 | 元 | 动量指标-CLOSE, N=12, M=6；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_mtmma_bfq` | Tushare MTMMA 不复权 | 元 | 动量指标-CLOSE, N=12, M=6；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_obv_bfq` | Tushare OBV 不复权 | 未确认 | 能量潮指标-CLOSE, VOL；不复权；来源预计算参数固定。 来源未明确缩放单位，保留原值 |
+| `ts_psy_bfq` | Tushare PSY 不复权 | 无量纲 | 投资者对股市涨跌产生心理波动的情绪指标-CLOSE, N=12, M=6；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_psyma_bfq` | Tushare PSYMA 不复权 | 无量纲 | 投资者对股市涨跌产生心理波动的情绪指标-CLOSE, N=12, M=6；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_roc_bfq` | Tushare ROC 不复权 | 无量纲 | 变动率指标-CLOSE, N=12, M=6；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_maroc_bfq` | Tushare MAROC 不复权 | 无量纲 | 变动率指标-CLOSE, N=12, M=6；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_rsi_bfq_12` | Tushare RSI_12 不复权 | 无量纲 | RSI指标-CLOSE, N=12；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_rsi_bfq_24` | Tushare RSI_24 不复权 | 无量纲 | RSI指标-CLOSE, N=24；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_rsi_bfq_6` | Tushare RSI_6 不复权 | 无量纲 | RSI指标-CLOSE, N=6；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_taq_down_bfq` | Tushare TAQ_DOWN 不复权 | 元 | 唐安奇通道(海龟)交易指标-HIGH, LOW, 20；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_taq_mid_bfq` | Tushare TAQ_MID 不复权 | 元 | 唐安奇通道(海龟)交易指标-HIGH, LOW, 20；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_taq_up_bfq` | Tushare TAQ_UP 不复权 | 元 | 唐安奇通道(海龟)交易指标-HIGH, LOW, 20；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_trix_bfq` | Tushare TRIX 不复权 | 无量纲 | 三重指数平滑平均线-CLOSE, M1=12, M2=20；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_trma_bfq` | Tushare TRMA 不复权 | 无量纲 | 三重指数平滑平均线-CLOSE, M1=12, M2=20；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_vr_bfq` | Tushare VR 不复权 | 无量纲 | VR容量比率-CLOSE, VOL, M1=26；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_wr_bfq` | Tushare WR 不复权 | 无量纲 | W&R 威廉指标-CLOSE, HIGH, LOW, N=10, N1=6；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_wr1_bfq` | Tushare WR1 不复权 | 无量纲 | W&R 威廉指标-CLOSE, HIGH, LOW, N=10, N1=6；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_xsii_td1_bfq` | Tushare XSII_TD1 不复权 | 元 | 薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_xsii_td2_bfq` | Tushare XSII_TD2 不复权 | 元 | 薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_xsii_td3_bfq` | Tushare XSII_TD3 不复权 | 元 | 薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_xsii_td4_bfq` | Tushare XSII_TD4 不复权 | 元 | 薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；不复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_asi_qfq` | Tushare ASI 前复权 | 未确认 | 振动升降指标-OPEN, CLOSE, HIGH, LOW, M1=26, M2=10；前复权；来源预计算参数固定。 来源未明确缩放单位，保留原值 |
+| `ts_asit_qfq` | Tushare ASIT 前复权 | 未确认 | 振动升降指标-OPEN, CLOSE, HIGH, LOW, M1=26, M2=10；前复权；来源预计算参数固定。 来源未明确缩放单位，保留原值 |
+| `ts_atr_qfq` | Tushare ATR 前复权 | 元 | 真实波动N日平均值-CLOSE, HIGH, LOW, N=20；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_bbi_qfq` | Tushare BBI 前复权 | 元 | BBI多空指标-CLOSE, M1=3, M2=6, M3=12, M4=22；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_bias1_qfq` | Tushare BIAS1 前复权 | 无量纲 | BIAS乖离率-CLOSE, L1=6, L2=12, L3=24；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_bias2_qfq` | Tushare BIAS2 前复权 | 无量纲 | BIAS乖离率-CLOSE, L1=6, L2=12, L3=24；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_bias3_qfq` | Tushare BIAS3 前复权 | 无量纲 | BIAS乖离率-CLOSE, L1=6, L2=12, L3=24；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_boll_lower_qfq` | Tushare BOLL_LOWER 前复权 | 元 | BOLL指标，布林带-CLOSE, N=20, P=2；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_boll_mid_qfq` | Tushare BOLL_MID 前复权 | 元 | BOLL指标，布林带-CLOSE, N=20, P=2；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_boll_upper_qfq` | Tushare BOLL_UPPER 前复权 | 元 | BOLL指标，布林带-CLOSE, N=20, P=2；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_brar_ar_qfq` | Tushare BRAR_AR 前复权 | 无量纲 | BRAR情绪指标-OPEN, CLOSE, HIGH, LOW, M1=26；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_brar_br_qfq` | Tushare BRAR_BR 前复权 | 无量纲 | BRAR情绪指标-OPEN, CLOSE, HIGH, LOW, M1=26；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_cci_qfq` | Tushare CCI 前复权 | 无量纲 | 顺势指标又叫CCI指标-CLOSE, HIGH, LOW, N=14；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_cr_qfq` | Tushare CR 前复权 | 无量纲 | CR价格动量指标-CLOSE, HIGH, LOW, N=20；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dfma_dif_qfq` | Tushare DFMA_DIF 前复权 | 元 | 平行线差指标-CLOSE, N1=10, N2=50, M=10；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dfma_difma_qfq` | Tushare DFMA_DIFMA 前复权 | 元 | 平行线差指标-CLOSE, N1=10, N2=50, M=10；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dmi_adx_qfq` | Tushare DMI_ADX 前复权 | 无量纲 | 动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dmi_adxr_qfq` | Tushare DMI_ADXR 前复权 | 无量纲 | 动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dmi_mdi_qfq` | Tushare DMI_MDI 前复权 | 无量纲 | 动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dmi_pdi_qfq` | Tushare DMI_PDI 前复权 | 无量纲 | 动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dpo_qfq` | Tushare DPO 前复权 | 元 | 区间震荡线-CLOSE, M1=20, M2=10, M3=6；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_madpo_qfq` | Tushare MADPO 前复权 | 元 | 区间震荡线-CLOSE, M1=20, M2=10, M3=6；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_qfq_10` | Tushare EMA_10 前复权 | 元 | 指数移动平均-N=10；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_qfq_20` | Tushare EMA_20 前复权 | 元 | 指数移动平均-N=20；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_qfq_250` | Tushare EMA_250 前复权 | 元 | 指数移动平均-N=250；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_qfq_30` | Tushare EMA_30 前复权 | 元 | 指数移动平均-N=30；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_qfq_5` | Tushare EMA_5 前复权 | 元 | 指数移动平均-N=5；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_qfq_60` | Tushare EMA_60 前复权 | 元 | 指数移动平均-N=60；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_qfq_90` | Tushare EMA_90 前复权 | 元 | 指数移动平均-N=90；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_emv_qfq` | Tushare EMV 前复权 | 未确认 | 简易波动指标-HIGH, LOW, VOL, N=14, M=9；前复权；来源预计算参数固定。 来源未明确缩放单位，保留原值 |
+| `ts_maemv_qfq` | Tushare MAEMV 前复权 | 未确认 | 简易波动指标-HIGH, LOW, VOL, N=14, M=9；前复权；来源预计算参数固定。 来源未明确缩放单位，保留原值 |
+| `ts_expma_12_qfq` | Tushare EXPMA_12 前复权 | 元 | EMA指数平均数指标-CLOSE, N1=12, N2=50；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_expma_50_qfq` | Tushare EXPMA_50 前复权 | 元 | EMA指数平均数指标-CLOSE, N1=12, N2=50；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_kdj_qfq` | Tushare KDJ 前复权 | 无量纲 | KDJ指标-CLOSE, HIGH, LOW, N=9, M1=3, M2=3；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_kdj_d_qfq` | Tushare KDJ_D 前复权 | 无量纲 | KDJ指标-CLOSE, HIGH, LOW, N=9, M1=3, M2=3；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_kdj_k_qfq` | Tushare KDJ_K 前复权 | 无量纲 | KDJ指标-CLOSE, HIGH, LOW, N=9, M1=3, M2=3；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ktn_down_qfq` | Tushare KTN_DOWN 前复权 | 元 | 肯特纳交易通道, N选20日，ATR选10日-CLOSE, HIGH, LOW, N=20, M=10；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ktn_mid_qfq` | Tushare KTN_MID 前复权 | 元 | 肯特纳交易通道, N选20日，ATR选10日-CLOSE, HIGH, LOW, N=20, M=10；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ktn_upper_qfq` | Tushare KTN_UPPER 前复权 | 元 | 肯特纳交易通道, N选20日，ATR选10日-CLOSE, HIGH, LOW, N=20, M=10；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_qfq_10` | Tushare MA_10 前复权 | 元 | 简单移动平均-N=10；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_qfq_20` | Tushare MA_20 前复权 | 元 | 简单移动平均-N=20；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_qfq_250` | Tushare MA_250 前复权 | 元 | 简单移动平均-N=250；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_qfq_30` | Tushare MA_30 前复权 | 元 | 简单移动平均-N=30；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_qfq_5` | Tushare MA_5 前复权 | 元 | 简单移动平均-N=5；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_qfq_60` | Tushare MA_60 前复权 | 元 | 简单移动平均-N=60；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_qfq_90` | Tushare MA_90 前复权 | 元 | 简单移动平均-N=90；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_macd_qfq` | Tushare MACD 前复权 | 元 | MACD指标-CLOSE, SHORT=12, LONG=26, M=9；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_macd_dea_qfq` | Tushare MACD_DEA 前复权 | 元 | MACD指标-CLOSE, SHORT=12, LONG=26, M=9；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_macd_dif_qfq` | Tushare MACD_DIF 前复权 | 元 | MACD指标-CLOSE, SHORT=12, LONG=26, M=9；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_mass_qfq` | Tushare MASS 前复权 | 无量纲 | 梅斯线-HIGH, LOW, N1=9, N2=25, M=6；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_mass_qfq` | Tushare MA_MASS 前复权 | 元 | 梅斯线-HIGH, LOW, N1=9, N2=25, M=6；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_mfi_qfq` | Tushare MFI 前复权 | 无量纲 | MFI指标是成交量的RSI指标-CLOSE, HIGH, LOW, VOL, N=14；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_mtm_qfq` | Tushare MTM 前复权 | 元 | 动量指标-CLOSE, N=12, M=6；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_mtmma_qfq` | Tushare MTMMA 前复权 | 元 | 动量指标-CLOSE, N=12, M=6；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_obv_qfq` | Tushare OBV 前复权 | 未确认 | 能量潮指标-CLOSE, VOL；前复权；来源预计算参数固定。 来源未明确缩放单位，保留原值 |
+| `ts_psy_qfq` | Tushare PSY 前复权 | 无量纲 | 投资者对股市涨跌产生心理波动的情绪指标-CLOSE, N=12, M=6；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_psyma_qfq` | Tushare PSYMA 前复权 | 无量纲 | 投资者对股市涨跌产生心理波动的情绪指标-CLOSE, N=12, M=6；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_roc_qfq` | Tushare ROC 前复权 | 无量纲 | 变动率指标-CLOSE, N=12, M=6；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_maroc_qfq` | Tushare MAROC 前复权 | 无量纲 | 变动率指标-CLOSE, N=12, M=6；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_rsi_qfq_12` | Tushare RSI_12 前复权 | 无量纲 | RSI指标-CLOSE, N=12；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_rsi_qfq_24` | Tushare RSI_24 前复权 | 无量纲 | RSI指标-CLOSE, N=24；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_rsi_qfq_6` | Tushare RSI_6 前复权 | 无量纲 | RSI指标-CLOSE, N=6；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_taq_down_qfq` | Tushare TAQ_DOWN 前复权 | 元 | 唐安奇通道(海龟)交易指标-HIGH, LOW, 20；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_taq_mid_qfq` | Tushare TAQ_MID 前复权 | 元 | 唐安奇通道(海龟)交易指标-HIGH, LOW, 20；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_taq_up_qfq` | Tushare TAQ_UP 前复权 | 元 | 唐安奇通道(海龟)交易指标-HIGH, LOW, 20；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_trix_qfq` | Tushare TRIX 前复权 | 无量纲 | 三重指数平滑平均线-CLOSE, M1=12, M2=20；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_trma_qfq` | Tushare TRMA 前复权 | 无量纲 | 三重指数平滑平均线-CLOSE, M1=12, M2=20；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_vr_qfq` | Tushare VR 前复权 | 无量纲 | VR容量比率-CLOSE, VOL, M1=26；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_wr_qfq` | Tushare WR 前复权 | 无量纲 | W&R 威廉指标-CLOSE, HIGH, LOW, N=10, N1=6；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_wr1_qfq` | Tushare WR1 前复权 | 无量纲 | W&R 威廉指标-CLOSE, HIGH, LOW, N=10, N1=6；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_xsii_td1_qfq` | Tushare XSII_TD1 前复权 | 元 | 薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_xsii_td2_qfq` | Tushare XSII_TD2 前复权 | 元 | 薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_xsii_td3_qfq` | Tushare XSII_TD3 前复权 | 元 | 薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_xsii_td4_qfq` | Tushare XSII_TD4 前复权 | 元 | 薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；前复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_asi_hfq` | Tushare ASI 后复权 | 未确认 | 振动升降指标-OPEN, CLOSE, HIGH, LOW, M1=26, M2=10；后复权；来源预计算参数固定。 来源未明确缩放单位，保留原值 |
+| `ts_asit_hfq` | Tushare ASIT 后复权 | 未确认 | 振动升降指标-OPEN, CLOSE, HIGH, LOW, M1=26, M2=10；后复权；来源预计算参数固定。 来源未明确缩放单位，保留原值 |
+| `ts_atr_hfq` | Tushare ATR 后复权 | 元 | 真实波动N日平均值-CLOSE, HIGH, LOW, N=20；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_bbi_hfq` | Tushare BBI 后复权 | 元 | BBI多空指标-CLOSE, M1=3, M2=6, M3=12, M4=21；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_bias1_hfq` | Tushare BIAS1 后复权 | 无量纲 | BIAS乖离率-CLOSE, L1=6, L2=12, L3=24；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_bias2_hfq` | Tushare BIAS2 后复权 | 无量纲 | BIAS乖离率-CLOSE, L1=6, L2=12, L3=24；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_bias3_hfq` | Tushare BIAS3 后复权 | 无量纲 | BIAS乖离率-CLOSE, L1=6, L2=12, L3=24；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_boll_lower_hfq` | Tushare BOLL_LOWER 后复权 | 元 | BOLL指标，布林带-CLOSE, N=20, P=2；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_boll_mid_hfq` | Tushare BOLL_MID 后复权 | 元 | BOLL指标，布林带-CLOSE, N=20, P=2；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_boll_upper_hfq` | Tushare BOLL_UPPER 后复权 | 元 | BOLL指标，布林带-CLOSE, N=20, P=2；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_brar_ar_hfq` | Tushare BRAR_AR 后复权 | 无量纲 | BRAR情绪指标-OPEN, CLOSE, HIGH, LOW, M1=26；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_brar_br_hfq` | Tushare BRAR_BR 后复权 | 无量纲 | BRAR情绪指标-OPEN, CLOSE, HIGH, LOW, M1=26；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_cci_hfq` | Tushare CCI 后复权 | 无量纲 | 顺势指标又叫CCI指标-CLOSE, HIGH, LOW, N=14；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_cr_hfq` | Tushare CR 后复权 | 无量纲 | CR价格动量指标-CLOSE, HIGH, LOW, N=20；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dfma_dif_hfq` | Tushare DFMA_DIF 后复权 | 元 | 平行线差指标-CLOSE, N1=10, N2=50, M=10；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dfma_difma_hfq` | Tushare DFMA_DIFMA 后复权 | 元 | 平行线差指标-CLOSE, N1=10, N2=50, M=10；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dmi_adx_hfq` | Tushare DMI_ADX 后复权 | 无量纲 | 动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dmi_adxr_hfq` | Tushare DMI_ADXR 后复权 | 无量纲 | 动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dmi_mdi_hfq` | Tushare DMI_MDI 后复权 | 无量纲 | 动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dmi_pdi_hfq` | Tushare DMI_PDI 后复权 | 无量纲 | 动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dpo_hfq` | Tushare DPO 后复权 | 元 | 区间震荡线-CLOSE, M1=20, M2=10, M3=6；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_madpo_hfq` | Tushare MADPO 后复权 | 元 | 区间震荡线-CLOSE, M1=20, M2=10, M3=6；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_hfq_10` | Tushare EMA_10 后复权 | 元 | 指数移动平均-N=10；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_hfq_20` | Tushare EMA_20 后复权 | 元 | 指数移动平均-N=20；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_hfq_250` | Tushare EMA_250 后复权 | 元 | 指数移动平均-N=250；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_hfq_30` | Tushare EMA_30 后复权 | 元 | 指数移动平均-N=30；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_hfq_5` | Tushare EMA_5 后复权 | 元 | 指数移动平均-N=5；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_hfq_60` | Tushare EMA_60 后复权 | 元 | 指数移动平均-N=60；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_hfq_90` | Tushare EMA_90 后复权 | 元 | 指数移动平均-N=90；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_emv_hfq` | Tushare EMV 后复权 | 未确认 | 简易波动指标-HIGH, LOW, VOL, N=14, M=9；后复权；来源预计算参数固定。 来源未明确缩放单位，保留原值 |
+| `ts_maemv_hfq` | Tushare MAEMV 后复权 | 未确认 | 简易波动指标-HIGH, LOW, VOL, N=14, M=9；后复权；来源预计算参数固定。 来源未明确缩放单位，保留原值 |
+| `ts_expma_12_hfq` | Tushare EXPMA_12 后复权 | 元 | EMA指数平均数指标-CLOSE, N1=12, N2=50；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_expma_50_hfq` | Tushare EXPMA_50 后复权 | 元 | EMA指数平均数指标-CLOSE, N1=12, N2=50；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_kdj_hfq` | Tushare KDJ 后复权 | 无量纲 | KDJ指标-CLOSE, HIGH, LOW, N=9, M1=3, M2=3；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_kdj_d_hfq` | Tushare KDJ_D 后复权 | 无量纲 | KDJ指标-CLOSE, HIGH, LOW, N=9, M1=3, M2=3；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_kdj_k_hfq` | Tushare KDJ_K 后复权 | 无量纲 | KDJ指标-CLOSE, HIGH, LOW, N=9, M1=3, M2=3；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ktn_down_hfq` | Tushare KTN_DOWN 后复权 | 元 | 肯特纳交易通道, N选20日，ATR选10日-CLOSE, HIGH, LOW, N=20, M=10；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ktn_mid_hfq` | Tushare KTN_MID 后复权 | 元 | 肯特纳交易通道, N选20日，ATR选10日-CLOSE, HIGH, LOW, N=20, M=10；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ktn_upper_hfq` | Tushare KTN_UPPER 后复权 | 元 | 肯特纳交易通道, N选20日，ATR选10日-CLOSE, HIGH, LOW, N=20, M=10；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_hfq_10` | Tushare MA_10 后复权 | 元 | 简单移动平均-N=10；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_hfq_20` | Tushare MA_20 后复权 | 元 | 简单移动平均-N=20；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_hfq_250` | Tushare MA_250 后复权 | 元 | 简单移动平均-N=250；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_hfq_30` | Tushare MA_30 后复权 | 元 | 简单移动平均-N=30；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_hfq_5` | Tushare MA_5 后复权 | 元 | 简单移动平均-N=5；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_hfq_60` | Tushare MA_60 后复权 | 元 | 简单移动平均-N=60；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_hfq_90` | Tushare MA_90 后复权 | 元 | 简单移动平均-N=90；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_macd_hfq` | Tushare MACD 后复权 | 元 | MACD指标-CLOSE, SHORT=12, LONG=26, M=9；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_macd_dea_hfq` | Tushare MACD_DEA 后复权 | 元 | MACD指标-CLOSE, SHORT=12, LONG=26, M=9；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_macd_dif_hfq` | Tushare MACD_DIF 后复权 | 元 | MACD指标-CLOSE, SHORT=12, LONG=26, M=9；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_mass_hfq` | Tushare MASS 后复权 | 无量纲 | 梅斯线-HIGH, LOW, N1=9, N2=25, M=6；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_mass_hfq` | Tushare MA_MASS 后复权 | 元 | 梅斯线-HIGH, LOW, N1=9, N2=25, M=6；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_mfi_hfq` | Tushare MFI 后复权 | 无量纲 | MFI指标是成交量的RSI指标-CLOSE, HIGH, LOW, VOL, N=14；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_mtm_hfq` | Tushare MTM 后复权 | 元 | 动量指标-CLOSE, N=12, M=6；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_mtmma_hfq` | Tushare MTMMA 后复权 | 元 | 动量指标-CLOSE, N=12, M=6；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_obv_hfq` | Tushare OBV 后复权 | 未确认 | 能量潮指标-CLOSE, VOL；后复权；来源预计算参数固定。 来源未明确缩放单位，保留原值 |
+| `ts_psy_hfq` | Tushare PSY 后复权 | 无量纲 | 投资者对股市涨跌产生心理波动的情绪指标-CLOSE, N=12, M=6；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_psyma_hfq` | Tushare PSYMA 后复权 | 无量纲 | 投资者对股市涨跌产生心理波动的情绪指标-CLOSE, N=12, M=6；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_roc_hfq` | Tushare ROC 后复权 | 无量纲 | 变动率指标-CLOSE, N=12, M=6；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_maroc_hfq` | Tushare MAROC 后复权 | 无量纲 | 变动率指标-CLOSE, N=12, M=6；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_rsi_hfq_12` | Tushare RSI_12 后复权 | 无量纲 | RSI指标-CLOSE, N=12；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_rsi_hfq_24` | Tushare RSI_24 后复权 | 无量纲 | RSI指标-CLOSE, N=24；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_rsi_hfq_6` | Tushare RSI_6 后复权 | 无量纲 | RSI指标-CLOSE, N=6；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_taq_down_hfq` | Tushare TAQ_DOWN 后复权 | 元 | 唐安奇通道(海龟)交易指标-HIGH, LOW, 20；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_taq_mid_hfq` | Tushare TAQ_MID 后复权 | 元 | 唐安奇通道(海龟)交易指标-HIGH, LOW, 20；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_taq_up_hfq` | Tushare TAQ_UP 后复权 | 元 | 唐安奇通道(海龟)交易指标-HIGH, LOW, 20；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_trix_hfq` | Tushare TRIX 后复权 | 无量纲 | 三重指数平滑平均线-CLOSE, M1=12, M2=20；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_trma_hfq` | Tushare TRMA 后复权 | 无量纲 | 三重指数平滑平均线-CLOSE, M1=12, M2=20；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_vr_hfq` | Tushare VR 后复权 | 无量纲 | VR容量比率-CLOSE, VOL, M1=26；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_wr_hfq` | Tushare WR 后复权 | 无量纲 | W&R 威廉指标-CLOSE, HIGH, LOW, N=10, N1=6；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_wr1_hfq` | Tushare WR1 后复权 | 无量纲 | W&R 威廉指标-CLOSE, HIGH, LOW, N=10, N1=6；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_xsii_td1_hfq` | Tushare XSII_TD1 后复权 | 元 | 薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_xsii_td2_hfq` | Tushare XSII_TD2 后复权 | 元 | 薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_xsii_td3_hfq` | Tushare XSII_TD3 后复权 | 元 | 薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_xsii_td4_hfq` | Tushare XSII_TD4 后复权 | 元 | 薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；后复权；来源预计算参数固定。 按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_downdays` | Tushare DOWNDAYS 天数 | 天 | 连跌天数；天数；来源预计算参数固定。 周期为日线，字段表示天数 |
+| `ts_updays` | Tushare UPDAYS 天数 | 天 | 连涨天数；天数；来源预计算参数固定。 周期为日线，字段表示天数 |
+| `ts_lowdays` | Tushare LOWDAYS 天数 | 天 | LOWRANGE(LOW)表示当前最低价是近多少周期内最低价的最小值；天数；来源预计算参数固定。 周期为日线，字段表示天数 |
+| `ts_topdays` | Tushare TOPDAYS 天数 | 天 | TOPRANGE(HIGH)表示当前最高价是近多少周期内最高价的最大值；天数；来源预计算参数固定。 周期为日线，字段表示天数 |
+| `wind_macd_native` | Wind 指数平滑异同移动平均（原生快照） | 元 | Wind MCP原生最新技术快照；可含盘中变化，不支持历史和参数覆盖；完整参数及复权方式未披露。  |
+| `wind_macd_dif_native` | Wind DIF快线（原生快照） | 元 | Wind MCP原生最新技术快照；可含盘中变化，不支持历史和参数覆盖；完整参数及复权方式未披露。  |
+| `wind_sar_native` | Wind 抛物线转向指标（原生快照） | 元 | Wind MCP原生最新技术快照；可含盘中变化，不支持历史和参数覆盖；完整参数及复权方式未披露。  |
+| `wind_boll_mid_native` | Wind 布林中轨（原生快照） | 元 | Wind MCP原生最新技术快照；可含盘中变化，不支持历史和参数覆盖；完整参数及复权方式未披露。  |
+| `wind_boll_upper_native` | Wind 布林上轨（原生快照） | 元 | Wind MCP原生最新技术快照；可含盘中变化，不支持历史和参数覆盖；完整参数及复权方式未披露。  |
+| `wind_boll_lower_native` | Wind 布林下轨（原生快照） | 元 | Wind MCP原生最新技术快照；可含盘中变化，不支持历史和参数覆盖；完整参数及复权方式未披露。  |
+| `wind_ma_5_native` | Wind 5周期移动平均（原生快照） | 元 | Wind MCP原生最新技术快照；可含盘中变化，不支持历史和参数覆盖；完整参数及复权方式未披露。  |
+| `wind_ma_10_native` | Wind 10周期移动平均（原生快照） | 元 | Wind MCP原生最新技术快照；可含盘中变化，不支持历史和参数覆盖；完整参数及复权方式未披露。  |
+| `wind_ma_20_native` | Wind 20周期移动平均（原生快照） | 元 | Wind MCP原生最新技术快照；可含盘中变化，不支持历史和参数覆盖；完整参数及复权方式未披露。  |
+| `wind_ma_60_native` | Wind 60周期移动平均（原生快照） | 元 | Wind MCP原生最新技术快照；可含盘中变化，不支持历史和参数覆盖；完整参数及复权方式未披露。  |
+| `wind_ma_120_native` | Wind 120周期移动平均（原生快照） | 元 | Wind MCP原生最新技术快照；可含盘中变化，不支持历史和参数覆盖；完整参数及复权方式未披露。  |
+| `wind_ma_250_native` | Wind 250日均线（原生快照） | 元 | Wind MCP原生最新技术快照；可含盘中变化，不支持历史和参数覆盖；完整参数及复权方式未披露。  |
+| `wind_kdj_k_native` | Wind 随机指标K值（原生快照） | 无量纲 | Wind MCP原生最新技术快照；可含盘中变化，不支持历史和参数覆盖；完整参数及复权方式未披露。 接口未给出单位；按指标定义标注。RSI/KDJ按原始0至100标度保留，非收益率。 |
+| `wind_kdj_d_native` | Wind 随机指标D值（原生快照） | 无量纲 | Wind MCP原生最新技术快照；可含盘中变化，不支持历史和参数覆盖；完整参数及复权方式未披露。 接口未给出单位；按指标定义标注。RSI/KDJ按原始0至100标度保留，非收益率。 |
+| `wind_kdj_j_native` | Wind 随机指标J值（原生快照） | 无量纲 | Wind MCP原生最新技术快照；可含盘中变化，不支持历史和参数覆盖；完整参数及复权方式未披露。 接口未给出单位；按指标定义标注。RSI/KDJ按原始0至100标度保留，非收益率。 |
+| `wind_rsi_6_native` | Wind 6周期相对强弱指标（原生快照） | 无量纲 | Wind MCP原生最新技术快照；可含盘中变化，不支持历史和参数覆盖；完整参数及复权方式未披露。 接口未给出单位；按指标定义标注。RSI/KDJ按原始0至100标度保留，非收益率。 |
+| `wind_rsi_12_native` | Wind 12周期相对强弱指标（原生快照） | 无量纲 | Wind MCP原生最新技术快照；可含盘中变化，不支持历史和参数覆盖；完整参数及复权方式未披露。 接口未给出单位；按指标定义标注。RSI/KDJ按原始0至100标度保留，非收益率。 |
+| `wind_bias_5_native` | Wind 5日乖离率（原生快照） | % | Wind MCP原生最新技术快照；可含盘中变化，不支持历史和参数覆盖；完整参数及复权方式未披露。 接口未给出单位；按指标定义标注。RSI/KDJ按原始0至100标度保留，非收益率。 |
+| `wind_bias_36_native` | Wind 36日乖离（原生快照） | % | Wind MCP原生最新技术快照；可含盘中变化，不支持历史和参数覆盖；完整参数及复权方式未披露。 接口未给出单位；按指标定义标注。RSI/KDJ按原始0至100标度保留，非收益率。 |
+| `wind_cci_14_native` | Wind 14周期顺势指标（原生快照） | 无量纲 | Wind MCP原生最新技术快照；可含盘中变化，不支持历史和参数覆盖；完整参数及复权方式未披露。 接口未给出单位；按指标定义标注。RSI/KDJ按原始0至100标度保留，非收益率。 |
+| `wind_psy_12_native` | Wind 12周期心理线指标（原生快照） | % | Wind MCP原生最新技术快照；可含盘中变化，不支持历史和参数覆盖；完整参数及复权方式未披露。 接口未给出单位；按指标定义标注。RSI/KDJ按原始0至100标度保留，非收益率。 |
+| `ifind_macd_diff` | iFinD MACD指数平滑异同平均 DIFF | 元 | iFinD MACD指数平滑异同平均 原生日线指标；独立来源字段，参数以返回元数据核验；单位未披露。 接口未附单位；按指标定义及真实返回量级推断。元用于价格均线及价差，百分比按上游数值保留，1表示1个百分点；不另行缩放。 |
+| `ifind_cci` | iFinD CCI顺势指标 | 无量纲 | iFinD CCI顺势指标 原生日线指标；独立来源字段，参数以返回元数据核验；单位未披露。 接口未附单位；按指标定义及真实返回量级推断。元用于价格均线及价差，百分比按上游数值保留，1表示1个百分点；不另行缩放。 |
+| `ifind_macd_dea` | iFinD MACD指数平滑异同平均 DEA | 元 | iFinD MACD指数平滑异同平均 原生日线指标；独立来源字段，参数以返回元数据核验；单位未披露。 接口未附单位；按指标定义及真实返回量级推断。元用于价格均线及价差，百分比按上游数值保留，1表示1个百分点；不另行缩放。 |
+| `ifind_boll_mid` | iFinD BOLL布林线 MID | 元 | iFinD BOLL布林线 原生日线指标；独立来源字段，参数以返回元数据核验；单位未披露。 接口未附单位；按指标定义及真实返回量级推断。元用于价格均线及价差，百分比按上游数值保留，1表示1个百分点；不另行缩放。 |
+| `ifind_macd_macd` | iFinD MACD指数平滑异同平均 MACD | 元 | iFinD MACD指数平滑异同平均 原生日线指标；独立来源字段，参数以返回元数据核验；单位未披露。 接口未附单位；按指标定义及真实返回量级推断。元用于价格均线及价差，百分比按上游数值保留，1表示1个百分点；不另行缩放。 |
+| `ifind_rsi` | iFinD RSI相对强弱指标 | 无量纲 | iFinD RSI相对强弱指标 原生日线指标；独立来源字段，参数以返回元数据核验；单位未披露。 接口未附单位；按指标定义及真实返回量级推断。元用于价格均线及价差，百分比按上游数值保留，1表示1个百分点；不另行缩放。 |
+| `ifind_ma` | iFinD MA简单移动平均 | 元 | iFinD MA简单移动平均 原生日线指标；独立来源字段，参数以返回元数据核验；单位未披露。 接口未附单位；按指标定义及真实返回量级推断。元用于价格均线及价差，百分比按上游数值保留，1表示1个百分点；不另行缩放。 |
+| `ifind_mtm_mtm` | iFinD MTM动力指标 MTM | 元 | iFinD MTM动力指标 原生日线指标；独立来源字段，参数以返回元数据核验；单位未披露。 接口未附单位；按指标定义及真实返回量级推断。元用于价格均线及价差，百分比按上游数值保留，1表示1个百分点；不另行缩放。 |
+| `ifind_bbi` | iFinD BBI多空指数 | 元 | iFinD BBI多空指数 原生日线指标；独立来源字段，参数以返回元数据核验；单位未披露。 接口未附单位；按指标定义及真实返回量级推断。元用于价格均线及价差，百分比按上游数值保留，1表示1个百分点；不另行缩放。 |
+| `ifind_roc_roc` | iFinD ROC变动速率 ROC | % | iFinD ROC变动速率 原生日线指标；独立来源字段，参数以返回元数据核验；单位未披露。 接口未附单位；按指标定义及真实返回量级推断。元用于价格均线及价差，百分比按上游数值保留，1表示1个百分点；不另行缩放。 |
+| `ifind_expma` | iFinD EXPMA指数平均数 | 元 | iFinD EXPMA指数平均数 原生日线指标；独立来源字段，参数以返回元数据核验；单位未披露。 接口未附单位；按指标定义及真实返回量级推断。元用于价格均线及价差，百分比按上游数值保留，1表示1个百分点；不另行缩放。 |
+| `ifind_wr` | iFinD WR威廉指标 | 无量纲 | iFinD WR威廉指标 原生日线指标；独立来源字段，参数以返回元数据核验；单位未披露。 接口未附单位；按指标定义及真实返回量级推断。元用于价格均线及价差，百分比按上游数值保留，1表示1个百分点；不另行缩放。 |
+| `ifind_bias` | iFinD BIAS乖离率 | % | iFinD BIAS乖离率 原生日线指标；独立来源字段，参数以返回元数据核验；单位未披露。 接口未附单位；按指标定义及真实返回量级推断。元用于价格均线及价差，百分比按上游数值保留，1表示1个百分点；不另行缩放。 |
+| `ifind_trix_trix` | iFinD TRIX三重指数平滑平均 TRIX | % | iFinD TRIX三重指数平滑平均 原生日线指标；独立来源字段，参数以返回元数据核验；单位未披露。 接口未附单位；按指标定义及真实返回量级推断。元用于价格均线及价差，百分比按上游数值保留，1表示1个百分点；不另行缩放。 |
+| `ifind_obv_obv` | iFinD OBV能量潮 OBV | 来源原值 | iFinD OBV能量潮 原生日线指标；独立来源字段，参数以返回元数据核验；单位未披露。 真实接口未返回单位或缩放标签；数值不转换，不将OBV等推断为股或手。 |
+| `ifind_psy_psy` | iFinD PSY心理指标 PSY | % | iFinD PSY心理指标 原生日线指标；独立来源字段，参数以返回元数据核验；单位未披露。 接口未附单位；按指标定义及真实返回量级推断。元用于价格均线及价差，百分比按上游数值保留，1表示1个百分点；不另行缩放。 |
+| `ifind_dpo_dpo` | iFinD DPO区间震荡线 DPO | 元 | iFinD DPO区间震荡线 原生日线指标；独立来源字段，参数以返回元数据核验；单位未披露。 接口未附单位；按指标定义及真实返回量级推断。元用于价格均线及价差，百分比按上游数值保留，1表示1个百分点；不另行缩放。 |
+| `ifind_atr_atr` | iFinD ATR真实波幅 ATR | 元 | iFinD ATR真实波幅 原生日线指标；独立来源字段，参数以返回元数据核验；单位未披露。 接口未附单位；按指标定义及真实返回量级推断。元用于价格均线及价差，百分比按上游数值保留，1表示1个百分点；不另行缩放。 |
+| `ifind_dma_ddd` | iFinD DMA平均线差 DDD | 元 | iFinD DMA平均线差 原生日线指标；独立来源字段，参数以返回元数据核验；单位未披露。 接口未附单位；按指标定义及真实返回量级推断。元用于价格均线及价差，百分比按上游数值保留，1表示1个百分点；不另行缩放。 |
+| `ifind_arbr_br` | iFinD 人气意愿指标(ARBR) BR | 无量纲 | iFinD 人气意愿指标(ARBR) 原生日线指标；独立来源字段，参数以返回元数据核验；单位未披露。 接口未附单位；按指标定义及真实返回量级推断。元用于价格均线及价差，百分比按上游数值保留，1表示1个百分点；不另行缩放。 |
+| `ifind_mass` | iFinD MASS梅斯线 | 无量纲 | iFinD MASS梅斯线 原生日线指标；独立来源字段，参数以返回元数据核验；单位未披露。 接口未附单位；按指标定义及真实返回量级推断。元用于价格均线及价差，百分比按上游数值保留，1表示1个百分点；不另行缩放。 |
+| `ifind_mfi` | iFinD MFI资金流向指标 | 无量纲 | iFinD MFI资金流向指标 原生日线指标；独立来源字段，参数以返回元数据核验；单位未披露。 接口未附单位；按指标定义及真实返回量级推断。元用于价格均线及价差，百分比按上游数值保留，1表示1个百分点；不另行缩放。 |
+| `ifind_cr` | iFinD CR能量指标 | 无量纲 | iFinD CR能量指标 原生日线指标；独立来源字段，参数以返回元数据核验；单位未披露。 接口未附单位；按指标定义及真实返回量级推断。元用于价格均线及价差，百分比按上游数值保留，1表示1个百分点；不另行缩放。 |
+| `ifind_kdj_k` | iFinD KDJ随机指标 K | 无量纲 | iFinD KDJ随机指标 原生日线指标；独立来源字段，参数以返回元数据核验；单位未披露。 接口未附单位；按指标定义及真实返回量级推断。元用于价格均线及价差，百分比按上游数值保留，1表示1个百分点；不另行缩放。 |
+| `ifind_boll_upper` | iFinD BOLL布林线 UPPER | 元 | iFinD BOLL布林线 原生日线指标；独立来源字段，参数以返回元数据核验；单位未披露。 接口未附单位；按指标定义及真实返回量级推断。元用于价格均线及价差，百分比按上游数值保留，1表示1个百分点；不另行缩放。 |
+| `ifind_boll_lower` | iFinD BOLL布林线 LOWER | 元 | iFinD BOLL布林线 原生日线指标；独立来源字段，参数以返回元数据核验；单位未披露。 接口未附单位；按指标定义及真实返回量级推断。元用于价格均线及价差，百分比按上游数值保留，1表示1个百分点；不另行缩放。 |
+| `ifind_kdj_j` | iFinD KDJ随机指标 J | 无量纲 | iFinD KDJ随机指标 原生日线指标；独立来源字段，参数以返回元数据核验；单位未披露。 接口未附单位；按指标定义及真实返回量级推断。元用于价格均线及价差，百分比按上游数值保留，1表示1个百分点；不另行缩放。 |
+| `ifind_kdj_d` | iFinD KDJ随机指标 D | 无量纲 | iFinD KDJ随机指标 原生日线指标；独立来源字段，参数以返回元数据核验；单位未披露。 接口未附单位；按指标定义及真实返回量级推断。元用于价格均线及价差，百分比按上游数值保留，1表示1个百分点；不另行缩放。 |
+| `wind_history_bbi` | Wind BBI（历史） | 元 | Wind BBI历史日线；来源默认参数；未披露项不假定与其他厂商相同。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_expma` | Wind EXPMA（历史） | 元 | Wind EXPMA历史日线；来源默认参数；未披露项不假定与其他厂商相同。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_psy` | Wind PSY（历史） | % | Wind PSY历史日线；来源默认参数；未披露项不假定与其他厂商相同。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_kdj_k` | Wind KDJ（历史） K | 无量纲 | Wind KDJ历史日线 K；来源默认参数；未披露项不假定与其他厂商相同。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_kdj_d` | Wind KDJ（历史） D | 无量纲 | Wind KDJ历史日线 D；来源默认参数；未披露项不假定与其他厂商相同。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_kdj_j` | Wind KDJ（历史） J | 无量纲 | Wind KDJ历史日线 J；来源默认参数；未披露项不假定与其他厂商相同。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_wr` | Wind WR（历史） | 无量纲 | Wind WR历史日线；来源默认参数；未披露项不假定与其他厂商相同。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_ar` | Wind AR（历史） | 无量纲 | Wind AR历史日线；来源默认参数；未披露项不假定与其他厂商相同。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_sar` | Wind SAR（历史） | 元 | Wind SAR历史日线；来源默认参数；未披露项不假定与其他厂商相同。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_dma` | Wind DMA（历史） | 元 | Wind DMA历史日线；来源默认参数；未披露项不假定与其他厂商相同。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_boll_upper` | Wind BOLL（历史） UPPER | 元 | Wind BOLL历史日线 UPPER；来源默认参数；未披露项不假定与其他厂商相同。当前取法固定26日、带宽2。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_boll_mid` | Wind BOLL（历史） MID | 元 | Wind BOLL历史日线 MID；来源默认参数；未披露项不假定与其他厂商相同。当前取法固定26日、带宽2。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_boll_lower` | Wind BOLL（历史） LOWER | 元 | Wind BOLL历史日线 LOWER；来源默认参数；未披露项不假定与其他厂商相同。当前取法固定26日、带宽2。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_mfi` | Wind MFI（历史） | 无量纲 | Wind MFI历史日线；来源默认参数；未披露项不假定与其他厂商相同。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_mtm` | Wind MTM（历史） | 元 | Wind MTM历史日线；来源默认参数；未披露项不假定与其他厂商相同。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_trix` | Wind TRIX（历史） | % | Wind TRIX历史日线；来源默认参数；未披露项不假定与其他厂商相同。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_roc` | Wind ROC（历史） | % | Wind ROC历史日线；来源默认参数；未披露项不假定与其他厂商相同。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_rsi` | Wind RSI（历史） | 无量纲 | Wind RSI历史日线；周期可调，返回周期须匹配。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_atr` | Wind ATR（历史） | 元 | Wind ATR历史日线；来源默认参数；未披露项不假定与其他厂商相同。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_obv` | Wind OBV（历史） | 来源原值 | Wind OBV历史日线；来源默认参数；未披露项不假定与其他厂商相同。 来源未披露成交量单位或比率缩放，保留原值，不能据此当作股、手或百分数。 |
+| `wind_history_bias` | Wind BIAS（历史） | % | Wind BIAS历史日线；来源默认参数；未披露项不假定与其他厂商相同。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_macd_dif` | Wind MACD（历史） DIF | 元 | Wind MACD历史日线 DIF；来源默认参数；未披露项不假定与其他厂商相同。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_macd_dea` | Wind MACD（历史） DEA | 元 | Wind MACD历史日线 DEA；来源默认参数；未披露项不假定与其他厂商相同。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_macd_macd` | Wind MACD（历史） MACD | 元 | Wind MACD历史日线 MACD；来源默认参数；未披露项不假定与其他厂商相同。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_cci` | Wind CCI（历史） | 无量纲 | Wind CCI历史日线；来源默认参数；未披露项不假定与其他厂商相同。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_cr` | Wind CR（历史） | 无量纲 | Wind CR历史日线；来源默认参数；未披露项不假定与其他厂商相同。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_vr` | Wind VR（历史） | 来源原值 | Wind VR历史日线；来源默认参数；未披露项不假定与其他厂商相同。 来源未披露成交量单位或比率缩放，保留原值，不能据此当作股、手或百分数。 |
+| `wind_history_dmi_pdi` | Wind DMI（历史） PDI | 无量纲 | Wind DMI历史日线 PDI；来源默认参数；未披露项不假定与其他厂商相同。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_dmi_mdi` | Wind DMI（历史） MDI | 无量纲 | Wind DMI历史日线 MDI；来源默认参数；未披露项不假定与其他厂商相同。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_dmi_adx` | Wind DMI（历史） ADX | 无量纲 | Wind DMI历史日线 ADX；来源默认参数；未披露项不假定与其他厂商相同。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_dmi_adxr` | Wind DMI（历史） ADXR | 无量纲 | Wind DMI历史日线 ADXR；来源默认参数；未披露项不假定与其他厂商相同。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_ma` | Wind MA（历史） | 元 | Wind MA历史日线；周期可调，返回周期须匹配。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 
 | 字段 | 来源 | 取数方案 → 方法 | 返回列／问句指标 | 转换／说明 |
 | --- | --- | --- | --- | --- |
 | `kdj_k` | tushare | — | — | 尚未确认同口径取法 |
-| `kdj_k` | akshare | — | — | 尚未确认同口径取法 |
+| `kdj_k` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `kdj_k` | wind | — | — | 尚未确认同口径取法 |
 | `kdj_k` | ifind | — | — | 尚未确认同口径取法 |
 | `kdj_k` | tdx | `tdx_kdj` → `tdx_technical_indicator_query` | K | 原单位：无量纲；×1；KDJ原生算法；复权方式未披露 |
 | `kdj_d` | tushare | — | — | 尚未确认同口径取法 |
-| `kdj_d` | akshare | — | — | 尚未确认同口径取法 |
+| `kdj_d` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `kdj_d` | wind | — | — | 尚未确认同口径取法 |
 | `kdj_d` | ifind | — | — | 尚未确认同口径取法 |
 | `kdj_d` | tdx | `tdx_kdj` → `tdx_technical_indicator_query` | D | 原单位：无量纲；×1；KDJ原生算法；复权方式未披露 |
 | `kdj_j` | tushare | — | — | 尚未确认同口径取法 |
-| `kdj_j` | akshare | — | — | 尚未确认同口径取法 |
+| `kdj_j` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `kdj_j` | wind | — | — | 尚未确认同口径取法 |
 | `kdj_j` | ifind | — | — | 尚未确认同口径取法 |
 | `kdj_j` | tdx | `tdx_kdj` → `tdx_technical_indicator_query` | J | 原单位：无量纲；×1；KDJ原生算法；复权方式未披露 |
+| `macd_dif` | tushare | — | — | 尚未确认同口径取法 |
+| `macd_dif` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `macd_dif` | wind | — | — | 尚未确认同口径取法 |
+| `macd_dif` | ifind | — | — | 尚未确认同口径取法 |
+| `macd_dif` | tdx | `tdx_macd` → `tdx_technical_indicator_query` | DIF | 原单位：元；×1；价格及价差以元计；RSI为0至100标度而非收益率百分比。 |
+| `macd_dea` | tushare | — | — | 尚未确认同口径取法 |
+| `macd_dea` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `macd_dea` | wind | — | — | 尚未确认同口径取法 |
+| `macd_dea` | ifind | — | — | 尚未确认同口径取法 |
+| `macd_dea` | tdx | `tdx_macd` → `tdx_technical_indicator_query` | DEA | 原单位：元；×1；价格及价差以元计；RSI为0至100标度而非收益率百分比。 |
+| `macd_macd` | tushare | — | — | 尚未确认同口径取法 |
+| `macd_macd` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `macd_macd` | wind | — | — | 尚未确认同口径取法 |
+| `macd_macd` | ifind | — | — | 尚未确认同口径取法 |
+| `macd_macd` | tdx | `tdx_macd` → `tdx_technical_indicator_query` | MACD | 原单位：元；×1；价格及价差以元计；RSI为0至100标度而非收益率百分比。 |
+| `rsi_rsi1` | tushare | — | — | 尚未确认同口径取法 |
+| `rsi_rsi1` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `rsi_rsi1` | wind | — | — | 尚未确认同口径取法 |
+| `rsi_rsi1` | ifind | — | — | 尚未确认同口径取法 |
+| `rsi_rsi1` | tdx | `tdx_rsi` → `tdx_technical_indicator_query` | RSI1 | 原单位：无量纲；×1；价格及价差以元计；RSI为0至100标度而非收益率百分比。 |
+| `rsi_rsi2` | tushare | — | — | 尚未确认同口径取法 |
+| `rsi_rsi2` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `rsi_rsi2` | wind | — | — | 尚未确认同口径取法 |
+| `rsi_rsi2` | ifind | — | — | 尚未确认同口径取法 |
+| `rsi_rsi2` | tdx | `tdx_rsi` → `tdx_technical_indicator_query` | RSI2 | 原单位：无量纲；×1；价格及价差以元计；RSI为0至100标度而非收益率百分比。 |
+| `rsi_rsi3` | tushare | — | — | 尚未确认同口径取法 |
+| `rsi_rsi3` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `rsi_rsi3` | wind | — | — | 尚未确认同口径取法 |
+| `rsi_rsi3` | ifind | — | — | 尚未确认同口径取法 |
+| `rsi_rsi3` | tdx | `tdx_rsi` → `tdx_technical_indicator_query` | RSI3 | 原单位：无量纲；×1；价格及价差以元计；RSI为0至100标度而非收益率百分比。 |
+| `boll_boll` | tushare | — | — | 尚未确认同口径取法 |
+| `boll_boll` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `boll_boll` | wind | — | — | 尚未确认同口径取法 |
+| `boll_boll` | ifind | — | — | 尚未确认同口径取法 |
+| `boll_boll` | tdx | `tdx_boll` → `tdx_technical_indicator_query` | BOLL | 原单位：元；×1；价格及价差以元计；RSI为0至100标度而非收益率百分比。 |
+| `boll_ub` | tushare | — | — | 尚未确认同口径取法 |
+| `boll_ub` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `boll_ub` | wind | — | — | 尚未确认同口径取法 |
+| `boll_ub` | ifind | — | — | 尚未确认同口径取法 |
+| `boll_ub` | tdx | `tdx_boll` → `tdx_technical_indicator_query` | UB | 原单位：元；×1；价格及价差以元计；RSI为0至100标度而非收益率百分比。 |
+| `boll_lb` | tushare | — | — | 尚未确认同口径取法 |
+| `boll_lb` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `boll_lb` | wind | — | — | 尚未确认同口径取法 |
+| `boll_lb` | ifind | — | — | 尚未确认同口径取法 |
+| `boll_lb` | tdx | `tdx_boll` → `tdx_technical_indicator_query` | LB | 原单位：元；×1；价格及价差以元计；RSI为0至100标度而非收益率百分比。 |
+| `ma_ma1` | tushare | — | — | 尚未确认同口径取法 |
+| `ma_ma1` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ma_ma1` | wind | — | — | 尚未确认同口径取法 |
+| `ma_ma1` | ifind | — | — | 尚未确认同口径取法 |
+| `ma_ma1` | tdx | `tdx_ma` → `tdx_technical_indicator_query` | MA1 | 原单位：元；×1；M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 |
+| `ma_ma2` | tushare | — | — | 尚未确认同口径取法 |
+| `ma_ma2` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ma_ma2` | wind | — | — | 尚未确认同口径取法 |
+| `ma_ma2` | ifind | — | — | 尚未确认同口径取法 |
+| `ma_ma2` | tdx | `tdx_ma` → `tdx_technical_indicator_query` | MA2 | 原单位：元；×1；M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 |
+| `ma_ma3` | tushare | — | — | 尚未确认同口径取法 |
+| `ma_ma3` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ma_ma3` | wind | — | — | 尚未确认同口径取法 |
+| `ma_ma3` | ifind | — | — | 尚未确认同口径取法 |
+| `ma_ma3` | tdx | `tdx_ma` → `tdx_technical_indicator_query` | MA3 | 原单位：元；×1；M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 |
+| `ma_ma4` | tushare | — | — | 尚未确认同口径取法 |
+| `ma_ma4` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ma_ma4` | wind | — | — | 尚未确认同口径取法 |
+| `ma_ma4` | ifind | — | — | 尚未确认同口径取法 |
+| `ma_ma4` | tdx | `tdx_ma` → `tdx_technical_indicator_query` | MA4 | 原单位：元；×1；M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 |
+| `ma_ma5` | tushare | — | — | 尚未确认同口径取法 |
+| `ma_ma5` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ma_ma5` | wind | — | — | 尚未确认同口径取法 |
+| `ma_ma5` | ifind | — | — | 尚未确认同口径取法 |
+| `ma_ma5` | tdx | `tdx_ma` → `tdx_technical_indicator_query` | MA5 | 原单位：元；×1；M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 |
+| `ma_ma6` | tushare | — | — | 尚未确认同口径取法 |
+| `ma_ma6` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ma_ma6` | wind | — | — | 尚未确认同口径取法 |
+| `ma_ma6` | ifind | — | — | 尚未确认同口径取法 |
+| `ma_ma6` | tdx | `tdx_ma` → `tdx_technical_indicator_query` | MA6 | 原单位：元；×1；M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 |
+| `ma_ma7` | tushare | — | — | 尚未确认同口径取法 |
+| `ma_ma7` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ma_ma7` | wind | — | — | 尚未确认同口径取法 |
+| `ma_ma7` | ifind | — | — | 尚未确认同口径取法 |
+| `ma_ma7` | tdx | `tdx_ma` → `tdx_technical_indicator_query` | MA7 | 原单位：元；×1；M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 |
+| `ma_ma8` | tushare | — | — | 尚未确认同口径取法 |
+| `ma_ma8` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ma_ma8` | wind | — | — | 尚未确认同口径取法 |
+| `ma_ma8` | ifind | — | — | 尚未确认同口径取法 |
+| `ma_ma8` | tdx | `tdx_ma` → `tdx_technical_indicator_query` | MA8 | 原单位：元；×1；M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 |
+| `expma_exp1` | tushare | — | — | 尚未确认同口径取法 |
+| `expma_exp1` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `expma_exp1` | wind | — | — | 尚未确认同口径取法 |
+| `expma_exp1` | ifind | — | — | 尚未确认同口径取法 |
+| `expma_exp1` | tdx | `tdx_expma` → `tdx_technical_indicator_query` | EXP1 | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `expma_exp2` | tushare | — | — | 尚未确认同口径取法 |
+| `expma_exp2` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `expma_exp2` | wind | — | — | 尚未确认同口径取法 |
+| `expma_exp2` | ifind | — | — | 尚未确认同口径取法 |
+| `expma_exp2` | tdx | `tdx_expma` → `tdx_technical_indicator_query` | EXP2 | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `bbi_bbi` | tushare | — | — | 尚未确认同口径取法 |
+| `bbi_bbi` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `bbi_bbi` | wind | — | — | 尚未确认同口径取法 |
+| `bbi_bbi` | ifind | — | — | 尚未确认同口径取法 |
+| `bbi_bbi` | tdx | `tdx_bbi` → `tdx_technical_indicator_query` | BBI | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `dmi_pdi` | tushare | — | — | 尚未确认同口径取法 |
+| `dmi_pdi` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `dmi_pdi` | wind | — | — | 尚未确认同口径取法 |
+| `dmi_pdi` | ifind | — | — | 尚未确认同口径取法 |
+| `dmi_pdi` | tdx | `tdx_dmi` → `tdx_technical_indicator_query` | PDI | 原单位：无量纲；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `dmi_mdi` | tushare | — | — | 尚未确认同口径取法 |
+| `dmi_mdi` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `dmi_mdi` | wind | — | — | 尚未确认同口径取法 |
+| `dmi_mdi` | ifind | — | — | 尚未确认同口径取法 |
+| `dmi_mdi` | tdx | `tdx_dmi` → `tdx_technical_indicator_query` | MDI | 原单位：无量纲；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `dmi_adx` | tushare | — | — | 尚未确认同口径取法 |
+| `dmi_adx` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `dmi_adx` | wind | — | — | 尚未确认同口径取法 |
+| `dmi_adx` | ifind | — | — | 尚未确认同口径取法 |
+| `dmi_adx` | tdx | `tdx_dmi` → `tdx_technical_indicator_query` | ADX | 原单位：无量纲；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `dmi_adxr` | tushare | — | — | 尚未确认同口径取法 |
+| `dmi_adxr` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `dmi_adxr` | wind | — | — | 尚未确认同口径取法 |
+| `dmi_adxr` | ifind | — | — | 尚未确认同口径取法 |
+| `dmi_adxr` | tdx | `tdx_dmi` → `tdx_technical_indicator_query` | ADXR | 原单位：无量纲；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `cci_cci` | tushare | — | — | 尚未确认同口径取法 |
+| `cci_cci` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `cci_cci` | wind | — | — | 尚未确认同口径取法 |
+| `cci_cci` | ifind | — | — | 尚未确认同口径取法 |
+| `cci_cci` | tdx | `tdx_cci` → `tdx_technical_indicator_query` | CCI | 原单位：无量纲；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `roc_roc` | tushare | — | — | 尚未确认同口径取法 |
+| `roc_roc` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `roc_roc` | wind | — | — | 尚未确认同口径取法 |
+| `roc_roc` | ifind | — | — | 尚未确认同口径取法 |
+| `roc_roc` | tdx | `tdx_roc` → `tdx_technical_indicator_query` | ROC | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `roc_maroc` | tushare | — | — | 尚未确认同口径取法 |
+| `roc_maroc` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `roc_maroc` | wind | — | — | 尚未确认同口径取法 |
+| `roc_maroc` | ifind | — | — | 尚未确认同口径取法 |
+| `roc_maroc` | tdx | `tdx_roc` → `tdx_technical_indicator_query` | MAROC | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `mtm_mtm` | tushare | — | — | 尚未确认同口径取法 |
+| `mtm_mtm` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `mtm_mtm` | wind | — | — | 尚未确认同口径取法 |
+| `mtm_mtm` | ifind | — | — | 尚未确认同口径取法 |
+| `mtm_mtm` | tdx | `tdx_mtm` → `tdx_technical_indicator_query` | MTM | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `mtm_mtmma` | tushare | — | — | 尚未确认同口径取法 |
+| `mtm_mtmma` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `mtm_mtmma` | wind | — | — | 尚未确认同口径取法 |
+| `mtm_mtmma` | ifind | — | — | 尚未确认同口径取法 |
+| `mtm_mtmma` | tdx | `tdx_mtm` → `tdx_technical_indicator_query` | MTMMA | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `wr_wr1` | tushare | — | — | 尚未确认同口径取法 |
+| `wr_wr1` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `wr_wr1` | wind | — | — | 尚未确认同口径取法 |
+| `wr_wr1` | ifind | — | — | 尚未确认同口径取法 |
+| `wr_wr1` | tdx | `tdx_wr` → `tdx_technical_indicator_query` | WR1 | 原单位：无量纲；×1；通达信0至100反向标度，数值越小越靠近区间高点；不转为负值Williams %R。 |
+| `wr_wr2` | tushare | — | — | 尚未确认同口径取法 |
+| `wr_wr2` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `wr_wr2` | wind | — | — | 尚未确认同口径取法 |
+| `wr_wr2` | ifind | — | — | 尚未确认同口径取法 |
+| `wr_wr2` | tdx | `tdx_wr` → `tdx_technical_indicator_query` | WR2 | 原单位：无量纲；×1；通达信0至100反向标度，数值越小越靠近区间高点；不转为负值Williams %R。 |
+| `bias_bias1` | tushare | — | — | 尚未确认同口径取法 |
+| `bias_bias1` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `bias_bias1` | wind | — | — | 尚未确认同口径取法 |
+| `bias_bias1` | ifind | — | — | 尚未确认同口径取法 |
+| `bias_bias1` | tdx | `tdx_bias` → `tdx_technical_indicator_query` | BIAS1 | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `bias_bias2` | tushare | — | — | 尚未确认同口径取法 |
+| `bias_bias2` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `bias_bias2` | wind | — | — | 尚未确认同口径取法 |
+| `bias_bias2` | ifind | — | — | 尚未确认同口径取法 |
+| `bias_bias2` | tdx | `tdx_bias` → `tdx_technical_indicator_query` | BIAS2 | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `bias_bias3` | tushare | — | — | 尚未确认同口径取法 |
+| `bias_bias3` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `bias_bias3` | wind | — | — | 尚未确认同口径取法 |
+| `bias_bias3` | ifind | — | — | 尚未确认同口径取法 |
+| `bias_bias3` | tdx | `tdx_bias` → `tdx_technical_indicator_query` | BIAS3 | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `trix_trix` | tushare | — | — | 尚未确认同口径取法 |
+| `trix_trix` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `trix_trix` | wind | — | — | 尚未确认同口径取法 |
+| `trix_trix` | ifind | — | — | 尚未确认同口径取法 |
+| `trix_trix` | tdx | `tdx_trix` → `tdx_technical_indicator_query` | TRIX | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `trix_matrix` | tushare | — | — | 尚未确认同口径取法 |
+| `trix_matrix` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `trix_matrix` | wind | — | — | 尚未确认同口径取法 |
+| `trix_matrix` | ifind | — | — | 尚未确认同口径取法 |
+| `trix_matrix` | tdx | `tdx_trix` → `tdx_technical_indicator_query` | MATRIX | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `psy_psy` | tushare | — | — | 尚未确认同口径取法 |
+| `psy_psy` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `psy_psy` | wind | — | — | 尚未确认同口径取法 |
+| `psy_psy` | ifind | — | — | 尚未确认同口径取法 |
+| `psy_psy` | tdx | `tdx_psy` → `tdx_technical_indicator_query` | PSY | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `psy_psyma` | tushare | — | — | 尚未确认同口径取法 |
+| `psy_psyma` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `psy_psyma` | wind | — | — | 尚未确认同口径取法 |
+| `psy_psyma` | ifind | — | — | 尚未确认同口径取法 |
+| `psy_psyma` | tdx | `tdx_psy` → `tdx_technical_indicator_query` | PSYMA | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `obv_obv` | tushare | — | — | 尚未确认同口径取法 |
+| `obv_obv` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `obv_obv` | wind | — | — | 尚未确认同口径取法 |
+| `obv_obv` | ifind | — | — | 尚未确认同口径取法 |
+| `obv_obv` | tdx | `tdx_obv` → `tdx_technical_indicator_query` | OBV | 原单位：手；×1；有符号成交量累计，单位手；起始累计基准由厂商决定。样本相邻差值与VOL一致。 |
+| `obv_maobv` | tushare | — | — | 尚未确认同口径取法 |
+| `obv_maobv` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `obv_maobv` | wind | — | — | 尚未确认同口径取法 |
+| `obv_maobv` | ifind | — | — | 尚未确认同口径取法 |
+| `obv_maobv` | tdx | `tdx_obv` → `tdx_technical_indicator_query` | MAOBV | 原单位：手；×1；有符号成交量累计，单位手；起始累计基准由厂商决定。样本相邻差值与VOL一致。 |
+| `vr_vr` | tushare | — | — | 尚未确认同口径取法 |
+| `vr_vr` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `vr_vr` | wind | — | — | 尚未确认同口径取法 |
+| `vr_vr` | ifind | — | — | 尚未确认同口径取法 |
+| `vr_vr` | tdx | `tdx_vr` → `tdx_technical_indicator_query` | VR | 原单位：%；×1；成交量比率乘100的原生标度；100表示比率1，不是证券收益率。 |
+| `vr_mavr` | tushare | — | — | 尚未确认同口径取法 |
+| `vr_mavr` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `vr_mavr` | wind | — | — | 尚未确认同口径取法 |
+| `vr_mavr` | ifind | — | — | 尚未确认同口径取法 |
+| `vr_mavr` | tdx | `tdx_vr` → `tdx_technical_indicator_query` | MAVR | 原单位：%；×1；成交量比率乘100的原生标度；100表示比率1，不是证券收益率。 |
+| `vol_volume` | tushare | — | — | 尚未确认同口径取法 |
+| `vol_volume` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `vol_volume` | wind | — | — | 尚未确认同口径取法 |
+| `vol_volume` | ifind | — | — | 尚未确认同口径取法 |
+| `vol_volume` | tdx | `tdx_vol` → `tdx_technical_indicator_query` | VOLUME | 原单位：手；×1；A股成交量单位按通达信手计；1手=100股。 |
+| `vol_mavol1` | tushare | — | — | 尚未确认同口径取法 |
+| `vol_mavol1` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `vol_mavol1` | wind | — | — | 尚未确认同口径取法 |
+| `vol_mavol1` | ifind | — | — | 尚未确认同口径取法 |
+| `vol_mavol1` | tdx | `tdx_vol` → `tdx_technical_indicator_query` | MAVOL1 | 原单位：手；×1；A股成交量单位按通达信手计；1手=100股。 |
+| `vol_mavol2` | tushare | — | — | 尚未确认同口径取法 |
+| `vol_mavol2` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `vol_mavol2` | wind | — | — | 尚未确认同口径取法 |
+| `vol_mavol2` | ifind | — | — | 尚未确认同口径取法 |
+| `vol_mavol2` | tdx | `tdx_vol` → `tdx_technical_indicator_query` | MAVOL2 | 原单位：手；×1；A股成交量单位按通达信手计；1手=100股。 |
+| `atr_mtr` | tushare | — | — | 尚未确认同口径取法 |
+| `atr_mtr` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `atr_mtr` | wind | — | — | 尚未确认同口径取法 |
+| `atr_mtr` | ifind | — | — | 尚未确认同口径取法 |
+| `atr_mtr` | tdx | `tdx_atr` → `tdx_technical_indicator_query` | MTR | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `atr_atr` | tushare | — | — | 尚未确认同口径取法 |
+| `atr_atr` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `atr_atr` | wind | — | — | 尚未确认同口径取法 |
+| `atr_atr` | ifind | — | — | 尚未确认同口径取法 |
+| `atr_atr` | tdx | `tdx_atr` → `tdx_technical_indicator_query` | ATR | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `dma_dif` | tushare | — | — | 尚未确认同口径取法 |
+| `dma_dif` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `dma_dif` | wind | — | — | 尚未确认同口径取法 |
+| `dma_dif` | ifind | — | — | 尚未确认同口径取法 |
+| `dma_dif` | tdx | `tdx_dma` → `tdx_technical_indicator_query` | DIF | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `dma_difma` | tushare | — | — | 尚未确认同口径取法 |
+| `dma_difma` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `dma_difma` | wind | — | — | 尚未确认同口径取法 |
+| `dma_difma` | ifind | — | — | 尚未确认同口径取法 |
+| `dma_difma` | tdx | `tdx_dma` → `tdx_technical_indicator_query` | DIFMA | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `emv_emv` | tushare | — | — | 尚未确认同口径取法 |
+| `emv_emv` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `emv_emv` | wind | — | — | 尚未确认同口径取法 |
+| `emv_emv` | ifind | — | — | 尚未确认同口径取法 |
+| `emv_emv` | tdx | `tdx_emv` → `tdx_technical_indicator_query` | EMV | 原单位：来源原生值；×1；接口未披露该分量公式量纲及缩放，保留厂商原生值，不认定为元或百分比。 |
+| `emv_maemv` | tushare | — | — | 尚未确认同口径取法 |
+| `emv_maemv` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `emv_maemv` | wind | — | — | 尚未确认同口径取法 |
+| `emv_maemv` | ifind | — | — | 尚未确认同口径取法 |
+| `emv_maemv` | tdx | `tdx_emv` → `tdx_technical_indicator_query` | MAEMV | 原单位：来源原生值；×1；接口未披露该分量公式量纲及缩放，保留厂商原生值，不认定为元或百分比。 |
+| `dpo_dpo` | tushare | — | — | 尚未确认同口径取法 |
+| `dpo_dpo` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `dpo_dpo` | wind | — | — | 尚未确认同口径取法 |
+| `dpo_dpo` | ifind | — | — | 尚未确认同口径取法 |
+| `dpo_dpo` | tdx | `tdx_dpo` → `tdx_technical_indicator_query` | DPO | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `dpo_madpo` | tushare | — | — | 尚未确认同口径取法 |
+| `dpo_madpo` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `dpo_madpo` | wind | — | — | 尚未确认同口径取法 |
+| `dpo_madpo` | ifind | — | — | 尚未确认同口径取法 |
+| `dpo_madpo` | tdx | `tdx_dpo` → `tdx_technical_indicator_query` | MADPO | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `brar_br` | tushare | — | — | 尚未确认同口径取法 |
+| `brar_br` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `brar_br` | wind | — | — | 尚未确认同口径取法 |
+| `brar_br` | ifind | — | — | 尚未确认同口径取法 |
+| `brar_br` | tdx | `tdx_brar` → `tdx_technical_indicator_query` | BR | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `brar_ar` | tushare | — | — | 尚未确认同口径取法 |
+| `brar_ar` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `brar_ar` | wind | — | — | 尚未确认同口径取法 |
+| `brar_ar` | ifind | — | — | 尚未确认同口径取法 |
+| `brar_ar` | tdx | `tdx_brar` → `tdx_technical_indicator_query` | AR | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `mfi_mfi` | tushare | — | — | 尚未确认同口径取法 |
+| `mfi_mfi` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `mfi_mfi` | wind | — | — | 尚未确认同口径取法 |
+| `mfi_mfi` | ifind | — | — | 尚未确认同口径取法 |
+| `mfi_mfi` | tdx | `tdx_mfi` → `tdx_technical_indicator_query` | MFI | 原单位：无量纲；×1；N2为厂商公开参数；本接口仅输出MFI一线。 |
+| `cr_cr` | tushare | — | — | 尚未确认同口径取法 |
+| `cr_cr` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `cr_cr` | wind | — | — | 尚未确认同口径取法 |
+| `cr_cr` | ifind | — | — | 尚未确认同口径取法 |
+| `cr_cr` | tdx | `tdx_cr` → `tdx_technical_indicator_query` | CR | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `cr_ma1` | tushare | — | — | 尚未确认同口径取法 |
+| `cr_ma1` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `cr_ma1` | wind | — | — | 尚未确认同口径取法 |
+| `cr_ma1` | ifind | — | — | 尚未确认同口径取法 |
+| `cr_ma1` | tdx | `tdx_cr` → `tdx_technical_indicator_query` | MA1 | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `cr_ma2` | tushare | — | — | 尚未确认同口径取法 |
+| `cr_ma2` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `cr_ma2` | wind | — | — | 尚未确认同口径取法 |
+| `cr_ma2` | ifind | — | — | 尚未确认同口径取法 |
+| `cr_ma2` | tdx | `tdx_cr` → `tdx_technical_indicator_query` | MA2 | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `cr_ma3` | tushare | — | — | 尚未确认同口径取法 |
+| `cr_ma3` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `cr_ma3` | wind | — | — | 尚未确认同口径取法 |
+| `cr_ma3` | ifind | — | — | 尚未确认同口径取法 |
+| `cr_ma3` | tdx | `tdx_cr` → `tdx_technical_indicator_query` | MA3 | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `cr_ma4` | tushare | — | — | 尚未确认同口径取法 |
+| `cr_ma4` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `cr_ma4` | wind | — | — | 尚未确认同口径取法 |
+| `cr_ma4` | ifind | — | — | 尚未确认同口径取法 |
+| `cr_ma4` | tdx | `tdx_cr` → `tdx_technical_indicator_query` | MA4 | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `asi_asi` | tushare | — | — | 尚未确认同口径取法 |
+| `asi_asi` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `asi_asi` | wind | — | — | 尚未确认同口径取法 |
+| `asi_asi` | ifind | — | — | 尚未确认同口径取法 |
+| `asi_asi` | tdx | `tdx_asi` → `tdx_technical_indicator_query` | ASI | 原单位：来源原生值；×1；接口未披露公式量纲及缩放，保留厂商原生值，不认定为元或百分比。 |
+| `asi_ma` | tushare | — | — | 尚未确认同口径取法 |
+| `asi_ma` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `asi_ma` | wind | — | — | 尚未确认同口径取法 |
+| `asi_ma` | ifind | — | — | 尚未确认同口径取法 |
+| `asi_ma` | tdx | `tdx_asi` → `tdx_technical_indicator_query` | MA | 原单位：来源原生值；×1；接口未披露公式量纲及缩放，保留厂商原生值，不认定为元或百分比。 |
+| `mass_mass` | tushare | — | — | 尚未确认同口径取法 |
+| `mass_mass` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `mass_mass` | wind | — | — | 尚未确认同口径取法 |
+| `mass_mass` | ifind | — | — | 尚未确认同口径取法 |
+| `mass_mass` | tdx | `tdx_mass` → `tdx_technical_indicator_query` | MASS | 原单位：无量纲；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `mass_mamass` | tushare | — | — | 尚未确认同口径取法 |
+| `mass_mamass` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `mass_mamass` | wind | — | — | 尚未确认同口径取法 |
+| `mass_mamass` | ifind | — | — | 尚未确认同口径取法 |
+| `mass_mamass` | tdx | `tdx_mass` → `tdx_technical_indicator_query` | MAMASS | 原单位：无量纲；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `xsii_td1` | tushare | — | — | 尚未确认同口径取法 |
+| `xsii_td1` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `xsii_td1` | wind | — | — | 尚未确认同口径取法 |
+| `xsii_td1` | ifind | — | — | 尚未确认同口径取法 |
+| `xsii_td1` | tdx | `tdx_xsii` → `tdx_technical_indicator_query` | 通道1 | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `xsii_td2` | tushare | — | — | 尚未确认同口径取法 |
+| `xsii_td2` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `xsii_td2` | wind | — | — | 尚未确认同口径取法 |
+| `xsii_td2` | ifind | — | — | 尚未确认同口径取法 |
+| `xsii_td2` | tdx | `tdx_xsii` → `tdx_technical_indicator_query` | 通道2 | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `xsii_td3` | tushare | — | — | 尚未确认同口径取法 |
+| `xsii_td3` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `xsii_td3` | wind | — | — | 尚未确认同口径取法 |
+| `xsii_td3` | ifind | — | — | 尚未确认同口径取法 |
+| `xsii_td3` | tdx | `tdx_xsii` → `tdx_technical_indicator_query` | 通道3 | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `xsii_td4` | tushare | — | — | 尚未确认同口径取法 |
+| `xsii_td4` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `xsii_td4` | wind | — | — | 尚未确认同口径取法 |
+| `xsii_td4` | ifind | — | — | 尚未确认同口径取法 |
+| `xsii_td4` | tdx | `tdx_xsii` → `tdx_technical_indicator_query` | 通道4 | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `donchian_upper` | tushare | — | — | 尚未确认同口径取法 |
+| `donchian_upper` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `donchian_upper` | wind | — | — | 尚未确认同口径取法 |
+| `donchian_upper` | ifind | — | — | 尚未确认同口径取法 |
+| `donchian_upper` | tdx | `tdx_donchian` → `tdx_technical_indicator_query` | 周期高点 | 原单位：元；×1；X1高点周期、X2低点周期不同；不冒称Tushare TAQ的三线通道。 |
+| `donchian_lower` | tushare | — | — | 尚未确认同口径取法 |
+| `donchian_lower` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `donchian_lower` | wind | — | — | 尚未确认同口径取法 |
+| `donchian_lower` | ifind | — | — | 尚未确认同口径取法 |
+| `donchian_lower` | tdx | `tdx_donchian` → `tdx_technical_indicator_query` | 周期低点 | 原单位：元；×1；X1高点周期、X2低点周期不同；不冒称Tushare TAQ的三线通道。 |
+| `ts_asi_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | asi_bfq | 原单位：未确认；×1；振动升降指标-OPEN, CLOSE, HIGH, LOW, M1=26, M2=10；来源未明确缩放单位，保留原值 |
+| `ts_asi_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_asi_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_asi_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_asi_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_asit_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | asit_bfq | 原单位：未确认；×1；振动升降指标-OPEN, CLOSE, HIGH, LOW, M1=26, M2=10；来源未明确缩放单位，保留原值 |
+| `ts_asit_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_asit_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_asit_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_asit_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_atr_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | atr_bfq | 原单位：元；×1；真实波动N日平均值-CLOSE, HIGH, LOW, N=20；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_atr_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_atr_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_atr_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_atr_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_bbi_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | bbi_bfq | 原单位：元；×1；BBI多空指标-CLOSE, M1=3, M2=6, M3=12, M4=20；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_bbi_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_bbi_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_bbi_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_bbi_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias1_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | bias1_bfq | 原单位：无量纲；×1；BIAS乖离率-CLOSE, L1=6, L2=12, L3=24；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_bias1_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_bias1_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias1_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias1_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias2_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | bias2_bfq | 原单位：无量纲；×1；BIAS乖离率-CLOSE, L1=6, L2=12, L3=24；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_bias2_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_bias2_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias2_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias2_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias3_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | bias3_bfq | 原单位：无量纲；×1；BIAS乖离率-CLOSE, L1=6, L2=12, L3=24；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_bias3_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_bias3_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias3_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias3_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_lower_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | boll_lower_bfq | 原单位：元；×1；BOLL指标，布林带-CLOSE, N=20, P=2；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_boll_lower_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_boll_lower_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_lower_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_lower_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_mid_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | boll_mid_bfq | 原单位：元；×1；BOLL指标，布林带-CLOSE, N=20, P=2；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_boll_mid_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_boll_mid_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_mid_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_mid_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_upper_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | boll_upper_bfq | 原单位：元；×1；BOLL指标，布林带-CLOSE, N=20, P=2；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_boll_upper_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_boll_upper_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_upper_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_upper_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_brar_ar_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | brar_ar_bfq | 原单位：无量纲；×1；BRAR情绪指标-OPEN, CLOSE, HIGH, LOW, M1=26；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_brar_ar_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_brar_ar_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_brar_ar_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_brar_ar_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_brar_br_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | brar_br_bfq | 原单位：无量纲；×1；BRAR情绪指标-OPEN, CLOSE, HIGH, LOW, M1=26；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_brar_br_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_brar_br_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_brar_br_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_brar_br_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_cci_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | cci_bfq | 原单位：无量纲；×1；顺势指标又叫CCI指标-CLOSE, HIGH, LOW, N=14；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_cci_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_cci_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_cci_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_cci_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_cr_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | cr_bfq | 原单位：无量纲；×1；CR价格动量指标-CLOSE, HIGH, LOW, N=20；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_cr_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_cr_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_cr_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_cr_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dfma_dif_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | dfma_dif_bfq | 原单位：元；×1；平行线差指标-CLOSE, N1=10, N2=50, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dfma_dif_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_dfma_dif_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dfma_dif_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dfma_dif_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dfma_difma_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | dfma_difma_bfq | 原单位：元；×1；平行线差指标-CLOSE, N1=10, N2=50, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dfma_difma_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_dfma_difma_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dfma_difma_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dfma_difma_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_adx_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | dmi_adx_bfq | 原单位：无量纲；×1；动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dmi_adx_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_dmi_adx_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_adx_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_adx_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_adxr_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | dmi_adxr_bfq | 原单位：无量纲；×1；动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dmi_adxr_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_dmi_adxr_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_adxr_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_adxr_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_mdi_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | dmi_mdi_bfq | 原单位：无量纲；×1；动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dmi_mdi_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_dmi_mdi_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_mdi_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_mdi_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_pdi_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | dmi_pdi_bfq | 原单位：无量纲；×1；动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dmi_pdi_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_dmi_pdi_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_pdi_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_pdi_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dpo_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | dpo_bfq | 原单位：元；×1；区间震荡线-CLOSE, M1=20, M2=10, M3=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dpo_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_dpo_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dpo_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dpo_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_madpo_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | madpo_bfq | 原单位：元；×1；区间震荡线-CLOSE, M1=20, M2=10, M3=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_madpo_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_madpo_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_madpo_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_madpo_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_bfq_10` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ema_bfq_10 | 原单位：元；×1；指数移动平均-N=10；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_bfq_10` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ema_bfq_10` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_bfq_10` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_bfq_10` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_bfq_20` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ema_bfq_20 | 原单位：元；×1；指数移动平均-N=20；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_bfq_20` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ema_bfq_20` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_bfq_20` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_bfq_20` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_bfq_250` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ema_bfq_250 | 原单位：元；×1；指数移动平均-N=250；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_bfq_250` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ema_bfq_250` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_bfq_250` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_bfq_250` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_bfq_30` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ema_bfq_30 | 原单位：元；×1；指数移动平均-N=30；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_bfq_30` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ema_bfq_30` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_bfq_30` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_bfq_30` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_bfq_5` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ema_bfq_5 | 原单位：元；×1；指数移动平均-N=5；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_bfq_5` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ema_bfq_5` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_bfq_5` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_bfq_5` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_bfq_60` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ema_bfq_60 | 原单位：元；×1；指数移动平均-N=60；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_bfq_60` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ema_bfq_60` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_bfq_60` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_bfq_60` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_bfq_90` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ema_bfq_90 | 原单位：元；×1；指数移动平均-N=90；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_bfq_90` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ema_bfq_90` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_bfq_90` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_bfq_90` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_emv_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | emv_bfq | 原单位：未确认；×1；简易波动指标-HIGH, LOW, VOL, N=14, M=9；来源未明确缩放单位，保留原值 |
+| `ts_emv_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_emv_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_emv_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_emv_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_maemv_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | maemv_bfq | 原单位：未确认；×1；简易波动指标-HIGH, LOW, VOL, N=14, M=9；来源未明确缩放单位，保留原值 |
+| `ts_maemv_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_maemv_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_maemv_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_maemv_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_expma_12_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | expma_12_bfq | 原单位：元；×1；EMA指数平均数指标-CLOSE, N1=12, N2=50；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_expma_12_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_expma_12_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_expma_12_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_expma_12_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_expma_50_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | expma_50_bfq | 原单位：元；×1；EMA指数平均数指标-CLOSE, N1=12, N2=50；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_expma_50_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_expma_50_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_expma_50_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_expma_50_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | kdj_bfq | 原单位：无量纲；×1；KDJ指标-CLOSE, HIGH, LOW, N=9, M1=3, M2=3；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_kdj_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_kdj_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_d_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | kdj_d_bfq | 原单位：无量纲；×1；KDJ指标-CLOSE, HIGH, LOW, N=9, M1=3, M2=3；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_kdj_d_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_kdj_d_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_d_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_d_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_k_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | kdj_k_bfq | 原单位：无量纲；×1；KDJ指标-CLOSE, HIGH, LOW, N=9, M1=3, M2=3；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_kdj_k_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_kdj_k_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_k_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_k_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_down_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ktn_down_bfq | 原单位：元；×1；肯特纳交易通道, N选20日，ATR选10日-CLOSE, HIGH, LOW, N=20, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ktn_down_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ktn_down_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_down_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_down_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_mid_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ktn_mid_bfq | 原单位：元；×1；肯特纳交易通道, N选20日，ATR选10日-CLOSE, HIGH, LOW, N=20, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ktn_mid_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ktn_mid_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_mid_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_mid_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_upper_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ktn_upper_bfq | 原单位：元；×1；肯特纳交易通道, N选20日，ATR选10日-CLOSE, HIGH, LOW, N=20, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ktn_upper_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ktn_upper_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_upper_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_upper_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_bfq_10` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ma_bfq_10 | 原单位：元；×1；简单移动平均-N=10；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_bfq_10` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ma_bfq_10` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_bfq_10` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_bfq_10` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_bfq_20` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ma_bfq_20 | 原单位：元；×1；简单移动平均-N=20；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_bfq_20` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ma_bfq_20` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_bfq_20` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_bfq_20` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_bfq_250` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ma_bfq_250 | 原单位：元；×1；简单移动平均-N=250；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_bfq_250` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ma_bfq_250` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_bfq_250` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_bfq_250` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_bfq_30` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ma_bfq_30 | 原单位：元；×1；简单移动平均-N=30；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_bfq_30` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ma_bfq_30` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_bfq_30` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_bfq_30` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_bfq_5` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ma_bfq_5 | 原单位：元；×1；简单移动平均-N=5；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_bfq_5` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ma_bfq_5` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_bfq_5` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_bfq_5` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_bfq_60` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ma_bfq_60 | 原单位：元；×1；简单移动平均-N=60；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_bfq_60` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ma_bfq_60` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_bfq_60` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_bfq_60` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_bfq_90` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ma_bfq_90 | 原单位：元；×1；简单移动平均-N=90；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_bfq_90` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ma_bfq_90` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_bfq_90` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_bfq_90` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | macd_bfq | 原单位：元；×1；MACD指标-CLOSE, SHORT=12, LONG=26, M=9；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_macd_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_macd_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_dea_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | macd_dea_bfq | 原单位：元；×1；MACD指标-CLOSE, SHORT=12, LONG=26, M=9；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_macd_dea_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_macd_dea_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_dea_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_dea_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_dif_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | macd_dif_bfq | 原单位：元；×1；MACD指标-CLOSE, SHORT=12, LONG=26, M=9；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_macd_dif_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_macd_dif_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_dif_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_dif_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_mass_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | mass_bfq | 原单位：无量纲；×1；梅斯线-HIGH, LOW, N1=9, N2=25, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_mass_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_mass_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_mass_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_mass_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_mass_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ma_mass_bfq | 原单位：元；×1；梅斯线-HIGH, LOW, N1=9, N2=25, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_mass_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ma_mass_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_mass_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_mass_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_mfi_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | mfi_bfq | 原单位：无量纲；×1；MFI指标是成交量的RSI指标-CLOSE, HIGH, LOW, VOL, N=14；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_mfi_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_mfi_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_mfi_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_mfi_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_mtm_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | mtm_bfq | 原单位：元；×1；动量指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_mtm_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_mtm_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_mtm_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_mtm_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_mtmma_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | mtmma_bfq | 原单位：元；×1；动量指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_mtmma_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_mtmma_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_mtmma_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_mtmma_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_obv_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | obv_bfq | 原单位：未确认；×1；能量潮指标-CLOSE, VOL；来源未明确缩放单位，保留原值 |
+| `ts_obv_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_obv_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_obv_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_obv_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_psy_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | psy_bfq | 原单位：无量纲；×1；投资者对股市涨跌产生心理波动的情绪指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_psy_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_psy_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_psy_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_psy_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_psyma_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | psyma_bfq | 原单位：无量纲；×1；投资者对股市涨跌产生心理波动的情绪指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_psyma_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_psyma_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_psyma_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_psyma_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_roc_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | roc_bfq | 原单位：无量纲；×1；变动率指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_roc_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_roc_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_roc_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_roc_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_maroc_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | maroc_bfq | 原单位：无量纲；×1；变动率指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_maroc_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_maroc_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_maroc_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_maroc_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_bfq_12` | tushare | `ts_factor_bfq` → `stk_factor_pro` | rsi_bfq_12 | 原单位：无量纲；×1；RSI指标-CLOSE, N=12；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_rsi_bfq_12` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_rsi_bfq_12` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_bfq_12` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_bfq_12` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_bfq_24` | tushare | `ts_factor_bfq` → `stk_factor_pro` | rsi_bfq_24 | 原单位：无量纲；×1；RSI指标-CLOSE, N=24；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_rsi_bfq_24` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_rsi_bfq_24` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_bfq_24` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_bfq_24` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_bfq_6` | tushare | `ts_factor_bfq` → `stk_factor_pro` | rsi_bfq_6 | 原单位：无量纲；×1；RSI指标-CLOSE, N=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_rsi_bfq_6` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_rsi_bfq_6` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_bfq_6` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_bfq_6` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_down_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | taq_down_bfq | 原单位：元；×1；唐安奇通道(海龟)交易指标-HIGH, LOW, 20；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_taq_down_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_taq_down_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_down_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_down_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_mid_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | taq_mid_bfq | 原单位：元；×1；唐安奇通道(海龟)交易指标-HIGH, LOW, 20；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_taq_mid_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_taq_mid_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_mid_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_mid_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_up_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | taq_up_bfq | 原单位：元；×1；唐安奇通道(海龟)交易指标-HIGH, LOW, 20；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_taq_up_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_taq_up_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_up_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_up_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_trix_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | trix_bfq | 原单位：无量纲；×1；三重指数平滑平均线-CLOSE, M1=12, M2=20；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_trix_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_trix_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_trix_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_trix_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_trma_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | trma_bfq | 原单位：无量纲；×1；三重指数平滑平均线-CLOSE, M1=12, M2=20；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_trma_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_trma_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_trma_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_trma_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_vr_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | vr_bfq | 原单位：无量纲；×1；VR容量比率-CLOSE, VOL, M1=26；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_vr_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_vr_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_vr_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_vr_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_wr_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | wr_bfq | 原单位：无量纲；×1；W&R 威廉指标-CLOSE, HIGH, LOW, N=10, N1=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_wr_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_wr_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_wr_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_wr_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_wr1_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | wr1_bfq | 原单位：无量纲；×1；W&R 威廉指标-CLOSE, HIGH, LOW, N=10, N1=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_wr1_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_wr1_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_wr1_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_wr1_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td1_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | xsii_td1_bfq | 原单位：元；×1；薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_xsii_td1_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_xsii_td1_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td1_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td1_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td2_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | xsii_td2_bfq | 原单位：元；×1；薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_xsii_td2_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_xsii_td2_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td2_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td2_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td3_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | xsii_td3_bfq | 原单位：元；×1；薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_xsii_td3_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_xsii_td3_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td3_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td3_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td4_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | xsii_td4_bfq | 原单位：元；×1；薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_xsii_td4_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_xsii_td4_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td4_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td4_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_asi_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | asi_qfq | 原单位：未确认；×1；振动升降指标-OPEN, CLOSE, HIGH, LOW, M1=26, M2=10；来源未明确缩放单位，保留原值 |
+| `ts_asi_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_asi_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_asi_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_asi_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_asit_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | asit_qfq | 原单位：未确认；×1；振动升降指标-OPEN, CLOSE, HIGH, LOW, M1=26, M2=10；来源未明确缩放单位，保留原值 |
+| `ts_asit_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_asit_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_asit_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_asit_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_atr_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | atr_qfq | 原单位：元；×1；真实波动N日平均值-CLOSE, HIGH, LOW, N=20；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_atr_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_atr_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_atr_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_atr_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_bbi_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | bbi_qfq | 原单位：元；×1；BBI多空指标-CLOSE, M1=3, M2=6, M3=12, M4=22；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_bbi_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_bbi_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_bbi_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_bbi_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias1_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | bias1_qfq | 原单位：无量纲；×1；BIAS乖离率-CLOSE, L1=6, L2=12, L3=24；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_bias1_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_bias1_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias1_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias1_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias2_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | bias2_qfq | 原单位：无量纲；×1；BIAS乖离率-CLOSE, L1=6, L2=12, L3=24；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_bias2_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_bias2_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias2_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias2_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias3_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | bias3_qfq | 原单位：无量纲；×1；BIAS乖离率-CLOSE, L1=6, L2=12, L3=24；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_bias3_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_bias3_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias3_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias3_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_lower_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | boll_lower_qfq | 原单位：元；×1；BOLL指标，布林带-CLOSE, N=20, P=2；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_boll_lower_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_boll_lower_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_lower_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_lower_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_mid_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | boll_mid_qfq | 原单位：元；×1；BOLL指标，布林带-CLOSE, N=20, P=2；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_boll_mid_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_boll_mid_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_mid_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_mid_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_upper_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | boll_upper_qfq | 原单位：元；×1；BOLL指标，布林带-CLOSE, N=20, P=2；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_boll_upper_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_boll_upper_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_upper_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_upper_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_brar_ar_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | brar_ar_qfq | 原单位：无量纲；×1；BRAR情绪指标-OPEN, CLOSE, HIGH, LOW, M1=26；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_brar_ar_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_brar_ar_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_brar_ar_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_brar_ar_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_brar_br_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | brar_br_qfq | 原单位：无量纲；×1；BRAR情绪指标-OPEN, CLOSE, HIGH, LOW, M1=26；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_brar_br_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_brar_br_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_brar_br_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_brar_br_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_cci_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | cci_qfq | 原单位：无量纲；×1；顺势指标又叫CCI指标-CLOSE, HIGH, LOW, N=14；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_cci_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_cci_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_cci_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_cci_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_cr_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | cr_qfq | 原单位：无量纲；×1；CR价格动量指标-CLOSE, HIGH, LOW, N=20；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_cr_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_cr_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_cr_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_cr_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dfma_dif_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | dfma_dif_qfq | 原单位：元；×1；平行线差指标-CLOSE, N1=10, N2=50, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dfma_dif_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_dfma_dif_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dfma_dif_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dfma_dif_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dfma_difma_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | dfma_difma_qfq | 原单位：元；×1；平行线差指标-CLOSE, N1=10, N2=50, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dfma_difma_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_dfma_difma_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dfma_difma_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dfma_difma_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_adx_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | dmi_adx_qfq | 原单位：无量纲；×1；动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dmi_adx_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_dmi_adx_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_adx_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_adx_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_adxr_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | dmi_adxr_qfq | 原单位：无量纲；×1；动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dmi_adxr_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_dmi_adxr_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_adxr_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_adxr_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_mdi_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | dmi_mdi_qfq | 原单位：无量纲；×1；动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dmi_mdi_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_dmi_mdi_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_mdi_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_mdi_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_pdi_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | dmi_pdi_qfq | 原单位：无量纲；×1；动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dmi_pdi_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_dmi_pdi_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_pdi_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_pdi_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dpo_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | dpo_qfq | 原单位：元；×1；区间震荡线-CLOSE, M1=20, M2=10, M3=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dpo_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_dpo_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dpo_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dpo_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_madpo_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | madpo_qfq | 原单位：元；×1；区间震荡线-CLOSE, M1=20, M2=10, M3=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_madpo_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_madpo_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_madpo_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_madpo_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_qfq_10` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ema_qfq_10 | 原单位：元；×1；指数移动平均-N=10；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_qfq_10` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ema_qfq_10` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_qfq_10` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_qfq_10` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_qfq_20` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ema_qfq_20 | 原单位：元；×1；指数移动平均-N=20；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_qfq_20` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ema_qfq_20` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_qfq_20` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_qfq_20` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_qfq_250` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ema_qfq_250 | 原单位：元；×1；指数移动平均-N=250；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_qfq_250` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ema_qfq_250` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_qfq_250` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_qfq_250` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_qfq_30` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ema_qfq_30 | 原单位：元；×1；指数移动平均-N=30；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_qfq_30` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ema_qfq_30` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_qfq_30` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_qfq_30` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_qfq_5` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ema_qfq_5 | 原单位：元；×1；指数移动平均-N=5；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_qfq_5` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ema_qfq_5` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_qfq_5` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_qfq_5` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_qfq_60` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ema_qfq_60 | 原单位：元；×1；指数移动平均-N=60；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_qfq_60` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ema_qfq_60` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_qfq_60` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_qfq_60` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_qfq_90` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ema_qfq_90 | 原单位：元；×1；指数移动平均-N=90；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_qfq_90` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ema_qfq_90` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_qfq_90` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_qfq_90` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_emv_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | emv_qfq | 原单位：未确认；×1；简易波动指标-HIGH, LOW, VOL, N=14, M=9；来源未明确缩放单位，保留原值 |
+| `ts_emv_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_emv_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_emv_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_emv_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_maemv_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | maemv_qfq | 原单位：未确认；×1；简易波动指标-HIGH, LOW, VOL, N=14, M=9；来源未明确缩放单位，保留原值 |
+| `ts_maemv_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_maemv_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_maemv_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_maemv_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_expma_12_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | expma_12_qfq | 原单位：元；×1；EMA指数平均数指标-CLOSE, N1=12, N2=50；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_expma_12_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_expma_12_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_expma_12_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_expma_12_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_expma_50_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | expma_50_qfq | 原单位：元；×1；EMA指数平均数指标-CLOSE, N1=12, N2=50；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_expma_50_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_expma_50_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_expma_50_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_expma_50_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | kdj_qfq | 原单位：无量纲；×1；KDJ指标-CLOSE, HIGH, LOW, N=9, M1=3, M2=3；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_kdj_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_kdj_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_d_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | kdj_d_qfq | 原单位：无量纲；×1；KDJ指标-CLOSE, HIGH, LOW, N=9, M1=3, M2=3；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_kdj_d_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_kdj_d_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_d_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_d_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_k_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | kdj_k_qfq | 原单位：无量纲；×1；KDJ指标-CLOSE, HIGH, LOW, N=9, M1=3, M2=3；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_kdj_k_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_kdj_k_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_k_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_k_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_down_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ktn_down_qfq | 原单位：元；×1；肯特纳交易通道, N选20日，ATR选10日-CLOSE, HIGH, LOW, N=20, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ktn_down_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ktn_down_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_down_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_down_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_mid_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ktn_mid_qfq | 原单位：元；×1；肯特纳交易通道, N选20日，ATR选10日-CLOSE, HIGH, LOW, N=20, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ktn_mid_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ktn_mid_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_mid_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_mid_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_upper_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ktn_upper_qfq | 原单位：元；×1；肯特纳交易通道, N选20日，ATR选10日-CLOSE, HIGH, LOW, N=20, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ktn_upper_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ktn_upper_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_upper_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_upper_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_qfq_10` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ma_qfq_10 | 原单位：元；×1；简单移动平均-N=10；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_qfq_10` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ma_qfq_10` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_qfq_10` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_qfq_10` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_qfq_20` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ma_qfq_20 | 原单位：元；×1；简单移动平均-N=20；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_qfq_20` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ma_qfq_20` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_qfq_20` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_qfq_20` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_qfq_250` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ma_qfq_250 | 原单位：元；×1；简单移动平均-N=250；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_qfq_250` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ma_qfq_250` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_qfq_250` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_qfq_250` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_qfq_30` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ma_qfq_30 | 原单位：元；×1；简单移动平均-N=30；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_qfq_30` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ma_qfq_30` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_qfq_30` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_qfq_30` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_qfq_5` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ma_qfq_5 | 原单位：元；×1；简单移动平均-N=5；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_qfq_5` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ma_qfq_5` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_qfq_5` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_qfq_5` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_qfq_60` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ma_qfq_60 | 原单位：元；×1；简单移动平均-N=60；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_qfq_60` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ma_qfq_60` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_qfq_60` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_qfq_60` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_qfq_90` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ma_qfq_90 | 原单位：元；×1；简单移动平均-N=90；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_qfq_90` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ma_qfq_90` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_qfq_90` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_qfq_90` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | macd_qfq | 原单位：元；×1；MACD指标-CLOSE, SHORT=12, LONG=26, M=9；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_macd_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_macd_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_dea_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | macd_dea_qfq | 原单位：元；×1；MACD指标-CLOSE, SHORT=12, LONG=26, M=9；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_macd_dea_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_macd_dea_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_dea_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_dea_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_dif_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | macd_dif_qfq | 原单位：元；×1；MACD指标-CLOSE, SHORT=12, LONG=26, M=9；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_macd_dif_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_macd_dif_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_dif_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_dif_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_mass_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | mass_qfq | 原单位：无量纲；×1；梅斯线-HIGH, LOW, N1=9, N2=25, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_mass_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_mass_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_mass_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_mass_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_mass_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ma_mass_qfq | 原单位：元；×1；梅斯线-HIGH, LOW, N1=9, N2=25, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_mass_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ma_mass_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_mass_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_mass_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_mfi_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | mfi_qfq | 原单位：无量纲；×1；MFI指标是成交量的RSI指标-CLOSE, HIGH, LOW, VOL, N=14；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_mfi_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_mfi_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_mfi_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_mfi_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_mtm_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | mtm_qfq | 原单位：元；×1；动量指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_mtm_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_mtm_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_mtm_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_mtm_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_mtmma_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | mtmma_qfq | 原单位：元；×1；动量指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_mtmma_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_mtmma_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_mtmma_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_mtmma_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_obv_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | obv_qfq | 原单位：未确认；×1；能量潮指标-CLOSE, VOL；来源未明确缩放单位，保留原值 |
+| `ts_obv_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_obv_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_obv_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_obv_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_psy_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | psy_qfq | 原单位：无量纲；×1；投资者对股市涨跌产生心理波动的情绪指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_psy_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_psy_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_psy_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_psy_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_psyma_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | psyma_qfq | 原单位：无量纲；×1；投资者对股市涨跌产生心理波动的情绪指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_psyma_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_psyma_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_psyma_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_psyma_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_roc_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | roc_qfq | 原单位：无量纲；×1；变动率指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_roc_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_roc_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_roc_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_roc_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_maroc_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | maroc_qfq | 原单位：无量纲；×1；变动率指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_maroc_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_maroc_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_maroc_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_maroc_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_qfq_12` | tushare | `ts_factor_qfq` → `stk_factor_pro` | rsi_qfq_12 | 原单位：无量纲；×1；RSI指标-CLOSE, N=12；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_rsi_qfq_12` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_rsi_qfq_12` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_qfq_12` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_qfq_12` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_qfq_24` | tushare | `ts_factor_qfq` → `stk_factor_pro` | rsi_qfq_24 | 原单位：无量纲；×1；RSI指标-CLOSE, N=24；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_rsi_qfq_24` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_rsi_qfq_24` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_qfq_24` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_qfq_24` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_qfq_6` | tushare | `ts_factor_qfq` → `stk_factor_pro` | rsi_qfq_6 | 原单位：无量纲；×1；RSI指标-CLOSE, N=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_rsi_qfq_6` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_rsi_qfq_6` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_qfq_6` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_qfq_6` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_down_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | taq_down_qfq | 原单位：元；×1；唐安奇通道(海龟)交易指标-HIGH, LOW, 20；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_taq_down_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_taq_down_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_down_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_down_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_mid_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | taq_mid_qfq | 原单位：元；×1；唐安奇通道(海龟)交易指标-HIGH, LOW, 20；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_taq_mid_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_taq_mid_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_mid_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_mid_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_up_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | taq_up_qfq | 原单位：元；×1；唐安奇通道(海龟)交易指标-HIGH, LOW, 20；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_taq_up_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_taq_up_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_up_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_up_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_trix_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | trix_qfq | 原单位：无量纲；×1；三重指数平滑平均线-CLOSE, M1=12, M2=20；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_trix_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_trix_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_trix_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_trix_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_trma_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | trma_qfq | 原单位：无量纲；×1；三重指数平滑平均线-CLOSE, M1=12, M2=20；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_trma_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_trma_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_trma_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_trma_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_vr_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | vr_qfq | 原单位：无量纲；×1；VR容量比率-CLOSE, VOL, M1=26；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_vr_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_vr_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_vr_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_vr_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_wr_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | wr_qfq | 原单位：无量纲；×1；W&R 威廉指标-CLOSE, HIGH, LOW, N=10, N1=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_wr_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_wr_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_wr_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_wr_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_wr1_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | wr1_qfq | 原单位：无量纲；×1；W&R 威廉指标-CLOSE, HIGH, LOW, N=10, N1=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_wr1_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_wr1_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_wr1_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_wr1_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td1_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | xsii_td1_qfq | 原单位：元；×1；薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_xsii_td1_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_xsii_td1_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td1_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td1_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td2_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | xsii_td2_qfq | 原单位：元；×1；薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_xsii_td2_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_xsii_td2_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td2_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td2_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td3_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | xsii_td3_qfq | 原单位：元；×1；薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_xsii_td3_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_xsii_td3_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td3_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td3_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td4_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | xsii_td4_qfq | 原单位：元；×1；薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_xsii_td4_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_xsii_td4_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td4_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td4_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_asi_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | asi_hfq | 原单位：未确认；×1；振动升降指标-OPEN, CLOSE, HIGH, LOW, M1=26, M2=10；来源未明确缩放单位，保留原值 |
+| `ts_asi_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_asi_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_asi_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_asi_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_asit_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | asit_hfq | 原单位：未确认；×1；振动升降指标-OPEN, CLOSE, HIGH, LOW, M1=26, M2=10；来源未明确缩放单位，保留原值 |
+| `ts_asit_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_asit_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_asit_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_asit_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_atr_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | atr_hfq | 原单位：元；×1；真实波动N日平均值-CLOSE, HIGH, LOW, N=20；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_atr_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_atr_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_atr_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_atr_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_bbi_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | bbi_hfq | 原单位：元；×1；BBI多空指标-CLOSE, M1=3, M2=6, M3=12, M4=21；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_bbi_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_bbi_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_bbi_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_bbi_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias1_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | bias1_hfq | 原单位：无量纲；×1；BIAS乖离率-CLOSE, L1=6, L2=12, L3=24；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_bias1_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_bias1_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias1_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias1_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias2_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | bias2_hfq | 原单位：无量纲；×1；BIAS乖离率-CLOSE, L1=6, L2=12, L3=24；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_bias2_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_bias2_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias2_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias2_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias3_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | bias3_hfq | 原单位：无量纲；×1；BIAS乖离率-CLOSE, L1=6, L2=12, L3=24；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_bias3_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_bias3_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias3_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias3_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_lower_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | boll_lower_hfq | 原单位：元；×1；BOLL指标，布林带-CLOSE, N=20, P=2；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_boll_lower_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_boll_lower_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_lower_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_lower_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_mid_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | boll_mid_hfq | 原单位：元；×1；BOLL指标，布林带-CLOSE, N=20, P=2；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_boll_mid_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_boll_mid_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_mid_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_mid_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_upper_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | boll_upper_hfq | 原单位：元；×1；BOLL指标，布林带-CLOSE, N=20, P=2；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_boll_upper_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_boll_upper_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_upper_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_upper_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_brar_ar_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | brar_ar_hfq | 原单位：无量纲；×1；BRAR情绪指标-OPEN, CLOSE, HIGH, LOW, M1=26；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_brar_ar_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_brar_ar_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_brar_ar_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_brar_ar_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_brar_br_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | brar_br_hfq | 原单位：无量纲；×1；BRAR情绪指标-OPEN, CLOSE, HIGH, LOW, M1=26；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_brar_br_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_brar_br_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_brar_br_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_brar_br_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_cci_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | cci_hfq | 原单位：无量纲；×1；顺势指标又叫CCI指标-CLOSE, HIGH, LOW, N=14；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_cci_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_cci_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_cci_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_cci_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_cr_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | cr_hfq | 原单位：无量纲；×1；CR价格动量指标-CLOSE, HIGH, LOW, N=20；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_cr_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_cr_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_cr_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_cr_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dfma_dif_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | dfma_dif_hfq | 原单位：元；×1；平行线差指标-CLOSE, N1=10, N2=50, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dfma_dif_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_dfma_dif_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dfma_dif_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dfma_dif_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dfma_difma_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | dfma_difma_hfq | 原单位：元；×1；平行线差指标-CLOSE, N1=10, N2=50, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dfma_difma_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_dfma_difma_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dfma_difma_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dfma_difma_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_adx_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | dmi_adx_hfq | 原单位：无量纲；×1；动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dmi_adx_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_dmi_adx_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_adx_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_adx_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_adxr_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | dmi_adxr_hfq | 原单位：无量纲；×1；动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dmi_adxr_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_dmi_adxr_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_adxr_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_adxr_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_mdi_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | dmi_mdi_hfq | 原单位：无量纲；×1；动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dmi_mdi_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_dmi_mdi_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_mdi_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_mdi_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_pdi_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | dmi_pdi_hfq | 原单位：无量纲；×1；动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dmi_pdi_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_dmi_pdi_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_pdi_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_pdi_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dpo_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | dpo_hfq | 原单位：元；×1；区间震荡线-CLOSE, M1=20, M2=10, M3=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_dpo_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_dpo_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dpo_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_dpo_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_madpo_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | madpo_hfq | 原单位：元；×1；区间震荡线-CLOSE, M1=20, M2=10, M3=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_madpo_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_madpo_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_madpo_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_madpo_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_hfq_10` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ema_hfq_10 | 原单位：元；×1；指数移动平均-N=10；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_hfq_10` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ema_hfq_10` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_hfq_10` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_hfq_10` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_hfq_20` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ema_hfq_20 | 原单位：元；×1；指数移动平均-N=20；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_hfq_20` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ema_hfq_20` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_hfq_20` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_hfq_20` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_hfq_250` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ema_hfq_250 | 原单位：元；×1；指数移动平均-N=250；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_hfq_250` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ema_hfq_250` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_hfq_250` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_hfq_250` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_hfq_30` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ema_hfq_30 | 原单位：元；×1；指数移动平均-N=30；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_hfq_30` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ema_hfq_30` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_hfq_30` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_hfq_30` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_hfq_5` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ema_hfq_5 | 原单位：元；×1；指数移动平均-N=5；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_hfq_5` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ema_hfq_5` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_hfq_5` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_hfq_5` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_hfq_60` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ema_hfq_60 | 原单位：元；×1；指数移动平均-N=60；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_hfq_60` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ema_hfq_60` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_hfq_60` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_hfq_60` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_hfq_90` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ema_hfq_90 | 原单位：元；×1；指数移动平均-N=90；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ema_hfq_90` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ema_hfq_90` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_hfq_90` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_hfq_90` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_emv_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | emv_hfq | 原单位：未确认；×1；简易波动指标-HIGH, LOW, VOL, N=14, M=9；来源未明确缩放单位，保留原值 |
+| `ts_emv_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_emv_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_emv_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_emv_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_maemv_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | maemv_hfq | 原单位：未确认；×1；简易波动指标-HIGH, LOW, VOL, N=14, M=9；来源未明确缩放单位，保留原值 |
+| `ts_maemv_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_maemv_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_maemv_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_maemv_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_expma_12_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | expma_12_hfq | 原单位：元；×1；EMA指数平均数指标-CLOSE, N1=12, N2=50；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_expma_12_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_expma_12_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_expma_12_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_expma_12_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_expma_50_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | expma_50_hfq | 原单位：元；×1；EMA指数平均数指标-CLOSE, N1=12, N2=50；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_expma_50_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_expma_50_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_expma_50_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_expma_50_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | kdj_hfq | 原单位：无量纲；×1；KDJ指标-CLOSE, HIGH, LOW, N=9, M1=3, M2=3；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_kdj_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_kdj_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_d_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | kdj_d_hfq | 原单位：无量纲；×1；KDJ指标-CLOSE, HIGH, LOW, N=9, M1=3, M2=3；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_kdj_d_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_kdj_d_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_d_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_d_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_k_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | kdj_k_hfq | 原单位：无量纲；×1；KDJ指标-CLOSE, HIGH, LOW, N=9, M1=3, M2=3；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_kdj_k_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_kdj_k_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_k_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_k_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_down_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ktn_down_hfq | 原单位：元；×1；肯特纳交易通道, N选20日，ATR选10日-CLOSE, HIGH, LOW, N=20, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ktn_down_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ktn_down_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_down_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_down_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_mid_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ktn_mid_hfq | 原单位：元；×1；肯特纳交易通道, N选20日，ATR选10日-CLOSE, HIGH, LOW, N=20, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ktn_mid_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ktn_mid_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_mid_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_mid_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_upper_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ktn_upper_hfq | 原单位：元；×1；肯特纳交易通道, N选20日，ATR选10日-CLOSE, HIGH, LOW, N=20, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ktn_upper_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ktn_upper_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_upper_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_upper_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_hfq_10` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ma_hfq_10 | 原单位：元；×1；简单移动平均-N=10；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_hfq_10` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ma_hfq_10` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_hfq_10` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_hfq_10` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_hfq_20` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ma_hfq_20 | 原单位：元；×1；简单移动平均-N=20；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_hfq_20` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ma_hfq_20` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_hfq_20` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_hfq_20` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_hfq_250` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ma_hfq_250 | 原单位：元；×1；简单移动平均-N=250；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_hfq_250` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ma_hfq_250` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_hfq_250` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_hfq_250` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_hfq_30` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ma_hfq_30 | 原单位：元；×1；简单移动平均-N=30；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_hfq_30` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ma_hfq_30` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_hfq_30` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_hfq_30` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_hfq_5` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ma_hfq_5 | 原单位：元；×1；简单移动平均-N=5；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_hfq_5` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ma_hfq_5` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_hfq_5` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_hfq_5` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_hfq_60` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ma_hfq_60 | 原单位：元；×1；简单移动平均-N=60；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_hfq_60` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ma_hfq_60` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_hfq_60` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_hfq_60` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_hfq_90` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ma_hfq_90 | 原单位：元；×1；简单移动平均-N=90；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_hfq_90` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ma_hfq_90` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_hfq_90` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_hfq_90` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | macd_hfq | 原单位：元；×1；MACD指标-CLOSE, SHORT=12, LONG=26, M=9；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_macd_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_macd_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_dea_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | macd_dea_hfq | 原单位：元；×1；MACD指标-CLOSE, SHORT=12, LONG=26, M=9；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_macd_dea_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_macd_dea_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_dea_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_dea_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_dif_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | macd_dif_hfq | 原单位：元；×1；MACD指标-CLOSE, SHORT=12, LONG=26, M=9；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_macd_dif_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_macd_dif_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_dif_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_dif_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_mass_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | mass_hfq | 原单位：无量纲；×1；梅斯线-HIGH, LOW, N1=9, N2=25, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_mass_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_mass_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_mass_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_mass_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_mass_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ma_mass_hfq | 原单位：元；×1；梅斯线-HIGH, LOW, N1=9, N2=25, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_ma_mass_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_ma_mass_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_mass_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_mass_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_mfi_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | mfi_hfq | 原单位：无量纲；×1；MFI指标是成交量的RSI指标-CLOSE, HIGH, LOW, VOL, N=14；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_mfi_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_mfi_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_mfi_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_mfi_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_mtm_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | mtm_hfq | 原单位：元；×1；动量指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_mtm_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_mtm_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_mtm_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_mtm_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_mtmma_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | mtmma_hfq | 原单位：元；×1；动量指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_mtmma_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_mtmma_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_mtmma_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_mtmma_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_obv_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | obv_hfq | 原单位：未确认；×1；能量潮指标-CLOSE, VOL；来源未明确缩放单位，保留原值 |
+| `ts_obv_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_obv_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_obv_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_obv_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_psy_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | psy_hfq | 原单位：无量纲；×1；投资者对股市涨跌产生心理波动的情绪指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_psy_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_psy_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_psy_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_psy_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_psyma_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | psyma_hfq | 原单位：无量纲；×1；投资者对股市涨跌产生心理波动的情绪指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_psyma_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_psyma_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_psyma_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_psyma_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_roc_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | roc_hfq | 原单位：无量纲；×1；变动率指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_roc_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_roc_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_roc_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_roc_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_maroc_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | maroc_hfq | 原单位：无量纲；×1；变动率指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_maroc_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_maroc_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_maroc_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_maroc_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_hfq_12` | tushare | `ts_factor_hfq` → `stk_factor_pro` | rsi_hfq_12 | 原单位：无量纲；×1；RSI指标-CLOSE, N=12；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_rsi_hfq_12` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_rsi_hfq_12` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_hfq_12` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_hfq_12` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_hfq_24` | tushare | `ts_factor_hfq` → `stk_factor_pro` | rsi_hfq_24 | 原单位：无量纲；×1；RSI指标-CLOSE, N=24；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_rsi_hfq_24` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_rsi_hfq_24` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_hfq_24` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_hfq_24` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_hfq_6` | tushare | `ts_factor_hfq` → `stk_factor_pro` | rsi_hfq_6 | 原单位：无量纲；×1；RSI指标-CLOSE, N=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_rsi_hfq_6` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_rsi_hfq_6` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_hfq_6` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_hfq_6` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_down_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | taq_down_hfq | 原单位：元；×1；唐安奇通道(海龟)交易指标-HIGH, LOW, 20；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_taq_down_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_taq_down_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_down_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_down_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_mid_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | taq_mid_hfq | 原单位：元；×1；唐安奇通道(海龟)交易指标-HIGH, LOW, 20；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_taq_mid_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_taq_mid_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_mid_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_mid_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_up_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | taq_up_hfq | 原单位：元；×1；唐安奇通道(海龟)交易指标-HIGH, LOW, 20；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_taq_up_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_taq_up_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_up_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_up_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_trix_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | trix_hfq | 原单位：无量纲；×1；三重指数平滑平均线-CLOSE, M1=12, M2=20；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_trix_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_trix_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_trix_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_trix_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_trma_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | trma_hfq | 原单位：无量纲；×1；三重指数平滑平均线-CLOSE, M1=12, M2=20；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_trma_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_trma_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_trma_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_trma_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_vr_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | vr_hfq | 原单位：无量纲；×1；VR容量比率-CLOSE, VOL, M1=26；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_vr_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_vr_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_vr_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_vr_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_wr_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | wr_hfq | 原单位：无量纲；×1；W&R 威廉指标-CLOSE, HIGH, LOW, N=10, N1=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_wr_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_wr_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_wr_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_wr_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_wr1_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | wr1_hfq | 原单位：无量纲；×1；W&R 威廉指标-CLOSE, HIGH, LOW, N=10, N1=6；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_wr1_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_wr1_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_wr1_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_wr1_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td1_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | xsii_td1_hfq | 原单位：元；×1；薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_xsii_td1_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_xsii_td1_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td1_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td1_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td2_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | xsii_td2_hfq | 原单位：元；×1；薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_xsii_td2_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_xsii_td2_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td2_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td2_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td3_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | xsii_td3_hfq | 原单位：元；×1；薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_xsii_td3_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_xsii_td3_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td3_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td3_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td4_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | xsii_td4_hfq | 原单位：元；×1；薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；按指标定义推断，非Tushare接口显式单位承诺 |
+| `ts_xsii_td4_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_xsii_td4_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td4_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td4_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_downdays` | tushare | `ts_factor_counts` → `stk_factor_pro` | downdays | 原单位：天；×1；连跌天数；周期为日线，字段表示天数 |
+| `ts_downdays` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_downdays` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_downdays` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_downdays` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_updays` | tushare | `ts_factor_counts` → `stk_factor_pro` | updays | 原单位：天；×1；连涨天数；周期为日线，字段表示天数 |
+| `ts_updays` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_updays` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_updays` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_updays` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_lowdays` | tushare | `ts_factor_counts` → `stk_factor_pro` | lowdays | 原单位：天；×1；LOWRANGE(LOW)表示当前最低价是近多少周期内最低价的最小值；周期为日线，字段表示天数 |
+| `ts_lowdays` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_lowdays` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_lowdays` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_lowdays` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_topdays` | tushare | `ts_factor_counts` → `stk_factor_pro` | topdays | 原单位：天；×1；TOPRANGE(HIGH)表示当前最高价是近多少周期内最高价的最大值；周期为日线，字段表示天数 |
+| `ts_topdays` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `ts_topdays` | wind | — | — | 该字段保留Tushare原生口径 |
+| `ts_topdays` | ifind | — | — | 该字段保留Tushare原生口径 |
+| `ts_topdays` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `wind_macd_native` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_macd_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `wind_macd_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 指数平滑异同移动平均 | 原单位：元；×1 |
+| `wind_macd_native` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_macd_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_macd_dif_native` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_macd_dif_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `wind_macd_dif_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | DIF快线 | 原单位：元；×1 |
+| `wind_macd_dif_native` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_macd_dif_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_sar_native` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_sar_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `wind_sar_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 抛物线转向指标 | 原单位：元；×1 |
+| `wind_sar_native` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_sar_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_boll_mid_native` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_boll_mid_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `wind_boll_mid_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 布林中轨 | 原单位：元；×1 |
+| `wind_boll_mid_native` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_boll_mid_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_boll_upper_native` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_boll_upper_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `wind_boll_upper_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 布林上轨 | 原单位：元；×1 |
+| `wind_boll_upper_native` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_boll_upper_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_boll_lower_native` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_boll_lower_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `wind_boll_lower_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 布林下轨 | 原单位：元；×1 |
+| `wind_boll_lower_native` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_boll_lower_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_ma_5_native` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_ma_5_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `wind_ma_5_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 5周期移动平均 | 原单位：元；×1 |
+| `wind_ma_5_native` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_ma_5_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_ma_10_native` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_ma_10_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `wind_ma_10_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 10周期移动平均 | 原单位：元；×1 |
+| `wind_ma_10_native` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_ma_10_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_ma_20_native` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_ma_20_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `wind_ma_20_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 20周期移动平均 | 原单位：元；×1 |
+| `wind_ma_20_native` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_ma_20_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_ma_60_native` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_ma_60_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `wind_ma_60_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 60周期移动平均 | 原单位：元；×1 |
+| `wind_ma_60_native` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_ma_60_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_ma_120_native` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_ma_120_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `wind_ma_120_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 120周期移动平均 | 原单位：元；×1 |
+| `wind_ma_120_native` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_ma_120_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_ma_250_native` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_ma_250_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `wind_ma_250_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 250日均线 | 原单位：元；×1 |
+| `wind_ma_250_native` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_ma_250_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_kdj_k_native` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_kdj_k_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `wind_kdj_k_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 随机指标K值 | 原单位：无量纲；×1 |
+| `wind_kdj_k_native` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_kdj_k_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_kdj_d_native` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_kdj_d_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `wind_kdj_d_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 随机指标D值 | 原单位：无量纲；×1 |
+| `wind_kdj_d_native` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_kdj_d_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_kdj_j_native` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_kdj_j_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `wind_kdj_j_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 随机指标J值 | 原单位：无量纲；×1 |
+| `wind_kdj_j_native` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_kdj_j_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_rsi_6_native` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_rsi_6_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `wind_rsi_6_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 6周期相对强弱指标 | 原单位：无量纲；×1 |
+| `wind_rsi_6_native` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_rsi_6_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_rsi_12_native` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_rsi_12_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `wind_rsi_12_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 12周期相对强弱指标 | 原单位：无量纲；×1 |
+| `wind_rsi_12_native` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_rsi_12_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_bias_5_native` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_bias_5_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `wind_bias_5_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 5日乖离率 | 原单位：%；×1 |
+| `wind_bias_5_native` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_bias_5_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_bias_36_native` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_bias_36_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `wind_bias_36_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 36日乖离 | 原单位：%；×1 |
+| `wind_bias_36_native` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_bias_36_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_cci_14_native` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_cci_14_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `wind_cci_14_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 14周期顺势指标 | 原单位：无量纲；×1 |
+| `wind_cci_14_native` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_cci_14_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_psy_12_native` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_psy_12_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
+| `wind_psy_12_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 12周期心理线指标 | 原单位：%；×1 |
+| `wind_psy_12_native` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_psy_12_native` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_macd_diff` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_macd_diff` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_macd_diff` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_macd_diff` | ifind | `ifind_macd_diff_daily` → `get_security_indicators` | MACD指数平滑异同平均（MACD指标选项：DIFF） | 原单位：元；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
+| `ifind_macd_diff` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_cci` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_cci` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_cci` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_cci` | ifind | `ifind_cci_daily` → `get_security_indicators` | CCI顺势指标 | 原单位：无量纲；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
+| `ifind_cci` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_macd_dea` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_macd_dea` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_macd_dea` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_macd_dea` | ifind | `ifind_macd_dea_daily` → `get_security_indicators` | MACD指数平滑异同平均（MACD指标选项：DEA） | 原单位：元；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
+| `ifind_macd_dea` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_boll_mid` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_boll_mid` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_boll_mid` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_boll_mid` | ifind | `ifind_boll_mid_daily` → `get_security_indicators` | BOLL布林线 | 原单位：元；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
+| `ifind_boll_mid` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_macd_macd` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_macd_macd` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_macd_macd` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_macd_macd` | ifind | `ifind_macd_macd_daily` → `get_security_indicators` | MACD指数平滑异同平均（MACD指标选项：MACD） | 原单位：元；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
+| `ifind_macd_macd` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_rsi` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_rsi` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_rsi` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_rsi` | ifind | `ifind_rsi_daily` → `get_security_indicators` | RSI相对强弱指标 | 原单位：无量纲；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
+| `ifind_rsi` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_ma` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_ma` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_ma` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_ma` | ifind | `ifind_ma_daily` → `get_security_indicators` | MA简单移动平均 | 原单位：元；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
+| `ifind_ma` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_mtm_mtm` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_mtm_mtm` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_mtm_mtm` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_mtm_mtm` | ifind | `ifind_mtm_mtm_daily` → `get_security_indicators` | MTM动力指标 | 原单位：元；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
+| `ifind_mtm_mtm` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_bbi` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_bbi` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_bbi` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_bbi` | ifind | `ifind_bbi_daily` → `get_security_indicators` | BBI多空指数 | 原单位：元；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
+| `ifind_bbi` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_roc_roc` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_roc_roc` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_roc_roc` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_roc_roc` | ifind | `ifind_roc_roc_daily` → `get_security_indicators` | ROC变动速率 | 原单位：%；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
+| `ifind_roc_roc` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_expma` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_expma` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_expma` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_expma` | ifind | `ifind_expma_daily` → `get_security_indicators` | EXPMA指数平均数 | 原单位：元；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
+| `ifind_expma` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_wr` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_wr` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_wr` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_wr` | ifind | `ifind_wr_daily` → `get_security_indicators` | WR威廉指标 | 原单位：无量纲；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
+| `ifind_wr` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_bias` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_bias` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_bias` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_bias` | ifind | `ifind_bias_daily` → `get_security_indicators` | BIAS乖离率 | 原单位：%；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
+| `ifind_bias` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_trix_trix` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_trix_trix` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_trix_trix` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_trix_trix` | ifind | `ifind_trix_trix_daily` → `get_security_indicators` | TRIX三重指数平滑平均 | 原单位：%；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
+| `ifind_trix_trix` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_obv_obv` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_obv_obv` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_obv_obv` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_obv_obv` | ifind | `ifind_obv_obv_daily` → `get_security_indicators` | OBV能量潮 | 原单位：来源原值；×1；原生原值；单位和缩放未披露；不复权日线。 |
+| `ifind_obv_obv` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_psy_psy` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_psy_psy` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_psy_psy` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_psy_psy` | ifind | `ifind_psy_psy_daily` → `get_security_indicators` | PSY心理指标 | 原单位：%；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
+| `ifind_psy_psy` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_dpo_dpo` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_dpo_dpo` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_dpo_dpo` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_dpo_dpo` | ifind | `ifind_dpo_dpo_daily` → `get_security_indicators` | DPO区间震荡线 | 原单位：元；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
+| `ifind_dpo_dpo` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_atr_atr` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_atr_atr` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_atr_atr` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_atr_atr` | ifind | `ifind_atr_atr_daily` → `get_security_indicators` | ATR真实波幅 | 原单位：元；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
+| `ifind_atr_atr` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_dma_ddd` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_dma_ddd` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_dma_ddd` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_dma_ddd` | ifind | `ifind_dma_ddd_daily` → `get_security_indicators` | DMA平均线差 | 原单位：元；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
+| `ifind_dma_ddd` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_arbr_br` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_arbr_br` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_arbr_br` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_arbr_br` | ifind | `ifind_arbr_br_daily` → `get_security_indicators` | 人气意愿指标(ARBR) | 原单位：无量纲；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
+| `ifind_arbr_br` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_mass` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_mass` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_mass` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_mass` | ifind | `ifind_mass_daily` → `get_security_indicators` | MASS梅斯线 | 原单位：无量纲；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
+| `ifind_mass` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_mfi` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_mfi` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_mfi` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_mfi` | ifind | `ifind_mfi_daily` → `get_security_indicators` | MFI资金流向指标 | 原单位：无量纲；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
+| `ifind_mfi` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_cr` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_cr` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_cr` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_cr` | ifind | `ifind_cr_daily` → `get_security_indicators` | CR能量指标 | 原单位：无量纲；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
+| `ifind_cr` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_kdj_k` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_kdj_k` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_kdj_k` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_kdj_k` | ifind | `ifind_kdj_k_daily` → `get_security_indicators` | KDJ随机指标 | 原单位：无量纲；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
+| `ifind_kdj_k` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_boll_upper` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_boll_upper` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_boll_upper` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_boll_upper` | ifind | `ifind_boll_upper_daily` → `get_security_indicators` | BOLL布林线 | 原单位：元；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
+| `ifind_boll_upper` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_boll_lower` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_boll_lower` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_boll_lower` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_boll_lower` | ifind | `ifind_boll_lower_daily` → `get_security_indicators` | BOLL布林线 | 原单位：元；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
+| `ifind_boll_lower` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_kdj_j` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_kdj_j` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_kdj_j` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_kdj_j` | ifind | `ifind_kdj_j_daily` → `get_security_indicators` | KDJ随机指标 | 原单位：无量纲；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
+| `ifind_kdj_j` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_kdj_d` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_kdj_d` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_kdj_d` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_kdj_d` | ifind | `ifind_kdj_d_daily` → `get_security_indicators` | KDJ随机指标 | 原单位：无量纲；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
+| `ifind_kdj_d` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_bbi` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_bbi` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_bbi` | wind | `wind_history_bbi` → `get_stock_technicals` | BBI | 原单位：元；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_bbi` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_bbi` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_expma` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_expma` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_expma` | wind | `wind_history_expma` → `get_stock_technicals` | EXPMA | 原单位：元；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_expma` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_expma` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_psy` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_psy` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_psy` | wind | `wind_history_psy` → `get_stock_technicals` | PSY | 原单位：%；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_psy` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_psy` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_kdj_k` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_kdj_k` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_kdj_k` | wind | `wind_history_kdj` → `get_stock_technicals` | 每日K值 | 原单位：无量纲；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_kdj_k` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_kdj_k` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_kdj_d` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_kdj_d` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_kdj_d` | wind | `wind_history_kdj` → `get_stock_technicals` | 每日D值 | 原单位：无量纲；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_kdj_d` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_kdj_d` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_kdj_j` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_kdj_j` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_kdj_j` | wind | `wind_history_kdj` → `get_stock_technicals` | 每日J值 | 原单位：无量纲；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_kdj_j` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_kdj_j` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_wr` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_wr` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_wr` | wind | `wind_history_wr` → `get_stock_technicals` | 威廉指标WR | 原单位：无量纲；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_wr` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_wr` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_ar` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_ar` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_ar` | wind | `wind_history_ar` → `get_stock_technicals` | AR人气意愿指标 | 原单位：无量纲；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_ar` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_ar` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_sar` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_sar` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_sar` | wind | `wind_history_sar` → `get_stock_technicals` | SAR | 原单位：元；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_sar` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_sar` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_dma` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_dma` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_dma` | wind | `wind_history_dma` → `get_stock_technicals` | DMA | 原单位：元；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_dma` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_dma` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_boll_upper` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_boll_upper` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_boll_upper` | wind | `wind_history_boll` → `get_stock_technicals` | 每日布林带上轨 | 原单位：元；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_boll_upper` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_boll_upper` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_boll_mid` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_boll_mid` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_boll_mid` | wind | `wind_history_boll` → `get_stock_technicals` | 每日布林带中轨 | 原单位：元；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_boll_mid` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_boll_mid` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_boll_lower` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_boll_lower` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_boll_lower` | wind | `wind_history_boll` → `get_stock_technicals` | 每日布林带下轨 | 原单位：元；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_boll_lower` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_boll_lower` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_mfi` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_mfi` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_mfi` | wind | `wind_history_mfi` → `get_stock_technicals` | MFI | 原单位：无量纲；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_mfi` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_mfi` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_mtm` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_mtm` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_mtm` | wind | `wind_history_mtm` → `get_stock_technicals` | MTM动力指标 | 原单位：元；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_mtm` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_mtm` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_trix` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_trix` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_trix` | wind | `wind_history_trix` → `get_stock_technicals` | TRIX | 原单位：%；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_trix` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_trix` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_roc` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_roc` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_roc` | wind | `wind_history_roc` → `get_stock_technicals` | ROC | 原单位：%；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_roc` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_roc` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_rsi` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_rsi` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_rsi` | wind | `wind_history_rsi` → `get_stock_technicals` | {n}日RSI | 原单位：无量纲；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_rsi` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_rsi` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_atr` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_atr` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_atr` | wind | `wind_history_atr` → `get_stock_technicals` | ATR | 原单位：元；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_atr` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_atr` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_obv` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_obv` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_obv` | wind | `wind_history_obv` → `get_stock_technicals` | OBV | 原单位：来源原值；×1；来源未披露成交量单位或比率缩放，保留原值，不能据此当作股、手或百分数。 |
+| `wind_history_obv` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_obv` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_bias` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_bias` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_bias` | wind | `wind_history_bias` → `get_stock_technicals` | BIAS乖离率 | 原单位：%；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_bias` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_bias` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_macd_dif` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_macd_dif` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_macd_dif` | wind | `wind_history_macd` → `get_stock_technicals` | DIF线 | 原单位：元；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_macd_dif` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_macd_dif` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_macd_dea` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_macd_dea` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_macd_dea` | wind | `wind_history_macd` → `get_stock_technicals` | DEA线 | 原单位：元；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_macd_dea` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_macd_dea` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_macd_macd` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_macd_macd` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_macd_macd` | wind | `wind_history_macd` → `get_stock_technicals` | MACD柱 | 原单位：元；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_macd_macd` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_macd_macd` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_cci` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_cci` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_cci` | wind | `wind_history_cci` → `get_stock_technicals` | CCI | 原单位：无量纲；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_cci` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_cci` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_cr` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_cr` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_cr` | wind | `wind_history_cr` → `get_stock_technicals` | CR能量指标 | 原单位：无量纲；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_cr` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_cr` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_vr` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_vr` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_vr` | wind | `wind_history_vr` → `get_stock_technicals` | VR成交量比率 | 原单位：来源原值；×1；来源未披露成交量单位或比率缩放，保留原值，不能据此当作股、手或百分数。 |
+| `wind_history_vr` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_vr` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_dmi_pdi` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_dmi_pdi` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_dmi_pdi` | wind | `wind_history_dmi` → `get_stock_technicals` | DMI上升指标线PDI | 原单位：无量纲；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_dmi_pdi` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_dmi_pdi` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_dmi_mdi` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_dmi_mdi` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_dmi_mdi` | wind | `wind_history_dmi` → `get_stock_technicals` | DMI下降指标线MDI | 原单位：无量纲；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_dmi_mdi` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_dmi_mdi` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_dmi_adx` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_dmi_adx` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_dmi_adx` | wind | `wind_history_dmi` → `get_stock_technicals` | DMI趋向指标ADX | 原单位：无量纲；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_dmi_adx` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_dmi_adx` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_dmi_adxr` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_dmi_adxr` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_dmi_adxr` | wind | `wind_history_dmi` → `get_stock_technicals` | DMI趋向指标ADXR | 原单位：无量纲；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_dmi_adxr` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_dmi_adxr` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_ma` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_history_ma` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_history_ma` | wind | `wind_history_ma` → `get_stock_technicals` | {n}日均线 | 原单位：元；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `wind_history_ma` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_history_ma` | tdx | — | — | 尚未确认同口径取法 |
 
 ## 取数方案详情
 
@@ -2044,7 +4312,7 @@
   "params": {},
   "upstream": "通达信技术指标原生算法",
   "notes": [
-    "日线KDJ；复权方式厂商未披露；显式传递N/M1/M2并核对params_used；最近5000根日线。"
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
   ],
   "technical": {
     "indicator_id": "KDJ",
@@ -2061,7 +4329,4561 @@
       "n": "N",
       "m1": "M1",
       "m2": "M2"
-    }
+    },
+    "parameter_schema": {
+      "n": {
+        "label": "N",
+        "default": 9,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "m1": {
+        "label": "M1",
+        "default": 3,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "m2": {
+        "label": "M2",
+        "default": 3,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "K",
+      "D",
+      "J"
+    ]
+  },
+  "label": "KDJ"
+}
+```
+
+### tdx_macd
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "MACD",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "short": 12,
+      "long": 26,
+      "mid": 9
+    },
+    "parameter_keys": {
+      "short": "SHORT",
+      "long": "LONG",
+      "mid": "MID"
+    },
+    "parameter_schema": {
+      "short": {
+        "label": "SHORT",
+        "default": 12,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "long": {
+        "label": "LONG",
+        "default": 26,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "mid": {
+        "label": "MID",
+        "default": 9,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "DIF",
+      "DEA",
+      "MACD"
+    ]
+  },
+  "label": "MACD"
+}
+```
+
+### tdx_rsi
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "RSI",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "n1": 6,
+      "n2": 12,
+      "n3": 24
+    },
+    "parameter_keys": {
+      "n1": "N1",
+      "n2": "N2",
+      "n3": "N3"
+    },
+    "parameter_schema": {
+      "n1": {
+        "label": "N1",
+        "default": 6,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n2": {
+        "label": "N2",
+        "default": 12,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n3": {
+        "label": "N3",
+        "default": 24,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "RSI1",
+      "RSI2",
+      "RSI3"
+    ]
+  },
+  "label": "RSI"
+}
+```
+
+### tdx_boll
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "BOLL",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "m": 20
+    },
+    "parameter_keys": {
+      "m": "M"
+    },
+    "parameter_schema": {
+      "m": {
+        "label": "M",
+        "default": 20,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "BOLL",
+      "UB",
+      "LB"
+    ]
+  },
+  "label": "布林线"
+}
+```
+
+### tdx_ma
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "MA",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "m1": 5,
+      "m2": 10,
+      "m3": 20,
+      "m4": 60,
+      "m5": 0,
+      "m6": 0,
+      "m7": 0,
+      "m8": 0
+    },
+    "parameter_keys": {
+      "m1": "M1",
+      "m2": "M2",
+      "m3": "M3",
+      "m4": "M4",
+      "m5": "M5",
+      "m6": "M6",
+      "m7": "M7",
+      "m8": "M8"
+    },
+    "parameter_schema": {
+      "m1": {
+        "label": "M1",
+        "default": 5,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "m2": {
+        "label": "M2",
+        "default": 10,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "m3": {
+        "label": "M3",
+        "default": 20,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "m4": {
+        "label": "M4",
+        "default": 60,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "m5": {
+        "label": "M5",
+        "default": 0,
+        "type": "integer",
+        "min": 0,
+        "max": 1000
+      },
+      "m6": {
+        "label": "M6",
+        "default": 0,
+        "type": "integer",
+        "min": 0,
+        "max": 1000
+      },
+      "m7": {
+        "label": "M7",
+        "default": 0,
+        "type": "integer",
+        "min": 0,
+        "max": 1000
+      },
+      "m8": {
+        "label": "M8",
+        "default": 0,
+        "type": "integer",
+        "min": 0,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "MA1",
+      "MA2",
+      "MA3",
+      "MA4",
+      "MA5",
+      "MA6",
+      "MA7",
+      "MA8"
+    ],
+    "adjustments": [
+      "native"
+    ],
+    "parameter_mode": "configurable"
+  },
+  "label": "MA 均线",
+  "verification": {
+    "date": "2026-11-16",
+    "symbol": "600519.SH",
+    "lookup_match": "exact_id",
+    "sample_dates": [
+      "2026-11-13",
+      "2026-11-16"
+    ],
+    "params_used_verified": true,
+    "lines_verified": true
   }
+}
+```
+
+### tdx_expma
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "EXPMA",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "m1": 12,
+      "m2": 50
+    },
+    "parameter_keys": {
+      "m1": "M1",
+      "m2": "M2"
+    },
+    "parameter_schema": {
+      "m1": {
+        "label": "M1",
+        "default": 12,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "m2": {
+        "label": "M2",
+        "default": 50,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "EXP1",
+      "EXP2"
+    ],
+    "adjustments": [
+      "native"
+    ],
+    "parameter_mode": "configurable"
+  },
+  "label": "EXPMA 指数平均线",
+  "verification": {
+    "date": "2026-11-16",
+    "symbol": "600519.SH",
+    "lookup_match": "exact_id",
+    "sample_dates": [
+      "2026-11-13",
+      "2026-11-16"
+    ],
+    "params_used_verified": true,
+    "lines_verified": true
+  }
+}
+```
+
+### tdx_bbi
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "BBI",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "m1": 3,
+      "m2": 6,
+      "m3": 12,
+      "m4": 24
+    },
+    "parameter_keys": {
+      "m1": "M1",
+      "m2": "M2",
+      "m3": "M3",
+      "m4": "M4"
+    },
+    "parameter_schema": {
+      "m1": {
+        "label": "M1",
+        "default": 3,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "m2": {
+        "label": "M2",
+        "default": 6,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "m3": {
+        "label": "M3",
+        "default": 12,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "m4": {
+        "label": "M4",
+        "default": 24,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "BBI"
+    ],
+    "adjustments": [
+      "native"
+    ],
+    "parameter_mode": "configurable"
+  },
+  "label": "BBI 多空均线",
+  "verification": {
+    "date": "2026-11-16",
+    "symbol": "600519.SH",
+    "lookup_match": "exact_id",
+    "sample_dates": [
+      "2026-11-13",
+      "2026-11-16"
+    ],
+    "params_used_verified": true,
+    "lines_verified": true
+  }
+}
+```
+
+### tdx_dmi
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "DMI",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "n": 14,
+      "m": 6
+    },
+    "parameter_keys": {
+      "n": "N",
+      "m": "M"
+    },
+    "parameter_schema": {
+      "n": {
+        "label": "N",
+        "default": 14,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "m": {
+        "label": "M",
+        "default": 6,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "PDI",
+      "MDI",
+      "ADX",
+      "ADXR"
+    ],
+    "adjustments": [
+      "native"
+    ],
+    "parameter_mode": "configurable"
+  },
+  "label": "DMI 趋向指标",
+  "verification": {
+    "date": "2026-11-16",
+    "symbol": "600519.SH",
+    "lookup_match": "exact_id",
+    "sample_dates": [
+      "2026-11-13",
+      "2026-11-16"
+    ],
+    "params_used_verified": true,
+    "lines_verified": true
+  }
+}
+```
+
+### tdx_cci
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "CCI",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "n": 14
+    },
+    "parameter_keys": {
+      "n": "N"
+    },
+    "parameter_schema": {
+      "n": {
+        "label": "N",
+        "default": 14,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "CCI"
+    ],
+    "adjustments": [
+      "native"
+    ],
+    "parameter_mode": "configurable"
+  },
+  "label": "CCI 商品路径指标",
+  "verification": {
+    "date": "2026-11-16",
+    "symbol": "600519.SH",
+    "lookup_match": "exact_id",
+    "sample_dates": [
+      "2026-11-13",
+      "2026-11-16"
+    ],
+    "params_used_verified": true,
+    "lines_verified": true
+  }
+}
+```
+
+### tdx_roc
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "ROC",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "n": 12,
+      "m": 6
+    },
+    "parameter_keys": {
+      "n": "N",
+      "m": "M"
+    },
+    "parameter_schema": {
+      "n": {
+        "label": "N",
+        "default": 12,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "m": {
+        "label": "M",
+        "default": 6,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "ROC",
+      "MAROC"
+    ],
+    "adjustments": [
+      "native"
+    ],
+    "parameter_mode": "configurable"
+  },
+  "label": "ROC 变动率指标",
+  "verification": {
+    "date": "2026-11-16",
+    "symbol": "600519.SH",
+    "lookup_match": "exact_id",
+    "sample_dates": [
+      "2026-11-13",
+      "2026-11-16"
+    ],
+    "params_used_verified": true,
+    "lines_verified": true
+  }
+}
+```
+
+### tdx_mtm
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "MTM",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "n": 12,
+      "m": 6
+    },
+    "parameter_keys": {
+      "n": "N",
+      "m": "M"
+    },
+    "parameter_schema": {
+      "n": {
+        "label": "N",
+        "default": 12,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "m": {
+        "label": "M",
+        "default": 6,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "MTM",
+      "MTMMA"
+    ],
+    "adjustments": [
+      "native"
+    ],
+    "parameter_mode": "configurable"
+  },
+  "label": "MTM 动量线",
+  "verification": {
+    "date": "2026-11-16",
+    "symbol": "600519.SH",
+    "lookup_match": "exact_id",
+    "sample_dates": [
+      "2026-11-13",
+      "2026-11-16"
+    ],
+    "params_used_verified": true,
+    "lines_verified": true
+  }
+}
+```
+
+### tdx_wr
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "WR",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "n": 10,
+      "n1": 6
+    },
+    "parameter_keys": {
+      "n": "N",
+      "n1": "N1"
+    },
+    "parameter_schema": {
+      "n": {
+        "label": "N",
+        "default": 10,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n1": {
+        "label": "N1",
+        "default": 6,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "WR1",
+      "WR2"
+    ],
+    "adjustments": [
+      "native"
+    ],
+    "parameter_mode": "configurable"
+  },
+  "label": "WR 威廉指标",
+  "verification": {
+    "date": "2026-11-16",
+    "symbol": "600519.SH",
+    "lookup_match": "exact_id",
+    "sample_dates": [
+      "2026-11-13",
+      "2026-11-16"
+    ],
+    "params_used_verified": true,
+    "lines_verified": true
+  }
+}
+```
+
+### tdx_bias
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "BIAS",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "n1": 6,
+      "n2": 12,
+      "n3": 24
+    },
+    "parameter_keys": {
+      "n1": "N1",
+      "n2": "N2",
+      "n3": "N3"
+    },
+    "parameter_schema": {
+      "n1": {
+        "label": "N1",
+        "default": 6,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n2": {
+        "label": "N2",
+        "default": 12,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n3": {
+        "label": "N3",
+        "default": 24,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "BIAS1",
+      "BIAS2",
+      "BIAS3"
+    ],
+    "adjustments": [
+      "native"
+    ],
+    "parameter_mode": "configurable"
+  },
+  "label": "BIAS 乖离率",
+  "verification": {
+    "date": "2026-11-16",
+    "symbol": "600519.SH",
+    "lookup_match": "exact_id",
+    "sample_dates": [
+      "2026-11-13",
+      "2026-11-16"
+    ],
+    "params_used_verified": true,
+    "lines_verified": true
+  }
+}
+```
+
+### tdx_trix
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "TRIX",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "n": 12,
+      "m": 9
+    },
+    "parameter_keys": {
+      "n": "N",
+      "m": "M"
+    },
+    "parameter_schema": {
+      "n": {
+        "label": "N",
+        "default": 12,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "m": {
+        "label": "M",
+        "default": 9,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "TRIX",
+      "MATRIX"
+    ],
+    "adjustments": [
+      "native"
+    ],
+    "parameter_mode": "configurable"
+  },
+  "label": "TRIX 三重指数平均线",
+  "verification": {
+    "date": "2026-11-16",
+    "symbol": "600519.SH",
+    "lookup_match": "exact_id",
+    "sample_dates": [
+      "2026-11-13",
+      "2026-11-16"
+    ],
+    "params_used_verified": true,
+    "lines_verified": true
+  }
+}
+```
+
+### tdx_psy
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "PSY",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "n": 12,
+      "m": 6
+    },
+    "parameter_keys": {
+      "n": "N",
+      "m": "M"
+    },
+    "parameter_schema": {
+      "n": {
+        "label": "N",
+        "default": 12,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "m": {
+        "label": "M",
+        "default": 6,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "PSY",
+      "PSYMA"
+    ],
+    "adjustments": [
+      "native"
+    ],
+    "parameter_mode": "configurable"
+  },
+  "label": "PSY 心理线",
+  "verification": {
+    "date": "2026-11-16",
+    "symbol": "600519.SH",
+    "lookup_match": "exact_id",
+    "sample_dates": [
+      "2026-11-13",
+      "2026-11-16"
+    ],
+    "params_used_verified": true,
+    "lines_verified": true
+  }
+}
+```
+
+### tdx_obv
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "OBV",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "m": 30
+    },
+    "parameter_keys": {
+      "m": "M"
+    },
+    "parameter_schema": {
+      "m": {
+        "label": "M",
+        "default": 30,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "OBV",
+      "MAOBV"
+    ],
+    "adjustments": [
+      "native"
+    ],
+    "parameter_mode": "configurable"
+  },
+  "label": "OBV 累积能量线",
+  "verification": {
+    "date": "2026-11-16",
+    "symbol": "600519.SH",
+    "lookup_match": "exact_id",
+    "sample_dates": [
+      "2026-11-13",
+      "2026-11-16"
+    ],
+    "params_used_verified": true,
+    "lines_verified": true
+  }
+}
+```
+
+### tdx_vr
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "VR",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "n": 26,
+      "m": 6
+    },
+    "parameter_keys": {
+      "n": "N",
+      "m": "M"
+    },
+    "parameter_schema": {
+      "n": {
+        "label": "N",
+        "default": 26,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "m": {
+        "label": "M",
+        "default": 6,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "VR",
+      "MAVR"
+    ],
+    "adjustments": [
+      "native"
+    ],
+    "parameter_mode": "configurable"
+  },
+  "label": "VR 成交量变异率",
+  "verification": {
+    "date": "2026-11-16",
+    "symbol": "600519.SH",
+    "lookup_match": "exact_id",
+    "sample_dates": [
+      "2026-11-13",
+      "2026-11-16"
+    ],
+    "params_used_verified": true,
+    "lines_verified": true
+  }
+}
+```
+
+### tdx_vol
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "VOL",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "m1": 5,
+      "m2": 10
+    },
+    "parameter_keys": {
+      "m1": "M1",
+      "m2": "M2"
+    },
+    "parameter_schema": {
+      "m1": {
+        "label": "M1",
+        "default": 5,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "m2": {
+        "label": "M2",
+        "default": 10,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "VOLUME",
+      "MAVOL1",
+      "MAVOL2"
+    ],
+    "adjustments": [
+      "native"
+    ],
+    "parameter_mode": "configurable"
+  },
+  "label": "VOL 成交量",
+  "verification": {
+    "date": "2026-11-16",
+    "symbol": "600519.SH",
+    "lookup_match": "exact_id",
+    "sample_dates": [
+      "2026-11-13",
+      "2026-11-16"
+    ],
+    "params_used_verified": true,
+    "lines_verified": true
+  }
+}
+```
+
+### tdx_atr
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "ATR",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "n": 14
+    },
+    "parameter_keys": {
+      "n": "N"
+    },
+    "parameter_schema": {
+      "n": {
+        "label": "N",
+        "default": 14,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "MTR",
+      "ATR"
+    ],
+    "adjustments": [
+      "native"
+    ],
+    "parameter_mode": "configurable"
+  },
+  "label": "ATR 真实波幅",
+  "verification": {
+    "date": "2026-11-16",
+    "symbol": "600519.SH",
+    "lookup_match": "exact_id",
+    "sample_dates": [
+      "2026-11-13",
+      "2026-11-16"
+    ],
+    "params_used_verified": true,
+    "lines_verified": true
+  }
+}
+```
+
+### tdx_dma
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "DMA",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "n1": 10,
+      "n2": 50,
+      "m": 10
+    },
+    "parameter_keys": {
+      "n1": "N1",
+      "n2": "N2",
+      "m": "M"
+    },
+    "parameter_schema": {
+      "n1": {
+        "label": "N1",
+        "default": 10,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n2": {
+        "label": "N2",
+        "default": 50,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "m": {
+        "label": "M",
+        "default": 10,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "DIF",
+      "DIFMA"
+    ],
+    "adjustments": [
+      "native"
+    ],
+    "parameter_mode": "configurable"
+  },
+  "label": "DMA 平均差",
+  "verification": {
+    "date": "2026-11-16",
+    "symbol": "600519.SH",
+    "lookup_match": "exact_id",
+    "sample_dates": [
+      "2026-11-13",
+      "2026-11-16"
+    ],
+    "params_used_verified": true,
+    "lines_verified": true
+  }
+}
+```
+
+### tdx_emv
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "EMV",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "n": 14,
+      "m": 9
+    },
+    "parameter_keys": {
+      "n": "N",
+      "m": "M"
+    },
+    "parameter_schema": {
+      "n": {
+        "label": "N",
+        "default": 14,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "m": {
+        "label": "M",
+        "default": 9,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "EMV",
+      "MAEMV"
+    ],
+    "adjustments": [
+      "native"
+    ],
+    "parameter_mode": "configurable"
+  },
+  "label": "EMV 简易波动指标",
+  "verification": {
+    "date": "2026-11-16",
+    "symbol": "600519.SH",
+    "lookup_match": "exact_id",
+    "sample_dates": [
+      "2026-11-13",
+      "2026-11-16"
+    ],
+    "params_used_verified": true,
+    "lines_verified": true
+  }
+}
+```
+
+### tdx_dpo
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "DPO",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "n": 20,
+      "m": 6
+    },
+    "parameter_keys": {
+      "n": "N",
+      "m": "M"
+    },
+    "parameter_schema": {
+      "n": {
+        "label": "N",
+        "default": 20,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "m": {
+        "label": "M",
+        "default": 6,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "DPO",
+      "MADPO"
+    ],
+    "adjustments": [
+      "native"
+    ],
+    "parameter_mode": "configurable"
+  },
+  "label": "DPO 区间震荡线",
+  "verification": {
+    "date": "2026-11-16",
+    "symbol": "600519.SH",
+    "lookup_match": "exact_id",
+    "sample_dates": [
+      "2026-11-13",
+      "2026-11-16"
+    ],
+    "params_used_verified": true,
+    "lines_verified": true
+  }
+}
+```
+
+### tdx_brar
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "BRAR",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "n": 26
+    },
+    "parameter_keys": {
+      "n": "N"
+    },
+    "parameter_schema": {
+      "n": {
+        "label": "N",
+        "default": 26,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "BR",
+      "AR"
+    ],
+    "adjustments": [
+      "native"
+    ],
+    "parameter_mode": "configurable"
+  },
+  "label": "BRAR 情绪指标",
+  "verification": {
+    "date": "2026-11-16",
+    "symbol": "600519.SH",
+    "lookup_match": "exact_id",
+    "sample_dates": [
+      "2026-11-13",
+      "2026-11-16"
+    ],
+    "params_used_verified": true,
+    "lines_verified": true
+  }
+}
+```
+
+### tdx_mfi
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "MFI",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "n": 14,
+      "n2": 6
+    },
+    "parameter_keys": {
+      "n": "N",
+      "n2": "N2"
+    },
+    "parameter_schema": {
+      "n": {
+        "label": "N",
+        "default": 14,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n2": {
+        "label": "N2",
+        "default": 6,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "MFI"
+    ],
+    "adjustments": [
+      "native"
+    ],
+    "parameter_mode": "configurable"
+  },
+  "label": "MFI 资金流量指标",
+  "verification": {
+    "date": "2026-11-16",
+    "symbol": "600519.SH",
+    "lookup_match": "exact_id",
+    "sample_dates": [
+      "2026-11-13",
+      "2026-11-16"
+    ],
+    "params_used_verified": true,
+    "lines_verified": true
+  }
+}
+```
+
+### tdx_cr
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "CR",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "n": 26,
+      "m1": 10,
+      "m2": 20,
+      "m3": 40,
+      "m4": 62
+    },
+    "parameter_keys": {
+      "n": "N",
+      "m1": "M1",
+      "m2": "M2",
+      "m3": "M3",
+      "m4": "M4"
+    },
+    "parameter_schema": {
+      "n": {
+        "label": "N",
+        "default": 26,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "m1": {
+        "label": "M1",
+        "default": 10,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "m2": {
+        "label": "M2",
+        "default": 20,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "m3": {
+        "label": "M3",
+        "default": 40,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "m4": {
+        "label": "M4",
+        "default": 62,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "CR",
+      "MA1",
+      "MA2",
+      "MA3",
+      "MA4"
+    ],
+    "adjustments": [
+      "native"
+    ],
+    "parameter_mode": "configurable"
+  },
+  "label": "CR 带状能量线",
+  "verification": {
+    "date": "2026-11-16",
+    "symbol": "600519.SH",
+    "lookup_match": "exact_id",
+    "sample_dates": [
+      "2026-11-13",
+      "2026-11-16"
+    ],
+    "params_used_verified": true,
+    "lines_verified": true
+  }
+}
+```
+
+### tdx_asi
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "ASI",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "m": 6
+    },
+    "parameter_keys": {
+      "m": "M"
+    },
+    "parameter_schema": {
+      "m": {
+        "label": "M",
+        "default": 6,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "ASI",
+      "MA"
+    ],
+    "adjustments": [
+      "native"
+    ],
+    "parameter_mode": "configurable"
+  },
+  "label": "ASI 振动升降指标",
+  "verification": {
+    "date": "2026-11-16",
+    "symbol": "600519.SH",
+    "lookup_match": "exact_id",
+    "sample_dates": [
+      "2026-11-13",
+      "2026-11-16"
+    ],
+    "params_used_verified": true,
+    "lines_verified": true
+  }
+}
+```
+
+### tdx_mass
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "MASS",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "n1": 9,
+      "n2": 25,
+      "m": 6
+    },
+    "parameter_keys": {
+      "n1": "N1",
+      "n2": "N2",
+      "m": "M"
+    },
+    "parameter_schema": {
+      "n1": {
+        "label": "N1",
+        "default": 9,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n2": {
+        "label": "N2",
+        "default": 25,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "m": {
+        "label": "M",
+        "default": 6,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "MASS",
+      "MAMASS"
+    ],
+    "adjustments": [
+      "native"
+    ],
+    "parameter_mode": "configurable"
+  },
+  "label": "MASS 梅斯线",
+  "verification": {
+    "date": "2026-11-16",
+    "symbol": "600519.SH",
+    "lookup_match": "exact_id",
+    "sample_dates": [
+      "2026-11-13",
+      "2026-11-16"
+    ],
+    "params_used_verified": true,
+    "lines_verified": true
+  }
+}
+```
+
+### tdx_xsii
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "XS2",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "n": 102,
+      "m": 7
+    },
+    "parameter_keys": {
+      "n": "N",
+      "m": "M"
+    },
+    "parameter_schema": {
+      "n": {
+        "label": "N",
+        "default": 102,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "m": {
+        "label": "M",
+        "default": 7,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "通道1",
+      "通道2",
+      "通道3",
+      "通道4"
+    ],
+    "adjustments": [
+      "native"
+    ],
+    "parameter_mode": "configurable"
+  },
+  "label": "XS2 薛斯通道II",
+  "verification": {
+    "date": "2026-11-16",
+    "symbol": "600519.SH",
+    "lookup_match": "exact_id",
+    "sample_dates": [
+      "2026-11-13",
+      "2026-11-16"
+    ],
+    "params_used_verified": true,
+    "lines_verified": true
+  }
+}
+```
+
+### tdx_donchian
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "tdx_technical_indicator_query",
+  "params": {},
+  "upstream": "通达信技术指标原生算法",
+  "notes": [
+    "日线来源原生算法；复权方式厂商未披露；参数显式传递并核对params_used；最近5000根日线。"
+  ],
+  "technical": {
+    "indicator_id": "唐奇安",
+    "set": "0",
+    "period": "4",
+    "max_limit": 5000,
+    "min_limit": 30,
+    "default_parameters": {
+      "x1": 20,
+      "x2": 10
+    },
+    "parameter_keys": {
+      "x1": "X1",
+      "x2": "X2"
+    },
+    "parameter_schema": {
+      "x1": {
+        "label": "X1",
+        "default": 20,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "x2": {
+        "label": "X2",
+        "default": 10,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "required_lines": [
+      "周期高点",
+      "周期低点"
+    ],
+    "adjustments": [
+      "native"
+    ],
+    "parameter_mode": "configurable"
+  },
+  "label": "唐奇安 唐奇安通道",
+  "verification": {
+    "date": "2026-11-16",
+    "symbol": "600519.SH",
+    "lookup_match": "exact_description",
+    "sample_dates": [
+      "2026-11-13",
+      "2026-11-16"
+    ],
+    "params_used_verified": true,
+    "lines_verified": true
+  }
+}
+```
+
+### ts_factor_bfq
+
+```json
+{
+  "provider": "tushare",
+  "dataset": "technical_indicators",
+  "kind": "sdk",
+  "method": "stk_factor_pro",
+  "params": {
+    "ts_code": "$symbol",
+    "start_date": "$start_compact",
+    "end_date": "$end_compact",
+    "fields": "$source_fields"
+  },
+  "select_columns": [
+    "ts_code",
+    "trade_date"
+  ],
+  "upstream": "Tushare stk_factor_pro",
+  "label": "Tushare 不复权技术指标",
+  "notes": [
+    "来源预计算技术指标，参数固定；来源字段已区分复权方式；不与其他来源强制统一算法。"
+  ],
+  "technical": {
+    "fixed": true,
+    "adjustment": "none",
+    "indicator_id": "stk_factor_pro",
+    "default_parameters": {},
+    "parameter_keys": {},
+    "parameter_schema": {},
+    "required_lines": [
+      "asi_bfq",
+      "asit_bfq",
+      "atr_bfq",
+      "bbi_bfq",
+      "bias1_bfq",
+      "bias2_bfq",
+      "bias3_bfq",
+      "boll_lower_bfq",
+      "boll_mid_bfq",
+      "boll_upper_bfq",
+      "brar_ar_bfq",
+      "brar_br_bfq",
+      "cci_bfq",
+      "cr_bfq",
+      "dfma_dif_bfq",
+      "dfma_difma_bfq",
+      "dmi_adx_bfq",
+      "dmi_adxr_bfq",
+      "dmi_mdi_bfq",
+      "dmi_pdi_bfq",
+      "dpo_bfq",
+      "madpo_bfq",
+      "ema_bfq_10",
+      "ema_bfq_20",
+      "ema_bfq_250",
+      "ema_bfq_30",
+      "ema_bfq_5",
+      "ema_bfq_60",
+      "ema_bfq_90",
+      "emv_bfq",
+      "maemv_bfq",
+      "expma_12_bfq",
+      "expma_50_bfq",
+      "kdj_bfq",
+      "kdj_d_bfq",
+      "kdj_k_bfq",
+      "ktn_down_bfq",
+      "ktn_mid_bfq",
+      "ktn_upper_bfq",
+      "ma_bfq_10",
+      "ma_bfq_20",
+      "ma_bfq_250",
+      "ma_bfq_30",
+      "ma_bfq_5",
+      "ma_bfq_60",
+      "ma_bfq_90",
+      "macd_bfq",
+      "macd_dea_bfq",
+      "macd_dif_bfq",
+      "mass_bfq",
+      "ma_mass_bfq",
+      "mfi_bfq",
+      "mtm_bfq",
+      "mtmma_bfq",
+      "obv_bfq",
+      "psy_bfq",
+      "psyma_bfq",
+      "roc_bfq",
+      "maroc_bfq",
+      "rsi_bfq_12",
+      "rsi_bfq_24",
+      "rsi_bfq_6",
+      "taq_down_bfq",
+      "taq_mid_bfq",
+      "taq_up_bfq",
+      "trix_bfq",
+      "trma_bfq",
+      "vr_bfq",
+      "wr_bfq",
+      "wr1_bfq",
+      "xsii_td1_bfq",
+      "xsii_td2_bfq",
+      "xsii_td3_bfq",
+      "xsii_td4_bfq"
+    ]
+  }
+}
+```
+
+### ts_factor_qfq
+
+```json
+{
+  "provider": "tushare",
+  "dataset": "technical_indicators",
+  "kind": "sdk",
+  "method": "stk_factor_pro",
+  "params": {
+    "ts_code": "$symbol",
+    "start_date": "$start_compact",
+    "end_date": "$end_compact",
+    "fields": "$source_fields"
+  },
+  "select_columns": [
+    "ts_code",
+    "trade_date"
+  ],
+  "upstream": "Tushare stk_factor_pro",
+  "label": "Tushare 前复权技术指标",
+  "notes": [
+    "来源预计算技术指标，参数固定；来源字段已区分复权方式；不与其他来源强制统一算法。"
+  ],
+  "technical": {
+    "fixed": true,
+    "adjustment": "qfq",
+    "indicator_id": "stk_factor_pro",
+    "default_parameters": {},
+    "parameter_keys": {},
+    "parameter_schema": {},
+    "required_lines": [
+      "asi_qfq",
+      "asit_qfq",
+      "atr_qfq",
+      "bbi_qfq",
+      "bias1_qfq",
+      "bias2_qfq",
+      "bias3_qfq",
+      "boll_lower_qfq",
+      "boll_mid_qfq",
+      "boll_upper_qfq",
+      "brar_ar_qfq",
+      "brar_br_qfq",
+      "cci_qfq",
+      "cr_qfq",
+      "dfma_dif_qfq",
+      "dfma_difma_qfq",
+      "dmi_adx_qfq",
+      "dmi_adxr_qfq",
+      "dmi_mdi_qfq",
+      "dmi_pdi_qfq",
+      "dpo_qfq",
+      "madpo_qfq",
+      "ema_qfq_10",
+      "ema_qfq_20",
+      "ema_qfq_250",
+      "ema_qfq_30",
+      "ema_qfq_5",
+      "ema_qfq_60",
+      "ema_qfq_90",
+      "emv_qfq",
+      "maemv_qfq",
+      "expma_12_qfq",
+      "expma_50_qfq",
+      "kdj_qfq",
+      "kdj_d_qfq",
+      "kdj_k_qfq",
+      "ktn_down_qfq",
+      "ktn_mid_qfq",
+      "ktn_upper_qfq",
+      "ma_qfq_10",
+      "ma_qfq_20",
+      "ma_qfq_250",
+      "ma_qfq_30",
+      "ma_qfq_5",
+      "ma_qfq_60",
+      "ma_qfq_90",
+      "macd_qfq",
+      "macd_dea_qfq",
+      "macd_dif_qfq",
+      "mass_qfq",
+      "ma_mass_qfq",
+      "mfi_qfq",
+      "mtm_qfq",
+      "mtmma_qfq",
+      "obv_qfq",
+      "psy_qfq",
+      "psyma_qfq",
+      "roc_qfq",
+      "maroc_qfq",
+      "rsi_qfq_12",
+      "rsi_qfq_24",
+      "rsi_qfq_6",
+      "taq_down_qfq",
+      "taq_mid_qfq",
+      "taq_up_qfq",
+      "trix_qfq",
+      "trma_qfq",
+      "vr_qfq",
+      "wr_qfq",
+      "wr1_qfq",
+      "xsii_td1_qfq",
+      "xsii_td2_qfq",
+      "xsii_td3_qfq",
+      "xsii_td4_qfq"
+    ]
+  }
+}
+```
+
+### ts_factor_hfq
+
+```json
+{
+  "provider": "tushare",
+  "dataset": "technical_indicators",
+  "kind": "sdk",
+  "method": "stk_factor_pro",
+  "params": {
+    "ts_code": "$symbol",
+    "start_date": "$start_compact",
+    "end_date": "$end_compact",
+    "fields": "$source_fields"
+  },
+  "select_columns": [
+    "ts_code",
+    "trade_date"
+  ],
+  "upstream": "Tushare stk_factor_pro",
+  "label": "Tushare 后复权技术指标",
+  "notes": [
+    "来源预计算技术指标，参数固定；来源字段已区分复权方式；不与其他来源强制统一算法。"
+  ],
+  "technical": {
+    "fixed": true,
+    "adjustment": "hfq",
+    "indicator_id": "stk_factor_pro",
+    "default_parameters": {},
+    "parameter_keys": {},
+    "parameter_schema": {},
+    "required_lines": [
+      "asi_hfq",
+      "asit_hfq",
+      "atr_hfq",
+      "bbi_hfq",
+      "bias1_hfq",
+      "bias2_hfq",
+      "bias3_hfq",
+      "boll_lower_hfq",
+      "boll_mid_hfq",
+      "boll_upper_hfq",
+      "brar_ar_hfq",
+      "brar_br_hfq",
+      "cci_hfq",
+      "cr_hfq",
+      "dfma_dif_hfq",
+      "dfma_difma_hfq",
+      "dmi_adx_hfq",
+      "dmi_adxr_hfq",
+      "dmi_mdi_hfq",
+      "dmi_pdi_hfq",
+      "dpo_hfq",
+      "madpo_hfq",
+      "ema_hfq_10",
+      "ema_hfq_20",
+      "ema_hfq_250",
+      "ema_hfq_30",
+      "ema_hfq_5",
+      "ema_hfq_60",
+      "ema_hfq_90",
+      "emv_hfq",
+      "maemv_hfq",
+      "expma_12_hfq",
+      "expma_50_hfq",
+      "kdj_hfq",
+      "kdj_d_hfq",
+      "kdj_k_hfq",
+      "ktn_down_hfq",
+      "ktn_mid_hfq",
+      "ktn_upper_hfq",
+      "ma_hfq_10",
+      "ma_hfq_20",
+      "ma_hfq_250",
+      "ma_hfq_30",
+      "ma_hfq_5",
+      "ma_hfq_60",
+      "ma_hfq_90",
+      "macd_hfq",
+      "macd_dea_hfq",
+      "macd_dif_hfq",
+      "mass_hfq",
+      "ma_mass_hfq",
+      "mfi_hfq",
+      "mtm_hfq",
+      "mtmma_hfq",
+      "obv_hfq",
+      "psy_hfq",
+      "psyma_hfq",
+      "roc_hfq",
+      "maroc_hfq",
+      "rsi_hfq_12",
+      "rsi_hfq_24",
+      "rsi_hfq_6",
+      "taq_down_hfq",
+      "taq_mid_hfq",
+      "taq_up_hfq",
+      "trix_hfq",
+      "trma_hfq",
+      "vr_hfq",
+      "wr_hfq",
+      "wr1_hfq",
+      "xsii_td1_hfq",
+      "xsii_td2_hfq",
+      "xsii_td3_hfq",
+      "xsii_td4_hfq"
+    ]
+  }
+}
+```
+
+### ts_factor_counts
+
+```json
+{
+  "provider": "tushare",
+  "dataset": "technical_indicators",
+  "kind": "sdk",
+  "method": "stk_factor_pro",
+  "params": {
+    "ts_code": "$symbol",
+    "start_date": "$start_compact",
+    "end_date": "$end_compact",
+    "fields": "$source_fields"
+  },
+  "select_columns": [
+    "ts_code",
+    "trade_date"
+  ],
+  "upstream": "Tushare stk_factor_pro",
+  "label": "Tushare 天数技术指标",
+  "notes": [
+    "来源预计算技术指标，参数固定；来源字段已区分复权方式；不与其他来源强制统一算法。"
+  ],
+  "technical": {
+    "fixed": true,
+    "adjustment": "native",
+    "indicator_id": "stk_factor_pro",
+    "default_parameters": {},
+    "parameter_keys": {},
+    "parameter_schema": {},
+    "required_lines": [
+      "downdays",
+      "updays",
+      "lowdays",
+      "topdays"
+    ]
+  }
+}
+```
+
+### wind_technical_snapshot
+
+```json
+{
+  "provider": "wind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "method": "get_stock_price_indicators",
+  "params": {},
+  "temporal": "snapshot",
+  "upstream": "Wind MCP 原生技术快照",
+  "technical": {
+    "fixed": true,
+    "adjustment": "native",
+    "default_parameters": {},
+    "parameter_schema": {},
+    "parameter_status": "厂商原生默认，接口不支持参数覆盖且未披露完整参数",
+    "temporal": "snapshot",
+    "indicator_id": "Wind原生技术快照",
+    "parameter_keys": {},
+    "required_lines": [
+      "指数平滑异同移动平均",
+      "DIF快线",
+      "抛物线转向指标",
+      "布林中轨",
+      "布林上轨",
+      "布林下轨",
+      "5周期移动平均",
+      "10周期移动平均",
+      "20周期移动平均",
+      "60周期移动平均",
+      "120周期移动平均",
+      "250日均线",
+      "随机指标K值",
+      "随机指标D值",
+      "随机指标J值",
+      "6周期相对强弱指标",
+      "12周期相对强弱指标",
+      "5日乖离率",
+      "36日乖离",
+      "14周期顺势指标",
+      "12周期心理线指标"
+    ]
+  },
+  "notes": [
+    "仅最新交易日盘中快照；返回交易时间保存在raw。不能查询历史；日期区间只筛选实际交易日。",
+    "Wind原生算法；完整参数、复权方式未披露，不与其他来源字段自动混合。"
+  ],
+  "handler": "wind_technical"
+}
+```
+
+### ifind_macd_diff_daily
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "ifind_technical",
+  "method": "get_security_indicators",
+  "params": {},
+  "label": "iFinD MACD指数平滑异同平均 DIFF",
+  "upstream": "iFinD原生日线技术指标",
+  "technical": {
+    "indicator_id": "MACD",
+    "required_lines": [
+      "DIFF"
+    ],
+    "adjustment": "none",
+    "default_parameters": {
+      "long": 26,
+      "short": 12,
+      "n": 9
+    },
+    "parameter_schema": {
+      "long": {
+        "label": "长期周期",
+        "default": 26,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "short": {
+        "label": "短期周期",
+        "default": 12,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n": {
+        "label": "周期",
+        "default": 9,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "parameter_keys": {
+      "long": "长期周期",
+      "short": "短期周期",
+      "n": "周期"
+    }
+  },
+  "notes": [
+    "仅A股不复权日线；通过上游自然语言接口原生查询，逐分量校验参数和显式表格日期。",
+    "来源未披露单位及缩放，保留返回原值，不与其他来源自动合并。",
+    "接口可能限流或省略指标，未返回确切指标及参数证据时明确失败。"
+  ]
+}
+```
+
+### ifind_cci_daily
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "ifind_technical",
+  "method": "get_security_indicators",
+  "params": {},
+  "label": "iFinD CCI顺势指标",
+  "upstream": "iFinD原生日线技术指标",
+  "technical": {
+    "indicator_id": "CCI",
+    "required_lines": [
+      "CCI"
+    ],
+    "adjustment": "none",
+    "default_parameters": {
+      "n": 14
+    },
+    "parameter_schema": {
+      "n": {
+        "label": "周期",
+        "default": 14,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "parameter_keys": {
+      "n": "周期"
+    }
+  },
+  "notes": [
+    "仅A股不复权日线；通过上游自然语言接口原生查询，逐分量校验参数和显式表格日期。",
+    "来源未披露单位及缩放，保留返回原值，不与其他来源自动合并。",
+    "接口可能限流或省略指标，未返回确切指标及参数证据时明确失败。"
+  ]
+}
+```
+
+### ifind_macd_dea_daily
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "ifind_technical",
+  "method": "get_security_indicators",
+  "params": {},
+  "label": "iFinD MACD指数平滑异同平均 DEA",
+  "upstream": "iFinD原生日线技术指标",
+  "technical": {
+    "indicator_id": "MACD",
+    "required_lines": [
+      "DEA"
+    ],
+    "adjustment": "none",
+    "default_parameters": {
+      "long": 26,
+      "short": 12,
+      "n": 9
+    },
+    "parameter_schema": {
+      "long": {
+        "label": "长期周期",
+        "default": 26,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "short": {
+        "label": "短期周期",
+        "default": 12,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n": {
+        "label": "周期",
+        "default": 9,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "parameter_keys": {
+      "long": "长期周期",
+      "short": "短期周期",
+      "n": "周期"
+    }
+  },
+  "notes": [
+    "仅A股不复权日线；通过上游自然语言接口原生查询，逐分量校验参数和显式表格日期。",
+    "来源未披露单位及缩放，保留返回原值，不与其他来源自动合并。",
+    "接口可能限流或省略指标，未返回确切指标及参数证据时明确失败。"
+  ]
+}
+```
+
+### ifind_boll_mid_daily
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "ifind_technical",
+  "method": "get_security_indicators",
+  "params": {},
+  "label": "iFinD BOLL布林线 MID",
+  "upstream": "iFinD原生日线技术指标",
+  "technical": {
+    "indicator_id": "BOLL",
+    "required_lines": [
+      "MID"
+    ],
+    "adjustment": "none",
+    "default_parameters": {
+      "width": 2,
+      "n": 20
+    },
+    "parameter_schema": {
+      "width": {
+        "label": "带宽",
+        "default": 2,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n": {
+        "label": "周期",
+        "default": 20,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "parameter_keys": {
+      "width": "带宽",
+      "n": "周期"
+    }
+  },
+  "notes": [
+    "仅A股不复权日线；通过上游自然语言接口原生查询，逐分量校验参数和显式表格日期。",
+    "来源未披露单位及缩放，保留返回原值，不与其他来源自动合并。",
+    "接口可能限流或省略指标，未返回确切指标及参数证据时明确失败。"
+  ]
+}
+```
+
+### ifind_macd_macd_daily
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "ifind_technical",
+  "method": "get_security_indicators",
+  "params": {},
+  "label": "iFinD MACD指数平滑异同平均 MACD",
+  "upstream": "iFinD原生日线技术指标",
+  "technical": {
+    "indicator_id": "MACD",
+    "required_lines": [
+      "MACD"
+    ],
+    "adjustment": "none",
+    "default_parameters": {
+      "long": 26,
+      "short": 12,
+      "n": 9
+    },
+    "parameter_schema": {
+      "long": {
+        "label": "长期周期",
+        "default": 26,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "short": {
+        "label": "短期周期",
+        "default": 12,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n": {
+        "label": "周期",
+        "default": 9,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "parameter_keys": {
+      "long": "长期周期",
+      "short": "短期周期",
+      "n": "周期"
+    }
+  },
+  "notes": [
+    "仅A股不复权日线；通过上游自然语言接口原生查询，逐分量校验参数和显式表格日期。",
+    "来源未披露单位及缩放，保留返回原值，不与其他来源自动合并。",
+    "接口可能限流或省略指标，未返回确切指标及参数证据时明确失败。"
+  ]
+}
+```
+
+### ifind_rsi_daily
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "ifind_technical",
+  "method": "get_security_indicators",
+  "params": {},
+  "label": "iFinD RSI相对强弱指标",
+  "upstream": "iFinD原生日线技术指标",
+  "technical": {
+    "indicator_id": "RSI",
+    "required_lines": [
+      "RSI"
+    ],
+    "adjustment": "none",
+    "default_parameters": {
+      "n": 6
+    },
+    "parameter_schema": {
+      "n": {
+        "label": "周期",
+        "default": 6,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "parameter_keys": {
+      "n": "周期"
+    }
+  },
+  "notes": [
+    "仅A股不复权日线；通过上游自然语言接口原生查询，逐分量校验参数和显式表格日期。",
+    "来源未披露单位及缩放，保留返回原值，不与其他来源自动合并。",
+    "接口可能限流或省略指标，未返回确切指标及参数证据时明确失败。"
+  ]
+}
+```
+
+### ifind_ma_daily
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "ifind_technical",
+  "method": "get_security_indicators",
+  "params": {},
+  "label": "iFinD MA简单移动平均",
+  "upstream": "iFinD原生日线技术指标",
+  "technical": {
+    "indicator_id": "MA",
+    "required_lines": [
+      "MA"
+    ],
+    "adjustment": "none",
+    "default_parameters": {
+      "n": 20
+    },
+    "parameter_schema": {
+      "n": {
+        "label": "周期",
+        "default": 20,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "parameter_keys": {
+      "n": "周期"
+    }
+  },
+  "notes": [
+    "仅A股不复权日线；通过上游自然语言接口原生查询，逐分量校验参数和显式表格日期。",
+    "来源未披露单位及缩放，保留返回原值，不与其他来源自动合并。",
+    "接口可能限流或省略指标，未返回确切指标及参数证据时明确失败。"
+  ]
+}
+```
+
+### ifind_mtm_mtm_daily
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "ifind_technical",
+  "method": "get_security_indicators",
+  "params": {},
+  "label": "iFinD MTM动力指标 MTM",
+  "upstream": "iFinD原生日线技术指标",
+  "technical": {
+    "indicator_id": "MTM",
+    "required_lines": [
+      "MTM"
+    ],
+    "adjustment": "none",
+    "default_parameters": {
+      "interval": 12,
+      "n": 12
+    },
+    "parameter_schema": {
+      "interval": {
+        "label": "间隔周期",
+        "default": 12,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n": {
+        "label": "周期",
+        "default": 12,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "parameter_keys": {
+      "interval": "间隔周期",
+      "n": "周期"
+    }
+  },
+  "notes": [
+    "仅A股不复权日线；通过上游自然语言接口原生查询，逐分量校验参数和显式表格日期。",
+    "来源未披露单位及缩放，保留返回原值，不与其他来源自动合并。",
+    "接口可能限流或省略指标，未返回确切指标及参数证据时明确失败。"
+  ]
+}
+```
+
+### ifind_bbi_daily
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "ifind_technical",
+  "method": "get_security_indicators",
+  "params": {},
+  "label": "iFinD BBI多空指数",
+  "upstream": "iFinD原生日线技术指标",
+  "technical": {
+    "indicator_id": "BBI",
+    "required_lines": [
+      "BBI"
+    ],
+    "adjustment": "none",
+    "default_parameters": {
+      "n2": 6,
+      "n1": 3,
+      "n4": 24,
+      "n3": 12
+    },
+    "parameter_schema": {
+      "n2": {
+        "label": "周期2",
+        "default": 6,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n1": {
+        "label": "周期1",
+        "default": 3,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n4": {
+        "label": "周期4",
+        "default": 24,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n3": {
+        "label": "周期3",
+        "default": 12,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "parameter_keys": {
+      "n2": "周期2",
+      "n1": "周期1",
+      "n4": "周期4",
+      "n3": "周期3"
+    }
+  },
+  "notes": [
+    "仅A股不复权日线；通过上游自然语言接口原生查询，逐分量校验参数和显式表格日期。",
+    "来源未披露单位及缩放，保留返回原值，不与其他来源自动合并。",
+    "接口可能限流或省略指标，未返回确切指标及参数证据时明确失败。"
+  ]
+}
+```
+
+### ifind_roc_roc_daily
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "ifind_technical",
+  "method": "get_security_indicators",
+  "params": {},
+  "label": "iFinD ROC变动速率 ROC",
+  "upstream": "iFinD原生日线技术指标",
+  "technical": {
+    "indicator_id": "ROC",
+    "required_lines": [
+      "ROC"
+    ],
+    "adjustment": "none",
+    "default_parameters": {
+      "interval": 12,
+      "n": 6
+    },
+    "parameter_schema": {
+      "interval": {
+        "label": "间隔周期",
+        "default": 12,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n": {
+        "label": "周期",
+        "default": 6,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "parameter_keys": {
+      "interval": "间隔周期",
+      "n": "周期"
+    }
+  },
+  "notes": [
+    "仅A股不复权日线；通过上游自然语言接口原生查询，逐分量校验参数和显式表格日期。",
+    "来源未披露单位及缩放，保留返回原值，不与其他来源自动合并。",
+    "接口可能限流或省略指标，未返回确切指标及参数证据时明确失败。"
+  ]
+}
+```
+
+### ifind_expma_daily
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "ifind_technical",
+  "method": "get_security_indicators",
+  "params": {},
+  "label": "iFinD EXPMA指数平均数",
+  "upstream": "iFinD原生日线技术指标",
+  "technical": {
+    "indicator_id": "EXPMA",
+    "required_lines": [
+      "EXPMA"
+    ],
+    "adjustment": "none",
+    "default_parameters": {
+      "n": 12
+    },
+    "parameter_schema": {
+      "n": {
+        "label": "周期",
+        "default": 12,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "parameter_keys": {
+      "n": "周期"
+    }
+  },
+  "notes": [
+    "仅A股不复权日线；通过上游自然语言接口原生查询，逐分量校验参数和显式表格日期。",
+    "来源未披露单位及缩放，保留返回原值，不与其他来源自动合并。",
+    "接口可能限流或省略指标，未返回确切指标及参数证据时明确失败。"
+  ]
+}
+```
+
+### ifind_wr_daily
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "ifind_technical",
+  "method": "get_security_indicators",
+  "params": {},
+  "label": "iFinD WR威廉指标",
+  "upstream": "iFinD原生日线技术指标",
+  "technical": {
+    "indicator_id": "WR",
+    "required_lines": [
+      "WR"
+    ],
+    "adjustment": "none",
+    "default_parameters": {
+      "n": 10
+    },
+    "parameter_schema": {
+      "n": {
+        "label": "周期",
+        "default": 10,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "parameter_keys": {
+      "n": "周期"
+    }
+  },
+  "notes": [
+    "仅A股不复权日线；通过上游自然语言接口原生查询，逐分量校验参数和显式表格日期。",
+    "来源未披露单位及缩放，保留返回原值，不与其他来源自动合并。",
+    "接口可能限流或省略指标，未返回确切指标及参数证据时明确失败。"
+  ]
+}
+```
+
+### ifind_bias_daily
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "ifind_technical",
+  "method": "get_security_indicators",
+  "params": {},
+  "label": "iFinD BIAS乖离率",
+  "upstream": "iFinD原生日线技术指标",
+  "technical": {
+    "indicator_id": "BIAS",
+    "required_lines": [
+      "BIAS"
+    ],
+    "adjustment": "none",
+    "default_parameters": {
+      "n": 6
+    },
+    "parameter_schema": {
+      "n": {
+        "label": "周期",
+        "default": 6,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "parameter_keys": {
+      "n": "周期"
+    }
+  },
+  "notes": [
+    "仅A股不复权日线；通过上游自然语言接口原生查询，逐分量校验参数和显式表格日期。",
+    "来源未披露单位及缩放，保留返回原值，不与其他来源自动合并。",
+    "接口可能限流或省略指标，未返回确切指标及参数证据时明确失败。"
+  ]
+}
+```
+
+### ifind_trix_trix_daily
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "ifind_technical",
+  "method": "get_security_indicators",
+  "params": {},
+  "label": "iFinD TRIX三重指数平滑平均 TRIX",
+  "upstream": "iFinD原生日线技术指标",
+  "technical": {
+    "indicator_id": "TRIX",
+    "required_lines": [
+      "TRIX"
+    ],
+    "adjustment": "none",
+    "default_parameters": {
+      "n2": 20,
+      "n1": 12
+    },
+    "parameter_schema": {
+      "n2": {
+        "label": "周期2",
+        "default": 20,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n1": {
+        "label": "周期1",
+        "default": 12,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "parameter_keys": {
+      "n2": "周期2",
+      "n1": "周期1"
+    }
+  },
+  "notes": [
+    "仅A股不复权日线；通过上游自然语言接口原生查询，逐分量校验参数和显式表格日期。",
+    "来源未披露单位及缩放，保留返回原值，不与其他来源自动合并。",
+    "接口可能限流或省略指标，未返回确切指标及参数证据时明确失败。"
+  ]
+}
+```
+
+### ifind_obv_obv_daily
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "ifind_technical",
+  "method": "get_security_indicators",
+  "params": {},
+  "label": "iFinD OBV能量潮 OBV",
+  "upstream": "iFinD原生日线技术指标",
+  "technical": {
+    "indicator_id": "OBV",
+    "required_lines": [
+      "OBV"
+    ],
+    "adjustment": "none",
+    "default_parameters": {},
+    "parameter_schema": {},
+    "parameter_keys": {}
+  },
+  "notes": [
+    "仅A股不复权日线；通过上游自然语言接口原生查询，逐分量校验参数和显式表格日期。",
+    "来源未披露单位及缩放，保留返回原值，不与其他来源自动合并。",
+    "接口可能限流或省略指标，未返回确切指标及参数证据时明确失败。"
+  ]
+}
+```
+
+### ifind_psy_psy_daily
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "ifind_technical",
+  "method": "get_security_indicators",
+  "params": {},
+  "label": "iFinD PSY心理指标 PSY",
+  "upstream": "iFinD原生日线技术指标",
+  "technical": {
+    "indicator_id": "PSY",
+    "required_lines": [
+      "PSY"
+    ],
+    "adjustment": "none",
+    "default_parameters": {
+      "n2": 6,
+      "n1": 12
+    },
+    "parameter_schema": {
+      "n2": {
+        "label": "周期2",
+        "default": 6,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n1": {
+        "label": "周期1",
+        "default": 12,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "parameter_keys": {
+      "n2": "周期2",
+      "n1": "周期1"
+    }
+  },
+  "notes": [
+    "仅A股不复权日线；通过上游自然语言接口原生查询，逐分量校验参数和显式表格日期。",
+    "来源未披露单位及缩放，保留返回原值，不与其他来源自动合并。",
+    "接口可能限流或省略指标，未返回确切指标及参数证据时明确失败。"
+  ]
+}
+```
+
+### ifind_dpo_dpo_daily
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "ifind_technical",
+  "method": "get_security_indicators",
+  "params": {},
+  "label": "iFinD DPO区间震荡线 DPO",
+  "upstream": "iFinD原生日线技术指标",
+  "technical": {
+    "indicator_id": "DPO",
+    "required_lines": [
+      "DPO"
+    ],
+    "adjustment": "none",
+    "default_parameters": {
+      "n2": 6,
+      "n1": 20
+    },
+    "parameter_schema": {
+      "n2": {
+        "label": "周期2",
+        "default": 6,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n1": {
+        "label": "周期1",
+        "default": 20,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "parameter_keys": {
+      "n2": "周期2",
+      "n1": "周期1"
+    }
+  },
+  "notes": [
+    "仅A股不复权日线；通过上游自然语言接口原生查询，逐分量校验参数和显式表格日期。",
+    "来源未披露单位及缩放，保留返回原值，不与其他来源自动合并。",
+    "接口可能限流或省略指标，未返回确切指标及参数证据时明确失败。"
+  ]
+}
+```
+
+### ifind_atr_atr_daily
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "ifind_technical",
+  "method": "get_security_indicators",
+  "params": {},
+  "label": "iFinD ATR真实波幅 ATR",
+  "upstream": "iFinD原生日线技术指标",
+  "technical": {
+    "indicator_id": "ATR",
+    "required_lines": [
+      "ATR"
+    ],
+    "adjustment": "none",
+    "default_parameters": {
+      "n": 14
+    },
+    "parameter_schema": {
+      "n": {
+        "label": "周期",
+        "default": 14,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "parameter_keys": {
+      "n": "周期"
+    }
+  },
+  "notes": [
+    "仅A股不复权日线；通过上游自然语言接口原生查询，逐分量校验参数和显式表格日期。",
+    "来源未披露单位及缩放，保留返回原值，不与其他来源自动合并。",
+    "接口可能限流或省略指标，未返回确切指标及参数证据时明确失败。"
+  ]
+}
+```
+
+### ifind_dma_ddd_daily
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "ifind_technical",
+  "method": "get_security_indicators",
+  "params": {},
+  "label": "iFinD DMA平均线差 DDD",
+  "upstream": "iFinD原生日线技术指标",
+  "technical": {
+    "indicator_id": "DMA",
+    "required_lines": [
+      "DDD"
+    ],
+    "adjustment": "none",
+    "default_parameters": {
+      "long": 50,
+      "short": 10,
+      "n": 10
+    },
+    "parameter_schema": {
+      "long": {
+        "label": "长期周期",
+        "default": 50,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "short": {
+        "label": "短期周期",
+        "default": 10,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n": {
+        "label": "周期",
+        "default": 10,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "parameter_keys": {
+      "long": "长期周期",
+      "short": "短期周期",
+      "n": "周期"
+    }
+  },
+  "notes": [
+    "仅A股不复权日线；通过上游自然语言接口原生查询，逐分量校验参数和显式表格日期。",
+    "来源未披露单位及缩放，保留返回原值，不与其他来源自动合并。",
+    "接口可能限流或省略指标，未返回确切指标及参数证据时明确失败。"
+  ]
+}
+```
+
+### ifind_arbr_br_daily
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "ifind_technical",
+  "method": "get_security_indicators",
+  "params": {},
+  "label": "iFinD 人气意愿指标(ARBR) BR",
+  "upstream": "iFinD原生日线技术指标",
+  "technical": {
+    "indicator_id": "ARBR",
+    "required_lines": [
+      "BR"
+    ],
+    "adjustment": "none",
+    "default_parameters": {
+      "n": 26
+    },
+    "parameter_schema": {
+      "n": {
+        "label": "周期",
+        "default": 26,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "parameter_keys": {
+      "n": "周期"
+    }
+  },
+  "notes": [
+    "仅A股不复权日线；通过上游自然语言接口原生查询，逐分量校验参数和显式表格日期。",
+    "来源未披露单位及缩放，保留返回原值，不与其他来源自动合并。",
+    "接口可能限流或省略指标，未返回确切指标及参数证据时明确失败。"
+  ]
+}
+```
+
+### ifind_mass_daily
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "ifind_technical",
+  "method": "get_security_indicators",
+  "params": {},
+  "label": "iFinD MASS梅斯线",
+  "upstream": "iFinD原生日线技术指标",
+  "technical": {
+    "indicator_id": "MASS",
+    "required_lines": [
+      "MASS"
+    ],
+    "adjustment": "none",
+    "default_parameters": {
+      "n2": 25,
+      "n1": 9
+    },
+    "parameter_schema": {
+      "n2": {
+        "label": "周期2",
+        "default": 25,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n1": {
+        "label": "周期1",
+        "default": 9,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "parameter_keys": {
+      "n2": "周期2",
+      "n1": "周期1"
+    }
+  },
+  "notes": [
+    "仅A股不复权日线；通过上游自然语言接口原生查询，逐分量校验参数和显式表格日期。",
+    "来源未披露单位及缩放，保留返回原值，不与其他来源自动合并。",
+    "接口可能限流或省略指标，未返回确切指标及参数证据时明确失败。"
+  ]
+}
+```
+
+### ifind_mfi_daily
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "ifind_technical",
+  "method": "get_security_indicators",
+  "params": {},
+  "label": "iFinD MFI资金流向指标",
+  "upstream": "iFinD原生日线技术指标",
+  "technical": {
+    "indicator_id": "MFI",
+    "required_lines": [
+      "MFI"
+    ],
+    "adjustment": "none",
+    "default_parameters": {
+      "n": 14
+    },
+    "parameter_schema": {
+      "n": {
+        "label": "周期",
+        "default": 14,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "parameter_keys": {
+      "n": "周期"
+    }
+  },
+  "notes": [
+    "仅A股不复权日线；通过上游自然语言接口原生查询，逐分量校验参数和显式表格日期。",
+    "来源未披露单位及缩放，保留返回原值，不与其他来源自动合并。",
+    "接口可能限流或省略指标，未返回确切指标及参数证据时明确失败。"
+  ]
+}
+```
+
+### ifind_cr_daily
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "ifind_technical",
+  "method": "get_security_indicators",
+  "params": {},
+  "label": "iFinD CR能量指标",
+  "upstream": "iFinD原生日线技术指标",
+  "technical": {
+    "indicator_id": "CR",
+    "required_lines": [
+      "CR"
+    ],
+    "adjustment": "none",
+    "default_parameters": {
+      "n": 26
+    },
+    "parameter_schema": {
+      "n": {
+        "label": "周期",
+        "default": 26,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "parameter_keys": {
+      "n": "周期"
+    }
+  },
+  "notes": [
+    "仅A股不复权日线；通过上游自然语言接口原生查询，逐分量校验参数和显式表格日期。",
+    "来源未披露单位及缩放，保留返回原值，不与其他来源自动合并。",
+    "接口可能限流或省略指标，未返回确切指标及参数证据时明确失败。"
+  ]
+}
+```
+
+### ifind_kdj_k_daily
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "ifind_technical",
+  "method": "get_security_indicators",
+  "params": {},
+  "label": "iFinD KDJ随机指标 K",
+  "upstream": "iFinD原生日线技术指标",
+  "technical": {
+    "indicator_id": "KDJ",
+    "required_lines": [
+      "K"
+    ],
+    "adjustment": "none",
+    "default_parameters": {
+      "n2": 3,
+      "n1": 3,
+      "n": 9
+    },
+    "parameter_schema": {
+      "n2": {
+        "label": "周期2",
+        "default": 3,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n1": {
+        "label": "周期1",
+        "default": 3,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n": {
+        "label": "周期",
+        "default": 9,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "parameter_keys": {
+      "n2": "周期2",
+      "n1": "周期1",
+      "n": "周期"
+    }
+  },
+  "notes": [
+    "仅A股不复权日线；通过上游自然语言接口原生查询，逐分量校验参数和显式表格日期。",
+    "来源未披露单位及缩放，保留返回原值，不与其他来源自动合并。",
+    "接口可能限流或省略指标，未返回确切指标及参数证据时明确失败。"
+  ]
+}
+```
+
+### ifind_boll_upper_daily
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "ifind_technical",
+  "method": "get_security_indicators",
+  "params": {},
+  "label": "iFinD BOLL布林线 UPPER",
+  "upstream": "iFinD原生日线技术指标",
+  "technical": {
+    "indicator_id": "BOLL",
+    "required_lines": [
+      "UPPER"
+    ],
+    "adjustment": "none",
+    "default_parameters": {
+      "width": 2,
+      "n": 20
+    },
+    "parameter_schema": {
+      "width": {
+        "label": "带宽",
+        "default": 2,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n": {
+        "label": "周期",
+        "default": 20,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "parameter_keys": {
+      "width": "带宽",
+      "n": "周期"
+    }
+  },
+  "notes": [
+    "仅A股不复权日线；通过上游自然语言接口原生查询，逐分量校验参数和显式表格日期。",
+    "来源未披露单位及缩放，保留返回原值，不与其他来源自动合并。",
+    "接口可能限流或省略指标，未返回确切指标及参数证据时明确失败。"
+  ]
+}
+```
+
+### ifind_boll_lower_daily
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "ifind_technical",
+  "method": "get_security_indicators",
+  "params": {},
+  "label": "iFinD BOLL布林线 LOWER",
+  "upstream": "iFinD原生日线技术指标",
+  "technical": {
+    "indicator_id": "BOLL",
+    "required_lines": [
+      "LOWER"
+    ],
+    "adjustment": "none",
+    "default_parameters": {
+      "width": 2,
+      "n": 20
+    },
+    "parameter_schema": {
+      "width": {
+        "label": "带宽",
+        "default": 2,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n": {
+        "label": "周期",
+        "default": 20,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "parameter_keys": {
+      "width": "带宽",
+      "n": "周期"
+    }
+  },
+  "notes": [
+    "仅A股不复权日线；通过上游自然语言接口原生查询，逐分量校验参数和显式表格日期。",
+    "来源未披露单位及缩放，保留返回原值，不与其他来源自动合并。",
+    "接口可能限流或省略指标，未返回确切指标及参数证据时明确失败。"
+  ]
+}
+```
+
+### ifind_kdj_j_daily
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "ifind_technical",
+  "method": "get_security_indicators",
+  "params": {},
+  "label": "iFinD KDJ随机指标 J",
+  "upstream": "iFinD原生日线技术指标",
+  "technical": {
+    "indicator_id": "KDJ",
+    "required_lines": [
+      "J"
+    ],
+    "adjustment": "none",
+    "default_parameters": {
+      "n2": 3,
+      "n1": 3,
+      "n": 9
+    },
+    "parameter_schema": {
+      "n2": {
+        "label": "周期2",
+        "default": 3,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n1": {
+        "label": "周期1",
+        "default": 3,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n": {
+        "label": "周期",
+        "default": 9,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "parameter_keys": {
+      "n2": "周期2",
+      "n1": "周期1",
+      "n": "周期"
+    }
+  },
+  "notes": [
+    "仅A股不复权日线；通过上游自然语言接口原生查询，逐分量校验参数和显式表格日期。",
+    "来源未披露单位及缩放，保留返回原值，不与其他来源自动合并。",
+    "接口可能限流或省略指标，未返回确切指标及参数证据时明确失败。"
+  ]
+}
+```
+
+### ifind_kdj_d_daily
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "ifind_technical",
+  "method": "get_security_indicators",
+  "params": {},
+  "label": "iFinD KDJ随机指标 D",
+  "upstream": "iFinD原生日线技术指标",
+  "technical": {
+    "indicator_id": "KDJ",
+    "required_lines": [
+      "D"
+    ],
+    "adjustment": "none",
+    "default_parameters": {
+      "n2": 3,
+      "n1": 3,
+      "n": 9
+    },
+    "parameter_schema": {
+      "n2": {
+        "label": "周期2",
+        "default": 3,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n1": {
+        "label": "周期1",
+        "default": 3,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      },
+      "n": {
+        "label": "周期",
+        "default": 9,
+        "type": "integer",
+        "min": 1,
+        "max": 1000
+      }
+    },
+    "parameter_keys": {
+      "n2": "周期2",
+      "n1": "周期1",
+      "n": "周期"
+    }
+  },
+  "notes": [
+    "仅A股不复权日线；通过上游自然语言接口原生查询，逐分量校验参数和显式表格日期。",
+    "来源未披露单位及缩放，保留返回原值，不与其他来源自动合并。",
+    "接口可能限流或省略指标，未返回确切指标及参数证据时明确失败。"
+  ]
+}
+```
+
+### wind_history_bbi
+
+```json
+{
+  "provider": "wind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "wind_technical_history",
+  "method": "get_stock_technicals",
+  "params": {},
+  "label": "Wind BBI（历史）",
+  "query_template": "查询{symbol}在{start_cn}至{end_cn}每日的BBI。",
+  "upstream": "Wind MCP 历史技术指标",
+  "technical": {
+    "indicator_id": "BBI",
+    "temporal": "historical",
+    "adjustment": "native",
+    "fixed": true,
+    "default_parameters": {},
+    "parameter_schema": {},
+    "parameter_keys": {},
+    "required_lines": [
+      "bbi"
+    ]
+  },
+  "notes": [
+    "Wind原生历史日线；不在本地计算。复权及未披露的计算参数沿用来源默认，详见原始返回。",
+    "使用已验证的简短问句；逐项核对证券、实际日期、分量及已声明参数。"
+  ]
+}
+```
+
+### wind_history_expma
+
+```json
+{
+  "provider": "wind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "wind_technical_history",
+  "method": "get_stock_technicals",
+  "params": {},
+  "label": "Wind EXPMA（历史）",
+  "query_template": "查询{symbol}在{start_cn}至{end_cn}每日的EXPMA。",
+  "upstream": "Wind MCP 历史技术指标",
+  "technical": {
+    "indicator_id": "EXPMA",
+    "temporal": "historical",
+    "adjustment": "native",
+    "fixed": true,
+    "default_parameters": {},
+    "parameter_schema": {},
+    "parameter_keys": {},
+    "required_lines": [
+      "expma"
+    ]
+  },
+  "notes": [
+    "Wind原生历史日线；不在本地计算。复权及未披露的计算参数沿用来源默认，详见原始返回。",
+    "使用已验证的简短问句；逐项核对证券、实际日期、分量及已声明参数。"
+  ]
+}
+```
+
+### wind_history_psy
+
+```json
+{
+  "provider": "wind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "wind_technical_history",
+  "method": "get_stock_technicals",
+  "params": {},
+  "label": "Wind PSY（历史）",
+  "query_template": "查询{symbol}在{start_cn}至{end_cn}每日的PSY。",
+  "upstream": "Wind MCP 历史技术指标",
+  "technical": {
+    "indicator_id": "PSY",
+    "temporal": "historical",
+    "adjustment": "native",
+    "fixed": true,
+    "default_parameters": {},
+    "parameter_schema": {},
+    "parameter_keys": {},
+    "required_lines": [
+      "psy"
+    ]
+  },
+  "notes": [
+    "Wind原生历史日线；不在本地计算。复权及未披露的计算参数沿用来源默认，详见原始返回。",
+    "使用已验证的简短问句；逐项核对证券、实际日期、分量及已声明参数。"
+  ]
+}
+```
+
+### wind_history_kdj
+
+```json
+{
+  "provider": "wind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "wind_technical_history",
+  "method": "get_stock_technicals",
+  "params": {},
+  "label": "Wind KDJ（历史）",
+  "query_template": "查询{symbol}在{start_cn}至{end_cn}每日的KDJ的K值、D值和J值。",
+  "upstream": "Wind MCP 历史技术指标",
+  "technical": {
+    "indicator_id": "KDJ",
+    "temporal": "historical",
+    "adjustment": "native",
+    "fixed": true,
+    "default_parameters": {},
+    "parameter_schema": {},
+    "parameter_keys": {},
+    "required_lines": [
+      "k",
+      "d",
+      "j"
+    ]
+  },
+  "notes": [
+    "Wind原生历史日线；不在本地计算。复权及未披露的计算参数沿用来源默认，详见原始返回。",
+    "使用已验证的简短问句；逐项核对证券、实际日期、分量及已声明参数。"
+  ]
+}
+```
+
+### wind_history_wr
+
+```json
+{
+  "provider": "wind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "wind_technical_history",
+  "method": "get_stock_technicals",
+  "params": {},
+  "label": "Wind WR（历史）",
+  "query_template": "查询{symbol}在{start_cn}至{end_cn}每日的威廉指标WR。",
+  "upstream": "Wind MCP 历史技术指标",
+  "technical": {
+    "indicator_id": "WR",
+    "temporal": "historical",
+    "adjustment": "native",
+    "fixed": true,
+    "default_parameters": {},
+    "parameter_schema": {},
+    "parameter_keys": {},
+    "required_lines": [
+      "wr"
+    ]
+  },
+  "notes": [
+    "Wind原生历史日线；不在本地计算。复权及未披露的计算参数沿用来源默认，详见原始返回。",
+    "使用已验证的简短问句；逐项核对证券、实际日期、分量及已声明参数。"
+  ]
+}
+```
+
+### wind_history_ar
+
+```json
+{
+  "provider": "wind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "wind_technical_history",
+  "method": "get_stock_technicals",
+  "params": {},
+  "label": "Wind AR（历史）",
+  "query_template": "查询{symbol}在{start_cn}至{end_cn}每日的AR人气意愿指标。",
+  "upstream": "Wind MCP 历史技术指标",
+  "technical": {
+    "indicator_id": "AR",
+    "temporal": "historical",
+    "adjustment": "native",
+    "fixed": true,
+    "default_parameters": {},
+    "parameter_schema": {},
+    "parameter_keys": {},
+    "required_lines": [
+      "ar"
+    ]
+  },
+  "notes": [
+    "Wind原生历史日线；不在本地计算。复权及未披露的计算参数沿用来源默认，详见原始返回。",
+    "使用已验证的简短问句；逐项核对证券、实际日期、分量及已声明参数。"
+  ]
+}
+```
+
+### wind_history_sar
+
+```json
+{
+  "provider": "wind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "wind_technical_history",
+  "method": "get_stock_technicals",
+  "params": {},
+  "label": "Wind SAR（历史）",
+  "query_template": "查询{symbol}在{start_cn}至{end_cn}每日的SAR。",
+  "upstream": "Wind MCP 历史技术指标",
+  "technical": {
+    "indicator_id": "SAR",
+    "temporal": "historical",
+    "adjustment": "native",
+    "fixed": true,
+    "default_parameters": {},
+    "parameter_schema": {},
+    "parameter_keys": {},
+    "required_lines": [
+      "sar"
+    ]
+  },
+  "notes": [
+    "Wind原生历史日线；不在本地计算。复权及未披露的计算参数沿用来源默认，详见原始返回。",
+    "使用已验证的简短问句；逐项核对证券、实际日期、分量及已声明参数。"
+  ]
+}
+```
+
+### wind_history_dma
+
+```json
+{
+  "provider": "wind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "wind_technical_history",
+  "method": "get_stock_technicals",
+  "params": {},
+  "label": "Wind DMA（历史）",
+  "query_template": "查询{symbol}在{start_cn}至{end_cn}每日的DMA。",
+  "upstream": "Wind MCP 历史技术指标",
+  "technical": {
+    "indicator_id": "DMA",
+    "temporal": "historical",
+    "adjustment": "native",
+    "fixed": true,
+    "default_parameters": {},
+    "parameter_schema": {},
+    "parameter_keys": {},
+    "required_lines": [
+      "dma"
+    ]
+  },
+  "notes": [
+    "Wind原生历史日线；不在本地计算。复权及未披露的计算参数沿用来源默认，详见原始返回。",
+    "使用已验证的简短问句；逐项核对证券、实际日期、分量及已声明参数。"
+  ]
+}
+```
+
+### wind_history_boll
+
+```json
+{
+  "provider": "wind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "wind_technical_history",
+  "method": "get_stock_technicals",
+  "params": {},
+  "label": "Wind BOLL（历史）",
+  "query_template": "查询{symbol}在{start_cn}至{end_cn}每日的布林带上轨、中轨和下轨。",
+  "upstream": "Wind MCP 历史技术指标",
+  "technical": {
+    "indicator_id": "BOLL",
+    "temporal": "historical",
+    "adjustment": "native",
+    "fixed": true,
+    "default_parameters": {},
+    "parameter_schema": {},
+    "parameter_keys": {},
+    "required_lines": [
+      "upper",
+      "mid",
+      "lower"
+    ]
+  },
+  "notes": [
+    "Wind原生历史日线；不在本地计算。复权及未披露的计算参数沿用来源默认，详见原始返回。",
+    "使用已验证的简短问句；逐项核对证券、实际日期、分量及已声明参数。"
+  ]
+}
+```
+
+### wind_history_mfi
+
+```json
+{
+  "provider": "wind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "wind_technical_history",
+  "method": "get_stock_technicals",
+  "params": {},
+  "label": "Wind MFI（历史）",
+  "query_template": "查询{symbol}在{start_cn}至{end_cn}每日的MFI。",
+  "upstream": "Wind MCP 历史技术指标",
+  "technical": {
+    "indicator_id": "MFI",
+    "temporal": "historical",
+    "adjustment": "native",
+    "fixed": true,
+    "default_parameters": {},
+    "parameter_schema": {},
+    "parameter_keys": {},
+    "required_lines": [
+      "mfi"
+    ]
+  },
+  "notes": [
+    "Wind原生历史日线；不在本地计算。复权及未披露的计算参数沿用来源默认，详见原始返回。",
+    "使用已验证的简短问句；逐项核对证券、实际日期、分量及已声明参数。"
+  ]
+}
+```
+
+### wind_history_mtm
+
+```json
+{
+  "provider": "wind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "wind_technical_history",
+  "method": "get_stock_technicals",
+  "params": {},
+  "label": "Wind MTM（历史）",
+  "query_template": "查询{symbol}在{start_cn}至{end_cn}每日的MTM。",
+  "upstream": "Wind MCP 历史技术指标",
+  "technical": {
+    "indicator_id": "MTM",
+    "temporal": "historical",
+    "adjustment": "native",
+    "fixed": true,
+    "default_parameters": {},
+    "parameter_schema": {},
+    "parameter_keys": {},
+    "required_lines": [
+      "mtm"
+    ]
+  },
+  "notes": [
+    "Wind原生历史日线；不在本地计算。复权及未披露的计算参数沿用来源默认，详见原始返回。",
+    "使用已验证的简短问句；逐项核对证券、实际日期、分量及已声明参数。"
+  ]
+}
+```
+
+### wind_history_trix
+
+```json
+{
+  "provider": "wind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "wind_technical_history",
+  "method": "get_stock_technicals",
+  "params": {},
+  "label": "Wind TRIX（历史）",
+  "query_template": "查询{symbol}在{start_cn}至{end_cn}每日的TRIX。",
+  "upstream": "Wind MCP 历史技术指标",
+  "technical": {
+    "indicator_id": "TRIX",
+    "temporal": "historical",
+    "adjustment": "native",
+    "fixed": true,
+    "default_parameters": {},
+    "parameter_schema": {},
+    "parameter_keys": {},
+    "required_lines": [
+      "trix"
+    ]
+  },
+  "notes": [
+    "Wind原生历史日线；不在本地计算。复权及未披露的计算参数沿用来源默认，详见原始返回。",
+    "使用已验证的简短问句；逐项核对证券、实际日期、分量及已声明参数。"
+  ]
+}
+```
+
+### wind_history_roc
+
+```json
+{
+  "provider": "wind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "wind_technical_history",
+  "method": "get_stock_technicals",
+  "params": {},
+  "label": "Wind ROC（历史）",
+  "query_template": "查询{symbol}在{start_cn}至{end_cn}每日的ROC。",
+  "upstream": "Wind MCP 历史技术指标",
+  "technical": {
+    "indicator_id": "ROC",
+    "temporal": "historical",
+    "adjustment": "native",
+    "fixed": true,
+    "default_parameters": {},
+    "parameter_schema": {},
+    "parameter_keys": {},
+    "required_lines": [
+      "roc"
+    ]
+  },
+  "notes": [
+    "Wind原生历史日线；不在本地计算。复权及未披露的计算参数沿用来源默认，详见原始返回。",
+    "使用已验证的简短问句；逐项核对证券、实际日期、分量及已声明参数。"
+  ]
+}
+```
+
+### wind_history_rsi
+
+```json
+{
+  "provider": "wind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "wind_technical_history",
+  "method": "get_stock_technicals",
+  "params": {},
+  "label": "Wind RSI（历史）",
+  "query_template": "查询{symbol}在{start_cn}至{end_cn}每日的{n}日RSI。",
+  "upstream": "Wind MCP 历史技术指标",
+  "technical": {
+    "indicator_id": "RSI",
+    "temporal": "historical",
+    "adjustment": "native",
+    "fixed": false,
+    "default_parameters": {
+      "n": 6
+    },
+    "parameter_schema": {
+      "n": {
+        "type": "integer",
+        "label": "周期",
+        "min": 1,
+        "max": 250,
+        "default": 6
+      }
+    },
+    "parameter_keys": {
+      "n": "周期数"
+    },
+    "required_lines": [
+      "rsi"
+    ]
+  },
+  "notes": [
+    "Wind原生历史日线；不在本地计算。复权及未披露的计算参数沿用来源默认，详见原始返回。",
+    "使用已验证的简短问句；逐项核对证券、实际日期、分量及已声明参数。"
+  ]
+}
+```
+
+### wind_history_atr
+
+```json
+{
+  "provider": "wind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "wind_technical_history",
+  "method": "get_stock_technicals",
+  "params": {},
+  "label": "Wind ATR（历史）",
+  "query_template": "查询{symbol}在{start_cn}至{end_cn}每日的ATR。",
+  "upstream": "Wind MCP 历史技术指标",
+  "technical": {
+    "indicator_id": "ATR",
+    "temporal": "historical",
+    "adjustment": "native",
+    "fixed": true,
+    "default_parameters": {},
+    "parameter_schema": {},
+    "parameter_keys": {},
+    "required_lines": [
+      "atr"
+    ]
+  },
+  "notes": [
+    "Wind原生历史日线；不在本地计算。复权及未披露的计算参数沿用来源默认，详见原始返回。",
+    "使用已验证的简短问句；逐项核对证券、实际日期、分量及已声明参数。"
+  ]
+}
+```
+
+### wind_history_obv
+
+```json
+{
+  "provider": "wind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "wind_technical_history",
+  "method": "get_stock_technicals",
+  "params": {},
+  "label": "Wind OBV（历史）",
+  "query_template": "查询{symbol}在{start_cn}至{end_cn}每日的OBV。",
+  "upstream": "Wind MCP 历史技术指标",
+  "technical": {
+    "indicator_id": "OBV",
+    "temporal": "historical",
+    "adjustment": "native",
+    "fixed": true,
+    "default_parameters": {},
+    "parameter_schema": {},
+    "parameter_keys": {},
+    "required_lines": [
+      "obv"
+    ]
+  },
+  "notes": [
+    "Wind原生历史日线；不在本地计算。复权及未披露的计算参数沿用来源默认，详见原始返回。",
+    "使用已验证的简短问句；逐项核对证券、实际日期、分量及已声明参数。"
+  ]
+}
+```
+
+### wind_history_bias
+
+```json
+{
+  "provider": "wind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "wind_technical_history",
+  "method": "get_stock_technicals",
+  "params": {},
+  "label": "Wind BIAS（历史）",
+  "query_template": "查询{symbol}在{start_cn}至{end_cn}每日的BIAS。",
+  "upstream": "Wind MCP 历史技术指标",
+  "technical": {
+    "indicator_id": "BIAS",
+    "temporal": "historical",
+    "adjustment": "native",
+    "fixed": true,
+    "default_parameters": {},
+    "parameter_schema": {},
+    "parameter_keys": {},
+    "required_lines": [
+      "bias"
+    ]
+  },
+  "notes": [
+    "Wind原生历史日线；不在本地计算。复权及未披露的计算参数沿用来源默认，详见原始返回。",
+    "使用已验证的简短问句；逐项核对证券、实际日期、分量及已声明参数。"
+  ]
+}
+```
+
+### wind_history_macd
+
+```json
+{
+  "provider": "wind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "wind_technical_history",
+  "method": "get_stock_technicals",
+  "params": {},
+  "label": "Wind MACD（历史）",
+  "query_template": "查询{symbol}在{start_cn}至{end_cn}每日的MACD的DIF、DEA和MACD柱。",
+  "upstream": "Wind MCP 历史技术指标",
+  "technical": {
+    "indicator_id": "MACD",
+    "temporal": "historical",
+    "adjustment": "native",
+    "fixed": true,
+    "default_parameters": {},
+    "parameter_schema": {},
+    "parameter_keys": {},
+    "required_lines": [
+      "dif",
+      "dea",
+      "macd"
+    ]
+  },
+  "notes": [
+    "Wind原生历史日线；不在本地计算。复权及未披露的计算参数沿用来源默认，详见原始返回。",
+    "使用已验证的简短问句；逐项核对证券、实际日期、分量及已声明参数。"
+  ]
+}
+```
+
+### wind_history_cci
+
+```json
+{
+  "provider": "wind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "wind_technical_history",
+  "method": "get_stock_technicals",
+  "params": {},
+  "label": "Wind CCI（历史）",
+  "query_template": "查询{symbol}在{start_cn}至{end_cn}每日的CCI。",
+  "upstream": "Wind MCP 历史技术指标",
+  "technical": {
+    "indicator_id": "CCI",
+    "temporal": "historical",
+    "adjustment": "native",
+    "fixed": true,
+    "default_parameters": {},
+    "parameter_schema": {},
+    "parameter_keys": {},
+    "required_lines": [
+      "cci"
+    ]
+  },
+  "notes": [
+    "Wind原生历史日线；不在本地计算。复权及未披露的计算参数沿用来源默认，详见原始返回。",
+    "使用已验证的简短问句；逐项核对证券、实际日期、分量及已声明参数。"
+  ]
+}
+```
+
+### wind_history_cr
+
+```json
+{
+  "provider": "wind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "wind_technical_history",
+  "method": "get_stock_technicals",
+  "params": {},
+  "label": "Wind CR（历史）",
+  "query_template": "查询{symbol}在{start_cn}至{end_cn}每日的CR能量指标。",
+  "upstream": "Wind MCP 历史技术指标",
+  "technical": {
+    "indicator_id": "CR",
+    "temporal": "historical",
+    "adjustment": "native",
+    "fixed": true,
+    "default_parameters": {},
+    "parameter_schema": {},
+    "parameter_keys": {},
+    "required_lines": [
+      "cr"
+    ]
+  },
+  "notes": [
+    "Wind原生历史日线；不在本地计算。复权及未披露的计算参数沿用来源默认，详见原始返回。",
+    "使用已验证的简短问句；逐项核对证券、实际日期、分量及已声明参数。"
+  ]
+}
+```
+
+### wind_history_vr
+
+```json
+{
+  "provider": "wind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "wind_technical_history",
+  "method": "get_stock_technicals",
+  "params": {},
+  "label": "Wind VR（历史）",
+  "query_template": "查询{symbol}在{start_cn}至{end_cn}每日的VR成交量比率技术指标。",
+  "upstream": "Wind MCP 历史技术指标",
+  "technical": {
+    "indicator_id": "VR",
+    "temporal": "historical",
+    "adjustment": "native",
+    "fixed": true,
+    "default_parameters": {},
+    "parameter_schema": {},
+    "parameter_keys": {},
+    "required_lines": [
+      "vr"
+    ]
+  },
+  "notes": [
+    "Wind原生历史日线；不在本地计算。复权及未披露的计算参数沿用来源默认，详见原始返回。",
+    "使用已验证的简短问句；逐项核对证券、实际日期、分量及已声明参数。"
+  ]
+}
+```
+
+### wind_history_dmi
+
+```json
+{
+  "provider": "wind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "wind_technical_history",
+  "method": "get_stock_technicals",
+  "params": {},
+  "label": "Wind DMI（历史）",
+  "query_template": "查询{symbol}在{start_cn}至{end_cn}每日的DMI的PDI、MDI、ADX和ADXR。",
+  "upstream": "Wind MCP 历史技术指标",
+  "technical": {
+    "indicator_id": "DMI",
+    "temporal": "historical",
+    "adjustment": "native",
+    "fixed": true,
+    "default_parameters": {},
+    "parameter_schema": {},
+    "parameter_keys": {},
+    "required_lines": [
+      "pdi",
+      "mdi",
+      "adx",
+      "adxr"
+    ]
+  },
+  "notes": [
+    "Wind原生历史日线；不在本地计算。复权及未披露的计算参数沿用来源默认，详见原始返回。",
+    "使用已验证的简短问句；逐项核对证券、实际日期、分量及已声明参数。"
+  ]
+}
+```
+
+### wind_history_ma
+
+```json
+{
+  "provider": "wind",
+  "dataset": "technical_indicators",
+  "kind": "mcp",
+  "handler": "wind_technical_history",
+  "method": "get_stock_technicals",
+  "params": {},
+  "label": "Wind MA（历史）",
+  "query_template": "查询{symbol}在{start_cn}至{end_cn}每日的{n}日均线。",
+  "upstream": "Wind MCP 历史技术指标",
+  "technical": {
+    "indicator_id": "MA",
+    "temporal": "historical",
+    "adjustment": "native",
+    "fixed": false,
+    "default_parameters": {
+      "n": 20
+    },
+    "parameter_schema": {
+      "n": {
+        "type": "integer",
+        "label": "周期",
+        "min": 1,
+        "max": 250,
+        "default": 20
+      }
+    },
+    "parameter_keys": {
+      "n": "周期数"
+    },
+    "required_lines": [
+      "ma"
+    ]
+  },
+  "notes": [
+    "Wind原生历史日线；不在本地计算。复权及未披露的计算参数沿用来源默认，详见原始返回。",
+    "使用已验证的简短问句；逐项核对证券、实际日期、分量及已声明参数。"
+  ]
 }
 ```

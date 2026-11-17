@@ -10,7 +10,7 @@ from gateway.core import Query
 
 def test_dictionary_complete_and_invalid_reference():
     builtin=json.loads((Path(__file__).parents[1]/'gateway/data/dictionary.json').read_text())
-    assert {ds:len(g['fields']) for ds,g in builtin['datasets'].items()}=={'daily_prices':7,'valuations':17,'financials':169,'technical_indicators':3}
+    assert {ds:len(g['fields']) for ds,g in builtin['datasets'].items()}=={'daily_prices':7,'valuations':17,'financials':169,'technical_indicators':381}
     d=copy.deepcopy(DICTIONARY)
     d['datasets']['daily_prices']['fields']['close']['sources']['wind'][0]['recipe']='not_a_recipe'
     with pytest.raises(KeyError):validate(d)

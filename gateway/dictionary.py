@@ -21,6 +21,11 @@ def validate(d):
             raise ValueError(f'Invalid recipe: {rid}')
         if not r['method'].isidentifier() or r['method'].startswith('_'):
             raise ValueError(f'Invalid method: {rid}')
+        if 'technical' in r:
+            t=r['technical'];schema=t['parameter_schema']
+            if set(schema)!=set(t['default_parameters']) or set(schema)!=set(t['parameter_keys']) or not t['required_lines']:raise ValueError('Invalid technical profile: '+rid)
+            for key,rule in schema.items():
+                if rule.get('type')!='integer' or type(rule.get('min')) is not int or type(rule.get('max')) is not int or not rule['min']<=t['default_parameters'][key]<=rule['max']:raise ValueError('Invalid technical parameter schema: '+rid)
         if r.get('fallback'):
             f=recipes[r['fallback']]
             if not f.get('fallback_only') or f['provider']!=r['provider'] or f['dataset']!=r['dataset'] or f.get('fallback'):
@@ -37,6 +42,12 @@ def validate(d):
                         raise ValueError(f'Missing indicator: {ds}.{field}.{p}')
                     if r['provider']!=p or r['dataset']!=ds or not b['columns']:
                         raise ValueError(f'Invalid binding: {ds}.{field}.{p}')
+                    if 'technical' in r:
+                        if b.get('component') not in r['technical']['required_lines'] or m['unit']!=b.get('source_unit'):raise ValueError('Invalid technical component or unit: '+field)
+                        if m.get('profile_id',b['recipe'])!=b['recipe']:raise ValueError('Technical profile does not match recipe: '+field)
+                        defaults=m.get('parameters',{})
+                        schema=r['technical']['parameter_schema']
+                        if set(defaults)!=set(schema) or any(type(v) is not int or not schema[k]['min']<=v<=schema[k]['max'] for k,v in defaults.items()):raise ValueError('Invalid saved technical parameters: '+field)
                     if not isinstance(b.get('multiplier',1),(int,float)):
                         raise ValueError(f'Invalid multiplier: {field}')
     return d
@@ -178,7 +189,7 @@ def search_metrics(query='', dataset=None, limit=10):
             corpus=' '.join([*primary,*columns,m.get('description','')]).casefold()
             if tokens and not all(t in corpus for t in tokens): continue
             score=0 if needle in [v.casefold() for v in primary] else 1 if any(needle in v.casefold() for v in primary) else 2
-            matches.append((score,ds,field,{'dataset':ds,'field':field,'label':m['label'],'unit':m['unit'],'description':m.get('description',''),'aliases':m.get('aliases',[]),**({'parameters':m['parameters']} if 'parameters' in m else {}),'sources':[p for p,b in m['sources'].items() if b],'origin':'user' if field in local.get(ds,{}).get('fields',{}) else 'builtin'}))
+            matches.append((score,ds,field,{'dataset':ds,'field':field,'label':m['label'],'unit':m['unit'],'description':m.get('description',''),'aliases':m.get('aliases',[]),**({'parameters':m['parameters'],'profile_id':m.get('profile_id') or m['sources']['tdx'][0]['recipe']} if 'parameters' in m else {}),'sources':[p for p,b in m['sources'].items() if b],'origin':'user' if field in local.get(ds,{}).get('fields',{}) else 'builtin'}))
     matches.sort(key=lambda x:x[:3])
     return {'query':query,'total':len(matches),'results':[m[3] for m in matches[:limit]]}
 

@@ -1,0 +1,852 @@
+{
+  "official_url": "https://mcp.51ifind.com/",
+  "schema": "local/schemas/ifind.json",
+  "daily_verified": [
+    {
+      "field": "ifind_macd_diff",
+      "source": "batch_0.raw.json",
+      "column": "MACD指数平滑异同平均（MACD指标选项：DIFF）",
+      "parameters": {
+        "long": 26,
+        "short": 12,
+        "n": 9
+      },
+      "parameter_evidence": {
+        "交易日期": "最新",
+        "长期周期": "26",
+        "复权方式": "不复权",
+        "短期周期": "12",
+        "MCAD指标选项": "DIFF",
+        "周期": "9",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        39.1017,
+        43.2411
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    },
+    {
+      "field": "ifind_cci",
+      "source": "batch_0.raw.json",
+      "column": "CCI顺势指标",
+      "parameters": {
+        "n": 14
+      },
+      "parameter_evidence": {
+        "交易日期": "最新",
+        "复权方式": "不复权",
+        "周期": "14",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        20.8565,
+        55.8202
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    },
+    {
+      "field": "ifind_macd_dea",
+      "source": "batch_0.raw.json",
+      "column": "MACD指数平滑异同平均（MACD指标选项：DEA）",
+      "parameters": {
+        "long": 26,
+        "short": 12,
+        "n": 9
+      },
+      "parameter_evidence": {
+        "交易日期": "最新",
+        "长期周期": "26",
+        "复权方式": "不复权",
+        "短期周期": "12",
+        "MCAD指标选项": "DEA",
+        "周期": "9",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        36.5291,
+        35.8859
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    },
+    {
+      "field": "ifind_boll_mid",
+      "source": "batch_0.raw.json",
+      "column": "BOLL布林线",
+      "parameters": {
+        "width": 2,
+        "n": 20
+      },
+      "parameter_evidence": {
+        "交易日期": "最新",
+        "复权方式": "不复权",
+        "BOLL指标选项": "MID",
+        "带宽": "2",
+        "周期": "20",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        1380.0755,
+        1374.2605
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    },
+    {
+      "field": "ifind_macd_macd",
+      "source": "batch_0.raw.json",
+      "column": "MACD指数平滑异同平均（MACD指标选项：MACD）",
+      "parameters": {
+        "long": 26,
+        "short": 12,
+        "n": 9
+      },
+      "parameter_evidence": {
+        "交易日期": "最新",
+        "长期周期": "26",
+        "复权方式": "不复权",
+        "短期周期": "12",
+        "MCAD指标选项": "MACD",
+        "周期": "9",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        5.1453,
+        14.7104
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    },
+    {
+      "field": "ifind_rsi",
+      "source": "batch_0.raw.json",
+      "column": "RSI相对强弱指标",
+      "parameters": {
+        "n": 6
+      },
+      "parameter_evidence": {
+        "交易日期": "最新",
+        "复权方式": "不复权",
+        "周期": "6",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        43.2797,
+        62.7645
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    },
+    {
+      "field": "ifind_ma",
+      "source": "batch_0.raw.json",
+      "column": "MA简单移动平均",
+      "parameters": {
+        "n": 20
+      },
+      "parameter_evidence": {
+        "交易日期": "最新",
+        "复权方式": "不复权",
+        "周期": "20",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        1380.0755,
+        1374.2605
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    },
+    {
+      "field": "ifind_mtm_mtm",
+      "source": "batch_1.raw.json",
+      "column": "MTM动力指标",
+      "parameters": {
+        "interval": 12,
+        "n": 12
+      },
+      "parameter_evidence": {
+        "交易日期": "最新",
+        "MTM指标选项": "MTM",
+        "复权方式": "不复权",
+        "间隔周期": "12",
+        "周期": "12",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        52.32,
+        104.0
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    },
+    {
+      "field": "ifind_bbi",
+      "source": "batch_1.raw.json",
+      "column": "BBI多空指数",
+      "parameters": {
+        "n2": 6,
+        "n1": 3,
+        "n4": 24,
+        "n3": 12
+      },
+      "parameter_evidence": {
+        "交易日期": "最新",
+        "周期2": "6",
+        "周期1": "3",
+        "周期4": "24",
+        "周期3": "12",
+        "复权方式": "不复权",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        1411.8094,
+        1416.6557
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    },
+    {
+      "field": "ifind_roc_roc",
+      "source": "batch_1.raw.json",
+      "column": "ROC变动速率",
+      "parameters": {
+        "interval": 12,
+        "n": 6
+      },
+      "parameter_evidence": {
+        "交易日期": "最新",
+        "复权方式": "不复权",
+        "ROC指标选项": "ROC",
+        "间隔周期": "12",
+        "周期": "6",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        3.8756,
+        7.7903
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    },
+    {
+      "field": "ifind_expma",
+      "source": "batch_1.raw.json",
+      "column": "EXPMA指数平均数",
+      "parameters": {
+        "n": 12
+      },
+      "parameter_evidence": {
+        "交易日期": "最新",
+        "复权方式": "不复权",
+        "周期": "12",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        1412.2318,
+        1414.0376
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    },
+    {
+      "field": "ifind_wr",
+      "source": "batch_2.raw.json",
+      "column": "WR威廉指标",
+      "parameters": {
+        "n": 10
+      },
+      "parameter_evidence": {
+        "交易日期": "最新",
+        "复权方式": "不复权",
+        "周期": "10",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        51.9955,
+        26.3291
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    },
+    {
+      "field": "ifind_bias",
+      "source": "batch_2.raw.json",
+      "column": "BIAS乖离率",
+      "parameters": {
+        "n": 6
+      },
+      "parameter_evidence": {
+        "交易日期": "最新",
+        "复权方式": "不复权",
+        "周期": "6",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        -2.5925,
+        -0.9343
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    },
+    {
+      "field": "ifind_trix_trix",
+      "source": "batch_2.raw.json",
+      "column": "TRIX三重指数平滑平均",
+      "parameters": {
+        "n2": 20,
+        "n1": 12
+      },
+      "parameter_evidence": {
+        "交易日期": "最新",
+        "周期2": "20",
+        "周期1": "12",
+        "TRIX指标选项": "TRIX",
+        "复权方式": "不复权",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        0.5213,
+        0.5278
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    },
+    {
+      "field": "ifind_obv_obv",
+      "source": "batch_2.raw.json",
+      "column": "OBV能量潮",
+      "parameters": {},
+      "parameter_evidence": {
+        "交易日期": "最新",
+        "OBV指标选项": "OBV",
+        "复权方式": "不复权",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        59370.9905,
+        59769.4696
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    },
+    {
+      "field": "ifind_psy_psy",
+      "source": "batch_2.raw.json",
+      "column": "PSY心理指标",
+      "parameters": {
+        "n2": 6,
+        "n1": 12
+      },
+      "parameter_evidence": {
+        "PSY指标选项": "PSY",
+        "交易日期": "最新",
+        "周期2": "6",
+        "周期1": "12",
+        "复权方式": "不复权",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        58.3333,
+        66.6667
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    },
+    {
+      "field": "ifind_dpo_dpo",
+      "source": "batch_3.raw.json",
+      "column": "DPO区间震荡线",
+      "parameters": {
+        "n2": 6,
+        "n1": 20
+      },
+      "parameter_evidence": {
+        "交易日期": "最新",
+        "周期2": "6",
+        "DPO指标选项": "DPO",
+        "周期1": "20",
+        "复权方式": "不复权",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        -18.9391,
+        21.9791
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    },
+    {
+      "field": "ifind_atr_atr",
+      "source": "batch_3.raw.json",
+      "column": "ATR真实波幅",
+      "parameters": {
+        "n": 14
+      },
+      "parameter_evidence": {
+        "交易日期": "最新",
+        "ATR指标选项": "ATR",
+        "复权方式": "不复权",
+        "周期": "14",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        32.3,
+        31.0414
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    },
+    {
+      "field": "ifind_dma_ddd",
+      "source": "batch_3.raw.json",
+      "column": "DMA平均线差",
+      "parameters": {
+        "long": 50,
+        "short": 10,
+        "n": 10
+      },
+      "parameter_evidence": {
+        "交易日期": "最新",
+        "长期周期": "50",
+        "DMA指标选项": "DDD",
+        "复权方式": "不复权",
+        "短期周期": "10",
+        "周期": "10",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        111.7054,
+        106.5164
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    },
+    {
+      "field": "ifind_arbr_br",
+      "source": "batch_4.raw.json",
+      "column": "人气意愿指标(ARBR)",
+      "parameters": {
+        "n": 26
+      },
+      "parameter_evidence": {
+        "交易日期": "最新",
+        "复权方式": "不复权",
+        "ARBR指标选项": "BR",
+        "周期": "26",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        127.511,
+        135.8645
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    },
+    {
+      "field": "ifind_mass",
+      "source": "batch_4.raw.json",
+      "column": "MASS梅斯线",
+      "parameters": {
+        "n2": 25,
+        "n1": 9
+      },
+      "parameter_evidence": {
+        "交易日期": "最新",
+        "周期2": "25",
+        "周期1": "9",
+        "复权方式": "不复权",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        28.0345,
+        28.0868
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    },
+    {
+      "field": "ifind_mfi",
+      "source": "batch_4.raw.json",
+      "column": "MFI资金流向指标",
+      "parameters": {
+        "n": 14
+      },
+      "parameter_evidence": {
+        "交易日期": "最新",
+        "复权方式": "不复权",
+        "周期": "14",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        57.8417,
+        57.8838
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    },
+    {
+      "field": "ifind_cr",
+      "source": "batch_4.raw.json",
+      "column": "CR能量指标",
+      "parameters": {
+        "n": 26
+      },
+      "parameter_evidence": {
+        "交易日期": "最新",
+        "复权方式": "不复权",
+        "周期": "26",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        216.5479,
+        245.8899
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    },
+    {
+      "field": "ifind_kdj_k",
+      "source": "batch_5.raw.json",
+      "column": "KDJ随机指标",
+      "parameters": {
+        "n2": 3,
+        "n1": 3,
+        "n": 9
+      },
+      "parameter_evidence": {
+        "交易日期": "最新",
+        "周期2": "3",
+        "周期1": "3",
+        "复权方式": "不复权",
+        "周期": "9",
+        "KDJ指标选项": "K",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        65.7364,
+        79.2816
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    },
+    {
+      "field": "ifind_boll_upper",
+      "source": "batch_6.raw.json",
+      "column": "BOLL布林线",
+      "parameters": {
+        "width": 2,
+        "n": 20
+      },
+      "parameter_evidence": {
+        "交易日期": "最新",
+        "复权方式": "不复权",
+        "BOLL指标选项": "UPPER",
+        "带宽": "2",
+        "周期": "20",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        1493.6894,
+        1494.4442
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    },
+    {
+      "field": "ifind_kdj_k",
+      "source": "batch_6.raw.json",
+      "column": "KDJ随机指标",
+      "parameters": {
+        "n2": 3,
+        "n1": 3,
+        "n": 9
+      },
+      "parameter_evidence": {
+        "交易日期": "最新",
+        "周期2": "3",
+        "周期1": "3",
+        "复权方式": "不复权",
+        "周期": "9",
+        "KDJ指标选项": "K",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        65.7364,
+        79.2816
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    },
+    {
+      "field": "ifind_boll_lower",
+      "source": "batch_7.raw.json",
+      "column": "BOLL布林线",
+      "parameters": {
+        "width": 2,
+        "n": 20
+      },
+      "parameter_evidence": {
+        "交易日期": "最新",
+        "复权方式": "不复权",
+        "BOLL指标选项": "LOWER",
+        "带宽": "2",
+        "周期": "20",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        1266.4616,
+        1254.0768
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    },
+    {
+      "field": "ifind_kdj_j",
+      "source": "batch_7.raw.json",
+      "column": "KDJ随机指标",
+      "parameters": {
+        "n2": 3,
+        "n1": 3,
+        "n": 9
+      },
+      "parameter_evidence": {
+        "交易日期": "最新",
+        "周期2": "3",
+        "周期1": "3",
+        "复权方式": "不复权",
+        "周期": "9",
+        "KDJ指标选项": "J",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        41.89,
+        70.6024
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    },
+    {
+      "field": "ifind_kdj_d",
+      "source": "batch_9.raw.json",
+      "column": "KDJ随机指标",
+      "parameters": {
+        "n2": 3,
+        "n1": 3,
+        "n": 9
+      },
+      "parameter_evidence": {
+        "交易日期": "最新",
+        "周期2": "3",
+        "周期1": "3",
+        "复权方式": "不复权",
+        "周期": "9",
+        "KDJ指标选项": "D",
+        "计算周期": "日"
+      },
+      "rows": 2,
+      "values": [
+        77.6596,
+        83.6213
+      ],
+      "symbol": "600519.SH",
+      "request_start_date": "2026-11-10",
+      "request_end_date": "2026-11-11",
+      "returned_dates": [
+        "20261110",
+        "20261111"
+      ]
+    }
+  ],
+  "not_returned_in_batches": [
+    "DMI",
+    "EMV",
+    "ASI",
+    "XS2",
+    "唐奇安"
+  ],
+  "returned_but_not_qualified": {
+    "VR": "batch_8有VR数值和日频参数，但缺少复权元数据，当前严格handler拒绝，不纳入支持字段。"
+  },
+  "scope": "A股不复权日线；分钟入口单独记录、不作为日线支持。",
+  "unit_status": "按定义和实测量级推断价格/无量纲/百分比；OBV单位及缩放未披露；均为独立来源字段",
+  "parameter_mismatch_probe": {
+    "source": "batch_9.raw.json",
+    "requested_MA_period": 10,
+    "returned_MA_period": 5,
+    "action": "严格拒绝，不冒充参数10数据"
+  },
+  "rate_limit": "3并发实测出现429，顺序间隔8秒随后成功。",
+  "date_evidence": "交易日期元数据写最新但数据表显式含请求历史日期；只接受表格日期。"
+}

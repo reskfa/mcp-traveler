@@ -25,8 +25,8 @@ async def query_daily_prices(symbol:str,start_date:str,end_date:str,fields:list[
     """查询 A 股历史日线。日期 YYYY-MM-DD，代码如 600519.SH。大结果返回预览和本地路径。"""
     return await core.query(core.Query(dataset='daily_prices',symbol=symbol,start_date=start_date,end_date=end_date,fields=fields,provider=provider,adjust=adjust))
 @mcp.tool()
-async def query_technical_indicators(symbol:str,start_date:str,end_date:str,fields:list[str]|None=None,provider:str='auto',parameters:dict[str,int]|None=None,frequency:str='daily',adjust:str='native')->dict:
-    """查询厂商日线KDJ：kdj_k/kdj_d/kdj_j；parameters n/m1/m2默认9/3/3。仅native，复权方式未披露；最近5000根日线。"""
+async def query_technical_indicators(symbol:str,start_date:str|None=None,end_date:str|None=None,fields:list[str]|None=None,provider:str='auto',parameters:dict[str,int]|None=None,frequency:str='daily',adjust:str='native')->dict:
+    """按字典查询A股技术指标。先search_metrics找字段；data_catalog查看参数、单位和复权口径。历史查询需日期范围；Wind历史用wind_history_*，MA/RSI周期可调；Wind *_native最新快照可省略日期，不能代替历史。来源可调与固定参数由字典明确，返回来源与实际日期，不在本地计算。"""
     return await core.query(core.Query(dataset='technical_indicators',symbol=symbol,start_date=start_date,end_date=end_date,fields=fields,provider=provider,parameters=parameters,frequency=frequency,adjust=adjust))
 @mcp.tool()
 async def query_valuations(symbol:str,date:str|None=None,fields:list[str]|None=None,provider:str='auto')->dict:

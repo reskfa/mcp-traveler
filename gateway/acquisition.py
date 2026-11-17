@@ -74,9 +74,20 @@ def indicator_dates(obj):
 
 
 def execute_recipe(rid,recipe,bindings,q,sdk,remote):
+    if recipe.get('handler')=='wind_technical_history':
+        from .wind_history import fetch
+        return fetch(remote,q,bindings,recipe)
+    if recipe.get('handler')=='ifind_technical':
+        from .ifind_technical import fetch
+        return fetch(remote,q,bindings,recipe)
+    if recipe.get('handler')=='wind_technical':
+        from .wind_technical import fetch
+        return fetch(remote,q,bindings,recipe)
     if recipe['method']=='tdx_technical_indicator_query':
         from .technical import fetch
-        return fetch(remote,q,bindings)
+        return fetch(remote,q,bindings,recipe)
+    if recipe.get('provider')=='tushare' and recipe.get('technical',{}).get('fixed'):
+        return fixed_technical(recipe,bindings,q,sdk)
     ctx=context(q,recipe,bindings);kind=recipe['kind'];raw=[];table=[]
     if kind.startswith('sdk'):
         batches=[{f:b} for f,b in bindings.items()] if kind=='sdk_per_field' else [bindings]
@@ -136,6 +147,28 @@ def execute_recipe(rid,recipe,bindings,q,sdk,remote):
     elif data and all(r.get('date') for r in data):
         latest=max(r['date'] for r in data);data=[r for r in data if r['date']==latest]
     return data,raw
+
+
+def fixed_technical(recipe,bindings,q,sdk):
+    """Keep vendor values unchanged and paginate backward at the documented cap."""
+    from datetime import date,timedelta
+    ctx=context(q,recipe,bindings);end=q['end_date'];raw=[];out={}
+    for _ in range(20):
+        args=parameters(recipe,{**ctx,'end_compact':end.replace('-','')},q)
+        frame=getattr(sdk,recipe['method'])(**args)
+        batch=records(frame);raw.append(batch)
+        if not batch:break
+        for item in batch:
+            if item.get('ts_code')!=q['symbol']:raise RuntimeError('Tushare技术指标返回证券与请求不一致')
+            day=norm_date(item.get('trade_date'))
+            if not day or not q['start_date']<=day<=end:raise RuntimeError('Tushare技术指标返回日期缺失或越界')
+            if any(b['columns'][0] not in item for b in bindings.values()):raise RuntimeError('Tushare技术指标返回缺少请求字段')
+            out[day]={'symbol':q['symbol'],'date':day,**{f:number(item[b['columns'][0]]) for f,b in bindings.items()}}
+        oldest=min(out)
+        if len(batch)<10000 or oldest<=q['start_date']:break
+        end=(date.fromisoformat(oldest)-timedelta(days=1)).isoformat()
+    else:raise RuntimeError('Tushare技术指标历史分页达到上限，请缩小日期范围')
+    return list(out.values()),raw
 
 
 def acquire(provider,q,sdk=None,remote=None):

@@ -35,9 +35,11 @@ def _known(request):
     wanted={compact(n) for n in _names(request)}
     return [f for f,m in dictionary.fields(request.dataset).items() if wanted & {compact(f),compact(m['label']),*[compact(a) for a in m.get('aliases',[])]}]
 
-def _recipe(provider,dataset):
+def _recipe(provider,dataset,name=None):
     if dataset=='technical_indicators':
-        return copy.deepcopy(dictionary.DICTIONARY['recipes']['tdx_kdj']) if provider=='tdx' else None
+        from .technical import field_for,field_profile
+        field=field_for(name or '')
+        return copy.deepcopy(dictionary.DICTIONARY['recipes'][field_profile(field)]) if provider=='tdx' and field else None
     options=[r for r in dictionary.DICTIONARY['recipes'].values() if r['provider']==provider and r['dataset']==dataset and r['kind']=='mcp_nl']
     if not options:return None
     r=copy.deepcopy(options[0])
@@ -132,12 +134,33 @@ async def invoke(provider,request,recipe,timeout):
 async def explore(request:ExplorationRequest):
     known=_known(request)
     if request.dataset=='technical_indicators':
-        from .technical import component_for
-        if not component_for(request.name):return {'status':'needs_confirmation','attempts':[],'network_calls':0,'data':[],'notes':['当前技术指标仅支持KDJ K值、D值、J值，请明确分量。']}
+        # Precomputed SDK fields already have an exact, reusable dictionary
+        # binding. Do not send their names to an unrelated vendor's MCP.
+        exact=[f for f in known if f==request.name]
+        if exact:known=exact
+        elif request.parameters:
+            known=[f for f in known if not any(
+                dictionary.DICTIONARY['recipes'][b['recipe']].get('technical',{}).get('fixed')
+                for bindings in dictionary.fields(request.dataset)[f]['sources'].values()
+                for b in bindings)]
+        if request.provider!='auto':
+            known=[f for f in known if dictionary.fields(request.dataset)[f]['sources'].get(request.provider)]
+        sdk_known=[f for f in known if any(
+            (dictionary.DICTIONARY['recipes'][b['recipe']]['kind'].startswith('sdk') or dictionary.DICTIONARY['recipes'][b['recipe']].get('handler') in {'wind_technical','ifind_technical','wind_technical_history'})
+            for bindings in dictionary.fields(request.dataset)[f]['sources'].values()
+            for b in bindings)]
+        if sdk_known:
+            if len(known)!=1:return {'status':'needs_confirmation','matches':known,'attempts':[],'network_calls':0}
+            q=core.Query(**{**request.model_dump(exclude={'name','unit','aliases','max_attempts','fields'}),'fields':known})
+            return {'status':'existing','existing_field':known[0],'result':await core.query(q),'attempts':[]}
+        from .technical import field_for
+        selected=field_for(request.name)
+        if not selected or not dictionary.fields(request.dataset)[selected]['sources'].get('tdx'):
+            return {'status':'needs_confirmation','attempts':[],'network_calls':0,'data':[],'notes':['请明确选择该来源支持的技术指标分量。']}
         # A display name may be shared by several saved parameter versions.
         # Only an exact personal ID reuses a saved entry; a named exploration
         # performs fresh vendor validation for the requested parameters.
-        known=[f for f in known if f not in ['kdj_k','kdj_d','kdj_j'] and request.name==f]
+        known=[f for f in known if request.name==f and f in dictionary._read_user().get('datasets',{}).get(request.dataset,{}).get('fields',{})]
     if len(known)==1:
         q=core.Query(**{**request.model_dump(exclude={'name','unit','aliases','max_attempts','fields'}),'fields':known})
         return {'status':'existing','existing_field':known[0],'result':await core.query(q),'attempts':[]}
@@ -147,7 +170,7 @@ async def explore(request:ExplorationRequest):
     budget=request.max_attempts*60
     for provider in dict.fromkeys(order):
         if used>=request.max_attempts or time.monotonic()-started>=budget:break
-        recipe=_recipe(provider,request.dataset)
+        recipe=_recipe(provider,request.dataset,request.name)
         if not recipe or provider not in ['wind','ifind','tdx']:
             attempts.append({'provider':provider,'status':'skipped','reason':'没有明确的自然语言工具或SDK接口字段映射，不猜测接口'});continue
         if not core.available(provider,c['providers'][provider]):attempts.append({'provider':provider,'status':'skipped','reason':'来源未配置或未启用'});continue

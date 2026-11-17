@@ -32,11 +32,8 @@ class Query(BaseModel):
         if self.dataset=='technical_indicators':
             from .technical import normalized_parameters
             self.adjust=self.adjust or 'native'
-            if self.adjust!='native':raise ValueError('技术指标仅支持来源原生口径 native；厂商未披露复权方式')
-            if self.parameters is not None:normalized_parameters(self.parameters)
             if self.date:
                 self.start_date=self.end_date=self.date
-            if not self.start_date or not self.end_date:raise ValueError('技术指标需要起止日期或date')
         else:
             self.adjust=self.adjust or 'none'
             if self.adjust=='native':raise ValueError('native仅适用于技术指标')
@@ -48,6 +45,16 @@ class Query(BaseModel):
         if self.dataset=='financials' and not self.period:raise ValueError('财务查询需要报告期')
         self.fields=list(FIELDS[self.dataset]) if self.fields==['*'] else (self.fields or list(DEFAULT_FIELDS[self.dataset]))
         if set(self.fields)-set(FIELDS[self.dataset]):raise ValueError('包含不支持的字段')
+        if self.dataset=='technical_indicators':
+            from .technical import resolve_parameters,field_for,field_profile,profile
+            selected=self.fields
+            if hasattr(self,'name'):
+                matched=field_for(self.name)
+                selected=[matched] if matched else []
+            snapshot=bool(selected) and all(profile(field_profile(f))['technical'].get('temporal')=='snapshot' for f in selected)
+            if bool(self.start_date)!=bool(self.end_date) or (not snapshot and not self.start_date):
+                raise ValueError('历史技术指标需要起止日期或date；只有最新快照可省略日期')
+            if not hasattr(self,'name'):resolve_parameters(self.model_dump())
         return self
 
 async def invoke(name,query,timeout):
@@ -95,12 +102,9 @@ async def query(request:Query):
     request=Query.model_validate(request.model_dump())
     c=config.load();q=request.model_dump();attempts=[];start=time.monotonic()
     if request.dataset=='technical_indicators':
-        from .technical import normalized_parameters
-        from .dictionary import fields as metric_fields
-        defaults=[metric_fields(request.dataset)[f].get('parameters',{}) for f in request.fields]
-        if any(p!=defaults[0] for p in defaults) and set(request.parameters or {})!={'n','m1','m2'}:
-            raise ValueError('所选字段保存的默认参数不同，请明确传入全部parameters')
-        q['parameters']=normalized_parameters({**defaults[0],**(request.parameters or {})})
+        from .technical import resolve_parameters
+        q['resolved_parameters']=resolve_parameters(q)
+        if len(q['resolved_parameters'])==1:q['parameters']=next(iter(q['resolved_parameters'].values()))
     order=c['routes'][q['dataset']] if request.provider=='auto' else [request.provider]
     data=None; provenance=[];raws=[];notes=[];contributors=[];upstreams=[]
     missing=list(request.fields)

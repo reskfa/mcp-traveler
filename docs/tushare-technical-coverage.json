@@ -1,0 +1,1364 @@
+{
+  "source": "https://tushare.pro/wctapi/documents/328.md",
+  "checked_at": "2026-11-16",
+  "technical_source_field_count": 226,
+  "coverage": {
+    "asi_bfq": {
+      "field": "ts_asi_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "未确认",
+      "unit_status": "unconfirmed"
+    },
+    "asit_bfq": {
+      "field": "ts_asit_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "未确认",
+      "unit_status": "unconfirmed"
+    },
+    "atr_bfq": {
+      "field": "ts_atr_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "bbi_bfq": {
+      "field": "ts_bbi_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "bias1_bfq": {
+      "field": "ts_bias1_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "bias2_bfq": {
+      "field": "ts_bias2_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "bias3_bfq": {
+      "field": "ts_bias3_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "boll_lower_bfq": {
+      "field": "ts_boll_lower_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "boll_mid_bfq": {
+      "field": "ts_boll_mid_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "boll_upper_bfq": {
+      "field": "ts_boll_upper_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "brar_ar_bfq": {
+      "field": "ts_brar_ar_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "brar_br_bfq": {
+      "field": "ts_brar_br_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "cci_bfq": {
+      "field": "ts_cci_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "cr_bfq": {
+      "field": "ts_cr_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "dfma_dif_bfq": {
+      "field": "ts_dfma_dif_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "dfma_difma_bfq": {
+      "field": "ts_dfma_difma_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "dmi_adx_bfq": {
+      "field": "ts_dmi_adx_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "dmi_adxr_bfq": {
+      "field": "ts_dmi_adxr_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "dmi_mdi_bfq": {
+      "field": "ts_dmi_mdi_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "dmi_pdi_bfq": {
+      "field": "ts_dmi_pdi_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "dpo_bfq": {
+      "field": "ts_dpo_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "madpo_bfq": {
+      "field": "ts_madpo_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ema_bfq_10": {
+      "field": "ts_ema_bfq_10",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ema_bfq_20": {
+      "field": "ts_ema_bfq_20",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ema_bfq_250": {
+      "field": "ts_ema_bfq_250",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ema_bfq_30": {
+      "field": "ts_ema_bfq_30",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ema_bfq_5": {
+      "field": "ts_ema_bfq_5",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ema_bfq_60": {
+      "field": "ts_ema_bfq_60",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ema_bfq_90": {
+      "field": "ts_ema_bfq_90",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "emv_bfq": {
+      "field": "ts_emv_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "未确认",
+      "unit_status": "unconfirmed"
+    },
+    "maemv_bfq": {
+      "field": "ts_maemv_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "未确认",
+      "unit_status": "unconfirmed"
+    },
+    "expma_12_bfq": {
+      "field": "ts_expma_12_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "expma_50_bfq": {
+      "field": "ts_expma_50_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "kdj_bfq": {
+      "field": "ts_kdj_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "kdj_d_bfq": {
+      "field": "ts_kdj_d_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "kdj_k_bfq": {
+      "field": "ts_kdj_k_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "ktn_down_bfq": {
+      "field": "ts_ktn_down_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ktn_mid_bfq": {
+      "field": "ts_ktn_mid_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ktn_upper_bfq": {
+      "field": "ts_ktn_upper_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ma_bfq_10": {
+      "field": "ts_ma_bfq_10",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ma_bfq_20": {
+      "field": "ts_ma_bfq_20",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ma_bfq_250": {
+      "field": "ts_ma_bfq_250",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ma_bfq_30": {
+      "field": "ts_ma_bfq_30",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ma_bfq_5": {
+      "field": "ts_ma_bfq_5",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ma_bfq_60": {
+      "field": "ts_ma_bfq_60",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ma_bfq_90": {
+      "field": "ts_ma_bfq_90",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "macd_bfq": {
+      "field": "ts_macd_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "macd_dea_bfq": {
+      "field": "ts_macd_dea_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "macd_dif_bfq": {
+      "field": "ts_macd_dif_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "mass_bfq": {
+      "field": "ts_mass_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "ma_mass_bfq": {
+      "field": "ts_ma_mass_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "mfi_bfq": {
+      "field": "ts_mfi_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "mtm_bfq": {
+      "field": "ts_mtm_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "mtmma_bfq": {
+      "field": "ts_mtmma_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "obv_bfq": {
+      "field": "ts_obv_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "未确认",
+      "unit_status": "unconfirmed"
+    },
+    "psy_bfq": {
+      "field": "ts_psy_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "psyma_bfq": {
+      "field": "ts_psyma_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "roc_bfq": {
+      "field": "ts_roc_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "maroc_bfq": {
+      "field": "ts_maroc_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "rsi_bfq_12": {
+      "field": "ts_rsi_bfq_12",
+      "profile": "ts_factor_bfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "rsi_bfq_24": {
+      "field": "ts_rsi_bfq_24",
+      "profile": "ts_factor_bfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "rsi_bfq_6": {
+      "field": "ts_rsi_bfq_6",
+      "profile": "ts_factor_bfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "taq_down_bfq": {
+      "field": "ts_taq_down_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "taq_mid_bfq": {
+      "field": "ts_taq_mid_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "taq_up_bfq": {
+      "field": "ts_taq_up_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "trix_bfq": {
+      "field": "ts_trix_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "trma_bfq": {
+      "field": "ts_trma_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "vr_bfq": {
+      "field": "ts_vr_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "wr_bfq": {
+      "field": "ts_wr_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "wr1_bfq": {
+      "field": "ts_wr1_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "xsii_td1_bfq": {
+      "field": "ts_xsii_td1_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "xsii_td2_bfq": {
+      "field": "ts_xsii_td2_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "xsii_td3_bfq": {
+      "field": "ts_xsii_td3_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "xsii_td4_bfq": {
+      "field": "ts_xsii_td4_bfq",
+      "profile": "ts_factor_bfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "asi_qfq": {
+      "field": "ts_asi_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "未确认",
+      "unit_status": "unconfirmed"
+    },
+    "asit_qfq": {
+      "field": "ts_asit_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "未确认",
+      "unit_status": "unconfirmed"
+    },
+    "atr_qfq": {
+      "field": "ts_atr_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "bbi_qfq": {
+      "field": "ts_bbi_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "bias1_qfq": {
+      "field": "ts_bias1_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "bias2_qfq": {
+      "field": "ts_bias2_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "bias3_qfq": {
+      "field": "ts_bias3_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "boll_lower_qfq": {
+      "field": "ts_boll_lower_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "boll_mid_qfq": {
+      "field": "ts_boll_mid_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "boll_upper_qfq": {
+      "field": "ts_boll_upper_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "brar_ar_qfq": {
+      "field": "ts_brar_ar_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "brar_br_qfq": {
+      "field": "ts_brar_br_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "cci_qfq": {
+      "field": "ts_cci_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "cr_qfq": {
+      "field": "ts_cr_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "dfma_dif_qfq": {
+      "field": "ts_dfma_dif_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "dfma_difma_qfq": {
+      "field": "ts_dfma_difma_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "dmi_adx_qfq": {
+      "field": "ts_dmi_adx_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "dmi_adxr_qfq": {
+      "field": "ts_dmi_adxr_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "dmi_mdi_qfq": {
+      "field": "ts_dmi_mdi_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "dmi_pdi_qfq": {
+      "field": "ts_dmi_pdi_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "dpo_qfq": {
+      "field": "ts_dpo_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "madpo_qfq": {
+      "field": "ts_madpo_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ema_qfq_10": {
+      "field": "ts_ema_qfq_10",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ema_qfq_20": {
+      "field": "ts_ema_qfq_20",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ema_qfq_250": {
+      "field": "ts_ema_qfq_250",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ema_qfq_30": {
+      "field": "ts_ema_qfq_30",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ema_qfq_5": {
+      "field": "ts_ema_qfq_5",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ema_qfq_60": {
+      "field": "ts_ema_qfq_60",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ema_qfq_90": {
+      "field": "ts_ema_qfq_90",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "emv_qfq": {
+      "field": "ts_emv_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "未确认",
+      "unit_status": "unconfirmed"
+    },
+    "maemv_qfq": {
+      "field": "ts_maemv_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "未确认",
+      "unit_status": "unconfirmed"
+    },
+    "expma_12_qfq": {
+      "field": "ts_expma_12_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "expma_50_qfq": {
+      "field": "ts_expma_50_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "kdj_qfq": {
+      "field": "ts_kdj_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "kdj_d_qfq": {
+      "field": "ts_kdj_d_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "kdj_k_qfq": {
+      "field": "ts_kdj_k_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "ktn_down_qfq": {
+      "field": "ts_ktn_down_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ktn_mid_qfq": {
+      "field": "ts_ktn_mid_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ktn_upper_qfq": {
+      "field": "ts_ktn_upper_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ma_qfq_10": {
+      "field": "ts_ma_qfq_10",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ma_qfq_20": {
+      "field": "ts_ma_qfq_20",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ma_qfq_250": {
+      "field": "ts_ma_qfq_250",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ma_qfq_30": {
+      "field": "ts_ma_qfq_30",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ma_qfq_5": {
+      "field": "ts_ma_qfq_5",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ma_qfq_60": {
+      "field": "ts_ma_qfq_60",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ma_qfq_90": {
+      "field": "ts_ma_qfq_90",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "macd_qfq": {
+      "field": "ts_macd_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "macd_dea_qfq": {
+      "field": "ts_macd_dea_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "macd_dif_qfq": {
+      "field": "ts_macd_dif_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "mass_qfq": {
+      "field": "ts_mass_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "ma_mass_qfq": {
+      "field": "ts_ma_mass_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "mfi_qfq": {
+      "field": "ts_mfi_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "mtm_qfq": {
+      "field": "ts_mtm_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "mtmma_qfq": {
+      "field": "ts_mtmma_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "obv_qfq": {
+      "field": "ts_obv_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "未确认",
+      "unit_status": "unconfirmed"
+    },
+    "psy_qfq": {
+      "field": "ts_psy_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "psyma_qfq": {
+      "field": "ts_psyma_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "roc_qfq": {
+      "field": "ts_roc_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "maroc_qfq": {
+      "field": "ts_maroc_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "rsi_qfq_12": {
+      "field": "ts_rsi_qfq_12",
+      "profile": "ts_factor_qfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "rsi_qfq_24": {
+      "field": "ts_rsi_qfq_24",
+      "profile": "ts_factor_qfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "rsi_qfq_6": {
+      "field": "ts_rsi_qfq_6",
+      "profile": "ts_factor_qfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "taq_down_qfq": {
+      "field": "ts_taq_down_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "taq_mid_qfq": {
+      "field": "ts_taq_mid_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "taq_up_qfq": {
+      "field": "ts_taq_up_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "trix_qfq": {
+      "field": "ts_trix_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "trma_qfq": {
+      "field": "ts_trma_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "vr_qfq": {
+      "field": "ts_vr_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "wr_qfq": {
+      "field": "ts_wr_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "wr1_qfq": {
+      "field": "ts_wr1_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "xsii_td1_qfq": {
+      "field": "ts_xsii_td1_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "xsii_td2_qfq": {
+      "field": "ts_xsii_td2_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "xsii_td3_qfq": {
+      "field": "ts_xsii_td3_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "xsii_td4_qfq": {
+      "field": "ts_xsii_td4_qfq",
+      "profile": "ts_factor_qfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "asi_hfq": {
+      "field": "ts_asi_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "未确认",
+      "unit_status": "unconfirmed"
+    },
+    "asit_hfq": {
+      "field": "ts_asit_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "未确认",
+      "unit_status": "unconfirmed"
+    },
+    "atr_hfq": {
+      "field": "ts_atr_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "bbi_hfq": {
+      "field": "ts_bbi_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "bias1_hfq": {
+      "field": "ts_bias1_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "bias2_hfq": {
+      "field": "ts_bias2_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "bias3_hfq": {
+      "field": "ts_bias3_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "boll_lower_hfq": {
+      "field": "ts_boll_lower_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "boll_mid_hfq": {
+      "field": "ts_boll_mid_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "boll_upper_hfq": {
+      "field": "ts_boll_upper_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "brar_ar_hfq": {
+      "field": "ts_brar_ar_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "brar_br_hfq": {
+      "field": "ts_brar_br_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "cci_hfq": {
+      "field": "ts_cci_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "cr_hfq": {
+      "field": "ts_cr_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "dfma_dif_hfq": {
+      "field": "ts_dfma_dif_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "dfma_difma_hfq": {
+      "field": "ts_dfma_difma_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "dmi_adx_hfq": {
+      "field": "ts_dmi_adx_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "dmi_adxr_hfq": {
+      "field": "ts_dmi_adxr_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "dmi_mdi_hfq": {
+      "field": "ts_dmi_mdi_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "dmi_pdi_hfq": {
+      "field": "ts_dmi_pdi_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "dpo_hfq": {
+      "field": "ts_dpo_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "madpo_hfq": {
+      "field": "ts_madpo_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ema_hfq_10": {
+      "field": "ts_ema_hfq_10",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ema_hfq_20": {
+      "field": "ts_ema_hfq_20",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ema_hfq_250": {
+      "field": "ts_ema_hfq_250",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ema_hfq_30": {
+      "field": "ts_ema_hfq_30",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ema_hfq_5": {
+      "field": "ts_ema_hfq_5",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ema_hfq_60": {
+      "field": "ts_ema_hfq_60",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ema_hfq_90": {
+      "field": "ts_ema_hfq_90",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "emv_hfq": {
+      "field": "ts_emv_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "未确认",
+      "unit_status": "unconfirmed"
+    },
+    "maemv_hfq": {
+      "field": "ts_maemv_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "未确认",
+      "unit_status": "unconfirmed"
+    },
+    "expma_12_hfq": {
+      "field": "ts_expma_12_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "expma_50_hfq": {
+      "field": "ts_expma_50_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "kdj_hfq": {
+      "field": "ts_kdj_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "kdj_d_hfq": {
+      "field": "ts_kdj_d_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "kdj_k_hfq": {
+      "field": "ts_kdj_k_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "ktn_down_hfq": {
+      "field": "ts_ktn_down_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ktn_mid_hfq": {
+      "field": "ts_ktn_mid_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ktn_upper_hfq": {
+      "field": "ts_ktn_upper_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ma_hfq_10": {
+      "field": "ts_ma_hfq_10",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ma_hfq_20": {
+      "field": "ts_ma_hfq_20",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ma_hfq_250": {
+      "field": "ts_ma_hfq_250",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ma_hfq_30": {
+      "field": "ts_ma_hfq_30",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ma_hfq_5": {
+      "field": "ts_ma_hfq_5",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ma_hfq_60": {
+      "field": "ts_ma_hfq_60",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "ma_hfq_90": {
+      "field": "ts_ma_hfq_90",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "macd_hfq": {
+      "field": "ts_macd_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "macd_dea_hfq": {
+      "field": "ts_macd_dea_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "macd_dif_hfq": {
+      "field": "ts_macd_dif_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "mass_hfq": {
+      "field": "ts_mass_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "ma_mass_hfq": {
+      "field": "ts_ma_mass_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "mfi_hfq": {
+      "field": "ts_mfi_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "mtm_hfq": {
+      "field": "ts_mtm_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "mtmma_hfq": {
+      "field": "ts_mtmma_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "obv_hfq": {
+      "field": "ts_obv_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "未确认",
+      "unit_status": "unconfirmed"
+    },
+    "psy_hfq": {
+      "field": "ts_psy_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "psyma_hfq": {
+      "field": "ts_psyma_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "roc_hfq": {
+      "field": "ts_roc_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "maroc_hfq": {
+      "field": "ts_maroc_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "rsi_hfq_12": {
+      "field": "ts_rsi_hfq_12",
+      "profile": "ts_factor_hfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "rsi_hfq_24": {
+      "field": "ts_rsi_hfq_24",
+      "profile": "ts_factor_hfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "rsi_hfq_6": {
+      "field": "ts_rsi_hfq_6",
+      "profile": "ts_factor_hfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "taq_down_hfq": {
+      "field": "ts_taq_down_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "taq_mid_hfq": {
+      "field": "ts_taq_mid_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "taq_up_hfq": {
+      "field": "ts_taq_up_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "trix_hfq": {
+      "field": "ts_trix_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "trma_hfq": {
+      "field": "ts_trma_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "vr_hfq": {
+      "field": "ts_vr_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "wr_hfq": {
+      "field": "ts_wr_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "wr1_hfq": {
+      "field": "ts_wr1_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "无量纲",
+      "unit_status": "definition_inferred"
+    },
+    "xsii_td1_hfq": {
+      "field": "ts_xsii_td1_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "xsii_td2_hfq": {
+      "field": "ts_xsii_td2_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "xsii_td3_hfq": {
+      "field": "ts_xsii_td3_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "xsii_td4_hfq": {
+      "field": "ts_xsii_td4_hfq",
+      "profile": "ts_factor_hfq",
+      "unit": "元",
+      "unit_status": "definition_inferred"
+    },
+    "downdays": {
+      "field": "ts_downdays",
+      "profile": "ts_factor_counts",
+      "unit": "天",
+      "unit_status": "documented"
+    },
+    "updays": {
+      "field": "ts_updays",
+      "profile": "ts_factor_counts",
+      "unit": "天",
+      "unit_status": "documented"
+    },
+    "lowdays": {
+      "field": "ts_lowdays",
+      "profile": "ts_factor_counts",
+      "unit": "天",
+      "unit_status": "documented"
+    },
+    "topdays": {
+      "field": "ts_topdays",
+      "profile": "ts_factor_counts",
+      "unit": "天",
+      "unit_status": "documented"
+    }
+  },
+  "missing": []
+}

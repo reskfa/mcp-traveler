@@ -1,0 +1,354 @@
+[
+  {
+    "field": "wind_history_bbi",
+    "recipe": "wind_history_bbi",
+    "source_file": "bbi.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_expma",
+    "recipe": "wind_history_expma",
+    "source_file": "expma.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_psy",
+    "recipe": "wind_history_psy",
+    "source_file": "psy.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_kdj_k",
+    "recipe": "wind_history_kdj",
+    "source_file": "kdj.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_kdj_d",
+    "recipe": "wind_history_kdj",
+    "source_file": "kdj.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_kdj_j",
+    "recipe": "wind_history_kdj",
+    "source_file": "kdj.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_wr",
+    "recipe": "wind_history_wr",
+    "source_file": "wr.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_ar",
+    "recipe": "wind_history_ar",
+    "source_file": "ar_cn.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_sar",
+    "recipe": "wind_history_sar",
+    "source_file": "sar.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_dma",
+    "recipe": "wind_history_dma",
+    "source_file": "dma.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_boll_upper",
+    "recipe": "wind_history_boll",
+    "source_file": "boll.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_boll_mid",
+    "recipe": "wind_history_boll",
+    "source_file": "boll.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_boll_lower",
+    "recipe": "wind_history_boll",
+    "source_file": "boll.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_mfi",
+    "recipe": "wind_history_mfi",
+    "source_file": "mfi.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_mtm",
+    "recipe": "wind_history_mtm",
+    "source_file": "mtm.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_trix",
+    "recipe": "wind_history_trix",
+    "source_file": "trix.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_roc",
+    "recipe": "wind_history_roc",
+    "source_file": "roc.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_rsi",
+    "recipe": "wind_history_rsi",
+    "source_file": "rsi.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_atr",
+    "recipe": "wind_history_atr",
+    "source_file": "atr.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_obv",
+    "recipe": "wind_history_obv",
+    "source_file": "obv.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_bias",
+    "recipe": "wind_history_bias",
+    "source_file": "bias.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_macd_dif",
+    "recipe": "wind_history_macd",
+    "source_file": "macd.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_macd_dea",
+    "recipe": "wind_history_macd",
+    "source_file": "macd.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_macd_macd",
+    "recipe": "wind_history_macd",
+    "source_file": "macd.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_cci",
+    "recipe": "wind_history_cci",
+    "source_file": "cci.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_cr",
+    "recipe": "wind_history_cr",
+    "source_file": "cr_cn.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_vr",
+    "recipe": "wind_history_vr",
+    "source_file": "vr_cn.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_dmi_pdi",
+    "recipe": "wind_history_dmi",
+    "source_file": "dmi.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_dmi_mdi",
+    "recipe": "wind_history_dmi",
+    "source_file": "dmi.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_dmi_adx",
+    "recipe": "wind_history_dmi",
+    "source_file": "dmi.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_dmi_adxr",
+    "recipe": "wind_history_dmi",
+    "source_file": "dmi.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  },
+  {
+    "field": "wind_history_ma",
+    "recipe": "wind_history_ma",
+    "source_file": "simple_ma20.raw.json",
+    "verified_dates": [
+      "2026-11-10",
+      "2026-11-11",
+      "2026-11-12",
+      "2026-11-13"
+    ]
+  }
+]

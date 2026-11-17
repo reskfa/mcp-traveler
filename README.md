@@ -124,7 +124,7 @@ HTTP 使用 `POST /api/query`，请求结构同 `Query`。本地网页与 MCP �
 
 ## 项目级数据字典
 
-[总字典表](docs/data-dictionary.md) 列出全部 196 个内置分类字段（量价 7、估值与每日指标 17、财务 169、技术指标 3）在五家来源的取法、返回列、单位转换及缺项。
+[总字典表](docs/data-dictionary.md) 列出全部 574 个内置分类字段（量价 7、估值与每日指标 17、财务 169、技术指标 381）在五家来源的取法、返回列、单位转换及缺项。
 
 内置字典是 `gateway/data/dictionary.json`，人读的 Markdown 由它生成；个人扩展保存在 `local/user_dictionary.json`。运行时合并两者，取数执行器、数据目录和字段解析共用合并后的字典。
 
@@ -186,16 +186,51 @@ HTTP 对应 `GET /api/metrics/search?q=净息差`、`POST /api/explore`、`POST 
 
 ## 厂商技术指标
 
-新增类别 `technical_indicators`，目前接入通达信原生日线 KDJ，包含 `kdj_k`、`kdj_d`、`kdj_j`。数值来自厂商工具，不在本地重算。MCP 示例：
+类别 `technical_indicators` 共 **381 个字段**：原有 300 个历史字段，加 iFinD 28 个独立原生日线字段和 Wind 32 个历史字段、21 个独立最新快照字段。原有历史字段包括通达信 29 个指标族、74 个分量；Tushare 技术面因子专业版 78 个输出分量／固定周期项、226 个复权字段。数值来自厂商，不在本地重算。来源、分量、单位和参数由 `data_catalog(dataset="technical_indicators")` 的 `profiles` 与字段定义统一描述，网页据此生成选项。
+
+| 来源 | 已支持范围 | 参数与复权 |
+| --- | --- | --- |
+| iFinD | 28 个已验证分量，使用独立 `ifind_*` 字段 | 不复权日线；按 profile 调参，逐分量核对返回参数；省略分量或参数不符即失败 |
+| Wind | 23 类、32 个 `wind_history_*` 历史字段，以及 21 个 `wind_*_native` 快照字段 | 历史 MA/RSI 周期可调，其余沿用来源默认；布林线26日、带宽2；快照不代替历史 |
+| AKShare | 当前已核实范围没有本目录可接入的原生历史数值接口 | 技术选股榜单不充当历史数值；未启用本地派生 |
+| 通达信 | KDJ、MACD、RSI、BOLL、MA、EXPMA、BBI、DMI、CCI、ROC、MTM、WR、BIAS、TRIX、PSY、OBV、VR、VOL、ATR、DMA、EMV、DPO、BRAR、MFI、CR、ASI、MASS、XSII、唐奇安通道 | 按各 profile 调参；日线原生口径，复权方式未披露 |
+| Tushare 专业版 | ASI/ASIT、ATR、BBI、BIAS、BOLL、BRAR、CCI、CR、DFMA、DMI、DPO/MADPO、EMA、EMV/MAEMV、EXPMA、KDJ、KTN、MA、MACD、MASS/MA_MASS、MFI、MTM/MTMMA、OBV、PSY/PSYMA、ROC/MAROC、RSI、TAQ、TRIX/TRMA、VR、WR/WR1、XSII，以及上涨／下跌／高点／低点天数 | 来源预计算固定参数；分别选不复权、前复权、后复权字段，天数项单独定义 |
+
+Wind 历史覆盖 MA、MACD、KDJ、RSI、BOLL、CCI、ATR、BIAS、ROC、WR、OBV、EXPMA、BBI、DMI、TRIX、PSY、MTM、DMA、SAR、MFI、AR、VR、CR。历史查询示例：
+
+```text
+query_technical_indicators(symbol="600519.SH", start_date="2026-11-10", end_date="2026-11-13",
+  fields=["wind_history_macd_dif", "wind_history_macd_dea", "wind_history_macd_macd"], provider="wind")
+query_technical_indicators(symbol="600519.SH", start_date="2026-11-10", end_date="2026-11-13",
+  fields=["wind_history_ma"], parameters={"n":10}, provider="wind")
+```
+
+使用字典中的简短问句和精确返回列映射；一个指标族一次调用，选择单个分量也可复用整族返回。证券、实际日期、已声明分量和参数必须匹配。BR 尚无可信取法；VR、OBV 未明确缩放，保留来源原值。未披露的周期和复权方式不猜测，也不声称与其他来源算法相同。
+
+Tushare 全部 226 个源字段及逐项映射见[技术目录边界](docs/technical-inventory.md)和[覆盖清单](docs/tushare-technical-coverage.json)。其中 MA、EMA 提供 5/10/20/30/60/90/250 日固定项，RSI 提供 6/12/24 日固定项；“78 项”包含同一算法的分量和周期项，不表示 78 种独立算法。
 
 ```text
 query_technical_indicators(
   symbol="600519.SH", start_date="2026-11-12", end_date="2026-11-13",
-  fields=["kdj_k", "kdj_d", "kdj_j"], provider="tdx",
-  parameters={"n":9,"m1":3,"m2":3}, frequency="daily", adjust="native"
+  fields=["macd_dif", "macd_dea", "macd_macd"], provider="tdx",
+  parameters={"short":12,"long":26,"mid":9}, frequency="daily", adjust="native"
+)
+query_technical_indicators(
+  symbol="600519.SH", start_date="2026-11-12", end_date="2026-11-13",
+  fields=["ts_ma_qfq_20", "ts_atr_qfq"], provider="tushare", adjust="native"
 )
 ```
 
-`n`、`m1`、`m2` 为 1–1000 的整数，内置默认 9/3/3；返回参数必须与厂商 `params_used` 一致才接受。当前仅支持日线与 `native` 来源原生口径；厂商未披露复权方式，不能将其理解为不复权，不支持 `qfq` / `hfq`。查询按起日估算所需的最近日线数量，再按实际日期筛选。接口声明上限 5000 根，但本轮直接请求 5000 根失败；已验证近期小范围取数，较长历史区间仍受厂商实际返回限制。K、D、J 是指标值，单位不是百分比收益率。HTTP 使用相同 `POST /api/query`，指定该类别及上述参数。
+`native` 表示沿用所选字段定义：Tushare 的 `qfq` 字段明确是前复权，通达信的复权方式则未披露。Tushare 也接受与全部所选字段一致的 `none` / `qfq` / `hfq`；不一致会拒绝。跨复权字段只能用 `native` 分别保留既定定义。仅支持日频。
 
-也可用 `explore_metric` 探索 `dataset="technical_indicators"`、`name="KDJ J"`，传证券、起止日期和 `parameters`，确认成功后保存一个分量及其默认参数。后续用保存的字段 ID 调用 `query_technical_indicators`，省略 `parameters` 即复用保存参数，显式传入的参数局部覆盖保存默认值。其他技术指标尚无适配时会报告缺项，不猜厂商接口，也不以本地公式补算。
+通达信的整数参数范围以 profile 为准，MA 的后四条均线默认参数为 0，表示关闭，对应值保留空；其他有效参数范围不是统一从 1 开始。厂商 `params_used` 必须与请求一致才接受；BOLL 仅暴露 `m`，不提供自定倍数。Tushare 参数固定，拒绝覆盖；其 BBI 文档不同复权字段的周期说明存在冲突，保留各字段原说明，不宣称参数一致。
+
+单位按来源保留：通达信 VOL 与 OBV 为手，日线量价 `volume` 为股，1 手为 100 股；OBV 是有符号累计量，起点由厂商决定。ATR 是价格幅度（元），不是百分比。通达信 WR 使用 0–100 标度，越小越接近区间高点，不改成负值 Williams %R。VR 保留厂商原生标度，不能当作收益率；通达信以 % 标记其比率乘 100 的值，Tushare 标记无量纲，不据此强行互换。ASI、EMV 等未确认缩放的字段保留来源原值和 `unit_status` / `unit_note`，不伪造标准单位；其中通达信单位未披露分量可查询、不能保存为已确认个人定义。
+
+`explore_metric` 可探索明确分量名称（如 `MACD DIF`），成功后保存一个分量及其默认参数。后续用保存字段 ID 查询，通达信省略 `parameters` 复用保存参数，显式参数局部覆盖默认值；Tushare 固定字段沿用其预计算定义。跨 profile 查询可省略参数；显式参数要求属于同一可调 profile。网页的个人字典“选到试查”会带入保存参数，字段列表可搜索 MA20 等名称。
+
+Wind、iFinD、AKShare 的本轮接入与核实边界见[其他来源技术指标](docs/technical-other-sources.md)。Wind 历史与最新快照使用独立字段，快照不补齐历史日期；AKShare 当前已核实官方目录与安装版本没有可接入这套目录的原生历史数值接口，保留缺项，未启用本地计算。
+
+当前不支持任意本地公式、任意 Tushare 参数、周线／分钟线，以及上述目录外未映射指标。通达信 EXPMA 的 EMA 别名不等于另一个独立 EMA 接口；通达信唐奇安接口只接上下轨，不冒称支持 Tushare TAQ 三轨；KTN、TAQ 三轨与四类天数项通过 Tushare 固定字段提供。缺项明确报告，不猜接口或补算。通达信日期受最近日线覆盖限制，声明上限 5000 根不代表已验证取满；Tushare 单次上限 10000 行，达到上限时按日期向前分页，最多 20 页，超限提示缩短区间。
+
+本轮真实查询已验证通达信新增 25 族的返回结构，以及 Tushare 全 226 个源字段的一日非空返回；其余离线测试覆盖参数传递、分量与日期校验、保存复用和字典扩展。真实样本通过不代表所有股票、历史区间或跨厂商算法一致。

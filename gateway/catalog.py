@@ -20,7 +20,7 @@ refresh_catalog()
 def catalog():
     from .dictionary import reload_dictionary
     reload_dictionary(force=False)
-    return {'datasets':{ds:{'default_fields':DEFAULT_FIELDS[ds],'date_semantics':g['date_semantics'],'fields':{f:{'label':m['label'],'unit':m['unit'],'description':m['description'],'unit_status':m.get('unit_status','existing'),'unit_note':m.get('unit_note',''),'available_sources':[p for p,b in m['sources'].items() if b]} for f,m in g['fields'].items()}} for ds,g in DICTIONARY['datasets'].items()},'providers':CAPABILITIES,
+    return {'datasets':{ds:{'default_fields':DEFAULT_FIELDS[ds],'date_semantics':g['date_semantics'],**({'profiles':technical_profiles()} if ds=='technical_indicators' else {}),'fields':{f:{'label':m['label'],'unit':m['unit'],'description':m['description'],'unit_status':m.get('unit_status','existing'),'unit_note':m.get('unit_note',''),'parameters':m.get('parameters',{}),'profile_id':m.get('profile_id') or (m['sources'].get('tdx',[{}])[0].get('recipe') if m['sources'].get('tdx') else None),'available_sources':[p for p,b in m['sources'].items() if b]} for f,m in g['fields'].items()}} for ds,g in DICTIONARY['datasets'].items()},'providers':CAPABILITIES,
             'dictionary_url':'/api/dictionary','notes':['自动路由逐字段补齐，保留已有值；field_sources 与数据行对应。','字段取法、参数、别名和单位转换由 gateway/data/dictionary.json 定义。']}
 
 def dictionary_view(dataset=None,field=None):
@@ -34,7 +34,7 @@ def dictionary_view(dataset=None,field=None):
         selected={field:group['fields'][field]}
     else:selected=group['fields']
     ids={b['recipe'] for m in selected.values() for bindings in m['sources'].values() for b in bindings}
-    return {'schema_version':DICTIONARY['schema_version'],'dataset':dataset,'fields':selected,'recipes':{rid:DICTIONARY['recipes'][rid] for rid in sorted(ids)}}
+    return {'schema_version':DICTIONARY['schema_version'],'dataset':dataset,**({'profiles':technical_profiles()} if dataset=='technical_indicators' else {}),'fields':selected,'recipes':{rid:DICTIONARY['recipes'][rid] for rid in sorted(ids)}}
 
 
 def source_definitions(dataset,field,providers=None):
@@ -44,3 +44,16 @@ def source_definitions(dataset,field,providers=None):
                 'note':b.get('note','使用该来源自身指标口径；不保证跨来源数值或算法完全一致。')}
                for b in bindings if not DICTIONARY['recipes'][b['recipe']].get('fallback_only')]
             for p,bindings in meta['sources'].items() if bindings and (providers is None or p in providers)}
+
+
+def technical_profiles():
+    result={}
+    for rid,recipe in DICTIONARY['recipes'].items():
+        tech=recipe.get('technical')
+        if not tech:continue
+        components={}
+        for field,m in DICTIONARY['datasets']['technical_indicators']['fields'].items():
+            for binding in m['sources'].get(recipe['provider'],[]):
+                if binding['recipe']==rid and binding['component'] not in components:components[binding['component']]={'label':m['label'],'field':field,'name':m['label'],'unit':m['unit'],'fixed_parameters':m.get('fixed_parameters'),'unit_status':m.get('unit_status','existing'),'unit_note':m.get('unit_note','')}
+        result[rid]={'label':recipe.get('label',tech['indicator_id']),'provider':recipe['provider'],'adjustments':['native'],'adjustment':tech.get('adjustment','native'),'temporal':tech.get('temporal','historical'),'fixed':tech.get('fixed',False),'parameters':tech['parameter_schema'],'components':components}
+    return result

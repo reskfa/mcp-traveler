@@ -1,0 +1,874 @@
+[
+  {
+    "id": "vr",
+    "query_tail": "VR",
+    "query_template": "查询{symbol}{start_cn}至{end_cn}每日的VR。",
+    "components": [
+      {
+        "column_suffix": "成交量",
+        "required_options": {},
+        "parameter_keys": {},
+        "observed_parameters": {},
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      },
+      {
+        "column_suffix": "成交额",
+        "required_options": {},
+        "parameter_keys": {},
+        "observed_parameters": {},
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      },
+      {
+        "column_suffix": "交易币种",
+        "required_options": {},
+        "parameter_keys": {},
+        "observed_parameters": {},
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      },
+      {
+        "column_suffix": "VR",
+        "required_options": {},
+        "parameter_keys": {},
+        "observed_parameters": {},
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      }
+    ],
+    "source_file": "tests/fixtures/wind_history/vr.raw.json",
+    "status": "reject_ambiguous_arithmetic"
+  },
+  {
+    "id": "bbi",
+    "query_tail": "BBI",
+    "query_template": "查询{symbol}{start_cn}至{end_cn}每日的BBI。",
+    "components": [
+      {
+        "column_suffix": "BBI",
+        "required_options": {},
+        "parameter_keys": {},
+        "observed_parameters": {},
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      }
+    ],
+    "source_file": "tests/fixtures/wind_history/bbi.raw.json",
+    "status": "verified_history"
+  },
+  {
+    "id": "expma",
+    "query_tail": "EXPMA",
+    "query_template": "查询{symbol}{start_cn}至{end_cn}每日的EXPMA。",
+    "components": [
+      {
+        "column_suffix": "EXPMA",
+        "required_options": {},
+        "parameter_keys": {},
+        "observed_parameters": {},
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      }
+    ],
+    "source_file": "tests/fixtures/wind_history/expma.raw.json",
+    "status": "verified_history"
+  },
+  {
+    "id": "psy",
+    "query_tail": "PSY",
+    "query_template": "查询{symbol}{start_cn}至{end_cn}每日的PSY。",
+    "components": [
+      {
+        "column_suffix": "PSY",
+        "required_options": {},
+        "parameter_keys": {
+          "周期": "周期"
+        },
+        "observed_parameters": {
+          "周期": "日"
+        },
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      }
+    ],
+    "source_file": "tests/fixtures/wind_history/psy.raw.json",
+    "status": "verified_history"
+  },
+  {
+    "id": "kdj",
+    "query_tail": "KDJ的K值、D值和J值",
+    "query_template": "查询{symbol}{start_cn}至{end_cn}每日的KDJ的K值、D值和J值。",
+    "components": [
+      {
+        "column_suffix": "每日K值",
+        "required_options": {
+          "KDJ指标选项": "K"
+        },
+        "parameter_keys": {
+          "KDJ指标选项": "KDJ指标选项"
+        },
+        "observed_parameters": {
+          "KDJ指标选项": "K"
+        },
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      },
+      {
+        "column_suffix": "每日D值",
+        "required_options": {
+          "KDJ指标选项": "D"
+        },
+        "parameter_keys": {
+          "KDJ指标选项": "KDJ指标选项"
+        },
+        "observed_parameters": {
+          "KDJ指标选项": "D"
+        },
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      },
+      {
+        "column_suffix": "每日J值",
+        "required_options": {
+          "KDJ指标选项": "J"
+        },
+        "parameter_keys": {
+          "KDJ指标选项": "KDJ指标选项"
+        },
+        "observed_parameters": {
+          "KDJ指标选项": "J"
+        },
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      }
+    ],
+    "source_file": "tests/fixtures/wind_history/kdj.raw.json",
+    "status": "verified_history"
+  },
+  {
+    "id": "wr",
+    "query_tail": "威廉指标WR",
+    "query_template": "查询{symbol}{start_cn}至{end_cn}每日的威廉指标WR。",
+    "components": [
+      {
+        "column_suffix": "威廉指标WR",
+        "required_options": {},
+        "parameter_keys": {},
+        "observed_parameters": {},
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      }
+    ],
+    "source_file": "tests/fixtures/wind_history/wr.raw.json",
+    "status": "verified_history"
+  },
+  {
+    "id": "brar",
+    "query_tail": "BRAR的BR和AR",
+    "query_template": "查询{symbol}{start_cn}至{end_cn}每日的BRAR的BR和AR。",
+    "components": [
+      {
+        "column_suffix": "BR",
+        "required_options": {},
+        "parameter_keys": {},
+        "observed_parameters": {},
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      },
+      {
+        "column_suffix": "AR",
+        "required_options": {},
+        "parameter_keys": {},
+        "observed_parameters": {},
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      }
+    ],
+    "source_file": "tests/fixtures/wind_history/brar.raw.json",
+    "status": "reject_duplicate_components_BR_equals_AR"
+  },
+  {
+    "id": "ar_cn",
+    "query_tail": "AR人气意愿指标",
+    "query_template": "查询{symbol}{start_cn}至{end_cn}每日的AR人气意愿指标。",
+    "components": [
+      {
+        "column_suffix": "AR人气意愿指标",
+        "required_options": {},
+        "parameter_keys": {},
+        "observed_parameters": {},
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      }
+    ],
+    "source_file": "tests/fixtures/wind_history/ar_cn.raw.json",
+    "status": "verified_history"
+  },
+  {
+    "id": "sar",
+    "query_tail": "SAR",
+    "query_template": "查询{symbol}{start_cn}至{end_cn}每日的SAR。",
+    "components": [
+      {
+        "column_suffix": "SAR",
+        "required_options": {},
+        "parameter_keys": {},
+        "observed_parameters": {},
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      }
+    ],
+    "source_file": "tests/fixtures/wind_history/sar.raw.json",
+    "status": "verified_history"
+  },
+  {
+    "id": "dma",
+    "query_tail": "DMA",
+    "query_template": "查询{symbol}{start_cn}至{end_cn}每日的DMA。",
+    "components": [
+      {
+        "column_suffix": "DMA",
+        "required_options": {},
+        "parameter_keys": {},
+        "observed_parameters": {},
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      }
+    ],
+    "source_file": "tests/fixtures/wind_history/dma.raw.json",
+    "status": "verified_history"
+  },
+  {
+    "id": "boll",
+    "query_tail": "布林带上轨、中轨和下轨",
+    "query_template": "查询{symbol}{start_cn}至{end_cn}每日的布林带上轨、中轨和下轨。",
+    "components": [
+      {
+        "column_suffix": "每日布林带上轨",
+        "required_options": {
+          "BOLL指标选项": "UPPER"
+        },
+        "parameter_keys": {
+          "周期数": "周期数",
+          "BOLL指标选项": "BOLL指标选项",
+          "带宽": "带宽",
+          "周期": "周期"
+        },
+        "observed_parameters": {
+          "周期数": 26,
+          "BOLL指标选项": "UPPER",
+          "带宽": "2",
+          "周期": "日"
+        },
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      },
+      {
+        "column_suffix": "每日布林带中轨",
+        "required_options": {
+          "BOLL指标选项": "MID"
+        },
+        "parameter_keys": {
+          "周期数": "周期数",
+          "BOLL指标选项": "BOLL指标选项",
+          "带宽": "带宽",
+          "周期": "周期"
+        },
+        "observed_parameters": {
+          "周期数": 26,
+          "BOLL指标选项": "MID",
+          "带宽": "2",
+          "周期": "日"
+        },
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      },
+      {
+        "column_suffix": "每日布林带下轨",
+        "required_options": {
+          "BOLL指标选项": "LOWER"
+        },
+        "parameter_keys": {
+          "周期数": "周期数",
+          "BOLL指标选项": "BOLL指标选项",
+          "带宽": "带宽",
+          "周期": "周期"
+        },
+        "observed_parameters": {
+          "周期数": 26,
+          "BOLL指标选项": "LOWER",
+          "带宽": "2",
+          "周期": "日"
+        },
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      }
+    ],
+    "source_file": "tests/fixtures/wind_history/boll.raw.json",
+    "status": "verified_history"
+  },
+  {
+    "id": "mfi",
+    "query_tail": "MFI",
+    "query_template": "查询{symbol}{start_cn}至{end_cn}每日的MFI。",
+    "components": [
+      {
+        "column_suffix": "MFI",
+        "required_options": {},
+        "parameter_keys": {},
+        "observed_parameters": {},
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      }
+    ],
+    "source_file": "tests/fixtures/wind_history/mfi.raw.json",
+    "status": "verified_history"
+  },
+  {
+    "id": "mtm",
+    "query_tail": "MTM",
+    "query_template": "查询{symbol}{start_cn}至{end_cn}每日的MTM。",
+    "components": [
+      {
+        "column_suffix": "MTM动力指标",
+        "required_options": {},
+        "parameter_keys": {},
+        "observed_parameters": {},
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      }
+    ],
+    "source_file": "tests/fixtures/wind_history/mtm.raw.json",
+    "status": "verified_history"
+  },
+  {
+    "id": "trix",
+    "query_tail": "TRIX",
+    "query_template": "查询{symbol}{start_cn}至{end_cn}每日的TRIX。",
+    "components": [
+      {
+        "column_suffix": "TRIX",
+        "required_options": {},
+        "parameter_keys": {},
+        "observed_parameters": {},
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      }
+    ],
+    "source_file": "tests/fixtures/wind_history/trix.raw.json",
+    "status": "verified_history"
+  },
+  {
+    "id": "roc",
+    "query_tail": "ROC",
+    "query_template": "查询{symbol}{start_cn}至{end_cn}每日的ROC。",
+    "components": [
+      {
+        "column_suffix": "ROC",
+        "required_options": {},
+        "parameter_keys": {},
+        "observed_parameters": {},
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      }
+    ],
+    "source_file": "tests/fixtures/wind_history/roc.raw.json",
+    "status": "verified_history"
+  },
+  {
+    "id": "rsi",
+    "query_tail": "6日RSI",
+    "query_template": "查询{symbol}{start_cn}至{end_cn}每日的6日RSI。",
+    "components": [
+      {
+        "column_suffix": "6日RSI",
+        "required_options": {},
+        "parameter_keys": {
+          "周期数": "周期数",
+          "周期": "周期"
+        },
+        "observed_parameters": {
+          "周期数": 6,
+          "周期": "日"
+        },
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      }
+    ],
+    "source_file": "tests/fixtures/wind_history/rsi.raw.json",
+    "status": "verified_history"
+  },
+  {
+    "id": "atr",
+    "query_tail": "ATR",
+    "query_template": "查询{symbol}{start_cn}至{end_cn}每日的ATR。",
+    "components": [
+      {
+        "column_suffix": "ATR",
+        "required_options": {},
+        "parameter_keys": {},
+        "observed_parameters": {},
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      }
+    ],
+    "source_file": "tests/fixtures/wind_history/atr.raw.json",
+    "status": "verified_history"
+  },
+  {
+    "id": "obv",
+    "query_tail": "OBV",
+    "query_template": "查询{symbol}{start_cn}至{end_cn}每日的OBV。",
+    "components": [
+      {
+        "column_suffix": "OBV",
+        "required_options": {},
+        "parameter_keys": {},
+        "observed_parameters": {},
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      }
+    ],
+    "source_file": "tests/fixtures/wind_history/obv.raw.json",
+    "status": "verified_history"
+  },
+  {
+    "id": "bias",
+    "query_tail": "BIAS",
+    "query_template": "查询{symbol}{start_cn}至{end_cn}每日的BIAS。",
+    "components": [
+      {
+        "column_suffix": "BIAS乖离率",
+        "required_options": {},
+        "parameter_keys": {},
+        "observed_parameters": {},
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      }
+    ],
+    "source_file": "tests/fixtures/wind_history/bias.raw.json",
+    "status": "verified_history"
+  },
+  {
+    "id": "macd",
+    "query_tail": "MACD的DIF、DEA和MACD柱",
+    "query_template": "查询{symbol}{start_cn}至{end_cn}每日的MACD的DIF、DEA和MACD柱。",
+    "components": [
+      {
+        "column_suffix": "DIF线",
+        "required_options": {
+          "MACD指标选项": "DIFF"
+        },
+        "parameter_keys": {
+          "MACD指标选项": "MACD指标选项"
+        },
+        "observed_parameters": {
+          "MACD指标选项": "DIFF"
+        },
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      },
+      {
+        "column_suffix": "DEA线",
+        "required_options": {
+          "MACD指标选项": "DEA"
+        },
+        "parameter_keys": {
+          "MACD指标选项": "MACD指标选项"
+        },
+        "observed_parameters": {
+          "MACD指标选项": "DEA"
+        },
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      },
+      {
+        "column_suffix": "MACD柱",
+        "required_options": {
+          "MACD指标选项": "MACD"
+        },
+        "parameter_keys": {
+          "MACD指标选项": "MACD指标选项"
+        },
+        "observed_parameters": {
+          "MACD指标选项": "MACD"
+        },
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      }
+    ],
+    "source_file": "tests/fixtures/wind_history/macd.raw.json",
+    "status": "verified_history"
+  },
+  {
+    "id": "cci",
+    "query_tail": "CCI",
+    "query_template": "查询{symbol}{start_cn}至{end_cn}每日的CCI。",
+    "components": [
+      {
+        "column_suffix": "CCI",
+        "required_options": {},
+        "parameter_keys": {},
+        "observed_parameters": {},
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      }
+    ],
+    "source_file": "tests/fixtures/wind_history/cci.raw.json",
+    "status": "verified_history"
+  },
+  {
+    "id": "cr_cn",
+    "query_tail": "CR能量指标",
+    "query_template": "查询{symbol}{start_cn}至{end_cn}每日的CR能量指标。",
+    "components": [
+      {
+        "column_suffix": "CR能量指标",
+        "required_options": {},
+        "parameter_keys": {},
+        "observed_parameters": {},
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      }
+    ],
+    "source_file": "tests/fixtures/wind_history/cr_cn.raw.json",
+    "status": "verified_history"
+  },
+  {
+    "id": "br_cn",
+    "query_tail": "BR买卖意愿指标",
+    "query_template": "查询{symbol}{start_cn}至{end_cn}每日的BR买卖意愿指标。",
+    "components": [],
+    "source_file": "tests/fixtures/wind_history/br_cn.raw.json",
+    "status": "no_data"
+  },
+  {
+    "id": "vr_cn",
+    "query_tail": "VR成交量比率技术指标",
+    "query_template": "查询{symbol}{start_cn}至{end_cn}每日的VR成交量比率技术指标。",
+    "components": [
+      {
+        "column_suffix": "VR成交量比率",
+        "required_options": {},
+        "parameter_keys": {},
+        "observed_parameters": {},
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      }
+    ],
+    "source_file": "tests/fixtures/wind_history/vr_cn.raw.json",
+    "status": "verified_history"
+  },
+  {
+    "id": "cr",
+    "query_tail": "CR",
+    "query_template": "查询{symbol}{start_cn}至{end_cn}每日的CR。",
+    "components": [
+      {
+        "column_suffix": "成交额",
+        "required_options": {},
+        "parameter_keys": {},
+        "observed_parameters": {},
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      },
+      {
+        "column_suffix": "成交量",
+        "required_options": {},
+        "parameter_keys": {},
+        "observed_parameters": {},
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      },
+      {
+        "column_suffix": "交易币种",
+        "required_options": {},
+        "parameter_keys": {},
+        "observed_parameters": {},
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      },
+      {
+        "column_suffix": "CR",
+        "required_options": {},
+        "parameter_keys": {},
+        "observed_parameters": {},
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      }
+    ],
+    "source_file": "tests/fixtures/wind_history/cr.raw.json",
+    "status": "reject_ambiguous_arithmetic"
+  },
+  {
+    "id": "dmi",
+    "query_tail": "DMI的PDI、MDI、ADX和ADXR",
+    "query_template": "查询{symbol}{start_cn}至{end_cn}每日的DMI的PDI、MDI、ADX和ADXR。",
+    "components": [
+      {
+        "column_suffix": "DMI上升指标线PDI",
+        "required_options": {
+          "DMI指标选项": "PDI"
+        },
+        "parameter_keys": {
+          "DMI指标选项": "DMI指标选项"
+        },
+        "observed_parameters": {
+          "DMI指标选项": "PDI"
+        },
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      },
+      {
+        "column_suffix": "DMI下降指标线MDI",
+        "required_options": {
+          "DMI指标选项": "MDI"
+        },
+        "parameter_keys": {
+          "DMI指标选项": "DMI指标选项"
+        },
+        "observed_parameters": {
+          "DMI指标选项": "MDI"
+        },
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      },
+      {
+        "column_suffix": "DMI趋向指标ADX",
+        "required_options": {
+          "DMI指标选项": "ADX"
+        },
+        "parameter_keys": {
+          "DMI指标选项": "DMI指标选项"
+        },
+        "observed_parameters": {
+          "DMI指标选项": "ADX"
+        },
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      },
+      {
+        "column_suffix": "DMI趋向指标ADXR",
+        "required_options": {
+          "DMI指标选项": "ADXR"
+        },
+        "parameter_keys": {
+          "DMI指标选项": "DMI指标选项"
+        },
+        "observed_parameters": {
+          "DMI指标选项": "ADXR"
+        },
+        "unit": "上游未声明",
+        "dates": [
+          "2026-11-10",
+          "2026-11-11",
+          "2026-11-12",
+          "2026-11-13"
+        ]
+      }
+    ],
+    "source_file": "tests/fixtures/wind_history/dmi.raw.json",
+    "status": "verified_history"
+  }
+]
