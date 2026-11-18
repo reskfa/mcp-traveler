@@ -47,9 +47,9 @@ def search_metrics(query:str='',dataset:str|None=None,limit:int=10)->dict:
     return find_metrics(query,dataset,limit)
 
 @mcp.tool()
-async def explore_metric(name:str,dataset:str,symbol:str,period:str|None=None,date:str|None=None,start_date:str|None=None,end_date:str|None=None,unit:str|None=None,aliases:list[str]|None=None,provider:str='auto',max_attempts:int=2,parameters:dict[str,int]|None=None,frequency:str='daily',adjust:str|None=None)->dict:
-    """探索尚未入字典的A股数值指标。先查已有取法，再按路由尝试可能支持的MCP；每来源最多一次。名称应是一个明确指标，提供日期/报告期。成功返回数据和可保存的取法；不会自动写入个人字典。"""
-    return await explore(ExplorationRequest(name=name,dataset=dataset,symbol=symbol,period=period,date=date,start_date=start_date,end_date=end_date,unit=unit,aliases=aliases or [],provider=provider,max_attempts=max_attempts,parameters=parameters,frequency=frequency,adjust=adjust))
+async def explore_metric(name:str,dataset:str,symbol:str,auto_save:bool=True,period:str|None=None,date:str|None=None,start_date:str|None=None,end_date:str|None=None,unit:str|None=None,aliases:list[str]|None=None,provider:str='auto',max_attempts:int=2,parameters:dict[str,int]|None=None,frequency:str='daily',adjust:str|None=None)->dict:
+    """探索尚未入字典的A股数值指标。先查已有取法，再按路由尝试可能支持的MCP；每来源最多一次。名称应是一个明确指标，提供日期/报告期。成功默认自动保存到个人字典并返回saved/saved_field，告知用户即可；有歧义不保存。仅临时查询传auto_save=false。coverage独立说明数据完整性，不能把成功保存称作取全。"""
+    return await explore(ExplorationRequest(name=name,auto_save=auto_save,dataset=dataset,symbol=symbol,period=period,date=date,start_date=start_date,end_date=end_date,unit=unit,aliases=aliases or [],provider=provider,max_attempts=max_attempts,parameters=parameters,frequency=frequency,adjust=adjust))
 
 @mcp.tool()
 async def save_metric(exploration_id:str,field:str|None=None)->dict:

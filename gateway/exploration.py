@@ -13,6 +13,7 @@ from . import config, core, dictionary
 from .parsing import tables, compact, number, norm_date, map_rows, scale_factor
 
 class ExplorationRequest(core.Query):
+    auto_save: bool = True
     name: str = Field(min_length=1,max_length=100)
     unit: str | None = None
     aliases: list[str] = Field(default_factory=list,max_length=20)
@@ -187,21 +188,43 @@ async def explore(request:ExplorationRequest):
             attempts.append({'provider':provider,'status':'error','error':message,'seconds':round(time.monotonic()-tick,2)})
     folder=config.ROOT/'local/explorations';raw_path=folder/f'{rid}.raw.json'
     answer={'id':rid,'status':'success' if candidate else ('needs_confirmation' if raws else 'failed'),'request':request.model_dump(),'network_calls':used,'attempt_limit':request.max_attempts,'attempts':attempts,'candidate':candidate,'data':candidate['data'] if candidate else [],'elapsed_seconds':round(time.monotonic()-started,2),'raw_path':str(raw_path),'notes':['来源算法允许不同；只有字段含义、单位、证券、日期及财务口径明确时可保存。']}
-    config.write_json(raw_path,config.redact(raws));config.write_json(folder/f'{rid}.json',config.redact(answer));return answer
+    from .coverage import coverage
+    answer['coverage']=coverage(raws,answer['data'])
+    answer['notes'].append(answer['coverage']['note'])
+    answer['saved']=False
+    config.write_json(raw_path,config.redact(raws));config.write_json(folder/f'{rid}.json',config.redact(answer))
+    if candidate and request.auto_save:
+        try:
+            saved=await save_exploration(rid)
+            answer.update(saved=True,saved_field=saved['field'],save_status='saved')
+            answer['notes'].append('已自动保存到个人字典，下次可直接查询；可在字典页删除。')
+        except ValueError as exc:
+            answer.update(status='needs_confirmation',save_status='needs_confirmation',save_error=config.redact(str(exc)))
+        except Exception as exc:
+            answer.update(save_status='failed',save_error=config.redact(str(exc)))
+            answer['notes'].append('取数成功，但个人字典保存失败；可重试保存。')
+    config.write_json(folder/f'{rid}.json',config.redact(answer))
+    return answer
 
 async def save_exploration(id,field=None):
     if not re.fullmatch('[a-f0-9]{32}',id):raise ValueError('探索编号无效')
     folder=config.ROOT/'local/explorations'
     if not (folder/f'{id}.json').is_file() or not (folder/f'{id}.raw.json').is_file():raise ValueError('找不到这次探索记录，请重新探索')
     stored=json.loads((folder/f'{id}.json').read_text());raws=json.loads((folder/f'{id}.raw.json').read_text())
-    if stored['status']!='success':raise ValueError('探索尚未得到可保存的候选')
+    if stored['status']!='success' and not (stored.get('save_status')=='needs_confirmation' and stored.get('candidate')):raise ValueError('探索尚未得到可保存的候选')
     original=stored['candidate'];response=next(r for r in raws if r['provider']==original['provider'])
     candidate,reasons=validate_response(ExplorationRequest(**stored['request']),response['provider'],response['recipe'],response['raw'])
     if not candidate:raise ValueError('候选重新校验失败：'+'；'.join(reasons))
     chosen=field or candidate['field']
     if not re.fullmatch('[a-z][a-z0-9_]{0,79}',chosen):raise ValueError('字段名须为英文小写字母、数字或下划线')
-    if chosen in dictionary.fields(candidate['dataset']):
-        raise ValueError('字段ID已存在，请指定不同的新字段ID，避免覆盖已有指标')
-    result=dictionary.save_user_metric(candidate['dataset'],chosen,candidate['definition'],candidate['recipes'])
-    stored.update(saved_field=chosen,saved=True);config.write_json(folder/f'{id}.json',stored)
+    with config.LOCK:
+        dictionary.reload_dictionary(force=False)
+        if chosen in dictionary.fields(candidate['dataset']):
+            if stored.get('saved') and stored.get('saved_field')==chosen and dictionary.fields(candidate['dataset'])[chosen]==candidate['definition']:
+                return {'id':id,'status':'saved','dataset':candidate['dataset'],'field':chosen,'already_saved':True}
+            raise ValueError('字段ID已存在，请确认是否为同一口径；不会覆盖已有指标')
+        result=dictionary.save_user_metric(candidate['dataset'],chosen,candidate['definition'],candidate['recipes'])
+    from .coverage import coverage
+    stored.setdefault('coverage',coverage(raws,candidate['data']))
+    stored.update(saved_field=chosen,saved=True,save_status='saved');config.write_json(folder/f'{id}.json',stored)
     return {'id':id,'status':'saved','dataset':candidate['dataset'],'field':chosen,'metric':result}

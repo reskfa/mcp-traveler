@@ -153,7 +153,10 @@ async def query(request:Query):
     data=[r for r,_ in paired];provenance=[p for _,p in paired]
     rid=uuid.uuid4().hex;folder=config.ROOT/'local/results';folder.mkdir(parents=True,exist_ok=True)
     config.write_json(folder/f'{rid}.raw.json',config.redact(raws[0]['raw'] if len(raws)==1 else raws))
-    answer={'id':rid,'dataset':q['dataset'],'provider':contributors[0] if len(contributors)==1 else 'mixed','providers':contributors,'upstream':' + '.join(upstreams),'query':q,'fetched_at':now(),'elapsed_seconds':round(time.monotonic()-start,2),'row_count':len(data),'data':data[:100],'field_sources':provenance[:100],'missing_fields':missing,'complete':not missing,'fields':{f:{'label':FIELDS[q['dataset']][f],'unit':UNITS[q['dataset']][f],'source_definitions':source_definitions(q['dataset'],f,contributors)} for f in request.fields},'notes':notes,'attempts':attempts,'raw_path':str(folder/f'{rid}.raw.json'),'data_path':str(folder/f'{rid}.json'),'download_url':f'/api/results/{rid}/csv','raw_url':f'/api/results/{rid}/raw'}
+    from .coverage import coverage
+    data_coverage=coverage(raws,data)
+    if data_coverage['status']=='partial':notes.append(data_coverage['note'])
+    answer={'coverage':data_coverage,'id':rid,'dataset':q['dataset'],'provider':contributors[0] if len(contributors)==1 else 'mixed','providers':contributors,'upstream':' + '.join(upstreams),'query':q,'fetched_at':now(),'elapsed_seconds':round(time.monotonic()-start,2),'row_count':len(data),'data':data[:100],'field_sources':provenance[:100],'missing_fields':missing,'complete':not missing and data_coverage['status']!='partial','fields':{f:{'label':FIELDS[q['dataset']][f],'unit':UNITS[q['dataset']][f],'source_definitions':source_definitions(q['dataset'],f,contributors)} for f in request.fields},'notes':notes,'attempts':attempts,'raw_path':str(folder/f'{rid}.raw.json'),'data_path':str(folder/f'{rid}.json'),'download_url':f'/api/results/{rid}/csv','raw_url':f'/api/results/{rid}/raw'}
     config.write_json(folder/f'{rid}.json',{**answer,'data':data,'field_sources':provenance})
     return answer
 

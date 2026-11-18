@@ -41,7 +41,7 @@ def test_existing_reuses_query():
 def test_bounded_attempts_and_persist(tmp_path):
     settings={'routes':{'valuations':['tushare','wind','ifind','tdx']},'providers':{p:{'timeout_seconds':60} for p in ['tushare','wind','ifind','tdx']}}
     with patch.object(e.config,'ROOT',tmp_path),patch.object(e.config,'load',return_value=settings),patch.object(e.config,'redact',side_effect=lambda x:x),patch.object(e.core,'available',return_value=True),patch.object(e,'invoke',new=AsyncMock(return_value=response())) as invoke:
-        result=asyncio.run(e.explore(req()));assert result['status']=='success';assert invoke.await_count==1
+        result=asyncio.run(e.explore(req(auto_save=False)));assert result['status']=='success';assert invoke.await_count==1
         assert json.loads((tmp_path/'local/explorations'/f"{result['id']}.json").read_text())['candidate']
 
 def test_save_revalidates_and_dictionary_accepts(tmp_path):
@@ -49,12 +49,11 @@ def test_save_revalidates_and_dictionary_accepts(tmp_path):
     snapshot=__import__('copy').deepcopy(e.dictionary.DICTIONARY)
     try:
         with patch.object(e.config,'ROOT',tmp_path),patch.object(e.config,'load',return_value=settings),patch.object(e.config,'redact',side_effect=lambda x:x),patch.object(e.core,'available',return_value=True),patch.object(e,'invoke',new=AsyncMock(return_value=response())):
-            result=asyncio.run(e.explore(req()))
+            result=asyncio.run(e.explore(req(auto_save=False)))
             saved=asyncio.run(e.save_exploration(result['id'],'turnover_days_test'))
             assert saved['status']=='saved'
             assert e.dictionary.plan('ifind','valuations',['turnover_days_test'])
-            with pytest.raises(ValueError,match='字段ID已存在'):
-                asyncio.run(e.save_exploration(result['id'],'turnover_days_test'))
+            assert asyncio.run(e.save_exploration(result['id'],'turnover_days_test'))['already_saved']
             rawpath=tmp_path/'local/explorations'/f"{result['id']}.raw.json"
             raw=json.loads(rawpath.read_text());raw[0]['raw']['rows'][0][0]='600001';rawpath.write_text(json.dumps(raw))
             with pytest.raises(ValueError):asyncio.run(e.save_exploration(result['id'],'other_test'))
