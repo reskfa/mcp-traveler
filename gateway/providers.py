@@ -43,10 +43,13 @@ def records(df):return json.loads(df.to_json(orient='records',date_format='iso',
 def compact_date(s):return s.replace('-','') if s else None
 
 def fetch(name,q,p,key):
+    if q.get('generic_call'):
+        from .generic_data import fetch_remote
+        return fetch_remote(name,p,key,q['generic_call'])
     if q.get('probe'):
         if name in ['wind','ifind','tdx']:
             r=Remote(name,p,key).rpc('tools/list',{})
-            return {'tools':[{'name':t['name'],'inputSchema':t.get('inputSchema',{})} for t in r.get('tools',[])]}
+            return {'tools':[{'name':t['name'],'description':t.get('description',''),'inputSchema':t.get('inputSchema',{}),'annotations':t.get('annotations',{})} for t in r.get('tools',[])]}
         if name=='tushare':
             import tushare as ts
             df=ts.pro_api(key).trade_cal(exchange='SSE',start_date='20251105',end_date='20251105')

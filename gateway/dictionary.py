@@ -67,6 +67,14 @@ def _read_user():
 def _safe_user(base, user):
     if user.get('schema_version') != 1:
         raise ValueError('Unsupported user dictionary schema_version')
+    for query_id, definition in user.get('data_queries',{}).items():
+        if not re.fullmatch(r'data_[a-f0-9]{16}',query_id) or definition.get('id')!=query_id or definition.get('kind')!='mcp_records':
+            raise ValueError('Invalid personal data query')
+        if definition.get('provider') not in ['wind','ifind','tdx'] or not isinstance(definition.get('tool'),str) or not definition['tool'].isidentifier():
+            raise ValueError('Invalid personal data source/tool')
+        if not all(isinstance(definition.get(k),str) and definition[k].strip() for k in ['label','request']):
+            raise ValueError('Invalid personal data request')
+        if not isinstance(definition.get('columns'),dict):raise ValueError('Invalid personal record columns')
     # Personal recipes reuse an approved acquisition template, never a new SDK
     # method, endpoint, parameter or executable expression.
     for rid, recipe in user.get('recipes', {}).items():
@@ -166,7 +174,7 @@ def save_user_metric(dataset, field, definition, recipes=None):
 def delete_user_metric(dataset, field):
     with config.LOCK:
         user=_read_user()
-        selected=user.get('datasets', {}).get(dataset, {}).get('fields', {})
+        selected=user.get('data_queries',{}) if dataset=='records' else user.get('datasets', {}).get(dataset, {}).get('fields', {})
         deleted=field in selected
         selected.pop(field,None)
         _merge(validate(json.loads(PATH.read_text())),user)
@@ -177,7 +185,7 @@ def delete_user_metric(dataset, field):
 
 def search_metrics(query='', dataset=None, limit=10):
     reload_dictionary(force=False)
-    if dataset is not None and dataset not in DICTIONARY['datasets']:
+    if dataset is not None and dataset not in [*DICTIONARY['datasets'],'records']:
         raise ValueError('未知数据类别')
     limit=max(1,min(100,int(limit)))
     needle=query.strip().casefold()
@@ -193,6 +201,11 @@ def search_metrics(query='', dataset=None, limit=10):
             if tokens and not all(t in corpus for t in tokens): continue
             score=0 if needle in [v.casefold() for v in primary] else 1 if any(needle in v.casefold() for v in primary) else 2
             matches.append((score,ds,field,{'dataset':ds,'field':field,'label':m['label'],'unit':m['unit'],'description':m.get('description',''),'aliases':m.get('aliases',[]),**({'parameters':m['parameters'],'profile_id':m.get('profile_id') or m['sources']['tdx'][0]['recipe']} if 'parameters' in m else {}),'sources':[p for p,b in m['sources'].items() if b],'origin':'user' if field in local.get(ds,{}).get('fields',{}) else 'builtin'}))
+    if dataset in [None,'records']:
+        for query_id,definition in _read_user().get('data_queries',{}).items():
+            corpus=(query_id+' '+definition['label']+' '+definition['request']).casefold()
+            if tokens and not all(t in corpus for t in tokens):continue
+            matches.append((0 if needle==definition['label'].casefold() else 1,'records',query_id,{'dataset':'records','field':query_id,'query_id':query_id,'query_tool':'query_data','label':definition['label'],'unit':'记录','description':'个人通用数据取法；实际日期和来源以每次返回为准。','aliases':[],'sources':[definition['provider']],'origin':'user'}))
     matches.sort(key=lambda x:x[:3])
     return {'query':query,'total':len(matches),'results':[m[3] for m in matches[:limit]]}
 

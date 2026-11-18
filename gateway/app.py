@@ -14,6 +14,7 @@ from . import config,core
 from .catalog import catalog,dictionary_view
 from .dictionary import search_metrics as find_metrics,delete_user_metric
 from .exploration import ExplorationRequest,explore,save_exploration
+from .generic_data import ExploreDataRequest,DataQueryRequest,search_capabilities as find_capabilities,explore_data as explore_generic,query_data as query_generic
 
 mcp=FastMCP('A股数据网关',stateless_http=True,json_response=True)
 @mcp.tool()
@@ -48,7 +49,7 @@ def provider_status()->dict:
 
 @mcp.tool()
 def search_metrics(query:str='',dataset:str|None=None,limit:int=10)->dict:
-    """搜索A股数值指标的中文名称、字段代码、别名和来源列；优先使用此工具，不必读取完整目录。返回个人及内置字典的紧凑结果。"""
+    """搜索A股字段及已保存通用取法的中文名称、字段代码、别名和来源列；优先使用此工具，不必读取完整目录。返回个人及内置字典的紧凑结果。未精确命中时继续search_capabilities或explore_data，不能据此判断上游没有数据。"""
     return find_metrics(query,dataset,limit)
 
 @mcp.tool()
@@ -60,6 +61,21 @@ async def explore_metric(name:str,dataset:str,symbol:str,auto_save:bool=True,per
 async def save_metric(exploration_id:str,field:str|None=None)->dict:
     """将成功探索的取法保存到本机个人字典，之后搜索及常规查询立即可用。field可选，填写稳定英文代码；不保存无法核实的候选，不覆盖内置字典。"""
     return await save_exploration(exploration_id,field)
+
+@mcp.tool()
+async def search_capabilities(query:str,provider:str='auto',refresh:bool=False,limit:int=8)->dict:
+    """搜索字典与供应商能力。字典未精确命中（或只有相近字段）时继续此入口，不直接绕开网关。返回已接入、可探索或未适配状态，未适配不等于来源不支持。"""
+    return await find_capabilities(query,provider,refresh,limit)
+
+@mcp.tool()
+async def explore_data(request:str,symbol:str,period:str|None=None,start_date:str|None=None,end_date:str|None=None,provider:str='auto',max_attempts:int=2,auto_save:bool=True)->dict:
+    """探索常用字典之外的信息，不要求先选数据类别。先发现上游能力再执行只读查询；本版验证结构化记录名单。成功默认保存个人字典取法并返回saved_query_id，复用query_data。相近字段不替代原需求，新闻全文尚未适配时明确报告，不冒充已查全。"""
+    return await explore_generic(ExploreDataRequest(request=request,symbol=symbol,period=period,start_date=start_date,end_date=end_date,provider=provider,max_attempts=max_attempts,auto_save=auto_save))
+
+@mcp.tool()
+async def query_data(query_id:str,symbol:str,period:str|None=None,start_date:str|None=None,end_date:str|None=None)->dict:
+    """复用个人字典中探索成功的记录取法。query_id来自explore_data.saved_query_id或search_metrics，不重复探索；可换证券或报告期，仍校验本次实际返回。"""
+    return await query_generic(DataQueryRequest(query_id=query_id,symbol=symbol,period=period,start_date=start_date,end_date=end_date))
 
 mcp_app=mcp.streamable_http_app()
 @asynccontextmanager
@@ -115,6 +131,16 @@ async def metric_save(exploration_id:str,request:SaveMetricRequest):
 @app.delete('/api/metrics/{dataset}/{field}')
 def metric_delete(dataset:str,field:str):
     return delete_user_metric(dataset,field)
+
+@app.get('/api/capabilities')
+async def capability_search(query:str,provider:str='auto',refresh:bool=False,limit:int=QueryParam(8,ge=1,le=20)):
+    return await find_capabilities(query,provider,refresh,limit)
+
+@app.post('/api/explore-data')
+async def generic_explore(request:ExploreDataRequest):return await explore_generic(request)
+
+@app.post('/api/data-query')
+async def generic_query(request:DataQueryRequest):return await query_generic(request)
 
 @app.get('/api/config')
 def get_config():return config.public()
