@@ -13,6 +13,7 @@ from . import config, core, dictionary
 from .parsing import tables, compact, number, norm_date, map_rows, scale_factor
 
 class ExplorationRequest(core.Query):
+    dataset: Literal['daily_prices','valuations','financials','technical_indicators']
     auto_save: bool = True
     name: str = Field(min_length=1,max_length=100)
     unit: str | None = None

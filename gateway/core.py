@@ -10,12 +10,12 @@ from pydantic import BaseModel,Field,model_validator,StrictInt
 from typing import Literal
 from . import config
 from .catalog import FIELDS,UNITS,DEFAULT_FIELDS,source_definitions
-from .dictionary import plan,reload_dictionary
+from .dictionary import plan,reload_dictionary,fields as dictionary_fields
 
 def now():return datetime.now(timezone.utc).isoformat()
 
 class Query(BaseModel):
-    dataset: Literal['daily_prices','valuations','financials','technical_indicators']
+    dataset: Literal['daily_prices','valuations','financials','technical_indicators','basic_info']
     symbol: str = Field(pattern=r'^\d{6}\.(SH|SZ|BJ)$')
     start_date: str | None = None
     end_date: str | None = None
@@ -38,6 +38,8 @@ class Query(BaseModel):
             self.adjust=self.adjust or 'none'
             if self.adjust=='native':raise ValueError('native仅适用于技术指标')
             if self.parameters:raise ValueError('parameters仅适用于技术指标')
+        if self.dataset=='basic_info' and (any([self.start_date,self.end_date,self.date,self.period]) or self.adjust!='none'):
+            raise ValueError('基本信息仅查询当前档案及来源提供的历史记录，不接受历史时点或复权参数')
         for value in [self.start_date,self.end_date,self.date,self.period]:
             if value and date.fromisoformat(value).isoformat()!=value:raise ValueError('日期使用 YYYY-MM-DD')
         if self.dataset=='daily_prices' and (not self.start_date or not self.end_date):raise ValueError('日线需要起止日期')
@@ -128,7 +130,7 @@ async def query(request:Query):
                 provenance=[{f:name for f in request.fields if r.get(f) is not None} for r in data]
                 filled=sum(len(p) for p in provenance)
             else:
-                lookup={(r['symbol'],r.get('date')):r for r in rows if r.get('date')}
+                lookup={(r['symbol'],r.get('date')):r for r in rows if r.get('date') or q['dataset']=='basic_info'}
                 for i,row in enumerate(data):
                     extra=lookup.get((row['symbol'],row.get('date')),{})
                     for f in missing:
@@ -147,7 +149,8 @@ async def query(request:Query):
             record(name,False,msg)
     if data is None:raise QueryFailure(attempts)
     if missing:notes.append('仍有缺失字段：'+', '.join(missing))
-    if len(contributors)>1:notes.append('按证券和日期逐项补齐，保留优先来源已有值；每个数值的来源见字段来源。')
+    if len(contributors)>1:notes.append('按证券和日期逐项补齐，保留优先来源已有值；每个字段的来源见字段来源。')
+    if request.dataset=='basic_info':notes.append('档案为当前可用快照；列表按字段保留优先来源，不将不同来源的名单拼成完整历史。')
     if request.dataset=='daily_prices' and request.adjust!='none':notes.append('复权价格不跨来源补齐；其他字段仍可补齐。')
     paired=sorted(zip(data,provenance),key=lambda pair:pair[0].get('date') or '')
     data=[r for r,_ in paired];provenance=[p for _,p in paired]
@@ -156,7 +159,7 @@ async def query(request:Query):
     from .coverage import coverage
     data_coverage=coverage(raws,data)
     if data_coverage['status']=='partial':notes.append(data_coverage['note'])
-    answer={'coverage':data_coverage,'id':rid,'dataset':q['dataset'],'provider':contributors[0] if len(contributors)==1 else 'mixed','providers':contributors,'upstream':' + '.join(upstreams),'query':q,'fetched_at':now(),'elapsed_seconds':round(time.monotonic()-start,2),'row_count':len(data),'data':data[:100],'field_sources':provenance[:100],'missing_fields':missing,'complete':not missing and data_coverage['status']!='partial','fields':{f:{'label':FIELDS[q['dataset']][f],'unit':UNITS[q['dataset']][f],'source_definitions':source_definitions(q['dataset'],f,contributors)} for f in request.fields},'notes':notes,'attempts':attempts,'raw_path':str(folder/f'{rid}.raw.json'),'data_path':str(folder/f'{rid}.json'),'download_url':f'/api/results/{rid}/csv','raw_url':f'/api/results/{rid}/raw'}
+    answer={'coverage':data_coverage,'id':rid,'dataset':q['dataset'],'provider':contributors[0] if len(contributors)==1 else 'mixed','providers':contributors,'upstream':' + '.join(upstreams),'query':q,'fetched_at':now(),'elapsed_seconds':round(time.monotonic()-start,2),'row_count':len(data),'data':data[:100],'field_sources':provenance[:100],'missing_fields':missing,'complete':not missing and data_coverage['status']!='partial','fields':{f:{'label':FIELDS[q['dataset']][f],'unit':UNITS[q['dataset']][f],'source_definitions':source_definitions(q['dataset'],f,contributors),**{k:v for k,v in dictionary_fields(q['dataset'])[f].items() if k in ['data_type','group','record_schema']}} for f in request.fields},'notes':notes,'attempts':attempts,'raw_path':str(folder/f'{rid}.raw.json'),'data_path':str(folder/f'{rid}.json'),'download_url':f'/api/results/{rid}/csv','raw_url':f'/api/results/{rid}/raw'}
     config.write_json(folder/f'{rid}.json',{**answer,'data':data,'field_sources':provenance})
     return answer
 

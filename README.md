@@ -2,7 +2,7 @@
 
 本地运行的 A 股取数 MVP：Tushare、AKShare、Wind MCP、iFinD MCP、通达信 MCP，共用一个 Python 查询核心，提供本地网页和统一 MCP。
 
-Agent 只需接入一个 MCP，就能查询 A 股量价、估值和基础财务。通过网页设置来源顺序，缺失字段自动向后补齐，每个数值保留来源。
+Agent 只需接入一个 MCP，就能查询 A 股基本信息、量价、估值、基础财务和技术指标。通过网页设置来源顺序，缺失字段自动向后补齐，每个字段保留来源。
 
 - **统一入口**：本地网页、Python、HTTP 和 MCP 共用查询核心。
 - **五家来源**：按自己的账户权限选择，不需要全部开通。
@@ -55,7 +55,7 @@ Windows PowerShell 中将 `python3` 换为 `python`，将 `.venv/bin/python` 换
 
 这是通用 Streamable HTTP 配置示例；具体客户端的配置位置、传输类型选项可能不同，按客户端要求填写。远端云端 Agent 无法直接访问你电脑的 localhost，本版面向本机 Agent。
 
-常规查询工具：`data_catalog`、`query_daily_prices`、`query_valuations`、`query_financials`、`query_technical_indicators`、`provider_status`。
+常规查询工具：`data_catalog`、`query_basic_info`、`query_daily_prices`、`query_valuations`、`query_financials`、`query_technical_indicators`、`provider_status`。
 
 可直接提问：
 
@@ -168,7 +168,7 @@ python scripts/render_dictionary.py --check
 - `explore_metric(name, dataset, symbol, period?/date?/start_date?/end_date?, unit?, aliases?, provider="auto", max_attempts=2)`：已知名称直接用字典；未知指标按路由尝试，返回候选及证据。
 - `save_metric(exploration_id, field?)`：将成功候选写入个人字典。保存后普通查询和搜索立即可用。
 
-例如先搜索“净息差”，没有时探索 `financials / 000001.SZ / 2024-12-31`，再保存为 `net_interest_margin`；之后可调用 `query_financials(symbol="000001.SZ", period="2023-12-31", fields=["net_interest_margin"])`。
+例如搜索“净息差”没有结果时，调用探索；成功默认保存，返回 `saved=true` 和 `saved_field`，后续普通查询复用该 ID。临时探索传 `auto_save=false`，仍可手动保存并指定英文字段名。歧义或字段冲突不自动覆盖，需用户确认；保存失败保留数据和证据供重试。
 
 HTTP 对应 `GET /api/metrics/search?q=净息差`、`POST /api/explore`、`POST /api/explorations/{id}/save`（请求体可含 `field`）和 `DELETE /api/metrics/{dataset}/{field}`。探索请求的其他参数与普通查询相同，以 `name` 指定指标。
 
@@ -178,7 +178,7 @@ HTTP 对应 `GET /api/metrics/search?q=净息差`、`POST /api/explore`、`POST 
 
 候选必须匹配证券、实际日期、指标名称或用户提供的别名，并能确认数值及单位；明确要求单季度、累计、期末或 TTM 时还会检查对应说明。缺证据时展示待确认原因，不自动保存。来源计算方法允许不同，保留来源和原生口径说明。一次样例成功并不代表该来源覆盖所有股票、年份；后续查询仍可能为空。
 
-保存的是可复用的字段绑定与参数模板，不是当次答案。当前每次保存一个新指标及一个成功来源，已有 ID 不覆盖；其他来源的对应取法可后续补入个人字典。个人字典使用与内置字典相同的字段结构；自定义执行配方仅允许复用已支持的取法。新的 SDK 接口或全新返回结构仍需要开发适配。
+保存的是可复用的字段绑定与参数模板，不是当次答案。探索与普通查询返回独立的 `coverage`：上游明确只展示部分数据时为 `partial`，否则为 `not_verified`，不凭日期稀疏猜周频、不宣称完整。普通查询发现明确节选时 `complete=false`。当前每次保存一个新指标及一个成功来源，已有 ID 不覆盖；其他来源的对应取法可后续补入个人字典。个人字典使用与内置字典相同的字段结构；自定义执行配方仅允许复用已支持的取法。新的 SDK 接口或全新返回结构仍需要开发适配。
 
 `local/user_dictionary.json` 保存常用指标，`local/explorations/` 保存探索证据，均被 Git 忽略。更新代码不覆盖个人字典；迁移电脑时请自行备份该文件。
 
@@ -234,3 +234,9 @@ Wind、iFinD、AKShare 的本轮接入与核实边界见[其他来源技术指�
 当前不支持任意本地公式、任意 Tushare 参数、周线／分钟线，以及上述目录外未映射指标。通达信 EXPMA 的 EMA 别名不等于另一个独立 EMA 接口；通达信唐奇安接口只接上下轨，不冒称支持 Tushare TAQ 三轨；KTN、TAQ 三轨与四类天数项通过 Tushare 固定字段提供。缺项明确报告，不猜接口或补算。通达信日期受最近日线覆盖限制，声明上限 5000 根不代表已验证取满；Tushare 单次上限 10000 行，达到上限时按日期向前分页，最多 20 页，超限提示缩短区间。
 
 本轮真实查询已验证通达信新增 25 族的返回结构，以及 Tushare 全 226 个源字段的一日非空返回；其余离线测试覆盖参数传递、分量与日期校验、保存复用和字典扩展。真实样本通过不代表所有股票、历史区间或跨厂商算法一致。
+
+## 股票基本信息
+
+新增56个字典字段，分为公司与证券档案、证券名称历史、行业归属、板块与标签四组，五家来源均已接入。网页选择“股票基本信息”，或使用 MCP `query_basic_info(symbol="300308.SZ", fields=["company_name", "ownership_type", "name_history", "ths_concepts"])`。沿用全局路由，也支持单独设置来源顺序。
+
+字段取法、文本/日期/记录列表类型和来源映射均由字典配置。企业所有制与实控人性质、不同体系行业、全类别板块与概念名单分别保存；缺失留空，已有列表保留优先来源。当前档案不接受历史时点参数，未知文本探索暂未开放。详见 [基本信息字段、取法与验证](docs/basic-info.md)。

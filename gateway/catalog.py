@@ -20,7 +20,7 @@ refresh_catalog()
 def catalog():
     from .dictionary import reload_dictionary
     reload_dictionary(force=False)
-    return {'datasets':{ds:{'default_fields':DEFAULT_FIELDS[ds],'date_semantics':g['date_semantics'],**({'profiles':technical_profiles()} if ds=='technical_indicators' else {}),'fields':{f:{'label':m['label'],'unit':m['unit'],'description':m['description'],'unit_status':m.get('unit_status','existing'),'unit_note':m.get('unit_note',''),'parameters':m.get('parameters',{}),'profile_id':m.get('profile_id') or (m['sources'].get('tdx',[{}])[0].get('recipe') if m['sources'].get('tdx') else None),'available_sources':[p for p,b in m['sources'].items() if b]} for f,m in g['fields'].items()}} for ds,g in DICTIONARY['datasets'].items()},'providers':CAPABILITIES,
+    return {'datasets':{ds:{'default_fields':DEFAULT_FIELDS[ds],'date_semantics':g['date_semantics'],'groups':g.get('groups',{}),**({'profiles':technical_profiles()} if ds=='technical_indicators' else {}),'fields':{f:{'label':m['label'],'unit':m['unit'],'data_type':m.get('data_type','number'),'group':m.get('group'),'record_schema':m.get('record_schema'),'description':m['description'],'unit_status':m.get('unit_status','existing'),'unit_note':m.get('unit_note',''),'parameters':m.get('parameters',{}),'profile_id':m.get('profile_id') or (m['sources'].get('tdx',[{}])[0].get('recipe') if m['sources'].get('tdx') else None),'available_sources':[p for p,b in m['sources'].items() if b]} for f,m in g['fields'].items()}} for ds,g in DICTIONARY['datasets'].items()},'providers':CAPABILITIES,
             'dictionary_url':'/api/dictionary','notes':['自动路由逐字段补齐，保留已有值；field_sources 与数据行对应。','字段取法、参数、别名和单位转换由 gateway/data/dictionary.json 定义。']}
 
 def dictionary_view(dataset=None,field=None):

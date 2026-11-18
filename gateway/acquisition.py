@@ -74,6 +74,9 @@ def indicator_dates(obj):
 
 
 def execute_recipe(rid,recipe,bindings,q,sdk,remote):
+    if recipe.get('handler')=='basic_info':
+        from .basic_info import fetch
+        return fetch(recipe,bindings,q,sdk,remote)
     if recipe.get('handler')=='wind_technical_history':
         from .wind_history import fetch
         return fetch(remote,q,bindings,recipe)
@@ -180,7 +183,13 @@ def acquire(provider,q,sdk=None,remote=None):
             data,response=execute_recipe(rid,recipe,bindings,q,sdk,remote)
         except Exception as exc:
             fallback=recipe.get('fallback')
-            if not fallback:raise
+            if not fallback:
+                if q['dataset']=='basic_info':
+                    from .config import redact
+                    notes.append(f'{rid}失败：{redact(str(exc))}')
+                    raw.append({'recipe':rid,'error':redact(str(exc))})
+                    continue
+                raise
             notes.append(f'{rid}失败（{type(exc).__name__}），使用字典配置的备用方案 {fallback}')
             rid=fallback;recipe=DICTIONARY['recipes'][rid];bindings=bindings_for(provider,q['dataset'],list(bindings),rid)
             data,response=execute_recipe(rid,recipe,bindings,q,sdk,remote)
@@ -191,4 +200,5 @@ def acquire(provider,q,sdk=None,remote=None):
             target=merged.setdefault((row['symbol'],row['date']),{'symbol':row['symbol'],'date':row['date'],**{f:None for f in q['fields']}})
             for f in bindings:
                 if target.get(f) is None and row.get(f) is not None:target[f]=row[f]
+    if q['dataset']=='basic_info' and not merged:raise RuntimeError('基本信息取数方案均失败：'+'；'.join(notes))
     return {'data':list(merged.values()),'raw':raw,'notes':list(dict.fromkeys(notes)),'upstream':' + '.join(dict.fromkeys(upstreams))}

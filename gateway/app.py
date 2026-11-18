@@ -17,6 +17,11 @@ from .exploration import ExplorationRequest,explore,save_exploration
 
 mcp=FastMCP('A股数据网关',stateless_http=True,json_response=True)
 @mcp.tool()
+async def query_basic_info(symbol:str,fields:list[str]|None=None,provider:str='auto')->dict:
+    """查询股票基本信息：公司档案、证券名称历史、行业归属、板块标签。文本/日期/记录列表按字典返回；不同分类体系分开。无历史时点参数，缺失字段为null，每个字段携带来源。fields=['*']查询全部。"""
+    return await core.query(core.Query(dataset='basic_info',symbol=symbol,fields=fields,provider=provider))
+
+@mcp.tool()
 def data_catalog(dataset:str|None=None,field:str|None=None)->dict:
     """查看数据目录。传 dataset 和可选 field 可查询字段取法、来源映射、单位转换与接口参数。"""
     return dictionary_view(dataset,field) if dataset else catalog()
@@ -152,7 +157,7 @@ def result(rid:str,kind:str):
     if kind!='csv':raise HTTPException(404)
     data=json.loads(path.read_text());s=io.StringIO();cols=['symbol','date']+list(data['fields'])
     w=csv.DictWriter(s,fieldnames=cols,extrasaction='ignore');w.writeheader()
-    for row in data['data']:w.writerow(row)
+    for row in data['data']:w.writerow({k:json.dumps(v,ensure_ascii=False) if isinstance(v,(list,dict)) else v for k,v in row.items()})
     return Response('\ufeff'+s.getvalue(),media_type='text/csv',headers={'Content-Disposition':f'attachment; filename="{rid}.csv"'})
 app.mount('/static',StaticFiles(directory=Path(__file__).parent/'static'),name='static')
 app.mount('/',mcp_app)

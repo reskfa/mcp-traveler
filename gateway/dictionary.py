@@ -35,6 +35,9 @@ def validate(d):
         for field,m in g['fields'].items():
             if not m['label'] or not m['unit'] or set(m['sources']) != set(d['providers']):
                 raise ValueError(f'Incomplete field: {ds}.{field}')
+            if ds=='basic_info':
+                if m.get('data_type') not in {'string','date','number','records'} or m.get('group') not in g.get('groups',{}):
+                    raise ValueError(f'Invalid basic info type/group: {field}')
             for p,bindings in m['sources'].items():
                 for b in bindings:
                     r=recipes[b['recipe']]

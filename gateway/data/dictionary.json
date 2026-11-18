@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
   "providers": {
-    "tushare": "历史日线、历史估值、三大报表及财务指标",
-    "akshare": "东财／新浪日线；东财每日估值及财务指标，新浪财务报表及关键指标",
-    "wind": "固定参数 K 线；历史估值、财务及技术指标；技术指标另有独立最新快照，部分财务值为亿元展示精度",
-    "ifind": "自然语言历史量价、估值和财务；Markdown 表格解析",
-    "tdx": "固定参数日线和财务；历史估值使用自然语言工具；K 线按偏移分页"
+    "tushare": "历史日线、历史估值、三大报表及财务指标；股票基本信息（按字典映射）",
+    "akshare": "东财／新浪日线；东财每日估值及财务指标，新浪财务报表及关键指标；股票基本信息（按字典映射）",
+    "wind": "固定参数 K 线；历史估值、财务及技术指标；技术指标另有独立最新快照，部分财务值为亿元展示精度；股票基本信息（按字典映射）",
+    "ifind": "自然语言历史量价、估值和财务；Markdown 表格解析；股票基本信息（按字典映射）",
+    "tdx": "固定参数日线和财务；历史估值使用自然语言工具；K 线按偏移分页；股票基本信息（按字典映射）"
   },
   "datasets": {
     "daily_prices": {
@@ -23472,6 +23472,2041 @@
           }
         }
       }
+    },
+    "basic_info": {
+      "groups": {
+        "profile": "公司与证券档案",
+        "names": "证券名称历史",
+        "industries": "行业归属",
+        "boards": "板块与标签"
+      },
+      "date_semantics": "公司档案与分类为来源当前可用快照；名称/行业记录仅在来源提供时附生效起止日期，不支持历史时点重建。",
+      "default_fields": [
+        "security_name",
+        "company_name",
+        "listing_date",
+        "ownership_type",
+        "controller_name",
+        "province",
+        "city",
+        "main_business",
+        "former_names",
+        "name_history",
+        "sw_industry_l1",
+        "sw_industry_l2",
+        "sw_industry_l3",
+        "wind_industry_l1",
+        "ths_concepts",
+        "wind_boards"
+      ],
+      "fields": {
+        "security_name": {
+          "label": "证券简称",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "profile",
+          "aliases": [
+            "证券简称"
+          ],
+          "description": "证券简称；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_basic",
+                "columns": [
+                  "name"
+                ]
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "ak_profile",
+                "columns": [
+                  "A股简称"
+                ]
+              }
+            ],
+            "wind": [
+              {
+                "recipe": "wind_identity",
+                "columns": [
+                  "证券简称"
+                ]
+              }
+            ],
+            "ifind": [
+              {
+                "recipe": "ifind_profile",
+                "columns": [
+                  "股票简称",
+                  "证券简称"
+                ]
+              }
+            ],
+            "tdx": []
+          }
+        },
+        "company_name": {
+          "label": "公司全称",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "profile",
+          "aliases": [
+            "公司全称"
+          ],
+          "description": "公司全称；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_basic",
+                "columns": [
+                  "fullname"
+                ]
+              },
+              {
+                "recipe": "ts_company",
+                "columns": [
+                  "com_name"
+                ]
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "ak_profile",
+                "columns": [
+                  "公司名称"
+                ]
+              }
+            ],
+            "wind": [
+              {
+                "recipe": "wind_identity",
+                "columns": [
+                  "公司中文名称"
+                ]
+              }
+            ],
+            "ifind": [
+              {
+                "recipe": "ifind_profile",
+                "columns": [
+                  "公司中文名称"
+                ]
+              }
+            ],
+            "tdx": [
+              {
+                "recipe": "tdx_profile",
+                "columns": [
+                  "公司名称"
+                ]
+              }
+            ]
+          }
+        },
+        "english_name": {
+          "label": "公司英文名称",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "profile",
+          "aliases": [
+            "公司英文名称"
+          ],
+          "description": "公司英文名称；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_basic",
+                "columns": [
+                  "enname"
+                ]
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "ak_profile",
+                "columns": [
+                  "英文名称"
+                ]
+              }
+            ],
+            "wind": [],
+            "ifind": [],
+            "tdx": [
+              {
+                "recipe": "tdx_profile",
+                "columns": [
+                  "英文名称"
+                ]
+              }
+            ]
+          }
+        },
+        "exchange": {
+          "label": "交易所",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "profile",
+          "aliases": [
+            "交易所"
+          ],
+          "description": "交易所；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_basic",
+                "columns": [
+                  "exchange"
+                ]
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          }
+        },
+        "listing_board": {
+          "label": "上市板块",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "profile",
+          "aliases": [
+            "上市板块"
+          ],
+          "description": "上市板块；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_basic",
+                "columns": [
+                  "market"
+                ]
+              }
+            ],
+            "akshare": [],
+            "wind": [
+              {
+                "recipe": "wind_region",
+                "columns": [
+                  "上市板"
+                ]
+              }
+            ],
+            "ifind": [],
+            "tdx": []
+          }
+        },
+        "listing_status": {
+          "label": "上市状态",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "profile",
+          "aliases": [
+            "上市状态"
+          ],
+          "description": "上市状态；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_basic",
+                "columns": [
+                  "list_status"
+                ],
+                "value_map": {
+                  "L": "上市",
+                  "D": "退市",
+                  "P": "暂停上市"
+                }
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          }
+        },
+        "listing_date": {
+          "label": "上市日期",
+          "unit": "日期",
+          "data_type": "date",
+          "group": "profile",
+          "aliases": [
+            "上市日期"
+          ],
+          "description": "上市日期；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_basic",
+                "columns": [
+                  "list_date"
+                ]
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "ak_profile",
+                "columns": [
+                  "上市日期"
+                ]
+              }
+            ],
+            "wind": [
+              {
+                "recipe": "wind_identity",
+                "columns": [
+                  "首发上市日期"
+                ]
+              }
+            ],
+            "ifind": [
+              {
+                "recipe": "ifind_region",
+                "columns": [
+                  "上市日期"
+                ]
+              }
+            ],
+            "tdx": []
+          }
+        },
+        "delisting_date": {
+          "label": "退市日期",
+          "unit": "日期",
+          "data_type": "date",
+          "group": "profile",
+          "aliases": [
+            "退市日期"
+          ],
+          "description": "退市日期；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_basic",
+                "columns": [
+                  "delist_date"
+                ]
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          }
+        },
+        "established_date": {
+          "label": "成立日期",
+          "unit": "日期",
+          "data_type": "date",
+          "group": "profile",
+          "aliases": [
+            "成立日期"
+          ],
+          "description": "成立日期；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_company",
+                "columns": [
+                  "setup_date"
+                ]
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "ak_profile",
+                "columns": [
+                  "成立日期"
+                ]
+              }
+            ],
+            "wind": [
+              {
+                "recipe": "wind_region",
+                "columns": [
+                  "成立日期"
+                ]
+              }
+            ],
+            "ifind": [],
+            "tdx": []
+          }
+        },
+        "ownership_type": {
+          "label": "企业所有制性质",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "profile",
+          "aliases": [
+            "企业所有制性质"
+          ],
+          "description": "企业所有制性质（如民营、国有）；不接受实控人性质或大型企业等规模分类。",
+          "sources": {
+            "tushare": [],
+            "akshare": [],
+            "wind": [
+              {
+                "recipe": "wind_identity",
+                "columns": [
+                  "企业所有制性质"
+                ]
+              }
+            ],
+            "ifind": [],
+            "tdx": []
+          }
+        },
+        "controller_name": {
+          "label": "实际控制人",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "profile",
+          "aliases": [
+            "实际控制人"
+          ],
+          "description": "实际控制人；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_basic",
+                "columns": [
+                  "act_name"
+                ]
+              }
+            ],
+            "akshare": [],
+            "wind": [
+              {
+                "recipe": "wind_identity",
+                "columns": [
+                  "实际控制人名称"
+                ]
+              }
+            ],
+            "ifind": [
+              {
+                "recipe": "ifind_profile",
+                "columns": [
+                  "实际控制人"
+                ]
+              }
+            ],
+            "tdx": []
+          }
+        },
+        "controller_type": {
+          "label": "实控人性质",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "profile",
+          "aliases": [
+            "实控人性质"
+          ],
+          "description": "实际控制人的性质（如自然人、国资）；不是企业所有制性质。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_basic",
+                "columns": [
+                  "act_ent_type"
+                ]
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [
+              {
+                "recipe": "ifind_profile",
+                "columns": [
+                  "实际控制人类型"
+                ]
+              }
+            ],
+            "tdx": []
+          }
+        },
+        "province": {
+          "label": "省份",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "profile",
+          "aliases": [
+            "省份"
+          ],
+          "description": "省份；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_company",
+                "columns": [
+                  "province"
+                ]
+              }
+            ],
+            "akshare": [],
+            "wind": [
+              {
+                "recipe": "wind_region",
+                "columns": [
+                  "省份"
+                ]
+              }
+            ],
+            "ifind": [
+              {
+                "recipe": "ifind_region",
+                "columns": [
+                  "省份"
+                ]
+              }
+            ],
+            "tdx": []
+          }
+        },
+        "city": {
+          "label": "城市",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "profile",
+          "aliases": [
+            "城市"
+          ],
+          "description": "城市；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_company",
+                "columns": [
+                  "city"
+                ]
+              }
+            ],
+            "akshare": [],
+            "wind": [
+              {
+                "recipe": "wind_region",
+                "columns": [
+                  "城市"
+                ]
+              }
+            ],
+            "ifind": [
+              {
+                "recipe": "ifind_region",
+                "columns": [
+                  "地级市"
+                ]
+              }
+            ],
+            "tdx": []
+          }
+        },
+        "registered_address": {
+          "label": "注册地址",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "profile",
+          "aliases": [
+            "注册地址"
+          ],
+          "description": "注册地址；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [],
+            "akshare": [
+              {
+                "recipe": "ak_profile",
+                "columns": [
+                  "注册地址"
+                ]
+              }
+            ],
+            "wind": [
+              {
+                "recipe": "wind_identity",
+                "columns": [
+                  "注册地址"
+                ]
+              }
+            ],
+            "ifind": [
+              {
+                "recipe": "ifind_region",
+                "columns": [
+                  "注册地址"
+                ]
+              }
+            ],
+            "tdx": [
+              {
+                "recipe": "tdx_profile",
+                "columns": [
+                  "注册地址"
+                ]
+              }
+            ]
+          }
+        },
+        "office_address": {
+          "label": "办公地址",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "profile",
+          "aliases": [
+            "办公地址"
+          ],
+          "description": "办公地址；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_company",
+                "columns": [
+                  "office"
+                ]
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "ak_profile",
+                "columns": [
+                  "办公地址"
+                ]
+              }
+            ],
+            "wind": [
+              {
+                "recipe": "wind_identity",
+                "columns": [
+                  "办公地址"
+                ]
+              }
+            ],
+            "ifind": [
+              {
+                "recipe": "ifind_region",
+                "columns": [
+                  "办公地址"
+                ]
+              }
+            ],
+            "tdx": [
+              {
+                "recipe": "tdx_profile",
+                "columns": [
+                  "办公地址"
+                ]
+              }
+            ]
+          }
+        },
+        "website": {
+          "label": "公司网站",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "profile",
+          "aliases": [
+            "公司网站"
+          ],
+          "description": "公司网站；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_company",
+                "columns": [
+                  "website"
+                ]
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "ak_profile",
+                "columns": [
+                  "官方网站"
+                ]
+              }
+            ],
+            "wind": [
+              {
+                "recipe": "wind_business",
+                "columns": [
+                  "公司网站"
+                ]
+              }
+            ],
+            "ifind": [],
+            "tdx": [
+              {
+                "recipe": "tdx_profile",
+                "columns": [
+                  "公司网址"
+                ]
+              }
+            ]
+          }
+        },
+        "email": {
+          "label": "公司邮箱",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "profile",
+          "aliases": [
+            "公司邮箱"
+          ],
+          "description": "公司邮箱；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_company",
+                "columns": [
+                  "email"
+                ]
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "ak_profile",
+                "columns": [
+                  "电子邮箱"
+                ]
+              }
+            ],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          }
+        },
+        "phone": {
+          "label": "联系电话",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "profile",
+          "aliases": [
+            "联系电话"
+          ],
+          "description": "联系电话；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [],
+            "akshare": [
+              {
+                "recipe": "ak_profile",
+                "columns": [
+                  "联系电话"
+                ]
+              }
+            ],
+            "wind": [],
+            "ifind": [],
+            "tdx": [
+              {
+                "recipe": "tdx_profile",
+                "columns": [
+                  "联系电话"
+                ]
+              }
+            ]
+          }
+        },
+        "introduction": {
+          "label": "公司简介",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "profile",
+          "aliases": [
+            "公司简介"
+          ],
+          "description": "公司简介；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_company",
+                "columns": [
+                  "introduction"
+                ]
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "ak_profile",
+                "columns": [
+                  "机构简介"
+                ]
+              }
+            ],
+            "wind": [
+              {
+                "recipe": "wind_business",
+                "columns": [
+                  "公司简介"
+                ]
+              }
+            ],
+            "ifind": [],
+            "tdx": [
+              {
+                "recipe": "tdx_profile",
+                "columns": [
+                  "公司简介"
+                ]
+              }
+            ]
+          }
+        },
+        "main_business": {
+          "label": "主营业务",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "profile",
+          "aliases": [
+            "主营业务"
+          ],
+          "description": "主营业务；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_company",
+                "columns": [
+                  "main_business"
+                ]
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "ak_profile",
+                "columns": [
+                  "主营业务"
+                ]
+              }
+            ],
+            "wind": [],
+            "ifind": [],
+            "tdx": [
+              {
+                "recipe": "tdx_profile",
+                "columns": [
+                  "主营业务"
+                ]
+              }
+            ]
+          }
+        },
+        "business_scope": {
+          "label": "经营范围",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "profile",
+          "aliases": [
+            "经营范围"
+          ],
+          "description": "经营范围；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_company",
+                "columns": [
+                  "business_scope"
+                ]
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "ak_profile",
+                "columns": [
+                  "经营范围"
+                ]
+              }
+            ],
+            "wind": [],
+            "ifind": [],
+            "tdx": [
+              {
+                "recipe": "tdx_profile",
+                "columns": [
+                  "经营范围"
+                ]
+              }
+            ]
+          }
+        },
+        "legal_representative": {
+          "label": "法定代表人",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "profile",
+          "aliases": [
+            "法定代表人"
+          ],
+          "description": "法定代表人；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [],
+            "akshare": [
+              {
+                "recipe": "ak_profile",
+                "columns": [
+                  "法人代表"
+                ]
+              }
+            ],
+            "wind": [],
+            "ifind": [],
+            "tdx": [
+              {
+                "recipe": "tdx_profile",
+                "columns": [
+                  "法人代表"
+                ]
+              }
+            ]
+          }
+        },
+        "general_manager": {
+          "label": "总经理",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "profile",
+          "aliases": [
+            "总经理"
+          ],
+          "description": "总经理；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_company",
+                "columns": [
+                  "manager"
+                ]
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": [
+              {
+                "recipe": "tdx_profile",
+                "columns": [
+                  "总经理"
+                ]
+              }
+            ]
+          }
+        },
+        "controlling_shareholder": {
+          "label": "控股股东",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "profile",
+          "aliases": [
+            "控股股东"
+          ],
+          "description": "控股股东；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": [
+              {
+                "recipe": "tdx_profile",
+                "columns": [
+                  "控股股东"
+                ]
+              }
+            ]
+          }
+        },
+        "credit_code": {
+          "label": "社会信用代码",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "profile",
+          "aliases": [
+            "社会信用代码"
+          ],
+          "description": "社会信用代码；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": [
+              {
+                "recipe": "tdx_profile",
+                "columns": [
+                  "社会信用代码"
+                ]
+              }
+            ]
+          }
+        },
+        "employees": {
+          "label": "员工人数",
+          "unit": "人",
+          "data_type": "number",
+          "group": "profile",
+          "aliases": [
+            "员工人数"
+          ],
+          "description": "员工人数；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_company",
+                "columns": [
+                  "employees"
+                ]
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": [
+              {
+                "recipe": "tdx_profile",
+                "columns": [
+                  "员工总数"
+                ]
+              }
+            ]
+          }
+        },
+        "registered_capital": {
+          "label": "注册资本",
+          "unit": "元",
+          "data_type": "number",
+          "group": "profile",
+          "aliases": [
+            "注册资本"
+          ],
+          "description": "注册资本；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_company",
+                "columns": [
+                  "reg_capital"
+                ],
+                "multiplier": 10000,
+                "source_unit": "万元"
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          }
+        },
+        "ts_area": {
+          "label": "地域简称（Tushare）",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "profile",
+          "aliases": [
+            "地域简称（Tushare）"
+          ],
+          "description": "地域简称（Tushare）；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_basic",
+                "columns": [
+                  "area"
+                ]
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          }
+        },
+        "ak_market": {
+          "label": "所属市场（巨潮）",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "profile",
+          "aliases": [
+            "所属市场（巨潮）"
+          ],
+          "description": "所属市场（巨潮）；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [],
+            "akshare": [
+              {
+                "recipe": "ak_profile",
+                "columns": [
+                  "所属市场"
+                ]
+              }
+            ],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          }
+        },
+        "tdx_region": {
+          "label": "所属区域（通达信）",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "profile",
+          "aliases": [
+            "所属区域（通达信）"
+          ],
+          "description": "所属区域（通达信）；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": [
+              {
+                "recipe": "tdx_profile",
+                "columns": [
+                  "所属区域"
+                ]
+              }
+            ]
+          }
+        },
+        "ifind_enterprise_type": {
+          "label": "企业类型（iFinD原值）",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "profile",
+          "aliases": [
+            "企业类型（iFinD原值）"
+          ],
+          "description": "iFinD返回的企业类型原值；实测为“大型企业”，不合并为所有制性质。",
+          "sources": {
+            "tushare": [],
+            "akshare": [],
+            "wind": [],
+            "ifind": [
+              {
+                "recipe": "ifind_profile",
+                "columns": [
+                  "企业类型"
+                ]
+              }
+            ],
+            "tdx": []
+          }
+        },
+        "name_history": {
+          "label": "证券简称变更记录",
+          "unit": "记录",
+          "data_type": "records",
+          "group": "names",
+          "aliases": [
+            "证券简称变更记录"
+          ],
+          "description": "证券简称及生效起止、公告日期与原因；不代表公司法定名称变更。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_names",
+                "columns": [
+                  "name"
+                ],
+                "shape": "records",
+                "record_fields": {
+                  "name": {
+                    "columns": [
+                      "name"
+                    ]
+                  },
+                  "start_date": {
+                    "columns": [
+                      "start_date"
+                    ],
+                    "type": "date"
+                  },
+                  "end_date": {
+                    "columns": [
+                      "end_date"
+                    ],
+                    "type": "date"
+                  },
+                  "announcement_date": {
+                    "columns": [
+                      "ann_date"
+                    ],
+                    "type": "date"
+                  },
+                  "reason": {
+                    "columns": [
+                      "change_reason"
+                    ]
+                  }
+                },
+                "required_keys": [
+                  "name"
+                ]
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          },
+          "record_schema": {
+            "name": "string",
+            "start_date": "date",
+            "end_date": "date",
+            "announcement_date": "date",
+            "reason": "string"
+          }
+        },
+        "former_names": {
+          "label": "证券曾用名（无日期）",
+          "unit": "记录",
+          "data_type": "records",
+          "group": "names",
+          "aliases": [
+            "证券曾用名（无日期）"
+          ],
+          "description": "来源提供的证券曾用名清单，不推断更名日期；无日期和完整历史记录分别保留。",
+          "sources": {
+            "tushare": [],
+            "akshare": [
+              {
+                "recipe": "ak_profile",
+                "columns": [
+                  "曾用简称"
+                ],
+                "shape": "split_records",
+                "separator": "[,，;；、]",
+                "name_key": "name"
+              }
+            ],
+            "wind": [
+              {
+                "recipe": "wind_names",
+                "columns": [
+                  "证券曾用名"
+                ],
+                "shape": "split_records",
+                "separator": "[,，;；、]",
+                "name_key": "name"
+              }
+            ],
+            "ifind": [
+              {
+                "recipe": "ifind_profile",
+                "columns": [
+                  "证券曾用名"
+                ],
+                "shape": "split_records",
+                "separator": "[,，;；、]",
+                "name_key": "name"
+              }
+            ],
+            "tdx": [
+              {
+                "recipe": "tdx_profile",
+                "columns": [
+                  "曾用名"
+                ],
+                "shape": "split_records",
+                "separator": "[,，;；、]",
+                "name_key": "name"
+              }
+            ]
+          },
+          "record_schema": {
+            "name": "string"
+          }
+        },
+        "sw_industry_l1": {
+          "label": "申万1级行业",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "industries",
+          "aliases": [
+            "申万1级行业"
+          ],
+          "description": "申万1级行业；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_sw",
+                "columns": [
+                  "l1_name"
+                ],
+                "row_filter": {
+                  "is_new": "Y"
+                }
+              }
+            ],
+            "akshare": [],
+            "wind": [
+              {
+                "recipe": "wind_classifications",
+                "columns": [
+                  "所属申万行业明细"
+                ],
+                "split": "--",
+                "index": 0
+              }
+            ],
+            "ifind": [
+              {
+                "recipe": "ifind_classifications",
+                "columns": [
+                  "所属申万行业"
+                ],
+                "indicator_params": {
+                  "行业级别": "一级行业"
+                }
+              }
+            ],
+            "tdx": []
+          }
+        },
+        "sw_industry_l1_code": {
+          "label": "申万1级行业代码",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "industries",
+          "aliases": [
+            "申万1级行业代码"
+          ],
+          "description": "申万1级行业代码；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_sw",
+                "columns": [
+                  "l1_code"
+                ],
+                "row_filter": {
+                  "is_new": "Y"
+                }
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          }
+        },
+        "sw_industry_l2": {
+          "label": "申万2级行业",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "industries",
+          "aliases": [
+            "申万2级行业"
+          ],
+          "description": "申万2级行业；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_sw",
+                "columns": [
+                  "l2_name"
+                ],
+                "row_filter": {
+                  "is_new": "Y"
+                }
+              }
+            ],
+            "akshare": [],
+            "wind": [
+              {
+                "recipe": "wind_classifications",
+                "columns": [
+                  "所属申万行业明细"
+                ],
+                "split": "--",
+                "index": 1
+              }
+            ],
+            "ifind": [],
+            "tdx": []
+          }
+        },
+        "sw_industry_l2_code": {
+          "label": "申万2级行业代码",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "industries",
+          "aliases": [
+            "申万2级行业代码"
+          ],
+          "description": "申万2级行业代码；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_sw",
+                "columns": [
+                  "l2_code"
+                ],
+                "row_filter": {
+                  "is_new": "Y"
+                }
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          }
+        },
+        "sw_industry_l3": {
+          "label": "申万3级行业",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "industries",
+          "aliases": [
+            "申万3级行业"
+          ],
+          "description": "申万3级行业；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_sw",
+                "columns": [
+                  "l3_name"
+                ],
+                "row_filter": {
+                  "is_new": "Y"
+                }
+              }
+            ],
+            "akshare": [],
+            "wind": [
+              {
+                "recipe": "wind_classifications",
+                "columns": [
+                  "所属申万行业明细"
+                ],
+                "split": "--",
+                "index": 2
+              }
+            ],
+            "ifind": [],
+            "tdx": []
+          }
+        },
+        "sw_industry_l3_code": {
+          "label": "申万3级行业代码",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "industries",
+          "aliases": [
+            "申万3级行业代码"
+          ],
+          "description": "申万3级行业代码；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_sw",
+                "columns": [
+                  "l3_code"
+                ],
+                "row_filter": {
+                  "is_new": "Y"
+                }
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          }
+        },
+        "wind_industry_l1": {
+          "label": "Wind1级行业",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "industries",
+          "aliases": [
+            "Wind1级行业"
+          ],
+          "description": "Wind1级行业；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [],
+            "akshare": [],
+            "wind": [
+              {
+                "recipe": "wind_classifications",
+                "columns": [
+                  "所属WIND行业明细"
+                ],
+                "split": "--",
+                "index": 0
+              }
+            ],
+            "ifind": [],
+            "tdx": []
+          }
+        },
+        "wind_industry_l2": {
+          "label": "Wind2级行业",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "industries",
+          "aliases": [
+            "Wind2级行业"
+          ],
+          "description": "Wind2级行业；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [],
+            "akshare": [],
+            "wind": [
+              {
+                "recipe": "wind_classifications",
+                "columns": [
+                  "所属WIND行业明细"
+                ],
+                "split": "--",
+                "index": 1
+              }
+            ],
+            "ifind": [],
+            "tdx": []
+          }
+        },
+        "wind_industry_l3": {
+          "label": "Wind3级行业",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "industries",
+          "aliases": [
+            "Wind3级行业"
+          ],
+          "description": "Wind3级行业；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [],
+            "akshare": [],
+            "wind": [
+              {
+                "recipe": "wind_classifications",
+                "columns": [
+                  "所属WIND行业明细"
+                ],
+                "split": "--",
+                "index": 2
+              }
+            ],
+            "ifind": [],
+            "tdx": []
+          }
+        },
+        "wind_industry_l4": {
+          "label": "Wind4级行业",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "industries",
+          "aliases": [
+            "Wind4级行业"
+          ],
+          "description": "Wind4级行业；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [],
+            "akshare": [],
+            "wind": [
+              {
+                "recipe": "wind_classifications",
+                "columns": [
+                  "所属WIND行业明细"
+                ],
+                "split": "--",
+                "index": 3
+              }
+            ],
+            "ifind": [],
+            "tdx": []
+          }
+        },
+        "ts_industry": {
+          "label": "Tushare基础行业",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "industries",
+          "aliases": [
+            "Tushare基础行业"
+          ],
+          "description": "Tushare基础行业；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_basic",
+                "columns": [
+                  "industry"
+                ]
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          }
+        },
+        "cninfo_industry": {
+          "label": "巨潮所属行业（版本未注明）",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "industries",
+          "aliases": [
+            "巨潮所属行业（版本未注明）"
+          ],
+          "description": "巨潮所属行业（版本未注明）；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [],
+            "akshare": [
+              {
+                "recipe": "ak_profile",
+                "columns": [
+                  "所属行业"
+                ]
+              }
+            ],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          }
+        },
+        "ths_industry_l1": {
+          "label": "同花顺一级行业",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "industries",
+          "aliases": [
+            "同花顺一级行业"
+          ],
+          "description": "同花顺一级行业；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [],
+            "akshare": [],
+            "wind": [],
+            "ifind": [
+              {
+                "recipe": "ifind_classifications",
+                "columns": [
+                  "所属同花顺行业"
+                ],
+                "indicator_params": {
+                  "行业级别": "一级行业"
+                }
+              }
+            ],
+            "tdx": []
+          }
+        },
+        "tdx_industry": {
+          "label": "通达信研究行业路径",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "industries",
+          "aliases": [
+            "通达信研究行业路径"
+          ],
+          "description": "通达信研究行业路径；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": [
+              {
+                "recipe": "tdx_profile",
+                "columns": [
+                  "通达信研究行业"
+                ]
+              }
+            ]
+          }
+        },
+        "tdx_csrc_industry": {
+          "label": "证监会行业路径（通达信）",
+          "unit": "文本",
+          "data_type": "string",
+          "group": "industries",
+          "aliases": [
+            "证监会行业路径（通达信）"
+          ],
+          "description": "证监会行业路径（通达信）；返回来源当前可用档案，不代表历史时点。",
+          "sources": {
+            "tushare": [],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": [
+              {
+                "recipe": "tdx_profile",
+                "columns": [
+                  "证监会行业"
+                ]
+              }
+            ]
+          }
+        },
+        "sw_memberships": {
+          "label": "申万行业归属记录",
+          "unit": "记录",
+          "data_type": "records",
+          "group": "industries",
+          "aliases": [
+            "申万行业归属记录"
+          ],
+          "description": "Tushare提供的行业纳入/剔除日期记录；不推断未返回的历史。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_sw",
+                "columns": [
+                  "l1_name"
+                ],
+                "shape": "records",
+                "record_fields": {
+                  "l1_code": {
+                    "columns": [
+                      "l1_code"
+                    ]
+                  },
+                  "l1_name": {
+                    "columns": [
+                      "l1_name"
+                    ]
+                  },
+                  "l2_code": {
+                    "columns": [
+                      "l2_code"
+                    ]
+                  },
+                  "l2_name": {
+                    "columns": [
+                      "l2_name"
+                    ]
+                  },
+                  "l3_code": {
+                    "columns": [
+                      "l3_code"
+                    ]
+                  },
+                  "l3_name": {
+                    "columns": [
+                      "l3_name"
+                    ]
+                  },
+                  "start_date": {
+                    "columns": [
+                      "in_date"
+                    ],
+                    "type": "date"
+                  },
+                  "end_date": {
+                    "columns": [
+                      "out_date"
+                    ],
+                    "type": "date"
+                  },
+                  "is_new": {
+                    "columns": [
+                      "is_new"
+                    ]
+                  }
+                },
+                "constants": {
+                  "system": "申万"
+                },
+                "required_keys": [
+                  "l1_name"
+                ]
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          },
+          "record_schema": {
+            "system": "string",
+            "l1_code": "string",
+            "l1_name": "string",
+            "l2_code": "string",
+            "l2_name": "string",
+            "l3_code": "string",
+            "l3_name": "string",
+            "start_date": "date",
+            "end_date": "date",
+            "is_new": "string"
+          }
+        },
+        "ths_boards": {
+          "label": "同花顺板块（全类别）",
+          "unit": "记录",
+          "data_type": "records",
+          "group": "boards",
+          "aliases": [
+            "同花顺板块标签"
+          ],
+          "description": "来源当前返回的名单；保留各自分类体系，不表示完整历史，也不将指数或交易资格当作纯产业概念。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_boards",
+                "columns": [
+                  "board_name"
+                ],
+                "shape": "records",
+                "record_fields": {
+                  "name": {
+                    "columns": [
+                      "board_name"
+                    ]
+                  },
+                  "code": {
+                    "columns": [
+                      "ts_code"
+                    ]
+                  },
+                  "type": {
+                    "columns": [
+                      "board_type"
+                    ]
+                  }
+                },
+                "constants": {
+                  "system": "同花顺"
+                },
+                "required_keys": [
+                  "code"
+                ]
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          },
+          "record_schema": {
+            "system": "string",
+            "name": "string",
+            "code": "string",
+            "type": "string"
+          }
+        },
+        "wind_boards": {
+          "label": "Wind板块标签",
+          "unit": "记录",
+          "data_type": "records",
+          "group": "boards",
+          "aliases": [
+            "Wind板块标签"
+          ],
+          "description": "来源当前返回的名单；保留各自分类体系，不表示完整历史，也不将指数或交易资格当作纯产业概念。",
+          "sources": {
+            "tushare": [],
+            "akshare": [],
+            "wind": [
+              {
+                "recipe": "wind_classifications",
+                "columns": [
+                  "所属概念板块"
+                ],
+                "shape": "split_records",
+                "separator": "[;；]",
+                "constants": {
+                  "system": "Wind"
+                }
+              }
+            ],
+            "ifind": [],
+            "tdx": []
+          },
+          "record_schema": {
+            "system": "string",
+            "name": "string"
+          }
+        },
+        "tdx_themes": {
+          "label": "通达信关联主题",
+          "unit": "记录",
+          "data_type": "records",
+          "group": "boards",
+          "aliases": [
+            "通达信关联主题"
+          ],
+          "description": "来源当前返回的名单；保留各自分类体系，不表示完整历史，也不将指数或交易资格当作纯产业概念。",
+          "sources": {
+            "tushare": [],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": [
+              {
+                "recipe": "tdx_summary",
+                "columns": [
+                  "关联主题"
+                ],
+                "shape": "records",
+                "record_fields": {
+                  "name": {
+                    "columns": [
+                      "关联主题"
+                    ]
+                  },
+                  "code": {
+                    "columns": [
+                      "主题id"
+                    ]
+                  }
+                },
+                "constants": {
+                  "system": "通达信"
+                },
+                "required_keys": [
+                  "name"
+                ]
+              }
+            ]
+          },
+          "record_schema": {
+            "system": "string",
+            "name": "string",
+            "code": "string"
+          }
+        },
+        "cninfo_indexes": {
+          "label": "巨潮入选指数",
+          "unit": "记录",
+          "data_type": "records",
+          "group": "boards",
+          "aliases": [
+            "巨潮入选指数"
+          ],
+          "description": "来源当前返回的名单；保留各自分类体系，不表示完整历史，也不将指数或交易资格当作纯产业概念。",
+          "sources": {
+            "tushare": [],
+            "akshare": [
+              {
+                "recipe": "ak_profile",
+                "columns": [
+                  "入选指数"
+                ],
+                "shape": "split_records",
+                "separator": "[,，;；]",
+                "constants": {
+                  "system": "巨潮"
+                }
+              }
+            ],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          },
+          "record_schema": {
+            "system": "string",
+            "name": "string"
+          }
+        },
+        "tdx_indexes": {
+          "label": "通达信相关指数",
+          "unit": "记录",
+          "data_type": "records",
+          "group": "boards",
+          "aliases": [
+            "通达信相关指数"
+          ],
+          "description": "来源当前返回的名单；保留各自分类体系，不表示完整历史，也不将指数或交易资格当作纯产业概念。",
+          "sources": {
+            "tushare": [],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": [
+              {
+                "recipe": "tdx_profile",
+                "columns": [
+                  "相关指数"
+                ],
+                "shape": "split_records",
+                "separator": "[,，;；]",
+                "constants": {
+                  "system": "通达信"
+                }
+              }
+            ]
+          },
+          "record_schema": {
+            "system": "string",
+            "name": "string"
+          }
+        },
+        "ths_concepts": {
+          "label": "同花顺概念标签（N类）",
+          "unit": "记录",
+          "data_type": "records",
+          "group": "boards",
+          "aliases": [
+            "同花顺概念",
+            "概念板块"
+          ],
+          "description": "同花顺N类概念名单，可能含指数样本或交易资格标签；与全类别板块名单分开。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "ts_boards",
+                "columns": [
+                  "board_name"
+                ],
+                "shape": "records",
+                "record_fields": {
+                  "name": {
+                    "columns": [
+                      "board_name"
+                    ]
+                  },
+                  "code": {
+                    "columns": [
+                      "ts_code"
+                    ]
+                  },
+                  "type": {
+                    "columns": [
+                      "board_type"
+                    ]
+                  }
+                },
+                "constants": {
+                  "system": "同花顺"
+                },
+                "required_keys": [
+                  "name"
+                ],
+                "row_filter": {
+                  "board_type": "N"
+                }
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [
+              {
+                "recipe": "ifind_classifications",
+                "columns": [
+                  "所属同花顺概念指数"
+                ],
+                "shape": "split_records",
+                "separator": "[,，;；]",
+                "constants": {
+                  "system": "同花顺",
+                  "type": "N"
+                },
+                "note": "iFinD仅返回名称，无板块代码；不与其他来源的列表逐项拼接。"
+              }
+            ],
+            "tdx": []
+          },
+          "record_schema": {
+            "system": "string",
+            "name": "string",
+            "code": "string",
+            "type": "string"
+          }
+        }
+      }
     }
   },
   "recipes": {
@@ -28250,6 +30285,279 @@
       "notes": [
         "Wind原生历史日线；不在本地计算。复权及未披露的计算参数沿用来源默认，详见原始返回。",
         "使用已验证的简短问句；逐项核对证券、实际日期、分量及已声明参数。"
+      ]
+    },
+    "ts_basic": {
+      "provider": "tushare",
+      "dataset": "basic_info",
+      "kind": "sdk",
+      "handler": "basic_info",
+      "method": "stock_basic",
+      "params": {
+        "ts_code": "$symbol",
+        "fields": "$source_fields"
+      },
+      "identity_columns": [
+        "ts_code"
+      ],
+      "select_columns": [
+        "ts_code"
+      ],
+      "status_fallbacks": [
+        "D",
+        "P"
+      ]
+    },
+    "ts_company": {
+      "provider": "tushare",
+      "dataset": "basic_info",
+      "kind": "sdk",
+      "handler": "basic_info",
+      "method": "stock_company",
+      "params": {
+        "ts_code": "$symbol"
+      },
+      "identity_columns": [
+        "ts_code"
+      ]
+    },
+    "ts_names": {
+      "provider": "tushare",
+      "dataset": "basic_info",
+      "kind": "sdk",
+      "handler": "basic_info",
+      "method": "namechange",
+      "params": {
+        "ts_code": "$symbol"
+      },
+      "identity_columns": [
+        "ts_code"
+      ]
+    },
+    "ts_sw": {
+      "provider": "tushare",
+      "dataset": "basic_info",
+      "kind": "sdk",
+      "handler": "basic_info",
+      "method": "index_member_all",
+      "params": {
+        "ts_code": "$symbol"
+      },
+      "identity_columns": [
+        "ts_code"
+      ]
+    },
+    "ts_boards": {
+      "provider": "tushare",
+      "dataset": "basic_info",
+      "kind": "sdk",
+      "handler": "basic_info",
+      "method": "ths_member",
+      "params": {
+        "con_code": "$symbol"
+      },
+      "identity_columns": [
+        "con_code"
+      ],
+      "join": {
+        "method": "ths_index",
+        "params": {
+          "exchange": "A"
+        },
+        "left": "ts_code",
+        "right": "ts_code",
+        "columns": {
+          "name": "board_name",
+          "type": "board_type"
+        }
+      },
+      "notes": [
+        "同花顺板块关联为当前返回名单；type=N也可能含指数样本、交易资格等标签，不视为纯产业概念。"
+      ]
+    },
+    "ak_profile": {
+      "provider": "akshare",
+      "dataset": "basic_info",
+      "kind": "sdk",
+      "handler": "basic_info",
+      "method": "stock_profile_cninfo",
+      "params": {
+        "symbol": "$code"
+      },
+      "identity_columns": [
+        "A股代码"
+      ],
+      "upstream": "AKShare / 巨潮资讯",
+      "notes": [
+        "巨潮所属行业未标注分类版本，单独保留；未确认注册资金单位，不映射注册资本。"
+      ]
+    },
+    "wind_identity": {
+      "provider": "wind",
+      "dataset": "basic_info",
+      "kind": "mcp_nl",
+      "handler": "basic_info",
+      "method": "get_stock_basicinfo",
+      "params": {
+        "question": "$question"
+      },
+      "template": "查询{symbol}的公司全称、股票简称、上市日期、企业性质、实际控制人、注册地址和办公地址。",
+      "identity_columns": [
+        "Wind代码",
+        "证券代码",
+        "股票代码"
+      ]
+    },
+    "wind_region": {
+      "provider": "wind",
+      "dataset": "basic_info",
+      "kind": "mcp_nl",
+      "handler": "basic_info",
+      "method": "get_stock_basicinfo",
+      "params": {
+        "question": "$question"
+      },
+      "template": "查询{symbol}的所属省份、所属城市、成立日期、上市板块和上市状态。",
+      "identity_columns": [
+        "Wind代码",
+        "证券代码",
+        "股票代码"
+      ]
+    },
+    "wind_names": {
+      "provider": "wind",
+      "dataset": "basic_info",
+      "kind": "mcp_nl",
+      "handler": "basic_info",
+      "method": "get_stock_basicinfo",
+      "params": {
+        "question": "$question"
+      },
+      "template": "查询{symbol}的曾用名。",
+      "identity_columns": [
+        "Wind代码",
+        "证券代码",
+        "股票代码"
+      ]
+    },
+    "wind_classifications": {
+      "provider": "wind",
+      "dataset": "basic_info",
+      "kind": "mcp_nl",
+      "handler": "basic_info",
+      "method": "get_stock_basicinfo",
+      "params": {
+        "question": "$question"
+      },
+      "template": "查询{symbol}的Wind行业分类、申万行业分类和所属概念板块。",
+      "identity_columns": [
+        "Wind代码",
+        "证券代码",
+        "股票代码"
+      ]
+    },
+    "wind_business": {
+      "provider": "wind",
+      "dataset": "basic_info",
+      "kind": "mcp_nl",
+      "handler": "basic_info",
+      "method": "get_stock_basicinfo",
+      "params": {
+        "question": "$question"
+      },
+      "template": "查询{symbol}的主营业务、主要产品和公司网站。",
+      "identity_columns": [
+        "Wind代码",
+        "证券代码",
+        "股票代码"
+      ]
+    },
+    "ifind_profile": {
+      "provider": "ifind",
+      "dataset": "basic_info",
+      "kind": "mcp_nl",
+      "handler": "basic_info",
+      "method": "get_security_indicators",
+      "params": {
+        "market": "A股",
+        "query": "$question"
+      },
+      "template": "查询{symbol}的公司全称、股票简称、企业性质、实际控制人、曾用简称。",
+      "identity_columns": [
+        "证券代码",
+        "股票代码"
+      ]
+    },
+    "ifind_region": {
+      "provider": "ifind",
+      "dataset": "basic_info",
+      "kind": "mcp_nl",
+      "handler": "basic_info",
+      "method": "get_security_indicators",
+      "params": {
+        "market": "A股",
+        "query": "$question"
+      },
+      "template": "查询{symbol}的注册地址、办公地址、所属省份、所属城市、上市日期。",
+      "identity_columns": [
+        "证券代码",
+        "股票代码"
+      ]
+    },
+    "ifind_classifications": {
+      "provider": "ifind",
+      "dataset": "basic_info",
+      "kind": "mcp_nl",
+      "handler": "basic_info",
+      "method": "get_security_indicators",
+      "params": {
+        "market": "A股",
+        "query": "$question"
+      },
+      "template": "查询{symbol}的申万行业分类、同花顺行业分类、所属概念板块。",
+      "identity_columns": [
+        "证券代码",
+        "股票代码"
+      ]
+    },
+    "tdx_profile": {
+      "provider": "tdx",
+      "dataset": "basic_info",
+      "kind": "mcp",
+      "handler": "basic_info",
+      "method": "tdx_api_data",
+      "params": {
+        "entry": "TdxSharePCCW.tdxf10_gg_gsgk",
+        "code": "$code",
+        "fixedTag": "0"
+      },
+      "identity_columns": [
+        "证券代码",
+        "股票代码"
+      ],
+      "allow_request_identity": true,
+      "notes": [
+        "通达信固定代码接口，表格未重复证券代码时沿用请求代码。未确认注册资金单位，不映射注册资本。"
+      ]
+    },
+    "tdx_summary": {
+      "provider": "tdx",
+      "dataset": "basic_info",
+      "kind": "mcp",
+      "handler": "basic_info",
+      "method": "tdx_api_data",
+      "params": {
+        "entry": "TdxSharePCCW.tdxf10_gg_zxts",
+        "code": "$code",
+        "fixedTag": "gsgy"
+      },
+      "identity_columns": [
+        "证券代码",
+        "股票代码"
+      ],
+      "allow_request_identity": true,
+      "notes": [
+        "通达信固定代码接口，表格未重复证券代码时沿用请求代码。未确认注册资金单位，不映射注册资本。"
       ]
     }
   },

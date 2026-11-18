@@ -2,7 +2,7 @@
 
 由 `gateway/data/dictionary.json` 生成。该 JSON 同时驱动实际取数；不要直接编辑本表。
 
-现有 574 个分类字段：daily_prices 7 项、valuations 17 项、financials 169 项、technical_indicators 381 项。跨类别同名字段分开计数。空缺项明确保留，不等于来源永远不支持。
+现有 630 个分类字段：daily_prices 7 项、valuations 17 项、financials 169 项、technical_indicators 381 项、basic_info 56 项。跨类别同名字段分开计数。空缺项明确保留，不等于来源永远不支持。
 
 修改 JSON 后下一次查询自动加载；运行 `python scripts/render_dictionary.py` 更新本表。各来源覆盖是当前实现配置，并非所有字段均经过全市场验证。
 
@@ -3496,6 +3496,353 @@
 | `wind_history_ma` | wind | `wind_history_ma` → `get_stock_technicals` | {n}日均线 | 原单位：元；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_ma` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_ma` | tdx | — | — | 尚未确认同口径取法 |
+
+## basic_info
+
+公司档案与分类为来源当前可用快照；名称/行业记录仅在来源提供时附生效起止日期，不支持历史时点重建。
+
+| 字段 | 名称 | 单位 | 含义与单位说明 |
+| --- | --- | --- | --- |
+| `security_name` | 证券简称 | 文本 | 证券简称；返回来源当前可用档案，不代表历史时点。  |
+| `company_name` | 公司全称 | 文本 | 公司全称；返回来源当前可用档案，不代表历史时点。  |
+| `english_name` | 公司英文名称 | 文本 | 公司英文名称；返回来源当前可用档案，不代表历史时点。  |
+| `exchange` | 交易所 | 文本 | 交易所；返回来源当前可用档案，不代表历史时点。  |
+| `listing_board` | 上市板块 | 文本 | 上市板块；返回来源当前可用档案，不代表历史时点。  |
+| `listing_status` | 上市状态 | 文本 | 上市状态；返回来源当前可用档案，不代表历史时点。  |
+| `listing_date` | 上市日期 | 日期 | 上市日期；返回来源当前可用档案，不代表历史时点。  |
+| `delisting_date` | 退市日期 | 日期 | 退市日期；返回来源当前可用档案，不代表历史时点。  |
+| `established_date` | 成立日期 | 日期 | 成立日期；返回来源当前可用档案，不代表历史时点。  |
+| `ownership_type` | 企业所有制性质 | 文本 | 企业所有制性质（如民营、国有）；不接受实控人性质或大型企业等规模分类。  |
+| `controller_name` | 实际控制人 | 文本 | 实际控制人；返回来源当前可用档案，不代表历史时点。  |
+| `controller_type` | 实控人性质 | 文本 | 实际控制人的性质（如自然人、国资）；不是企业所有制性质。  |
+| `province` | 省份 | 文本 | 省份；返回来源当前可用档案，不代表历史时点。  |
+| `city` | 城市 | 文本 | 城市；返回来源当前可用档案，不代表历史时点。  |
+| `registered_address` | 注册地址 | 文本 | 注册地址；返回来源当前可用档案，不代表历史时点。  |
+| `office_address` | 办公地址 | 文本 | 办公地址；返回来源当前可用档案，不代表历史时点。  |
+| `website` | 公司网站 | 文本 | 公司网站；返回来源当前可用档案，不代表历史时点。  |
+| `email` | 公司邮箱 | 文本 | 公司邮箱；返回来源当前可用档案，不代表历史时点。  |
+| `phone` | 联系电话 | 文本 | 联系电话；返回来源当前可用档案，不代表历史时点。  |
+| `introduction` | 公司简介 | 文本 | 公司简介；返回来源当前可用档案，不代表历史时点。  |
+| `main_business` | 主营业务 | 文本 | 主营业务；返回来源当前可用档案，不代表历史时点。  |
+| `business_scope` | 经营范围 | 文本 | 经营范围；返回来源当前可用档案，不代表历史时点。  |
+| `legal_representative` | 法定代表人 | 文本 | 法定代表人；返回来源当前可用档案，不代表历史时点。  |
+| `general_manager` | 总经理 | 文本 | 总经理；返回来源当前可用档案，不代表历史时点。  |
+| `controlling_shareholder` | 控股股东 | 文本 | 控股股东；返回来源当前可用档案，不代表历史时点。  |
+| `credit_code` | 社会信用代码 | 文本 | 社会信用代码；返回来源当前可用档案，不代表历史时点。  |
+| `employees` | 员工人数 | 人 | 员工人数；返回来源当前可用档案，不代表历史时点。  |
+| `registered_capital` | 注册资本 | 元 | 注册资本；返回来源当前可用档案，不代表历史时点。  |
+| `ts_area` | 地域简称（Tushare） | 文本 | 地域简称（Tushare）；返回来源当前可用档案，不代表历史时点。  |
+| `ak_market` | 所属市场（巨潮） | 文本 | 所属市场（巨潮）；返回来源当前可用档案，不代表历史时点。  |
+| `tdx_region` | 所属区域（通达信） | 文本 | 所属区域（通达信）；返回来源当前可用档案，不代表历史时点。  |
+| `ifind_enterprise_type` | 企业类型（iFinD原值） | 文本 | iFinD返回的企业类型原值；实测为“大型企业”，不合并为所有制性质。  |
+| `name_history` | 证券简称变更记录 | 记录 | 证券简称及生效起止、公告日期与原因；不代表公司法定名称变更。  |
+| `former_names` | 证券曾用名（无日期） | 记录 | 来源提供的证券曾用名清单，不推断更名日期；无日期和完整历史记录分别保留。  |
+| `sw_industry_l1` | 申万1级行业 | 文本 | 申万1级行业；返回来源当前可用档案，不代表历史时点。  |
+| `sw_industry_l1_code` | 申万1级行业代码 | 文本 | 申万1级行业代码；返回来源当前可用档案，不代表历史时点。  |
+| `sw_industry_l2` | 申万2级行业 | 文本 | 申万2级行业；返回来源当前可用档案，不代表历史时点。  |
+| `sw_industry_l2_code` | 申万2级行业代码 | 文本 | 申万2级行业代码；返回来源当前可用档案，不代表历史时点。  |
+| `sw_industry_l3` | 申万3级行业 | 文本 | 申万3级行业；返回来源当前可用档案，不代表历史时点。  |
+| `sw_industry_l3_code` | 申万3级行业代码 | 文本 | 申万3级行业代码；返回来源当前可用档案，不代表历史时点。  |
+| `wind_industry_l1` | Wind1级行业 | 文本 | Wind1级行业；返回来源当前可用档案，不代表历史时点。  |
+| `wind_industry_l2` | Wind2级行业 | 文本 | Wind2级行业；返回来源当前可用档案，不代表历史时点。  |
+| `wind_industry_l3` | Wind3级行业 | 文本 | Wind3级行业；返回来源当前可用档案，不代表历史时点。  |
+| `wind_industry_l4` | Wind4级行业 | 文本 | Wind4级行业；返回来源当前可用档案，不代表历史时点。  |
+| `ts_industry` | Tushare基础行业 | 文本 | Tushare基础行业；返回来源当前可用档案，不代表历史时点。  |
+| `cninfo_industry` | 巨潮所属行业（版本未注明） | 文本 | 巨潮所属行业（版本未注明）；返回来源当前可用档案，不代表历史时点。  |
+| `ths_industry_l1` | 同花顺一级行业 | 文本 | 同花顺一级行业；返回来源当前可用档案，不代表历史时点。  |
+| `tdx_industry` | 通达信研究行业路径 | 文本 | 通达信研究行业路径；返回来源当前可用档案，不代表历史时点。  |
+| `tdx_csrc_industry` | 证监会行业路径（通达信） | 文本 | 证监会行业路径（通达信）；返回来源当前可用档案，不代表历史时点。  |
+| `sw_memberships` | 申万行业归属记录 | 记录 | Tushare提供的行业纳入/剔除日期记录；不推断未返回的历史。  |
+| `ths_boards` | 同花顺板块（全类别） | 记录 | 来源当前返回的名单；保留各自分类体系，不表示完整历史，也不将指数或交易资格当作纯产业概念。  |
+| `wind_boards` | Wind板块标签 | 记录 | 来源当前返回的名单；保留各自分类体系，不表示完整历史，也不将指数或交易资格当作纯产业概念。  |
+| `tdx_themes` | 通达信关联主题 | 记录 | 来源当前返回的名单；保留各自分类体系，不表示完整历史，也不将指数或交易资格当作纯产业概念。  |
+| `cninfo_indexes` | 巨潮入选指数 | 记录 | 来源当前返回的名单；保留各自分类体系，不表示完整历史，也不将指数或交易资格当作纯产业概念。  |
+| `tdx_indexes` | 通达信相关指数 | 记录 | 来源当前返回的名单；保留各自分类体系，不表示完整历史，也不将指数或交易资格当作纯产业概念。  |
+| `ths_concepts` | 同花顺概念标签（N类） | 记录 | 同花顺N类概念名单，可能含指数样本或交易资格标签；与全类别板块名单分开。  |
+
+| 字段 | 来源 | 取数方案 → 方法 | 返回列／问句指标 | 转换／说明 |
+| --- | --- | --- | --- | --- |
+| `security_name` | tushare | `ts_basic` → `stock_basic` | name | 原单位：按返回单位；×1 |
+| `security_name` | akshare | `ak_profile` → `stock_profile_cninfo` | A股简称 | 原单位：按返回单位；×1 |
+| `security_name` | wind | `wind_identity` → `get_stock_basicinfo` | 证券简称 | 原单位：按返回单位；×1 |
+| `security_name` | ifind | `ifind_profile` → `get_security_indicators` | 股票简称 / 证券简称 | 原单位：按返回单位；×1 |
+| `security_name` | tdx | — | — | 尚未确认同口径取法 |
+| `company_name` | tushare | `ts_basic` → `stock_basic` | fullname | 原单位：按返回单位；×1 |
+| `company_name` | tushare | `ts_company` → `stock_company` | com_name | 原单位：按返回单位；×1 |
+| `company_name` | akshare | `ak_profile` → `stock_profile_cninfo` | 公司名称 | 原单位：按返回单位；×1 |
+| `company_name` | wind | `wind_identity` → `get_stock_basicinfo` | 公司中文名称 | 原单位：按返回单位；×1 |
+| `company_name` | ifind | `ifind_profile` → `get_security_indicators` | 公司中文名称 | 原单位：按返回单位；×1 |
+| `company_name` | tdx | `tdx_profile` → `tdx_api_data` | 公司名称 | 原单位：按返回单位；×1 |
+| `english_name` | tushare | `ts_basic` → `stock_basic` | enname | 原单位：按返回单位；×1 |
+| `english_name` | akshare | `ak_profile` → `stock_profile_cninfo` | 英文名称 | 原单位：按返回单位；×1 |
+| `english_name` | wind | — | — | 尚未确认同口径取法 |
+| `english_name` | ifind | — | — | 尚未确认同口径取法 |
+| `english_name` | tdx | `tdx_profile` → `tdx_api_data` | 英文名称 | 原单位：按返回单位；×1 |
+| `exchange` | tushare | `ts_basic` → `stock_basic` | exchange | 原单位：按返回单位；×1 |
+| `exchange` | akshare | — | — | 尚未确认同口径取法 |
+| `exchange` | wind | — | — | 尚未确认同口径取法 |
+| `exchange` | ifind | — | — | 尚未确认同口径取法 |
+| `exchange` | tdx | — | — | 尚未确认同口径取法 |
+| `listing_board` | tushare | `ts_basic` → `stock_basic` | market | 原单位：按返回单位；×1 |
+| `listing_board` | akshare | — | — | 尚未确认同口径取法 |
+| `listing_board` | wind | `wind_region` → `get_stock_basicinfo` | 上市板 | 原单位：按返回单位；×1 |
+| `listing_board` | ifind | — | — | 尚未确认同口径取法 |
+| `listing_board` | tdx | — | — | 尚未确认同口径取法 |
+| `listing_status` | tushare | `ts_basic` → `stock_basic` | list_status | 原单位：按返回单位；×1 |
+| `listing_status` | akshare | — | — | 尚未确认同口径取法 |
+| `listing_status` | wind | — | — | 尚未确认同口径取法 |
+| `listing_status` | ifind | — | — | 尚未确认同口径取法 |
+| `listing_status` | tdx | — | — | 尚未确认同口径取法 |
+| `listing_date` | tushare | `ts_basic` → `stock_basic` | list_date | 原单位：按返回单位；×1 |
+| `listing_date` | akshare | `ak_profile` → `stock_profile_cninfo` | 上市日期 | 原单位：按返回单位；×1 |
+| `listing_date` | wind | `wind_identity` → `get_stock_basicinfo` | 首发上市日期 | 原单位：按返回单位；×1 |
+| `listing_date` | ifind | `ifind_region` → `get_security_indicators` | 上市日期 | 原单位：按返回单位；×1 |
+| `listing_date` | tdx | — | — | 尚未确认同口径取法 |
+| `delisting_date` | tushare | `ts_basic` → `stock_basic` | delist_date | 原单位：按返回单位；×1 |
+| `delisting_date` | akshare | — | — | 尚未确认同口径取法 |
+| `delisting_date` | wind | — | — | 尚未确认同口径取法 |
+| `delisting_date` | ifind | — | — | 尚未确认同口径取法 |
+| `delisting_date` | tdx | — | — | 尚未确认同口径取法 |
+| `established_date` | tushare | `ts_company` → `stock_company` | setup_date | 原单位：按返回单位；×1 |
+| `established_date` | akshare | `ak_profile` → `stock_profile_cninfo` | 成立日期 | 原单位：按返回单位；×1 |
+| `established_date` | wind | `wind_region` → `get_stock_basicinfo` | 成立日期 | 原单位：按返回单位；×1 |
+| `established_date` | ifind | — | — | 尚未确认同口径取法 |
+| `established_date` | tdx | — | — | 尚未确认同口径取法 |
+| `ownership_type` | tushare | — | — | 尚未确认同口径取法 |
+| `ownership_type` | akshare | — | — | 尚未确认同口径取法 |
+| `ownership_type` | wind | `wind_identity` → `get_stock_basicinfo` | 企业所有制性质 | 原单位：按返回单位；×1 |
+| `ownership_type` | ifind | — | — | 尚未确认同口径取法 |
+| `ownership_type` | tdx | — | — | 尚未确认同口径取法 |
+| `controller_name` | tushare | `ts_basic` → `stock_basic` | act_name | 原单位：按返回单位；×1 |
+| `controller_name` | akshare | — | — | 尚未确认同口径取法 |
+| `controller_name` | wind | `wind_identity` → `get_stock_basicinfo` | 实际控制人名称 | 原单位：按返回单位；×1 |
+| `controller_name` | ifind | `ifind_profile` → `get_security_indicators` | 实际控制人 | 原单位：按返回单位；×1 |
+| `controller_name` | tdx | — | — | 尚未确认同口径取法 |
+| `controller_type` | tushare | `ts_basic` → `stock_basic` | act_ent_type | 原单位：按返回单位；×1 |
+| `controller_type` | akshare | — | — | 尚未确认同口径取法 |
+| `controller_type` | wind | — | — | 尚未确认同口径取法 |
+| `controller_type` | ifind | `ifind_profile` → `get_security_indicators` | 实际控制人类型 | 原单位：按返回单位；×1 |
+| `controller_type` | tdx | — | — | 尚未确认同口径取法 |
+| `province` | tushare | `ts_company` → `stock_company` | province | 原单位：按返回单位；×1 |
+| `province` | akshare | — | — | 尚未确认同口径取法 |
+| `province` | wind | `wind_region` → `get_stock_basicinfo` | 省份 | 原单位：按返回单位；×1 |
+| `province` | ifind | `ifind_region` → `get_security_indicators` | 省份 | 原单位：按返回单位；×1 |
+| `province` | tdx | — | — | 尚未确认同口径取法 |
+| `city` | tushare | `ts_company` → `stock_company` | city | 原单位：按返回单位；×1 |
+| `city` | akshare | — | — | 尚未确认同口径取法 |
+| `city` | wind | `wind_region` → `get_stock_basicinfo` | 城市 | 原单位：按返回单位；×1 |
+| `city` | ifind | `ifind_region` → `get_security_indicators` | 地级市 | 原单位：按返回单位；×1 |
+| `city` | tdx | — | — | 尚未确认同口径取法 |
+| `registered_address` | tushare | — | — | 尚未确认同口径取法 |
+| `registered_address` | akshare | `ak_profile` → `stock_profile_cninfo` | 注册地址 | 原单位：按返回单位；×1 |
+| `registered_address` | wind | `wind_identity` → `get_stock_basicinfo` | 注册地址 | 原单位：按返回单位；×1 |
+| `registered_address` | ifind | `ifind_region` → `get_security_indicators` | 注册地址 | 原单位：按返回单位；×1 |
+| `registered_address` | tdx | `tdx_profile` → `tdx_api_data` | 注册地址 | 原单位：按返回单位；×1 |
+| `office_address` | tushare | `ts_company` → `stock_company` | office | 原单位：按返回单位；×1 |
+| `office_address` | akshare | `ak_profile` → `stock_profile_cninfo` | 办公地址 | 原单位：按返回单位；×1 |
+| `office_address` | wind | `wind_identity` → `get_stock_basicinfo` | 办公地址 | 原单位：按返回单位；×1 |
+| `office_address` | ifind | `ifind_region` → `get_security_indicators` | 办公地址 | 原单位：按返回单位；×1 |
+| `office_address` | tdx | `tdx_profile` → `tdx_api_data` | 办公地址 | 原单位：按返回单位；×1 |
+| `website` | tushare | `ts_company` → `stock_company` | website | 原单位：按返回单位；×1 |
+| `website` | akshare | `ak_profile` → `stock_profile_cninfo` | 官方网站 | 原单位：按返回单位；×1 |
+| `website` | wind | `wind_business` → `get_stock_basicinfo` | 公司网站 | 原单位：按返回单位；×1 |
+| `website` | ifind | — | — | 尚未确认同口径取法 |
+| `website` | tdx | `tdx_profile` → `tdx_api_data` | 公司网址 | 原单位：按返回单位；×1 |
+| `email` | tushare | `ts_company` → `stock_company` | email | 原单位：按返回单位；×1 |
+| `email` | akshare | `ak_profile` → `stock_profile_cninfo` | 电子邮箱 | 原单位：按返回单位；×1 |
+| `email` | wind | — | — | 尚未确认同口径取法 |
+| `email` | ifind | — | — | 尚未确认同口径取法 |
+| `email` | tdx | — | — | 尚未确认同口径取法 |
+| `phone` | tushare | — | — | 尚未确认同口径取法 |
+| `phone` | akshare | `ak_profile` → `stock_profile_cninfo` | 联系电话 | 原单位：按返回单位；×1 |
+| `phone` | wind | — | — | 尚未确认同口径取法 |
+| `phone` | ifind | — | — | 尚未确认同口径取法 |
+| `phone` | tdx | `tdx_profile` → `tdx_api_data` | 联系电话 | 原单位：按返回单位；×1 |
+| `introduction` | tushare | `ts_company` → `stock_company` | introduction | 原单位：按返回单位；×1 |
+| `introduction` | akshare | `ak_profile` → `stock_profile_cninfo` | 机构简介 | 原单位：按返回单位；×1 |
+| `introduction` | wind | `wind_business` → `get_stock_basicinfo` | 公司简介 | 原单位：按返回单位；×1 |
+| `introduction` | ifind | — | — | 尚未确认同口径取法 |
+| `introduction` | tdx | `tdx_profile` → `tdx_api_data` | 公司简介 | 原单位：按返回单位；×1 |
+| `main_business` | tushare | `ts_company` → `stock_company` | main_business | 原单位：按返回单位；×1 |
+| `main_business` | akshare | `ak_profile` → `stock_profile_cninfo` | 主营业务 | 原单位：按返回单位；×1 |
+| `main_business` | wind | — | — | 尚未确认同口径取法 |
+| `main_business` | ifind | — | — | 尚未确认同口径取法 |
+| `main_business` | tdx | `tdx_profile` → `tdx_api_data` | 主营业务 | 原单位：按返回单位；×1 |
+| `business_scope` | tushare | `ts_company` → `stock_company` | business_scope | 原单位：按返回单位；×1 |
+| `business_scope` | akshare | `ak_profile` → `stock_profile_cninfo` | 经营范围 | 原单位：按返回单位；×1 |
+| `business_scope` | wind | — | — | 尚未确认同口径取法 |
+| `business_scope` | ifind | — | — | 尚未确认同口径取法 |
+| `business_scope` | tdx | `tdx_profile` → `tdx_api_data` | 经营范围 | 原单位：按返回单位；×1 |
+| `legal_representative` | tushare | — | — | 尚未确认同口径取法 |
+| `legal_representative` | akshare | `ak_profile` → `stock_profile_cninfo` | 法人代表 | 原单位：按返回单位；×1 |
+| `legal_representative` | wind | — | — | 尚未确认同口径取法 |
+| `legal_representative` | ifind | — | — | 尚未确认同口径取法 |
+| `legal_representative` | tdx | `tdx_profile` → `tdx_api_data` | 法人代表 | 原单位：按返回单位；×1 |
+| `general_manager` | tushare | `ts_company` → `stock_company` | manager | 原单位：按返回单位；×1 |
+| `general_manager` | akshare | — | — | 尚未确认同口径取法 |
+| `general_manager` | wind | — | — | 尚未确认同口径取法 |
+| `general_manager` | ifind | — | — | 尚未确认同口径取法 |
+| `general_manager` | tdx | `tdx_profile` → `tdx_api_data` | 总经理 | 原单位：按返回单位；×1 |
+| `controlling_shareholder` | tushare | — | — | 尚未确认同口径取法 |
+| `controlling_shareholder` | akshare | — | — | 尚未确认同口径取法 |
+| `controlling_shareholder` | wind | — | — | 尚未确认同口径取法 |
+| `controlling_shareholder` | ifind | — | — | 尚未确认同口径取法 |
+| `controlling_shareholder` | tdx | `tdx_profile` → `tdx_api_data` | 控股股东 | 原单位：按返回单位；×1 |
+| `credit_code` | tushare | — | — | 尚未确认同口径取法 |
+| `credit_code` | akshare | — | — | 尚未确认同口径取法 |
+| `credit_code` | wind | — | — | 尚未确认同口径取法 |
+| `credit_code` | ifind | — | — | 尚未确认同口径取法 |
+| `credit_code` | tdx | `tdx_profile` → `tdx_api_data` | 社会信用代码 | 原单位：按返回单位；×1 |
+| `employees` | tushare | `ts_company` → `stock_company` | employees | 原单位：按返回单位；×1 |
+| `employees` | akshare | — | — | 尚未确认同口径取法 |
+| `employees` | wind | — | — | 尚未确认同口径取法 |
+| `employees` | ifind | — | — | 尚未确认同口径取法 |
+| `employees` | tdx | `tdx_profile` → `tdx_api_data` | 员工总数 | 原单位：按返回单位；×1 |
+| `registered_capital` | tushare | `ts_company` → `stock_company` | reg_capital | 原单位：万元；×10000 |
+| `registered_capital` | akshare | — | — | 尚未确认同口径取法 |
+| `registered_capital` | wind | — | — | 尚未确认同口径取法 |
+| `registered_capital` | ifind | — | — | 尚未确认同口径取法 |
+| `registered_capital` | tdx | — | — | 尚未确认同口径取法 |
+| `ts_area` | tushare | `ts_basic` → `stock_basic` | area | 原单位：按返回单位；×1 |
+| `ts_area` | akshare | — | — | 尚未确认同口径取法 |
+| `ts_area` | wind | — | — | 尚未确认同口径取法 |
+| `ts_area` | ifind | — | — | 尚未确认同口径取法 |
+| `ts_area` | tdx | — | — | 尚未确认同口径取法 |
+| `ak_market` | tushare | — | — | 尚未确认同口径取法 |
+| `ak_market` | akshare | `ak_profile` → `stock_profile_cninfo` | 所属市场 | 原单位：按返回单位；×1 |
+| `ak_market` | wind | — | — | 尚未确认同口径取法 |
+| `ak_market` | ifind | — | — | 尚未确认同口径取法 |
+| `ak_market` | tdx | — | — | 尚未确认同口径取法 |
+| `tdx_region` | tushare | — | — | 尚未确认同口径取法 |
+| `tdx_region` | akshare | — | — | 尚未确认同口径取法 |
+| `tdx_region` | wind | — | — | 尚未确认同口径取法 |
+| `tdx_region` | ifind | — | — | 尚未确认同口径取法 |
+| `tdx_region` | tdx | `tdx_profile` → `tdx_api_data` | 所属区域 | 原单位：按返回单位；×1 |
+| `ifind_enterprise_type` | tushare | — | — | 尚未确认同口径取法 |
+| `ifind_enterprise_type` | akshare | — | — | 尚未确认同口径取法 |
+| `ifind_enterprise_type` | wind | — | — | 尚未确认同口径取法 |
+| `ifind_enterprise_type` | ifind | `ifind_profile` → `get_security_indicators` | 企业类型 | 原单位：按返回单位；×1 |
+| `ifind_enterprise_type` | tdx | — | — | 尚未确认同口径取法 |
+| `name_history` | tushare | `ts_names` → `namechange` | name | 原单位：按返回单位；×1 |
+| `name_history` | akshare | — | — | 尚未确认同口径取法 |
+| `name_history` | wind | — | — | 尚未确认同口径取法 |
+| `name_history` | ifind | — | — | 尚未确认同口径取法 |
+| `name_history` | tdx | — | — | 尚未确认同口径取法 |
+| `former_names` | tushare | — | — | 尚未确认同口径取法 |
+| `former_names` | akshare | `ak_profile` → `stock_profile_cninfo` | 曾用简称 | 原单位：按返回单位；×1 |
+| `former_names` | wind | `wind_names` → `get_stock_basicinfo` | 证券曾用名 | 原单位：按返回单位；×1 |
+| `former_names` | ifind | `ifind_profile` → `get_security_indicators` | 证券曾用名 | 原单位：按返回单位；×1 |
+| `former_names` | tdx | `tdx_profile` → `tdx_api_data` | 曾用名 | 原单位：按返回单位；×1 |
+| `sw_industry_l1` | tushare | `ts_sw` → `index_member_all` | l1_name | 原单位：按返回单位；×1 |
+| `sw_industry_l1` | akshare | — | — | 尚未确认同口径取法 |
+| `sw_industry_l1` | wind | `wind_classifications` → `get_stock_basicinfo` | 所属申万行业明细 | 原单位：按返回单位；×1 |
+| `sw_industry_l1` | ifind | `ifind_classifications` → `get_security_indicators` | 所属申万行业 | 原单位：按返回单位；×1 |
+| `sw_industry_l1` | tdx | — | — | 尚未确认同口径取法 |
+| `sw_industry_l1_code` | tushare | `ts_sw` → `index_member_all` | l1_code | 原单位：按返回单位；×1 |
+| `sw_industry_l1_code` | akshare | — | — | 尚未确认同口径取法 |
+| `sw_industry_l1_code` | wind | — | — | 尚未确认同口径取法 |
+| `sw_industry_l1_code` | ifind | — | — | 尚未确认同口径取法 |
+| `sw_industry_l1_code` | tdx | — | — | 尚未确认同口径取法 |
+| `sw_industry_l2` | tushare | `ts_sw` → `index_member_all` | l2_name | 原单位：按返回单位；×1 |
+| `sw_industry_l2` | akshare | — | — | 尚未确认同口径取法 |
+| `sw_industry_l2` | wind | `wind_classifications` → `get_stock_basicinfo` | 所属申万行业明细 | 原单位：按返回单位；×1 |
+| `sw_industry_l2` | ifind | — | — | 尚未确认同口径取法 |
+| `sw_industry_l2` | tdx | — | — | 尚未确认同口径取法 |
+| `sw_industry_l2_code` | tushare | `ts_sw` → `index_member_all` | l2_code | 原单位：按返回单位；×1 |
+| `sw_industry_l2_code` | akshare | — | — | 尚未确认同口径取法 |
+| `sw_industry_l2_code` | wind | — | — | 尚未确认同口径取法 |
+| `sw_industry_l2_code` | ifind | — | — | 尚未确认同口径取法 |
+| `sw_industry_l2_code` | tdx | — | — | 尚未确认同口径取法 |
+| `sw_industry_l3` | tushare | `ts_sw` → `index_member_all` | l3_name | 原单位：按返回单位；×1 |
+| `sw_industry_l3` | akshare | — | — | 尚未确认同口径取法 |
+| `sw_industry_l3` | wind | `wind_classifications` → `get_stock_basicinfo` | 所属申万行业明细 | 原单位：按返回单位；×1 |
+| `sw_industry_l3` | ifind | — | — | 尚未确认同口径取法 |
+| `sw_industry_l3` | tdx | — | — | 尚未确认同口径取法 |
+| `sw_industry_l3_code` | tushare | `ts_sw` → `index_member_all` | l3_code | 原单位：按返回单位；×1 |
+| `sw_industry_l3_code` | akshare | — | — | 尚未确认同口径取法 |
+| `sw_industry_l3_code` | wind | — | — | 尚未确认同口径取法 |
+| `sw_industry_l3_code` | ifind | — | — | 尚未确认同口径取法 |
+| `sw_industry_l3_code` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_industry_l1` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_industry_l1` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_industry_l1` | wind | `wind_classifications` → `get_stock_basicinfo` | 所属WIND行业明细 | 原单位：按返回单位；×1 |
+| `wind_industry_l1` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_industry_l1` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_industry_l2` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_industry_l2` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_industry_l2` | wind | `wind_classifications` → `get_stock_basicinfo` | 所属WIND行业明细 | 原单位：按返回单位；×1 |
+| `wind_industry_l2` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_industry_l2` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_industry_l3` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_industry_l3` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_industry_l3` | wind | `wind_classifications` → `get_stock_basicinfo` | 所属WIND行业明细 | 原单位：按返回单位；×1 |
+| `wind_industry_l3` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_industry_l3` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_industry_l4` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_industry_l4` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_industry_l4` | wind | `wind_classifications` → `get_stock_basicinfo` | 所属WIND行业明细 | 原单位：按返回单位；×1 |
+| `wind_industry_l4` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_industry_l4` | tdx | — | — | 尚未确认同口径取法 |
+| `ts_industry` | tushare | `ts_basic` → `stock_basic` | industry | 原单位：按返回单位；×1 |
+| `ts_industry` | akshare | — | — | 尚未确认同口径取法 |
+| `ts_industry` | wind | — | — | 尚未确认同口径取法 |
+| `ts_industry` | ifind | — | — | 尚未确认同口径取法 |
+| `ts_industry` | tdx | — | — | 尚未确认同口径取法 |
+| `cninfo_industry` | tushare | — | — | 尚未确认同口径取法 |
+| `cninfo_industry` | akshare | `ak_profile` → `stock_profile_cninfo` | 所属行业 | 原单位：按返回单位；×1 |
+| `cninfo_industry` | wind | — | — | 尚未确认同口径取法 |
+| `cninfo_industry` | ifind | — | — | 尚未确认同口径取法 |
+| `cninfo_industry` | tdx | — | — | 尚未确认同口径取法 |
+| `ths_industry_l1` | tushare | — | — | 尚未确认同口径取法 |
+| `ths_industry_l1` | akshare | — | — | 尚未确认同口径取法 |
+| `ths_industry_l1` | wind | — | — | 尚未确认同口径取法 |
+| `ths_industry_l1` | ifind | `ifind_classifications` → `get_security_indicators` | 所属同花顺行业 | 原单位：按返回单位；×1 |
+| `ths_industry_l1` | tdx | — | — | 尚未确认同口径取法 |
+| `tdx_industry` | tushare | — | — | 尚未确认同口径取法 |
+| `tdx_industry` | akshare | — | — | 尚未确认同口径取法 |
+| `tdx_industry` | wind | — | — | 尚未确认同口径取法 |
+| `tdx_industry` | ifind | — | — | 尚未确认同口径取法 |
+| `tdx_industry` | tdx | `tdx_profile` → `tdx_api_data` | 通达信研究行业 | 原单位：按返回单位；×1 |
+| `tdx_csrc_industry` | tushare | — | — | 尚未确认同口径取法 |
+| `tdx_csrc_industry` | akshare | — | — | 尚未确认同口径取法 |
+| `tdx_csrc_industry` | wind | — | — | 尚未确认同口径取法 |
+| `tdx_csrc_industry` | ifind | — | — | 尚未确认同口径取法 |
+| `tdx_csrc_industry` | tdx | `tdx_profile` → `tdx_api_data` | 证监会行业 | 原单位：按返回单位；×1 |
+| `sw_memberships` | tushare | `ts_sw` → `index_member_all` | l1_name | 原单位：按返回单位；×1 |
+| `sw_memberships` | akshare | — | — | 尚未确认同口径取法 |
+| `sw_memberships` | wind | — | — | 尚未确认同口径取法 |
+| `sw_memberships` | ifind | — | — | 尚未确认同口径取法 |
+| `sw_memberships` | tdx | — | — | 尚未确认同口径取法 |
+| `ths_boards` | tushare | `ts_boards` → `ths_member` | board_name | 原单位：按返回单位；×1 |
+| `ths_boards` | akshare | — | — | 尚未确认同口径取法 |
+| `ths_boards` | wind | — | — | 尚未确认同口径取法 |
+| `ths_boards` | ifind | — | — | 尚未确认同口径取法 |
+| `ths_boards` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_boards` | tushare | — | — | 尚未确认同口径取法 |
+| `wind_boards` | akshare | — | — | 尚未确认同口径取法 |
+| `wind_boards` | wind | `wind_classifications` → `get_stock_basicinfo` | 所属概念板块 | 原单位：按返回单位；×1 |
+| `wind_boards` | ifind | — | — | 尚未确认同口径取法 |
+| `wind_boards` | tdx | — | — | 尚未确认同口径取法 |
+| `tdx_themes` | tushare | — | — | 尚未确认同口径取法 |
+| `tdx_themes` | akshare | — | — | 尚未确认同口径取法 |
+| `tdx_themes` | wind | — | — | 尚未确认同口径取法 |
+| `tdx_themes` | ifind | — | — | 尚未确认同口径取法 |
+| `tdx_themes` | tdx | `tdx_summary` → `tdx_api_data` | 关联主题 | 原单位：按返回单位；×1 |
+| `cninfo_indexes` | tushare | — | — | 尚未确认同口径取法 |
+| `cninfo_indexes` | akshare | `ak_profile` → `stock_profile_cninfo` | 入选指数 | 原单位：按返回单位；×1 |
+| `cninfo_indexes` | wind | — | — | 尚未确认同口径取法 |
+| `cninfo_indexes` | ifind | — | — | 尚未确认同口径取法 |
+| `cninfo_indexes` | tdx | — | — | 尚未确认同口径取法 |
+| `tdx_indexes` | tushare | — | — | 尚未确认同口径取法 |
+| `tdx_indexes` | akshare | — | — | 尚未确认同口径取法 |
+| `tdx_indexes` | wind | — | — | 尚未确认同口径取法 |
+| `tdx_indexes` | ifind | — | — | 尚未确认同口径取法 |
+| `tdx_indexes` | tdx | `tdx_profile` → `tdx_api_data` | 相关指数 | 原单位：按返回单位；×1 |
+| `ths_concepts` | tushare | `ts_boards` → `ths_member` | board_name | 原单位：按返回单位；×1 |
+| `ths_concepts` | akshare | — | — | 尚未确认同口径取法 |
+| `ths_concepts` | wind | — | — | 尚未确认同口径取法 |
+| `ths_concepts` | ifind | `ifind_classifications` → `get_security_indicators` | 所属同花顺概念指数 | 原单位：按返回单位；×1；iFinD仅返回名称，无板块代码；不与其他来源的列表逐项拼接。 |
+| `ths_concepts` | tdx | — | — | 尚未确认同口径取法 |
 
 ## 取数方案详情
 
@@ -8884,6 +9231,359 @@
   "notes": [
     "Wind原生历史日线；不在本地计算。复权及未披露的计算参数沿用来源默认，详见原始返回。",
     "使用已验证的简短问句；逐项核对证券、实际日期、分量及已声明参数。"
+  ]
+}
+```
+
+### ts_basic
+
+```json
+{
+  "provider": "tushare",
+  "dataset": "basic_info",
+  "kind": "sdk",
+  "handler": "basic_info",
+  "method": "stock_basic",
+  "params": {
+    "ts_code": "$symbol",
+    "fields": "$source_fields"
+  },
+  "identity_columns": [
+    "ts_code"
+  ],
+  "select_columns": [
+    "ts_code"
+  ],
+  "status_fallbacks": [
+    "D",
+    "P"
+  ]
+}
+```
+
+### ts_company
+
+```json
+{
+  "provider": "tushare",
+  "dataset": "basic_info",
+  "kind": "sdk",
+  "handler": "basic_info",
+  "method": "stock_company",
+  "params": {
+    "ts_code": "$symbol"
+  },
+  "identity_columns": [
+    "ts_code"
+  ]
+}
+```
+
+### ts_names
+
+```json
+{
+  "provider": "tushare",
+  "dataset": "basic_info",
+  "kind": "sdk",
+  "handler": "basic_info",
+  "method": "namechange",
+  "params": {
+    "ts_code": "$symbol"
+  },
+  "identity_columns": [
+    "ts_code"
+  ]
+}
+```
+
+### ts_sw
+
+```json
+{
+  "provider": "tushare",
+  "dataset": "basic_info",
+  "kind": "sdk",
+  "handler": "basic_info",
+  "method": "index_member_all",
+  "params": {
+    "ts_code": "$symbol"
+  },
+  "identity_columns": [
+    "ts_code"
+  ]
+}
+```
+
+### ts_boards
+
+```json
+{
+  "provider": "tushare",
+  "dataset": "basic_info",
+  "kind": "sdk",
+  "handler": "basic_info",
+  "method": "ths_member",
+  "params": {
+    "con_code": "$symbol"
+  },
+  "identity_columns": [
+    "con_code"
+  ],
+  "join": {
+    "method": "ths_index",
+    "params": {
+      "exchange": "A"
+    },
+    "left": "ts_code",
+    "right": "ts_code",
+    "columns": {
+      "name": "board_name",
+      "type": "board_type"
+    }
+  },
+  "notes": [
+    "同花顺板块关联为当前返回名单；type=N也可能含指数样本、交易资格等标签，不视为纯产业概念。"
+  ]
+}
+```
+
+### ak_profile
+
+```json
+{
+  "provider": "akshare",
+  "dataset": "basic_info",
+  "kind": "sdk",
+  "handler": "basic_info",
+  "method": "stock_profile_cninfo",
+  "params": {
+    "symbol": "$code"
+  },
+  "identity_columns": [
+    "A股代码"
+  ],
+  "upstream": "AKShare / 巨潮资讯",
+  "notes": [
+    "巨潮所属行业未标注分类版本，单独保留；未确认注册资金单位，不映射注册资本。"
+  ]
+}
+```
+
+### wind_identity
+
+```json
+{
+  "provider": "wind",
+  "dataset": "basic_info",
+  "kind": "mcp_nl",
+  "handler": "basic_info",
+  "method": "get_stock_basicinfo",
+  "params": {
+    "question": "$question"
+  },
+  "template": "查询{symbol}的公司全称、股票简称、上市日期、企业性质、实际控制人、注册地址和办公地址。",
+  "identity_columns": [
+    "Wind代码",
+    "证券代码",
+    "股票代码"
+  ]
+}
+```
+
+### wind_region
+
+```json
+{
+  "provider": "wind",
+  "dataset": "basic_info",
+  "kind": "mcp_nl",
+  "handler": "basic_info",
+  "method": "get_stock_basicinfo",
+  "params": {
+    "question": "$question"
+  },
+  "template": "查询{symbol}的所属省份、所属城市、成立日期、上市板块和上市状态。",
+  "identity_columns": [
+    "Wind代码",
+    "证券代码",
+    "股票代码"
+  ]
+}
+```
+
+### wind_names
+
+```json
+{
+  "provider": "wind",
+  "dataset": "basic_info",
+  "kind": "mcp_nl",
+  "handler": "basic_info",
+  "method": "get_stock_basicinfo",
+  "params": {
+    "question": "$question"
+  },
+  "template": "查询{symbol}的曾用名。",
+  "identity_columns": [
+    "Wind代码",
+    "证券代码",
+    "股票代码"
+  ]
+}
+```
+
+### wind_classifications
+
+```json
+{
+  "provider": "wind",
+  "dataset": "basic_info",
+  "kind": "mcp_nl",
+  "handler": "basic_info",
+  "method": "get_stock_basicinfo",
+  "params": {
+    "question": "$question"
+  },
+  "template": "查询{symbol}的Wind行业分类、申万行业分类和所属概念板块。",
+  "identity_columns": [
+    "Wind代码",
+    "证券代码",
+    "股票代码"
+  ]
+}
+```
+
+### wind_business
+
+```json
+{
+  "provider": "wind",
+  "dataset": "basic_info",
+  "kind": "mcp_nl",
+  "handler": "basic_info",
+  "method": "get_stock_basicinfo",
+  "params": {
+    "question": "$question"
+  },
+  "template": "查询{symbol}的主营业务、主要产品和公司网站。",
+  "identity_columns": [
+    "Wind代码",
+    "证券代码",
+    "股票代码"
+  ]
+}
+```
+
+### ifind_profile
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "basic_info",
+  "kind": "mcp_nl",
+  "handler": "basic_info",
+  "method": "get_security_indicators",
+  "params": {
+    "market": "A股",
+    "query": "$question"
+  },
+  "template": "查询{symbol}的公司全称、股票简称、企业性质、实际控制人、曾用简称。",
+  "identity_columns": [
+    "证券代码",
+    "股票代码"
+  ]
+}
+```
+
+### ifind_region
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "basic_info",
+  "kind": "mcp_nl",
+  "handler": "basic_info",
+  "method": "get_security_indicators",
+  "params": {
+    "market": "A股",
+    "query": "$question"
+  },
+  "template": "查询{symbol}的注册地址、办公地址、所属省份、所属城市、上市日期。",
+  "identity_columns": [
+    "证券代码",
+    "股票代码"
+  ]
+}
+```
+
+### ifind_classifications
+
+```json
+{
+  "provider": "ifind",
+  "dataset": "basic_info",
+  "kind": "mcp_nl",
+  "handler": "basic_info",
+  "method": "get_security_indicators",
+  "params": {
+    "market": "A股",
+    "query": "$question"
+  },
+  "template": "查询{symbol}的申万行业分类、同花顺行业分类、所属概念板块。",
+  "identity_columns": [
+    "证券代码",
+    "股票代码"
+  ]
+}
+```
+
+### tdx_profile
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "basic_info",
+  "kind": "mcp",
+  "handler": "basic_info",
+  "method": "tdx_api_data",
+  "params": {
+    "entry": "TdxSharePCCW.tdxf10_gg_gsgk",
+    "code": "$code",
+    "fixedTag": "0"
+  },
+  "identity_columns": [
+    "证券代码",
+    "股票代码"
+  ],
+  "allow_request_identity": true,
+  "notes": [
+    "通达信固定代码接口，表格未重复证券代码时沿用请求代码。未确认注册资金单位，不映射注册资本。"
+  ]
+}
+```
+
+### tdx_summary
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "basic_info",
+  "kind": "mcp",
+  "handler": "basic_info",
+  "method": "tdx_api_data",
+  "params": {
+    "entry": "TdxSharePCCW.tdxf10_gg_zxts",
+    "code": "$code",
+    "fixedTag": "gsgy"
+  },
+  "identity_columns": [
+    "证券代码",
+    "股票代码"
+  ],
+  "allow_request_identity": true,
+  "notes": [
+    "通达信固定代码接口，表格未重复证券代码时沿用请求代码。未确认注册资金单位，不映射注册资本。"
   ]
 }
 ```
