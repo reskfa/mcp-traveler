@@ -10,13 +10,15 @@ from gateway.core import Query
 
 def test_dictionary_complete_and_invalid_reference():
     builtin=json.loads((Path(__file__).parents[1]/'gateway/data/dictionary.json').read_text())
-    assert {ds:len(g['fields']) for ds,g in builtin['datasets'].items()}=={'daily_prices':7,'valuations':17,'financials':169,'technical_indicators':381,'basic_info':56}
+    assert {ds:len(g['fields']) for ds,g in builtin['datasets'].items()}=={'daily_prices':7,'valuations':17,'financials':169,'technical_indicators':381,'basic_info':56,'cb_basic':21,'cb_daily':19,'cb_clauses':12}
     d=copy.deepcopy(DICTIONARY)
     d['datasets']['daily_prices']['fields']['close']['sources']['wind'][0]['recipe']='not_a_recipe'
     with pytest.raises(KeyError):validate(d)
 
 
 def test_new_field_method_and_mapping_only_from_dictionary(monkeypatch):
+    from gateway.dictionary import reload_dictionary
+    reload_dictionary(force=False)
     recipe={'provider':'tushare','dataset':'financials','kind':'sdk','method':'new_api','params':{'period':'$period_compact','fields':'$source_fields'},'select_columns':['end_date']}
     monkeypatch.setitem(DICTIONARY['recipes'],'test_recipe',recipe)
     field={'label':'测试字段','unit':'元','aliases':[],'sources':{p:[] for p in DICTIONARY['providers']}}

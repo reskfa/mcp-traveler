@@ -1,0 +1,43 @@
+{
+  "structuredContent": {
+    "Setcode": 1,
+    "Code": "113052",
+    "Period": 4,
+    "AttachInfo": {
+      "Name": "兴业转债",
+      "XSFlag": 3,
+      "HqDate": "20261118",
+      "HqTime": "150003",
+      "Close": 112.003,
+      "Open": 112.05,
+      "MaxP": 112.199,
+      "MinP": 111.3,
+      "Now": 111.495,
+      "Volume": "704525",
+      "Amount": 786360320,
+      "fHSL": 1.70373523,
+      "fAverage": 111.615669,
+      "lBelongHY": "85001",
+      "Unit": 1
+    },
+    "Rows": [
+      {
+        "Data": "20251105",
+        "Second": "0",
+        "Open": "124.049004",
+        "High": "124.599998",
+        "Low": "123.698997",
+        "Close": "124.149002",
+        "Amount": 453476448,
+        "VolInStock": "453476448.000000",
+        "Volume": 365351,
+        "Settle": "41351.789062",
+        "up": "34762.000000",
+        "down": "18209.000000",
+        "RawVolume": 365351,
+        "Unit": 1,
+        "RawAmount": 453476448
+      }
+    ]
+  }
+}

@@ -252,3 +252,12 @@ Wind、iFinD、AKShare 的本轮接入与核实边界见[其他来源技术指�
 网页“指标字典”中，无匹配或只有相近字段时，点击“继续向网关探索”；也可直接展开通用探索表单。填写需求和证券，可先查看匹配能力，再探索并查看原始列、尝试记录、覆盖说明及保存状态。个人取法可在搜索结果中选择“复用取法”，更换证券或时间查询。
 
 通用入口不等于任意工具均已适配：以返回的能力和尝试状态为准。对应的网关探索明确失败后，告知原因，再考虑外部搜索。完整性与成功保存分开，名单不能用单个近似字段替代。
+
+
+### 可转债
+
+可转债沿用“搜索字典 → 探索 → 保存 → 复用”的流程，独立于股票接口。用 `search_metrics(dataset="cb_basic" / "cb_daily" / "cb_clauses")` 查定义，再调用 `query_convertible_bond_basic`、`query_convertible_bond_daily` 或 `query_convertible_bond_clauses`。网页查询与字典筛选也提供这三个类别。
+
+未知需求调用 `explore_data(request, symbol, market_hint="convertible_bond", ...)`；`search_capabilities` 同样接受该市场提示。省略时按证券代码识别，个人取法保存市场类型，避免跨市场复用。当前档案不冒充历史快照；条款数据按公告事件返回，不重建当时状态。
+
+三来源扩展已实测：AKShare 当前档案、历史 OHLC 与估值；iFinD 当前档案及历史债券指标；TDX 固定历史日K与简称。税种未标明的到期收益率单独使用 `ytm_provider`。缺少明确公告日期的强赎状态不当作公告历史。[逐来源能力与证据](docs/convertible-bonds-expansion.md)。

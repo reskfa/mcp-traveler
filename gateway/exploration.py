@@ -134,6 +134,9 @@ async def invoke(provider,request,recipe,timeout):
     return payload['result']
 
 async def explore(request:ExplorationRequest):
+    from .generic_data import infer_market
+    if infer_market(request.symbol)=='convertible_bond':
+        raise ValueError('可转债未知指标请用 explore_data，market_hint=convertible_bond；不要用股票类别探索。已有字段用 cb_basic/cb_daily/cb_clauses 查询。')
     known=_known(request)
     if request.dataset=='technical_indicators':
         # Precomputed SDK fields already have an exact, reusable dictionary

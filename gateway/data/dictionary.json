@@ -2,10 +2,10 @@
   "schema_version": 1,
   "providers": {
     "tushare": "历史日线、历史估值、三大报表及财务指标；股票基本信息（按字典映射）",
-    "akshare": "东财／新浪日线；东财每日估值及财务指标，新浪财务报表及关键指标；股票基本信息（按字典映射）",
+    "akshare": "东财／新浪日线；东财每日估值及财务指标，新浪财务报表及关键指标；股票基本信息（按字典映射）；可转债当前档案与带日期历史字段已按实测映射，公告事件未核实",
     "wind": "固定参数 K 线；历史估值、财务及技术指标；技术指标另有独立最新快照，部分财务值为亿元展示精度；股票基本信息（按字典映射）",
-    "ifind": "自然语言历史量价、估值和财务；Markdown 表格解析；股票基本信息（按字典映射）",
-    "tdx": "固定参数日线和财务；历史估值使用自然语言工具；K 线按偏移分页；股票基本信息（按字典映射）"
+    "ifind": "自然语言历史量价、估值和财务；Markdown 表格解析；股票基本信息（按字典映射）；可转债当前档案与带日期历史字段已按实测映射，公告事件未核实",
+    "tdx": "固定日K与可转债日K按700条偏移分页；可转债仅简称快照、OHLC/量额已实测，估值和条款未接入"
   },
   "datasets": {
     "daily_prices": {
@@ -25507,6 +25507,2353 @@
           }
         }
       }
+    },
+    "cb_basic": {
+      "date_semantics": "当前可用档案与赎回、回售、下修合同原文；不接受历史日期，不代表历史公告或触发状态。",
+      "instrument_type": "convertible_bond",
+      "default_fields": [
+        "name",
+        "stock_code",
+        "maturity_date",
+        "conversion_price",
+        "outstanding"
+      ],
+      "fields": {
+        "name": {
+          "label": "转债简称",
+          "unit": "文本",
+          "data_type": "string",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "name",
+            "转债简称"
+          ],
+          "description": "当前可用档案快照；不代表指定历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_basic",
+                "columns": [
+                  "bond_short_name"
+                ],
+                "source_unit": "文本",
+                "multiplier": 1,
+                "note": "当前可用档案快照；不代表指定历史时点。"
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "akshare_cb_profile",
+                "columns": [
+                  "债券简称"
+                ],
+                "evidence": "docs/convertible-bonds-expansion.md#akshare"
+              }
+            ],
+            "wind": [],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_basic",
+                "columns": [
+                  "债券简称"
+                ],
+                "prompt": "债券简称",
+                "note": "真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。"
+              }
+            ],
+            "tdx": [
+              {
+                "recipe": "tdx_cb_basic",
+                "columns": [
+                  "Name"
+                ],
+                "multiplier": 1,
+                "source_unit": "文本",
+                "evidence": "local/convertible_expansion/tdx_kline_raw.json"
+              }
+            ]
+          }
+        },
+        "full_name": {
+          "label": "转债全称",
+          "unit": "文本",
+          "data_type": "string",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "full_name",
+            "转债全称"
+          ],
+          "description": "当前可用档案快照；不代表指定历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_basic",
+                "columns": [
+                  "bond_full_name"
+                ],
+                "source_unit": "文本",
+                "multiplier": 1,
+                "note": "当前可用档案快照；不代表指定历史时点。"
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "akshare_cb_profile",
+                "columns": [
+                  "债券名称"
+                ],
+                "evidence": "docs/convertible-bonds-expansion.md#akshare"
+              }
+            ],
+            "wind": [],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_basic",
+                "columns": [
+                  "债券名称"
+                ],
+                "prompt": "债券全称",
+                "note": "真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。"
+              }
+            ],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。"
+          }
+        },
+        "stock_code": {
+          "label": "正股代码",
+          "unit": "代码",
+          "data_type": "string",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "stock_code",
+            "正股代码"
+          ],
+          "description": "当前可用档案快照；不代表指定历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_basic",
+                "columns": [
+                  "stk_code"
+                ],
+                "source_unit": "代码",
+                "multiplier": 1,
+                "note": "当前可用档案快照；不代表指定历史时点。"
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "akshare_cb_redeem_snapshot",
+                "columns": [
+                  "正股代码"
+                ],
+                "evidence": "docs/convertible-bonds-expansion.md#akshare",
+                "a_share_code": true
+              }
+            ],
+            "wind": [],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_basic",
+                "columns": [
+                  "正股代码"
+                ],
+                "prompt": "正股代码",
+                "note": "真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。"
+              }
+            ],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。"
+          }
+        },
+        "stock_name": {
+          "label": "正股简称",
+          "unit": "文本",
+          "data_type": "string",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "stock_name",
+            "正股简称"
+          ],
+          "description": "当前可用档案快照；不代表指定历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_basic",
+                "columns": [
+                  "stk_short_name"
+                ],
+                "source_unit": "文本",
+                "multiplier": 1,
+                "note": "当前可用档案快照；不代表指定历史时点。"
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "akshare_cb_redeem_snapshot",
+                "columns": [
+                  "正股名称"
+                ],
+                "evidence": "docs/convertible-bonds-expansion.md#akshare"
+              }
+            ],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "ifind": "未核实该来源对应字段、日期与单位，不作推断。"
+          }
+        },
+        "bond_type": {
+          "label": "转债类型",
+          "unit": "文本",
+          "data_type": "string",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "bond_type",
+            "转债类型"
+          ],
+          "description": "当前可用档案快照；不代表指定历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_basic",
+                "columns": [
+                  "cb_type"
+                ],
+                "source_unit": "文本",
+                "multiplier": 1,
+                "note": "当前可用档案快照；不代表指定历史时点。"
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "akshare_cb_profile",
+                "columns": [
+                  "债券类型"
+                ],
+                "evidence": "docs/convertible-bonds-expansion.md#akshare"
+              }
+            ],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "ifind": "未核实该来源对应字段、日期与单位，不作推断。"
+          }
+        },
+        "list_date": {
+          "label": "上市日期",
+          "unit": "日期",
+          "data_type": "date",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "list_date",
+            "上市日期"
+          ],
+          "description": "当前可用档案快照；不代表指定历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_basic",
+                "columns": [
+                  "list_date"
+                ],
+                "source_unit": "日期",
+                "multiplier": 1,
+                "note": "当前可用档案快照；不代表指定历史时点。"
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "akshare_cb_profile",
+                "columns": [
+                  "上市日期"
+                ],
+                "evidence": "docs/convertible-bonds-expansion.md#akshare"
+              }
+            ],
+            "wind": [],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_basic",
+                "columns": [
+                  "上市日期"
+                ],
+                "prompt": "上市日期",
+                "note": "真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。"
+              }
+            ],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。"
+          }
+        },
+        "delist_date": {
+          "label": "摘牌日期",
+          "unit": "日期",
+          "data_type": "date",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "delist_date",
+            "摘牌日期"
+          ],
+          "description": "当前可用档案快照；不代表指定历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_basic",
+                "columns": [
+                  "delist_date"
+                ],
+                "source_unit": "日期",
+                "multiplier": 1,
+                "note": "当前可用档案快照；不代表指定历史时点。"
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "akshare_cb_profile",
+                "columns": [
+                  "摘牌日"
+                ],
+                "evidence": "docs/convertible-bonds-expansion.md#akshare"
+              }
+            ],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "ifind": "未核实该来源对应字段、日期与单位，不作推断。"
+          }
+        },
+        "value_date": {
+          "label": "起息日期",
+          "unit": "日期",
+          "data_type": "date",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "value_date",
+            "起息日期"
+          ],
+          "description": "当前可用档案快照；不代表指定历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_basic",
+                "columns": [
+                  "value_date"
+                ],
+                "source_unit": "日期",
+                "multiplier": 1,
+                "note": "当前可用档案快照；不代表指定历史时点。"
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "akshare_cb_profile",
+                "columns": [
+                  "起息日期"
+                ],
+                "evidence": "docs/convertible-bonds-expansion.md#akshare"
+              }
+            ],
+            "wind": [],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_basic",
+                "columns": [
+                  "起息日期"
+                ],
+                "prompt": "起息日期",
+                "note": "真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。"
+              }
+            ],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。"
+          }
+        },
+        "maturity_date": {
+          "label": "到期日期",
+          "unit": "日期",
+          "data_type": "date",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "maturity_date",
+            "到期日期"
+          ],
+          "description": "当前可用档案快照；不代表指定历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_basic",
+                "columns": [
+                  "maturity_date"
+                ],
+                "source_unit": "日期",
+                "multiplier": 1,
+                "note": "当前可用档案快照；不代表指定历史时点。"
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "akshare_cb_profile",
+                "columns": [
+                  "到期日"
+                ],
+                "evidence": "docs/convertible-bonds-expansion.md#akshare"
+              }
+            ],
+            "wind": [],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_basic",
+                "columns": [
+                  "到期日期"
+                ],
+                "prompt": "到期日期",
+                "note": "真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。"
+              }
+            ],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。"
+          }
+        },
+        "conversion_start_date": {
+          "label": "转股起始日",
+          "unit": "日期",
+          "data_type": "date",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "conversion_start_date",
+            "转股起始日"
+          ],
+          "description": "当前可用档案快照；不代表指定历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_basic",
+                "columns": [
+                  "conv_start_date"
+                ],
+                "source_unit": "日期",
+                "multiplier": 1,
+                "note": "当前可用档案快照；不代表指定历史时点。"
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "akshare_cb_summary",
+                "columns": [
+                  "转换期间"
+                ],
+                "evidence": "docs/convertible-bonds-expansion.md#akshare",
+                "split": "~",
+                "index": 0
+              }
+            ],
+            "wind": [
+              {
+                "recipe": "wind_cb_basic",
+                "columns": [
+                  "自愿转股起始日期"
+                ],
+                "prompt": "转股起始日",
+                "accepted_units": [
+                  "",
+                  "元"
+                ],
+                "source_unit": "以返回列单位为准",
+                "note": "真实MCP验证；日期与单位取自返回列，不从请求补写。"
+              }
+            ],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_basic",
+                "columns": [
+                  "转股起始日期"
+                ],
+                "prompt": "转股起始日期",
+                "note": "真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。"
+              }
+            ],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。"
+          }
+        },
+        "conversion_end_date": {
+          "label": "转股截止日",
+          "unit": "日期",
+          "data_type": "date",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "conversion_end_date",
+            "转股截止日"
+          ],
+          "description": "当前可用档案快照；不代表指定历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_basic",
+                "columns": [
+                  "conv_end_date"
+                ],
+                "source_unit": "日期",
+                "multiplier": 1,
+                "note": "当前可用档案快照；不代表指定历史时点。"
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "akshare_cb_summary",
+                "columns": [
+                  "转换期间"
+                ],
+                "evidence": "docs/convertible-bonds-expansion.md#akshare",
+                "split": "~",
+                "index": 1
+              }
+            ],
+            "wind": [
+              {
+                "recipe": "wind_cb_basic",
+                "columns": [
+                  "自愿转股终止日期"
+                ],
+                "prompt": "转股截止日",
+                "accepted_units": [
+                  "",
+                  "元"
+                ],
+                "source_unit": "以返回列单位为准",
+                "note": "真实MCP验证；日期与单位取自返回列，不从请求补写。"
+              }
+            ],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_basic",
+                "columns": [
+                  "转股终止日期"
+                ],
+                "prompt": "转股终止日期",
+                "note": "真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。"
+              }
+            ],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。"
+          }
+        },
+        "conversion_price": {
+          "label": "最新转股价",
+          "unit": "元/股",
+          "data_type": "number",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "conversion_price",
+            "最新转股价"
+          ],
+          "description": "当前可用档案快照；不代表指定历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_basic",
+                "columns": [
+                  "conv_price"
+                ],
+                "source_unit": "元/股",
+                "multiplier": 1,
+                "note": "当前可用档案快照；不代表指定历史时点。"
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "akshare_cb_summary",
+                "columns": [
+                  "最新转股价（元）"
+                ],
+                "evidence": "docs/convertible-bonds-expansion.md#akshare"
+              }
+            ],
+            "wind": [
+              {
+                "recipe": "wind_cb_basic",
+                "columns": [
+                  "最新转股价"
+                ],
+                "prompt": "最新转股价",
+                "accepted_units": [
+                  "",
+                  "元"
+                ],
+                "source_unit": "以返回列单位为准",
+                "note": "真实MCP验证；日期与单位取自返回列，不从请求补写。"
+              }
+            ],
+            "ifind": [],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "ifind": "未核实该来源对应字段、日期与单位，不作推断。"
+          }
+        },
+        "initial_conversion_price": {
+          "label": "初始转股价",
+          "unit": "元/股",
+          "data_type": "number",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "initial_conversion_price",
+            "初始转股价"
+          ],
+          "description": "当前可用档案快照；不代表指定历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_basic",
+                "columns": [
+                  "first_conv_price"
+                ],
+                "source_unit": "元/股",
+                "multiplier": 1,
+                "note": "当前可用档案快照；不代表指定历史时点。"
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "akshare": "未核实该来源对应字段、日期与单位，不作推断。",
+            "ifind": "未核实该来源对应字段、日期与单位，不作推断。"
+          }
+        },
+        "outstanding": {
+          "label": "当前未转股余额",
+          "unit": "元",
+          "data_type": "number",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "outstanding",
+            "当前未转股余额"
+          ],
+          "description": "当前可用档案快照；不代表指定历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_basic",
+                "columns": [
+                  "remain_size"
+                ],
+                "source_unit": "元",
+                "multiplier": 1,
+                "note": "当前可用档案快照；不代表指定历史时点。"
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "akshare_cb_redeem_snapshot",
+                "columns": [
+                  "剩余规模"
+                ],
+                "evidence": "docs/convertible-bonds-expansion.md#akshare",
+                "multiplier": 100000000
+              }
+            ],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "ifind": "未核实该来源对应字段、日期与单位，不作推断。"
+          }
+        },
+        "issue_size": {
+          "label": "发行规模",
+          "unit": "元",
+          "data_type": "number",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "issue_size",
+            "发行规模"
+          ],
+          "description": "当前可用档案快照；不代表指定历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_basic",
+                "columns": [
+                  "issue_size"
+                ],
+                "source_unit": "元",
+                "multiplier": 1,
+                "note": "当前可用档案快照；不代表指定历史时点。"
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "akshare_cb_profile",
+                "columns": [
+                  "发行规模（亿元）"
+                ],
+                "evidence": "docs/convertible-bonds-expansion.md#akshare",
+                "multiplier": 100000000
+              }
+            ],
+            "wind": [],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_basic",
+                "columns": [
+                  "发行总额"
+                ],
+                "prompt": "发行总额（亿元）",
+                "note": "真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。",
+                "accepted_units": [
+                  "元",
+                  "万元",
+                  "亿元"
+                ],
+                "source_unit": "按上游表头单位；金额统一元"
+              }
+            ],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。"
+          }
+        },
+        "rating": {
+          "label": "最新信用等级",
+          "unit": "文本",
+          "data_type": "string",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "rating",
+            "最新信用等级"
+          ],
+          "description": "当前可用档案快照；不代表指定历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_basic",
+                "columns": [
+                  "newest_rating"
+                ],
+                "source_unit": "文本",
+                "multiplier": 1,
+                "note": "当前可用档案快照；不代表指定历史时点。"
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "akshare_cb_profile",
+                "columns": [
+                  "信用等级"
+                ],
+                "evidence": "docs/convertible-bonds-expansion.md#akshare"
+              }
+            ],
+            "wind": [],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_basic",
+                "columns": [
+                  "债券最新信用评级"
+                ],
+                "prompt": "债券最新信用评级",
+                "note": "真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。"
+              }
+            ],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。"
+          }
+        },
+        "call_clause": {
+          "label": "赎回条款",
+          "unit": "文本",
+          "data_type": "string",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "call_clause",
+            "赎回条款"
+          ],
+          "description": "当前可用档案快照；不代表指定历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_basic",
+                "columns": [
+                  "call_clause"
+                ],
+                "source_unit": "文本",
+                "multiplier": 1,
+                "note": "当前可用档案快照；不代表指定历史时点。"
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "akshare_cb_redeem_snapshot",
+                "columns": [
+                  "强赎条款"
+                ],
+                "evidence": "docs/convertible-bonds-expansion.md#akshare"
+              }
+            ],
+            "wind": [
+              {
+                "recipe": "wind_cb_basic",
+                "columns": [
+                  "赎回条件"
+                ],
+                "prompt": "赎回条款",
+                "accepted_units": [
+                  "",
+                  "元"
+                ],
+                "source_unit": "以返回列单位为准",
+                "note": "真实MCP验证；日期与单位取自返回列，不从请求补写。"
+              }
+            ],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_basic",
+                "columns": [
+                  "赎回条款"
+                ],
+                "prompt": "赎回条款",
+                "note": "真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。"
+              }
+            ],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。"
+          }
+        },
+        "put_clause": {
+          "label": "回售条款",
+          "unit": "文本",
+          "data_type": "string",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "put_clause",
+            "回售条款"
+          ],
+          "description": "当前可用档案快照；不代表指定历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_basic",
+                "columns": [
+                  "put_clause"
+                ],
+                "source_unit": "文本",
+                "multiplier": 1,
+                "note": "当前可用档案快照；不代表指定历史时点。"
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "akshare": "未核实该来源对应字段、日期与单位，不作推断。",
+            "ifind": "未核实该来源对应字段、日期与单位，不作推断。"
+          }
+        },
+        "reset_clause": {
+          "label": "下修条款",
+          "unit": "文本",
+          "data_type": "string",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "reset_clause",
+            "下修条款"
+          ],
+          "description": "当前可用档案快照；不代表指定历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_basic",
+                "columns": [
+                  "reset_clause"
+                ],
+                "source_unit": "文本",
+                "multiplier": 1,
+                "note": "当前可用档案快照；不代表指定历史时点。"
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_basic",
+                "columns": [
+                  "特别向下修正条款全文"
+                ],
+                "prompt": "特别向下修正条款全文",
+                "note": "真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。"
+              }
+            ],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "akshare": "未核实该来源对应字段、日期与单位，不作推断。"
+          }
+        },
+        "rate_clause": {
+          "label": "票息说明",
+          "unit": "文本",
+          "data_type": "string",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "rate_clause",
+            "票息说明"
+          ],
+          "description": "当前可用档案快照；不代表指定历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_basic",
+                "columns": [
+                  "rate_clause"
+                ],
+                "source_unit": "文本",
+                "multiplier": 1,
+                "note": "当前可用档案快照；不代表指定历史时点。"
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "akshare_cb_profile",
+                "columns": [
+                  "利率说明"
+                ],
+                "evidence": "docs/convertible-bonds-expansion.md#akshare"
+              }
+            ],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "ifind": "未核实该来源对应字段、日期与单位，不作推断。"
+          }
+        },
+        "maturity_call_price": {
+          "label": "到期赎回价格（含税）",
+          "unit": "元/张",
+          "data_type": "number",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "maturity_call_price",
+            "到期赎回价格（含税）"
+          ],
+          "description": "当前可用档案快照；不代表指定历史时点。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_basic",
+                "columns": [
+                  "maturity_call_price"
+                ],
+                "source_unit": "元/张",
+                "multiplier": 1,
+                "note": "当前可用档案快照；不代表指定历史时点。"
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "akshare": "未核实该来源对应字段、日期与单位，不作推断。",
+            "ifind": "未核实该来源对应字段、日期与单位，不作推断。"
+          }
+        }
+      }
+    },
+    "cb_daily": {
+      "date_semantics": "实际交易日；价格均为每100元面值报价，不复权。",
+      "instrument_type": "convertible_bond",
+      "default_fields": [
+        "close",
+        "conversion_value",
+        "conversion_premium",
+        "bond_floor",
+        "bond_floor_premium"
+      ],
+      "fields": {
+        "open": {
+          "label": "开盘价",
+          "unit": "元/100元面值",
+          "data_type": "number",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "open",
+            "开盘价"
+          ],
+          "description": "Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_daily",
+                "columns": [
+                  "open"
+                ],
+                "source_unit": "元/100元面值",
+                "multiplier": 1,
+                "note": "Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。"
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "akshare_cb_daily",
+                "columns": [
+                  "open"
+                ],
+                "evidence": "docs/convertible-bonds-expansion.md#akshare"
+              }
+            ],
+            "wind": [],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_daily",
+                "columns": [
+                  "债券开盘价"
+                ],
+                "prompt": "债券开盘价",
+                "accepted_units": [
+                  "元"
+                ],
+                "note": "2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。"
+              }
+            ],
+            "tdx": [
+              {
+                "recipe": "tdx_cb_daily",
+                "columns": [
+                  "Open"
+                ],
+                "multiplier": 1,
+                "source_unit": "元/100元面值",
+                "evidence": "local/convertible_expansion/tdx_kline_raw.json",
+                "note": "TDX固定日K实测。"
+              }
+            ]
+          },
+          "unavailable": {
+            "ifind": "未核实该来源对应字段、日期与单位，不作推断。"
+          }
+        },
+        "high": {
+          "label": "最高价",
+          "unit": "元/100元面值",
+          "data_type": "number",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "high",
+            "最高价"
+          ],
+          "description": "Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_daily",
+                "columns": [
+                  "high"
+                ],
+                "source_unit": "元/100元面值",
+                "multiplier": 1,
+                "note": "Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。"
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "akshare_cb_daily",
+                "columns": [
+                  "high"
+                ],
+                "evidence": "docs/convertible-bonds-expansion.md#akshare"
+              }
+            ],
+            "wind": [],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_daily",
+                "columns": [
+                  "最高价",
+                  "债券最高价"
+                ],
+                "prompt": "债券最高价",
+                "accepted_units": [
+                  "元"
+                ],
+                "note": "2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。"
+              }
+            ],
+            "tdx": [
+              {
+                "recipe": "tdx_cb_daily",
+                "columns": [
+                  "High"
+                ],
+                "multiplier": 1,
+                "source_unit": "元/100元面值",
+                "evidence": "local/convertible_expansion/tdx_kline_raw.json",
+                "note": "TDX固定日K实测。"
+              }
+            ]
+          },
+          "unavailable": {
+            "ifind": "未核实该来源对应字段、日期与单位，不作推断。"
+          }
+        },
+        "low": {
+          "label": "最低价",
+          "unit": "元/100元面值",
+          "data_type": "number",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "low",
+            "最低价"
+          ],
+          "description": "Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_daily",
+                "columns": [
+                  "low"
+                ],
+                "source_unit": "元/100元面值",
+                "multiplier": 1,
+                "note": "Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。"
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "akshare_cb_daily",
+                "columns": [
+                  "low"
+                ],
+                "evidence": "docs/convertible-bonds-expansion.md#akshare"
+              }
+            ],
+            "wind": [],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_daily",
+                "columns": [
+                  "最低价",
+                  "债券最低价"
+                ],
+                "prompt": "债券最低价",
+                "accepted_units": [
+                  "元"
+                ],
+                "note": "2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。"
+              }
+            ],
+            "tdx": [
+              {
+                "recipe": "tdx_cb_daily",
+                "columns": [
+                  "Low"
+                ],
+                "multiplier": 1,
+                "source_unit": "元/100元面值",
+                "evidence": "local/convertible_expansion/tdx_kline_raw.json",
+                "note": "TDX固定日K实测。"
+              }
+            ]
+          },
+          "unavailable": {
+            "ifind": "未核实该来源对应字段、日期与单位，不作推断。"
+          }
+        },
+        "close": {
+          "label": "收盘价",
+          "unit": "元/100元面值",
+          "data_type": "number",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "close",
+            "收盘价"
+          ],
+          "description": "Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_daily",
+                "columns": [
+                  "close"
+                ],
+                "source_unit": "元/100元面值",
+                "multiplier": 1,
+                "note": "Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。"
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "akshare_cb_daily",
+                "columns": [
+                  "close"
+                ],
+                "evidence": "docs/convertible-bonds-expansion.md#akshare"
+              }
+            ],
+            "wind": [],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_daily",
+                "columns": [
+                  "收盘价"
+                ],
+                "prompt": "收盘价",
+                "note": "真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。",
+                "accepted_units": [
+                  "元"
+                ],
+                "source_unit": "按上游表头单位；金额统一元"
+              }
+            ],
+            "tdx": [
+              {
+                "recipe": "tdx_cb_daily",
+                "columns": [
+                  "Close"
+                ],
+                "multiplier": 1,
+                "source_unit": "元/100元面值",
+                "evidence": "local/convertible_expansion/tdx_kline_raw.json",
+                "note": "TDX固定日K实测。"
+              }
+            ]
+          }
+        },
+        "pre_close": {
+          "label": "昨收盘价",
+          "unit": "元/100元面值",
+          "data_type": "number",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "pre_close",
+            "昨收盘价"
+          ],
+          "description": "Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_daily",
+                "columns": [
+                  "pre_close"
+                ],
+                "source_unit": "元/100元面值",
+                "multiplier": 1,
+                "note": "Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。"
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_daily",
+                "columns": [
+                  "债券前收盘价"
+                ],
+                "prompt": "债券前收盘价",
+                "accepted_units": [
+                  "元"
+                ],
+                "note": "2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。"
+              }
+            ],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "akshare": "未核实该来源对应字段、日期与单位，不作推断。",
+            "ifind": "未核实该来源对应字段、日期与单位，不作推断。"
+          }
+        },
+        "pct_change": {
+          "label": "涨跌幅",
+          "unit": "%",
+          "data_type": "number",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "pct_change",
+            "涨跌幅"
+          ],
+          "description": "Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_daily",
+                "columns": [
+                  "pct_chg"
+                ],
+                "source_unit": "%",
+                "multiplier": 1,
+                "note": "Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。"
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_daily",
+                "columns": [
+                  "涨跌幅"
+                ],
+                "prompt": "涨跌幅",
+                "accepted_units": [
+                  "%"
+                ],
+                "note": "2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。"
+              }
+            ],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "akshare": "未核实该来源对应字段、日期与单位，不作推断。",
+            "ifind": "未核实该来源对应字段、日期与单位，不作推断。"
+          }
+        },
+        "volume": {
+          "label": "成交量",
+          "unit": "手",
+          "data_type": "number",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "volume",
+            "成交量"
+          ],
+          "description": "Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_daily",
+                "columns": [
+                  "vol"
+                ],
+                "source_unit": "手",
+                "multiplier": 1,
+                "note": "Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。"
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_daily",
+                "columns": [
+                  "债券成交量"
+                ],
+                "prompt": "债券成交量（单位设置=手，保留本指标单位参数）",
+                "accepted_units": [
+                  "手"
+                ],
+                "note": "2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。",
+                "unit_parameter": "单位设置",
+                "indicator_params": {
+                  "单位设置": "手"
+                },
+                "source_unit": "手"
+              }
+            ],
+            "tdx": [
+              {
+                "recipe": "tdx_cb_daily",
+                "columns": [
+                  "RawVolume"
+                ],
+                "multiplier": 1,
+                "source_unit": "手",
+                "evidence": "local/convertible_expansion/tdx_quotes_raw.json",
+                "note": "TDX固定行情明示成交量手，BaseInfo.Unit=10；同日HQInfo.Volume与K线RawVolume一致。"
+              }
+            ]
+          },
+          "unavailable": {
+            "akshare": "新浪volume文档缺少明确手/张单位，暂不混入手数列。",
+            "ifind": "未核实该来源对应字段、日期与单位，不作推断。"
+          }
+        },
+        "amount": {
+          "label": "成交额",
+          "unit": "元",
+          "data_type": "number",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "amount",
+            "成交额"
+          ],
+          "description": "Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_daily",
+                "columns": [
+                  "amount"
+                ],
+                "source_unit": "万元",
+                "multiplier": 10000,
+                "note": "Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。"
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_daily",
+                "columns": [
+                  "成交金额"
+                ],
+                "prompt": "成交金额（元）",
+                "accepted_units": [
+                  "元",
+                  "万元",
+                  "亿元"
+                ],
+                "note": "2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。"
+              }
+            ],
+            "tdx": [
+              {
+                "recipe": "tdx_cb_daily",
+                "columns": [
+                  "RawAmount"
+                ],
+                "multiplier": 1,
+                "source_unit": "元",
+                "evidence": "local/convertible_expansion/tdx_kline_raw.json",
+                "note": "TDX固定日K实测。"
+              }
+            ]
+          },
+          "unavailable": {
+            "akshare": "未核实该来源对应字段、日期与单位，不作推断。",
+            "ifind": "未核实该来源对应字段、日期与单位，不作推断。"
+          }
+        },
+        "conversion_value": {
+          "label": "转股价值（平价）",
+          "unit": "元/100元面值",
+          "data_type": "number",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "conversion_value",
+            "转股价值（平价）"
+          ],
+          "description": "Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_daily",
+                "columns": [
+                  "cb_value"
+                ],
+                "source_unit": "元/100元面值",
+                "multiplier": 1,
+                "note": "Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。"
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "akshare_cb_value",
+                "columns": [
+                  "SWAPVALUE"
+                ],
+                "evidence": "docs/convertible-bonds-expansion.md#akshare"
+              }
+            ],
+            "wind": [
+              {
+                "recipe": "wind_cb_daily",
+                "columns": [
+                  "转换价值",
+                  "转股价值"
+                ],
+                "prompt": "转股价值（平价）",
+                "accepted_units": [
+                  "元"
+                ],
+                "source_unit": "以返回列单位为准",
+                "note": "真实MCP验证；日期与单位取自返回列，不从请求补写。"
+              }
+            ],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_daily",
+                "columns": [
+                  "转换价值"
+                ],
+                "prompt": "转换价值",
+                "note": "真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。",
+                "accepted_units": [
+                  "元"
+                ],
+                "source_unit": "按上游表头单位；金额统一元"
+              }
+            ],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。"
+          }
+        },
+        "conversion_premium": {
+          "label": "转股溢价率",
+          "unit": "%",
+          "data_type": "number",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "conversion_premium",
+            "转股溢价率"
+          ],
+          "description": "Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_daily",
+                "columns": [
+                  "cb_over_rate"
+                ],
+                "source_unit": "%",
+                "multiplier": 1,
+                "note": "Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。"
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "akshare_cb_value",
+                "columns": [
+                  "SWAPOR"
+                ],
+                "evidence": "docs/convertible-bonds-expansion.md#akshare"
+              }
+            ],
+            "wind": [
+              {
+                "recipe": "wind_cb_daily",
+                "columns": [
+                  "转股溢价率"
+                ],
+                "prompt": "转股溢价率",
+                "accepted_units": [
+                  "%"
+                ],
+                "source_unit": "以返回列单位为准",
+                "note": "真实MCP验证；日期与单位取自返回列，不从请求补写。"
+              }
+            ],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_daily",
+                "columns": [
+                  "转股溢价率"
+                ],
+                "prompt": "转股溢价率",
+                "note": "真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。",
+                "accepted_units": [
+                  "%"
+                ],
+                "source_unit": "按上游表头单位；金额统一元"
+              }
+            ],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。"
+          }
+        },
+        "bond_floor": {
+          "label": "纯债价值（债底）",
+          "unit": "元/100元面值",
+          "data_type": "number",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "bond_floor",
+            "纯债价值（债底）"
+          ],
+          "description": "Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_daily",
+                "columns": [
+                  "bond_value"
+                ],
+                "source_unit": "元/100元面值",
+                "multiplier": 1,
+                "note": "Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。"
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "akshare_cb_value",
+                "columns": [
+                  "PUREBONDVALUE"
+                ],
+                "evidence": "docs/convertible-bonds-expansion.md#akshare"
+              }
+            ],
+            "wind": [
+              {
+                "recipe": "wind_cb_daily",
+                "columns": [
+                  "纯债价值"
+                ],
+                "prompt": "纯债价值（债底）",
+                "accepted_units": [
+                  "元"
+                ],
+                "source_unit": "以返回列单位为准",
+                "note": "真实MCP验证；日期与单位取自返回列，不从请求补写。"
+              }
+            ],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_daily",
+                "columns": [
+                  "纯债价值"
+                ],
+                "prompt": "纯债价值",
+                "note": "真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。",
+                "accepted_units": [
+                  "元"
+                ],
+                "source_unit": "按上游表头单位；金额统一元"
+              }
+            ],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。"
+          }
+        },
+        "bond_floor_premium": {
+          "label": "纯债溢价率",
+          "unit": "%",
+          "data_type": "number",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "bond_floor_premium",
+            "纯债溢价率"
+          ],
+          "description": "Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_daily",
+                "columns": [
+                  "bond_over_rate"
+                ],
+                "source_unit": "%",
+                "multiplier": 1,
+                "note": "Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。"
+              }
+            ],
+            "akshare": [
+              {
+                "recipe": "akshare_cb_value",
+                "columns": [
+                  "PUREBONDOR"
+                ],
+                "evidence": "docs/convertible-bonds-expansion.md#akshare"
+              }
+            ],
+            "wind": [],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_daily",
+                "columns": [
+                  "纯债溢价率"
+                ],
+                "prompt": "纯债溢价率",
+                "accepted_units": [
+                  "%"
+                ],
+                "note": "2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。"
+              }
+            ],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "ifind": "未核实该来源对应字段、日期与单位，不作推断。"
+          }
+        },
+        "ytm": {
+          "label": "税前到期收益率",
+          "unit": "%",
+          "data_type": "number",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "ytm",
+            "到期收益率"
+          ],
+          "description": "Wind税前到期收益率，保留百分数；MCP未披露现金流、计息与税率算法。",
+          "sources": {
+            "tushare": [],
+            "akshare": [],
+            "wind": [
+              {
+                "recipe": "wind_cb_daily",
+                "columns": [
+                  "税前到期收益率"
+                ],
+                "prompt": "税前到期收益率",
+                "accepted_units": [
+                  "%"
+                ],
+                "source_unit": "以返回列单位为准",
+                "note": "真实MCP验证；日期与单位取自返回列，不从请求补写。"
+              }
+            ],
+            "ifind": [],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "akshare": "未核实该来源对应字段、日期与单位，不作推断。",
+            "ifind": "实际返回到期收益率（央行规则）与行权YTM，均未标明税前/税后，不绑定两个税种字段。"
+          }
+        },
+        "remaining_years": {
+          "label": "剩余期限",
+          "unit": "年",
+          "data_type": "number",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "remaining_years",
+            "剩余期限"
+          ],
+          "description": "待探索历史逐日剩余期限，不能把当前剩余期限回填。",
+          "sources": {
+            "tushare": [],
+            "akshare": [],
+            "wind": [],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_daily",
+                "columns": [
+                  "剩余期限(年)"
+                ],
+                "prompt": "剩余期限（年）",
+                "note": "真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。",
+                "accepted_units": [
+                  ""
+                ],
+                "source_unit": "按上游表头单位；金额统一元"
+              }
+            ],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "akshare": "未核实该来源对应字段、日期与单位，不作推断。"
+          }
+        },
+        "outstanding": {
+          "label": "未转股余额",
+          "unit": "元",
+          "data_type": "number",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "outstanding",
+            "未转股余额"
+          ],
+          "description": "交易日未转股余额；按返回列元、万元或亿元换算为元，不使用当前档案回填历史。",
+          "sources": {
+            "tushare": [],
+            "akshare": [],
+            "wind": [
+              {
+                "recipe": "wind_cb_daily",
+                "columns": [
+                  "未转股余额"
+                ],
+                "prompt": "未转股余额",
+                "accepted_units": [
+                  "元",
+                  "万元",
+                  "亿元"
+                ],
+                "source_unit": "以返回列单位为准",
+                "note": "真实MCP验证；日期与单位取自返回列，不从请求补写。"
+              }
+            ],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_daily",
+                "columns": [
+                  "未转股余额"
+                ],
+                "prompt": "未转股余额（亿元）",
+                "note": "真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。",
+                "accepted_units": [
+                  "元",
+                  "万元",
+                  "亿元"
+                ],
+                "source_unit": "按上游表头单位；金额统一元"
+              }
+            ],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "akshare": "未核实该来源对应字段、日期与单位，不作推断。"
+          }
+        },
+        "ytm_after_tax": {
+          "label": "税后到期收益率",
+          "unit": "%",
+          "data_type": "number",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "税后到期收益率",
+            "ytm_after_tax"
+          ],
+          "description": "Wind税后到期收益率，保留百分数；MCP未披露投资者税率及现金流算法。",
+          "sources": {
+            "tushare": [],
+            "akshare": [],
+            "wind": [
+              {
+                "recipe": "wind_cb_daily",
+                "columns": [
+                  "税后到期收益率"
+                ],
+                "prompt": "税后到期收益率",
+                "accepted_units": [
+                  "%"
+                ],
+                "source_unit": "以返回列单位为准",
+                "note": "真实MCP验证；日期与单位取自返回列，不从请求补写。"
+              }
+            ],
+            "ifind": [],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "akshare": "未核实该来源对应字段、日期与单位，不作推断。",
+            "ifind": "未核实该来源对应字段、日期与单位，不作推断。"
+          }
+        },
+        "ytm_provider": {
+          "label": "供应商到期收益率（税种未标明）",
+          "unit": "%",
+          "data_type": "number",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "供应商到期收益率",
+            "税种未明YTM"
+          ],
+          "description": "供应商原始到期收益率；不等同于已核实税前或税后YTM。具体计算规则保留在来源说明中。",
+          "sources": {
+            "tushare": [],
+            "akshare": [],
+            "wind": [],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_daily",
+                "columns": [
+                  "到期收益率",
+                  "纯债到期收益率"
+                ],
+                "prompt": "纯债到期收益率（保留来源原口径）",
+                "note": "来源原口径到期收益率；税前税后未披露，不作分类；计算方法以原始响应元数据为准，缺失则未知。",
+                "accepted_units": [
+                  "%"
+                ],
+                "source_unit": "按上游表头单位；金额统一元"
+              }
+            ],
+            "tdx": []
+          },
+          "unavailable": {
+            "tushare": "尚未核实通用到期收益率口径",
+            "akshare": "尚未核实通用到期收益率口径",
+            "wind": "尚未核实通用到期收益率口径",
+            "tdx": "尚未核实通用到期收益率口径"
+          }
+        },
+        "conversion_price": {
+          "label": "转股价格",
+          "unit": "元/股",
+          "data_type": "number",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "conversion_price",
+            "转股价格"
+          ],
+          "description": "iFinD实际交易日历史指标，保留来源原口径，不用当前档案回填。",
+          "sources": {
+            "tushare": [],
+            "akshare": [],
+            "wind": [],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_daily",
+                "columns": [
+                  "转股价格"
+                ],
+                "prompt": "转股价格",
+                "accepted_units": [
+                  "元"
+                ],
+                "note": "2026-11-18原生债券MCP实测；有逐行实际交易日；百分比保留百分点，不用档案快照替代历史。"
+              }
+            ],
+            "tdx": []
+          }
+        },
+        "turnover_rate": {
+          "label": "换手率",
+          "unit": "%",
+          "data_type": "number",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "turnover_rate",
+            "换手率"
+          ],
+          "description": "iFinD实际交易日历史指标，保留来源原口径，不用当前档案回填。",
+          "sources": {
+            "tushare": [],
+            "akshare": [],
+            "wind": [],
+            "ifind": [
+              {
+                "recipe": "ifind_cb_daily",
+                "columns": [
+                  "换手率%"
+                ],
+                "prompt": "换手率%",
+                "accepted_units": [
+                  ""
+                ],
+                "note": "2026-11-18原生债券MCP实测；有逐行实际交易日；百分比保留百分点，不用档案快照替代历史。"
+              }
+            ],
+            "tdx": []
+          }
+        }
+      }
+    },
+    "cb_clauses": {
+      "date_semantics": "历史公告事件，日期为公告日期；合同原文请查cb_basic的call_clause、put_clause、reset_clause。未接入来源返回unsupported，不代表没有公告。",
+      "instrument_type": "convertible_bond",
+      "default_fields": [
+        "call_type",
+        "call_status",
+        "call_date"
+      ],
+      "fields": {
+        "call_type": {
+          "label": "赎回类型",
+          "unit": "文本",
+          "data_type": "string",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "call_type",
+            "赎回类型"
+          ],
+          "description": "按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_call",
+                "columns": [
+                  "call_type"
+                ],
+                "source_unit": "文本",
+                "multiplier": 1,
+                "note": "按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。"
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "akshare": "bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。",
+            "ifind": "未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。"
+          }
+        },
+        "call_status": {
+          "label": "赎回状态原文",
+          "unit": "文本",
+          "data_type": "string",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "call_status",
+            "赎回状态原文"
+          ],
+          "description": "按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_call",
+                "columns": [
+                  "is_call"
+                ],
+                "source_unit": "文本",
+                "multiplier": 1,
+                "note": "按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。"
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "akshare": "bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。",
+            "ifind": "未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。"
+          }
+        },
+        "call_date": {
+          "label": "赎回日期",
+          "unit": "日期",
+          "data_type": "date",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "call_date",
+            "赎回日期"
+          ],
+          "description": "按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_call",
+                "columns": [
+                  "call_date"
+                ],
+                "source_unit": "日期",
+                "multiplier": 1,
+                "note": "按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。"
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "akshare": "bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。",
+            "ifind": "未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。"
+          }
+        },
+        "call_price": {
+          "label": "赎回价格（含税）",
+          "unit": "元/张",
+          "data_type": "number",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "call_price",
+            "赎回价格（含税）"
+          ],
+          "description": "按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_call",
+                "columns": [
+                  "call_price"
+                ],
+                "source_unit": "元/张",
+                "multiplier": 1,
+                "note": "按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。"
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "akshare": "bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。",
+            "ifind": "未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。"
+          }
+        },
+        "call_price_after_tax": {
+          "label": "赎回价格（扣税）",
+          "unit": "元/张",
+          "data_type": "number",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "call_price_after_tax",
+            "赎回价格（扣税）"
+          ],
+          "description": "按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_call",
+                "columns": [
+                  "call_price_tax"
+                ],
+                "source_unit": "元/张",
+                "multiplier": 1,
+                "note": "按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。"
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "akshare": "bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。",
+            "ifind": "未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。"
+          }
+        },
+        "call_volume": {
+          "label": "赎回数量",
+          "unit": "张",
+          "data_type": "number",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "call_volume",
+            "赎回数量"
+          ],
+          "description": "按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_call",
+                "columns": [
+                  "call_vol"
+                ],
+                "source_unit": "张",
+                "multiplier": 1,
+                "note": "按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。"
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "akshare": "bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。",
+            "ifind": "未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。"
+          }
+        },
+        "call_amount": {
+          "label": "赎回金额",
+          "unit": "元",
+          "data_type": "number",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "call_amount",
+            "赎回金额"
+          ],
+          "description": "按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_call",
+                "columns": [
+                  "call_amount"
+                ],
+                "source_unit": "万元",
+                "multiplier": 10000,
+                "note": "按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。"
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "akshare": "bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。",
+            "ifind": "未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。"
+          }
+        },
+        "payment_date": {
+          "label": "款项到账日",
+          "unit": "日期",
+          "data_type": "date",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "payment_date",
+            "款项到账日"
+          ],
+          "description": "按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_call",
+                "columns": [
+                  "payment_date"
+                ],
+                "source_unit": "日期",
+                "multiplier": 1,
+                "note": "按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。"
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "akshare": "bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。",
+            "ifind": "未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。"
+          }
+        },
+        "registration_date": {
+          "label": "赎回登记日",
+          "unit": "日期",
+          "data_type": "date",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "registration_date",
+            "赎回登记日"
+          ],
+          "description": "按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。",
+          "sources": {
+            "tushare": [
+              {
+                "recipe": "tushare_cb_call",
+                "columns": [
+                  "call_reg_date"
+                ],
+                "source_unit": "日期",
+                "multiplier": 1,
+                "note": "按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。"
+              }
+            ],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "akshare": "bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。",
+            "ifind": "未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。"
+          }
+        },
+        "put_status": {
+          "label": "回售状态",
+          "unit": "文本",
+          "data_type": "string",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "put_status",
+            "回售状态"
+          ],
+          "description": "待探索并验证来源；无数据不代表未触发。",
+          "sources": {
+            "tushare": [],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "akshare": "bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。",
+            "ifind": "未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。"
+          }
+        },
+        "reset_status": {
+          "label": "下修状态",
+          "unit": "文本",
+          "data_type": "string",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "reset_status",
+            "下修状态"
+          ],
+          "description": "待探索并验证来源；无数据不代表未触发。",
+          "sources": {
+            "tushare": [],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "akshare": "bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。",
+            "ifind": "未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。"
+          }
+        },
+        "redemption_progress": {
+          "label": "强赎触发进度",
+          "unit": "文本",
+          "data_type": "string",
+          "instrument_type": "convertible_bond",
+          "aliases": [
+            "redemption_progress",
+            "强赎触发进度"
+          ],
+          "description": "待探索并验证来源；无数据不代表未触发。",
+          "sources": {
+            "tushare": [],
+            "akshare": [],
+            "wind": [],
+            "ifind": [],
+            "tdx": []
+          },
+          "unavailable": {
+            "tdx": "固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。",
+            "akshare": "bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。",
+            "ifind": "未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。"
+          }
+        }
+      }
     }
   },
   "recipes": {
@@ -30558,6 +32905,260 @@
       "allow_request_identity": true,
       "notes": [
         "通达信固定代码接口，表格未重复证券代码时沿用请求代码。未确认注册资金单位，不映射注册资本。"
+      ]
+    },
+    "tushare_cb_basic": {
+      "provider": "tushare",
+      "dataset": "cb_basic",
+      "kind": "sdk",
+      "method": "cb_basic",
+      "params": {
+        "ts_code": "$symbol",
+        "fields": "$source_fields"
+      },
+      "handler": "convertible_bond",
+      "identity_columns": [
+        "ts_code"
+      ],
+      "select_columns": [
+        "ts_code"
+      ],
+      "upstream": "Tushare cb_basic",
+      "temporal": "snapshot"
+    },
+    "tushare_cb_daily": {
+      "provider": "tushare",
+      "dataset": "cb_daily",
+      "kind": "sdk",
+      "method": "cb_daily",
+      "params": {
+        "ts_code": "$symbol",
+        "start_date": "$start_compact",
+        "end_date": "$end_compact",
+        "fields": "$source_fields"
+      },
+      "handler": "convertible_bond",
+      "identity_columns": [
+        "ts_code"
+      ],
+      "select_columns": [
+        "ts_code"
+      ],
+      "upstream": "Tushare cb_daily",
+      "date_columns": [
+        "trade_date"
+      ],
+      "limit": 2000
+    },
+    "tushare_cb_call": {
+      "provider": "tushare",
+      "dataset": "cb_clauses",
+      "kind": "sdk",
+      "method": "cb_call",
+      "params": {
+        "ts_code": "$symbol",
+        "start_date": "$start_compact",
+        "end_date": "$end_compact",
+        "fields": "$source_fields"
+      },
+      "handler": "convertible_bond",
+      "identity_columns": [
+        "ts_code"
+      ],
+      "select_columns": [
+        "ts_code",
+        "ann_date",
+        "call_type"
+      ],
+      "upstream": "Tushare cb_call",
+      "date_columns": [
+        "ann_date"
+      ],
+      "limit": 2000
+    },
+    "wind_cb_basic": {
+      "provider": "wind",
+      "dataset": "cb_basic",
+      "kind": "mcp_nl",
+      "method": "get_stock_basicinfo",
+      "params": {
+        "question": "$question"
+      },
+      "handler": "convertible_bond_wind",
+      "template": "查询可转债{symbol}，{when}的{labels}。逐项返回原始值、明确单位、证券代码及每个指标实际日期。不要用正股替代转债，不要用最新值回填历史；缺失留空。",
+      "upstream": "Wind MCP",
+      "notes": [
+        "Wind逐项保留来源口径；收益率税率和现金流算法未由MCP披露，不能视为自行核算结果。"
+      ]
+    },
+    "wind_cb_daily": {
+      "provider": "wind",
+      "dataset": "cb_daily",
+      "kind": "mcp_nl",
+      "method": "get_stock_fundamentals",
+      "params": {
+        "question": "$question"
+      },
+      "handler": "convertible_bond_wind",
+      "template": "查询可转债{symbol}，{when}的{labels}。逐项返回原始值、明确单位、证券代码及每个指标实际日期。不要用正股替代转债，不要用最新值回填历史；缺失留空。",
+      "upstream": "Wind MCP",
+      "notes": [
+        "Wind逐项保留来源口径；收益率税率和现金流算法未由MCP披露，不能视为自行核算结果。"
+      ]
+    },
+    "tdx_cb_daily": {
+      "provider": "tdx",
+      "dataset": "cb_daily",
+      "kind": "mcp_paged",
+      "method": "tdx_kline",
+      "handler": "convertible_bond_tdx",
+      "params": {
+        "code": "$code",
+        "setcode": "$market_code",
+        "period": "4",
+        "wantNum": "700",
+        "startxh": "$offset",
+        "tqFlag": "0"
+      },
+      "pagination": {
+        "size": 700,
+        "max_pages": 30,
+        "date_column": "Data"
+      },
+      "temporal": "history",
+      "notes": [
+        "固定日K、不复权；实测单页上限700，按startxh偏移分页。成交额为元，成交量为手（每手10张）；不使用AttachInfo的最新快照填历史。"
+      ],
+      "upstream": "TDX fixed K-line"
+    },
+    "tdx_cb_basic": {
+      "provider": "tdx",
+      "dataset": "cb_basic",
+      "kind": "mcp_paged",
+      "method": "tdx_kline",
+      "handler": "convertible_bond_tdx",
+      "params": {
+        "code": "$code",
+        "setcode": "$market_code",
+        "period": "4",
+        "wantNum": "1",
+        "startxh": "$offset",
+        "tqFlag": "0"
+      },
+      "pagination": {
+        "size": 700,
+        "max_pages": 30,
+        "date_column": "Data"
+      },
+      "temporal": "snapshot",
+      "notes": [
+        "仅证券简称来自K线AttachInfo当前快照；不提供历史档案。"
+      ],
+      "upstream": "TDX fixed K-line"
+    },
+    "akshare_cb_profile": {
+      "provider": "akshare",
+      "dataset": "cb_basic",
+      "kind": "sdk",
+      "handler": "convertible_bond_akshare",
+      "method": "bond_cb_profile_sina",
+      "params": {
+        "symbol": "$sina_symbol"
+      },
+      "upstream": "AKShare / 新浪财经",
+      "notes": [
+        "当前资料快照无历史观察日期；不用于回填历史。"
+      ],
+      "shape": "item_value",
+      "temporal": "snapshot",
+      "require_identity": true
+    },
+    "akshare_cb_summary": {
+      "provider": "akshare",
+      "dataset": "cb_basic",
+      "kind": "sdk",
+      "handler": "convertible_bond_akshare",
+      "method": "bond_cb_summary_sina",
+      "params": {
+        "symbol": "$sina_symbol"
+      },
+      "upstream": "AKShare / 新浪财经",
+      "notes": [
+        "当前资料快照无历史观察日期；不用于回填历史。"
+      ],
+      "shape": "item_value",
+      "temporal": "snapshot"
+    },
+    "akshare_cb_daily": {
+      "provider": "akshare",
+      "dataset": "cb_daily",
+      "kind": "sdk",
+      "handler": "convertible_bond_akshare",
+      "method": "bond_zh_hs_cov_daily",
+      "params": {
+        "symbol": "$sina_symbol"
+      },
+      "upstream": "AKShare / 新浪财经",
+      "notes": [],
+      "temporal": "history",
+      "date_columns": [
+        "date"
+      ]
+    },
+    "akshare_cb_value": {
+      "provider": "akshare",
+      "dataset": "cb_daily",
+      "kind": "sdk",
+      "handler": "convertible_bond_akshare",
+      "method": "bond_zh_cov_value_analysis",
+      "params": {},
+      "upstream": "AKShare documented Eastmoney RPTA_WEB_KZZ_LS (named JSON compatibility adapter)",
+      "notes": [
+        "AKShare 1.18.14价值分析SDK因列数变化失败；沿用其官方实现的同一东财接口，按字段名解析。",
+        "东财可能包含上市前估值日期；返回日期为上游观察日，并不证明当日可交易。"
+      ],
+      "temporal": "history",
+      "date_columns": [
+        "DATE"
+      ],
+      "named_value_endpoint": true
+    },
+    "ifind_cb_basic": {
+      "provider": "ifind",
+      "kind": "mcp_nl",
+      "dataset": "cb_basic",
+      "handler": "convertible_bond_ifind",
+      "method": "get_security_indicators",
+      "temporal": "snapshot",
+      "params": {},
+      "upstream": "iFinD 债券原生指标",
+      "verified_on": "2026-11-18",
+      "max_fields_per_call": 3
+    },
+    "ifind_cb_daily": {
+      "provider": "ifind",
+      "kind": "mcp_nl",
+      "dataset": "cb_daily",
+      "handler": "convertible_bond_ifind",
+      "method": "get_security_indicators",
+      "temporal": "series",
+      "params": {},
+      "upstream": "iFinD 债券原生指标",
+      "verified_on": "2026-11-18",
+      "max_fields_per_call": 3
+    },
+    "akshare_cb_redeem_snapshot": {
+      "provider": "akshare",
+      "dataset": "cb_basic",
+      "kind": "sdk",
+      "handler": "convertible_bond_akshare",
+      "method": "bond_cb_redeem_jsl",
+      "params": {},
+      "identity_column": "代码",
+      "temporal": "snapshot",
+      "upstream": "AKShare / 集思录强赎当前快照",
+      "notes": [
+        "仅当前资料；强赎状态无公告日期，不能充作公告历史。余额及发行规模单位亿元换算元。"
       ]
     }
   },

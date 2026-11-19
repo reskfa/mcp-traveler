@@ -1,0 +1,327 @@
+{
+  "recipes": {
+    "akshare_cb_profile": {
+      "provider": "akshare",
+      "dataset": "cb_basic",
+      "kind": "sdk",
+      "handler": "convertible_bond_akshare",
+      "method": "bond_cb_profile_sina",
+      "params": {
+        "symbol": "$sina_symbol"
+      },
+      "upstream": "AKShare / 新浪财经",
+      "notes": [
+        "当前资料快照无历史观察日期；不用于回填历史。"
+      ],
+      "shape": "item_value",
+      "temporal": "snapshot",
+      "require_identity": true
+    },
+    "akshare_cb_summary": {
+      "provider": "akshare",
+      "dataset": "cb_basic",
+      "kind": "sdk",
+      "handler": "convertible_bond_akshare",
+      "method": "bond_cb_summary_sina",
+      "params": {
+        "symbol": "$sina_symbol"
+      },
+      "upstream": "AKShare / 新浪财经",
+      "notes": [
+        "当前资料快照无历史观察日期；不用于回填历史。"
+      ],
+      "shape": "item_value",
+      "temporal": "snapshot"
+    },
+    "akshare_cb_daily": {
+      "provider": "akshare",
+      "dataset": "cb_daily",
+      "kind": "sdk",
+      "handler": "convertible_bond_akshare",
+      "method": "bond_zh_hs_cov_daily",
+      "params": {
+        "symbol": "$sina_symbol"
+      },
+      "upstream": "AKShare / 新浪财经",
+      "notes": [],
+      "temporal": "history",
+      "date_columns": [
+        "date"
+      ]
+    },
+    "akshare_cb_value": {
+      "provider": "akshare",
+      "dataset": "cb_daily",
+      "kind": "sdk",
+      "handler": "convertible_bond_akshare",
+      "method": "bond_zh_cov_value_analysis",
+      "params": {},
+      "upstream": "AKShare documented Eastmoney RPTA_WEB_KZZ_LS (named JSON compatibility adapter)",
+      "notes": [
+        "AKShare 1.18.14价值分析SDK因列数变化失败；沿用其官方实现的同一东财接口，按字段名解析。",
+        "东财可能包含上市前估值日期；返回日期为上游观察日，并不证明当日可交易。"
+      ],
+      "temporal": "history",
+      "date_columns": [
+        "DATE"
+      ],
+      "named_value_endpoint": true
+    },
+    "akshare_cb_redeem_snapshot": {
+      "provider": "akshare",
+      "dataset": "cb_basic",
+      "kind": "sdk",
+      "handler": "convertible_bond_akshare",
+      "method": "bond_cb_redeem_jsl",
+      "params": {},
+      "identity_column": "代码",
+      "temporal": "snapshot",
+      "upstream": "AKShare / 集思录强赎当前快照",
+      "notes": [
+        "仅当前资料；强赎状态无公告日期，不能充作公告历史。余额及发行规模单位亿元换算元。"
+      ]
+    }
+  },
+  "bindings": {
+    "cb_basic": {
+      "name": [
+        {
+          "recipe": "akshare_cb_profile",
+          "columns": [
+            "债券简称"
+          ],
+          "evidence": "docs/convertible-bonds-expansion.md#akshare"
+        }
+      ],
+      "full_name": [
+        {
+          "recipe": "akshare_cb_profile",
+          "columns": [
+            "债券名称"
+          ],
+          "evidence": "docs/convertible-bonds-expansion.md#akshare"
+        }
+      ],
+      "bond_type": [
+        {
+          "recipe": "akshare_cb_profile",
+          "columns": [
+            "债券类型"
+          ],
+          "evidence": "docs/convertible-bonds-expansion.md#akshare"
+        }
+      ],
+      "list_date": [
+        {
+          "recipe": "akshare_cb_profile",
+          "columns": [
+            "上市日期"
+          ],
+          "evidence": "docs/convertible-bonds-expansion.md#akshare"
+        }
+      ],
+      "delist_date": [
+        {
+          "recipe": "akshare_cb_profile",
+          "columns": [
+            "摘牌日"
+          ],
+          "evidence": "docs/convertible-bonds-expansion.md#akshare"
+        }
+      ],
+      "value_date": [
+        {
+          "recipe": "akshare_cb_profile",
+          "columns": [
+            "起息日期"
+          ],
+          "evidence": "docs/convertible-bonds-expansion.md#akshare"
+        }
+      ],
+      "maturity_date": [
+        {
+          "recipe": "akshare_cb_profile",
+          "columns": [
+            "到期日"
+          ],
+          "evidence": "docs/convertible-bonds-expansion.md#akshare"
+        }
+      ],
+      "issue_size": [
+        {
+          "recipe": "akshare_cb_profile",
+          "columns": [
+            "发行规模（亿元）"
+          ],
+          "evidence": "docs/convertible-bonds-expansion.md#akshare",
+          "multiplier": 100000000
+        }
+      ],
+      "rating": [
+        {
+          "recipe": "akshare_cb_profile",
+          "columns": [
+            "信用等级"
+          ],
+          "evidence": "docs/convertible-bonds-expansion.md#akshare"
+        }
+      ],
+      "rate_clause": [
+        {
+          "recipe": "akshare_cb_profile",
+          "columns": [
+            "利率说明"
+          ],
+          "evidence": "docs/convertible-bonds-expansion.md#akshare"
+        }
+      ],
+      "conversion_start_date": [
+        {
+          "recipe": "akshare_cb_summary",
+          "columns": [
+            "转换期间"
+          ],
+          "evidence": "docs/convertible-bonds-expansion.md#akshare",
+          "split": "~",
+          "index": 0
+        }
+      ],
+      "conversion_end_date": [
+        {
+          "recipe": "akshare_cb_summary",
+          "columns": [
+            "转换期间"
+          ],
+          "evidence": "docs/convertible-bonds-expansion.md#akshare",
+          "split": "~",
+          "index": 1
+        }
+      ],
+      "conversion_price": [
+        {
+          "recipe": "akshare_cb_summary",
+          "columns": [
+            "最新转股价（元）"
+          ],
+          "evidence": "docs/convertible-bonds-expansion.md#akshare"
+        }
+      ],
+      "stock_code": [
+        {
+          "recipe": "akshare_cb_redeem_snapshot",
+          "columns": [
+            "正股代码"
+          ],
+          "evidence": "docs/convertible-bonds-expansion.md#akshare",
+          "a_share_code": true
+        }
+      ],
+      "stock_name": [
+        {
+          "recipe": "akshare_cb_redeem_snapshot",
+          "columns": [
+            "正股名称"
+          ],
+          "evidence": "docs/convertible-bonds-expansion.md#akshare"
+        }
+      ],
+      "outstanding": [
+        {
+          "recipe": "akshare_cb_redeem_snapshot",
+          "columns": [
+            "剩余规模"
+          ],
+          "evidence": "docs/convertible-bonds-expansion.md#akshare",
+          "multiplier": 100000000
+        }
+      ],
+      "call_clause": [
+        {
+          "recipe": "akshare_cb_redeem_snapshot",
+          "columns": [
+            "强赎条款"
+          ],
+          "evidence": "docs/convertible-bonds-expansion.md#akshare"
+        }
+      ]
+    },
+    "cb_daily": {
+      "open": [
+        {
+          "recipe": "akshare_cb_daily",
+          "columns": [
+            "open"
+          ],
+          "evidence": "docs/convertible-bonds-expansion.md#akshare"
+        }
+      ],
+      "high": [
+        {
+          "recipe": "akshare_cb_daily",
+          "columns": [
+            "high"
+          ],
+          "evidence": "docs/convertible-bonds-expansion.md#akshare"
+        }
+      ],
+      "low": [
+        {
+          "recipe": "akshare_cb_daily",
+          "columns": [
+            "low"
+          ],
+          "evidence": "docs/convertible-bonds-expansion.md#akshare"
+        }
+      ],
+      "close": [
+        {
+          "recipe": "akshare_cb_daily",
+          "columns": [
+            "close"
+          ],
+          "evidence": "docs/convertible-bonds-expansion.md#akshare"
+        }
+      ],
+      "conversion_value": [
+        {
+          "recipe": "akshare_cb_value",
+          "columns": [
+            "SWAPVALUE"
+          ],
+          "evidence": "docs/convertible-bonds-expansion.md#akshare"
+        }
+      ],
+      "conversion_premium": [
+        {
+          "recipe": "akshare_cb_value",
+          "columns": [
+            "SWAPOR"
+          ],
+          "evidence": "docs/convertible-bonds-expansion.md#akshare"
+        }
+      ],
+      "bond_floor": [
+        {
+          "recipe": "akshare_cb_value",
+          "columns": [
+            "PUREBONDVALUE"
+          ],
+          "evidence": "docs/convertible-bonds-expansion.md#akshare"
+        }
+      ],
+      "bond_floor_premium": [
+        {
+          "recipe": "akshare_cb_value",
+          "columns": [
+            "PUREBONDOR"
+          ],
+          "evidence": "docs/convertible-bonds-expansion.md#akshare"
+        }
+      ]
+    }
+  },
+  "unsupported": {
+    "cb_clauses": "bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。",
+    "cb_daily.volume": "新浪volume文档缺少明确手/张单位，暂不混入手数列。"
+  }
+}

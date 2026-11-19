@@ -2,7 +2,7 @@
 
 由 `gateway/data/dictionary.json` 生成。该 JSON 同时驱动实际取数；不要直接编辑本表。
 
-现有 630 个分类字段：daily_prices 7 项、valuations 17 项、financials 169 项、technical_indicators 381 项、basic_info 56 项。跨类别同名字段分开计数。空缺项明确保留，不等于来源永远不支持。
+现有 682 个分类字段：daily_prices 7 项、valuations 17 项、financials 169 项、technical_indicators 381 项、basic_info 56 项、cb_basic 21 项、cb_daily 19 项、cb_clauses 12 项。跨类别同名字段分开计数。空缺项明确保留，不等于来源永远不支持。
 
 修改 JSON 后下一次查询自动加载；运行 `python scripts/render_dictionary.py` 更新本表。各来源覆盖是当前实现配置，并非所有字段均经过全市场验证。
 
@@ -3843,6 +3843,348 @@
 | `ths_concepts` | wind | — | — | 尚未确认同口径取法 |
 | `ths_concepts` | ifind | `ifind_classifications` → `get_security_indicators` | 所属同花顺概念指数 | 原单位：按返回单位；×1；iFinD仅返回名称，无板块代码；不与其他来源的列表逐项拼接。 |
 | `ths_concepts` | tdx | — | — | 尚未确认同口径取法 |
+
+## cb_basic
+
+当前可用档案与赎回、回售、下修合同原文；不接受历史日期，不代表历史公告或触发状态。
+
+| 字段 | 名称 | 单位 | 含义与单位说明 |
+| --- | --- | --- | --- |
+| `name` | 转债简称 | 文本 | 当前可用档案快照；不代表指定历史时点。  |
+| `full_name` | 转债全称 | 文本 | 当前可用档案快照；不代表指定历史时点。  |
+| `stock_code` | 正股代码 | 代码 | 当前可用档案快照；不代表指定历史时点。  |
+| `stock_name` | 正股简称 | 文本 | 当前可用档案快照；不代表指定历史时点。  |
+| `bond_type` | 转债类型 | 文本 | 当前可用档案快照；不代表指定历史时点。  |
+| `list_date` | 上市日期 | 日期 | 当前可用档案快照；不代表指定历史时点。  |
+| `delist_date` | 摘牌日期 | 日期 | 当前可用档案快照；不代表指定历史时点。  |
+| `value_date` | 起息日期 | 日期 | 当前可用档案快照；不代表指定历史时点。  |
+| `maturity_date` | 到期日期 | 日期 | 当前可用档案快照；不代表指定历史时点。  |
+| `conversion_start_date` | 转股起始日 | 日期 | 当前可用档案快照；不代表指定历史时点。  |
+| `conversion_end_date` | 转股截止日 | 日期 | 当前可用档案快照；不代表指定历史时点。  |
+| `conversion_price` | 最新转股价 | 元/股 | 当前可用档案快照；不代表指定历史时点。  |
+| `initial_conversion_price` | 初始转股价 | 元/股 | 当前可用档案快照；不代表指定历史时点。  |
+| `outstanding` | 当前未转股余额 | 元 | 当前可用档案快照；不代表指定历史时点。  |
+| `issue_size` | 发行规模 | 元 | 当前可用档案快照；不代表指定历史时点。  |
+| `rating` | 最新信用等级 | 文本 | 当前可用档案快照；不代表指定历史时点。  |
+| `call_clause` | 赎回条款 | 文本 | 当前可用档案快照；不代表指定历史时点。  |
+| `put_clause` | 回售条款 | 文本 | 当前可用档案快照；不代表指定历史时点。  |
+| `reset_clause` | 下修条款 | 文本 | 当前可用档案快照；不代表指定历史时点。  |
+| `rate_clause` | 票息说明 | 文本 | 当前可用档案快照；不代表指定历史时点。  |
+| `maturity_call_price` | 到期赎回价格（含税） | 元/张 | 当前可用档案快照；不代表指定历史时点。  |
+
+| 字段 | 来源 | 取数方案 → 方法 | 返回列／问句指标 | 转换／说明 |
+| --- | --- | --- | --- | --- |
+| `name` | tushare | `tushare_cb_basic` → `cb_basic` | bond_short_name | 原单位：文本；×1；当前可用档案快照；不代表指定历史时点。 |
+| `name` | akshare | `akshare_cb_profile` → `bond_cb_profile_sina` | 债券简称 | 原单位：按返回单位；×1 |
+| `name` | wind | — | — | 尚未确认同口径取法 |
+| `name` | ifind | `ifind_cb_basic` → `get_security_indicators` | 债券简称；问句：债券简称 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
+| `name` | tdx | `tdx_cb_basic` → `tdx_kline` | Name | 原单位：文本；×1 |
+| `full_name` | tushare | `tushare_cb_basic` → `cb_basic` | bond_full_name | 原单位：文本；×1；当前可用档案快照；不代表指定历史时点。 |
+| `full_name` | akshare | `akshare_cb_profile` → `bond_cb_profile_sina` | 债券名称 | 原单位：按返回单位；×1 |
+| `full_name` | wind | — | — | 尚未确认同口径取法 |
+| `full_name` | ifind | `ifind_cb_basic` → `get_security_indicators` | 债券名称；问句：债券全称 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
+| `full_name` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `stock_code` | tushare | `tushare_cb_basic` → `cb_basic` | stk_code | 原单位：代码；×1；当前可用档案快照；不代表指定历史时点。 |
+| `stock_code` | akshare | `akshare_cb_redeem_snapshot` → `bond_cb_redeem_jsl` | 正股代码 | 原单位：按返回单位；×1 |
+| `stock_code` | wind | — | — | 尚未确认同口径取法 |
+| `stock_code` | ifind | `ifind_cb_basic` → `get_security_indicators` | 正股代码；问句：正股代码 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
+| `stock_code` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `stock_name` | tushare | `tushare_cb_basic` → `cb_basic` | stk_short_name | 原单位：文本；×1；当前可用档案快照；不代表指定历史时点。 |
+| `stock_name` | akshare | `akshare_cb_redeem_snapshot` → `bond_cb_redeem_jsl` | 正股名称 | 原单位：按返回单位；×1 |
+| `stock_name` | wind | — | — | 尚未确认同口径取法 |
+| `stock_name` | ifind | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
+| `stock_name` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `bond_type` | tushare | `tushare_cb_basic` → `cb_basic` | cb_type | 原单位：文本；×1；当前可用档案快照；不代表指定历史时点。 |
+| `bond_type` | akshare | `akshare_cb_profile` → `bond_cb_profile_sina` | 债券类型 | 原单位：按返回单位；×1 |
+| `bond_type` | wind | — | — | 尚未确认同口径取法 |
+| `bond_type` | ifind | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
+| `bond_type` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `list_date` | tushare | `tushare_cb_basic` → `cb_basic` | list_date | 原单位：日期；×1；当前可用档案快照；不代表指定历史时点。 |
+| `list_date` | akshare | `akshare_cb_profile` → `bond_cb_profile_sina` | 上市日期 | 原单位：按返回单位；×1 |
+| `list_date` | wind | — | — | 尚未确认同口径取法 |
+| `list_date` | ifind | `ifind_cb_basic` → `get_security_indicators` | 上市日期；问句：上市日期 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
+| `list_date` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `delist_date` | tushare | `tushare_cb_basic` → `cb_basic` | delist_date | 原单位：日期；×1；当前可用档案快照；不代表指定历史时点。 |
+| `delist_date` | akshare | `akshare_cb_profile` → `bond_cb_profile_sina` | 摘牌日 | 原单位：按返回单位；×1 |
+| `delist_date` | wind | — | — | 尚未确认同口径取法 |
+| `delist_date` | ifind | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
+| `delist_date` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `value_date` | tushare | `tushare_cb_basic` → `cb_basic` | value_date | 原单位：日期；×1；当前可用档案快照；不代表指定历史时点。 |
+| `value_date` | akshare | `akshare_cb_profile` → `bond_cb_profile_sina` | 起息日期 | 原单位：按返回单位；×1 |
+| `value_date` | wind | — | — | 尚未确认同口径取法 |
+| `value_date` | ifind | `ifind_cb_basic` → `get_security_indicators` | 起息日期；问句：起息日期 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
+| `value_date` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `maturity_date` | tushare | `tushare_cb_basic` → `cb_basic` | maturity_date | 原单位：日期；×1；当前可用档案快照；不代表指定历史时点。 |
+| `maturity_date` | akshare | `akshare_cb_profile` → `bond_cb_profile_sina` | 到期日 | 原单位：按返回单位；×1 |
+| `maturity_date` | wind | — | — | 尚未确认同口径取法 |
+| `maturity_date` | ifind | `ifind_cb_basic` → `get_security_indicators` | 到期日期；问句：到期日期 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
+| `maturity_date` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `conversion_start_date` | tushare | `tushare_cb_basic` → `cb_basic` | conv_start_date | 原单位：日期；×1；当前可用档案快照；不代表指定历史时点。 |
+| `conversion_start_date` | akshare | `akshare_cb_summary` → `bond_cb_summary_sina` | 转换期间 | 原单位：按返回单位；×1 |
+| `conversion_start_date` | wind | `wind_cb_basic` → `get_stock_basicinfo` | 自愿转股起始日期；问句：转股起始日 | 原单位：以返回列单位为准；×1；真实MCP验证；日期与单位取自返回列，不从请求补写。 |
+| `conversion_start_date` | ifind | `ifind_cb_basic` → `get_security_indicators` | 转股起始日期；问句：转股起始日期 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
+| `conversion_start_date` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `conversion_end_date` | tushare | `tushare_cb_basic` → `cb_basic` | conv_end_date | 原单位：日期；×1；当前可用档案快照；不代表指定历史时点。 |
+| `conversion_end_date` | akshare | `akshare_cb_summary` → `bond_cb_summary_sina` | 转换期间 | 原单位：按返回单位；×1 |
+| `conversion_end_date` | wind | `wind_cb_basic` → `get_stock_basicinfo` | 自愿转股终止日期；问句：转股截止日 | 原单位：以返回列单位为准；×1；真实MCP验证；日期与单位取自返回列，不从请求补写。 |
+| `conversion_end_date` | ifind | `ifind_cb_basic` → `get_security_indicators` | 转股终止日期；问句：转股终止日期 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
+| `conversion_end_date` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `conversion_price` | tushare | `tushare_cb_basic` → `cb_basic` | conv_price | 原单位：元/股；×1；当前可用档案快照；不代表指定历史时点。 |
+| `conversion_price` | akshare | `akshare_cb_summary` → `bond_cb_summary_sina` | 最新转股价（元） | 原单位：按返回单位；×1 |
+| `conversion_price` | wind | `wind_cb_basic` → `get_stock_basicinfo` | 最新转股价；问句：最新转股价 | 原单位：以返回列单位为准；×1；真实MCP验证；日期与单位取自返回列，不从请求补写。 |
+| `conversion_price` | ifind | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
+| `conversion_price` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `initial_conversion_price` | tushare | `tushare_cb_basic` → `cb_basic` | first_conv_price | 原单位：元/股；×1；当前可用档案快照；不代表指定历史时点。 |
+| `initial_conversion_price` | akshare | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
+| `initial_conversion_price` | wind | — | — | 尚未确认同口径取法 |
+| `initial_conversion_price` | ifind | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
+| `initial_conversion_price` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `outstanding` | tushare | `tushare_cb_basic` → `cb_basic` | remain_size | 原单位：元；×1；当前可用档案快照；不代表指定历史时点。 |
+| `outstanding` | akshare | `akshare_cb_redeem_snapshot` → `bond_cb_redeem_jsl` | 剩余规模 | 原单位：按返回单位；×100000000 |
+| `outstanding` | wind | — | — | 尚未确认同口径取法 |
+| `outstanding` | ifind | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
+| `outstanding` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `issue_size` | tushare | `tushare_cb_basic` → `cb_basic` | issue_size | 原单位：元；×1；当前可用档案快照；不代表指定历史时点。 |
+| `issue_size` | akshare | `akshare_cb_profile` → `bond_cb_profile_sina` | 发行规模（亿元） | 原单位：按返回单位；×100000000 |
+| `issue_size` | wind | — | — | 尚未确认同口径取法 |
+| `issue_size` | ifind | `ifind_cb_basic` → `get_security_indicators` | 发行总额；问句：发行总额（亿元） | 原单位：按上游表头单位；金额统一元；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
+| `issue_size` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `rating` | tushare | `tushare_cb_basic` → `cb_basic` | newest_rating | 原单位：文本；×1；当前可用档案快照；不代表指定历史时点。 |
+| `rating` | akshare | `akshare_cb_profile` → `bond_cb_profile_sina` | 信用等级 | 原单位：按返回单位；×1 |
+| `rating` | wind | — | — | 尚未确认同口径取法 |
+| `rating` | ifind | `ifind_cb_basic` → `get_security_indicators` | 债券最新信用评级；问句：债券最新信用评级 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
+| `rating` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `call_clause` | tushare | `tushare_cb_basic` → `cb_basic` | call_clause | 原单位：文本；×1；当前可用档案快照；不代表指定历史时点。 |
+| `call_clause` | akshare | `akshare_cb_redeem_snapshot` → `bond_cb_redeem_jsl` | 强赎条款 | 原单位：按返回单位；×1 |
+| `call_clause` | wind | `wind_cb_basic` → `get_stock_basicinfo` | 赎回条件；问句：赎回条款 | 原单位：以返回列单位为准；×1；真实MCP验证；日期与单位取自返回列，不从请求补写。 |
+| `call_clause` | ifind | `ifind_cb_basic` → `get_security_indicators` | 赎回条款；问句：赎回条款 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
+| `call_clause` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `put_clause` | tushare | `tushare_cb_basic` → `cb_basic` | put_clause | 原单位：文本；×1；当前可用档案快照；不代表指定历史时点。 |
+| `put_clause` | akshare | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
+| `put_clause` | wind | — | — | 尚未确认同口径取法 |
+| `put_clause` | ifind | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
+| `put_clause` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `reset_clause` | tushare | `tushare_cb_basic` → `cb_basic` | reset_clause | 原单位：文本；×1；当前可用档案快照；不代表指定历史时点。 |
+| `reset_clause` | akshare | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
+| `reset_clause` | wind | — | — | 尚未确认同口径取法 |
+| `reset_clause` | ifind | `ifind_cb_basic` → `get_security_indicators` | 特别向下修正条款全文；问句：特别向下修正条款全文 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
+| `reset_clause` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `rate_clause` | tushare | `tushare_cb_basic` → `cb_basic` | rate_clause | 原单位：文本；×1；当前可用档案快照；不代表指定历史时点。 |
+| `rate_clause` | akshare | `akshare_cb_profile` → `bond_cb_profile_sina` | 利率说明 | 原单位：按返回单位；×1 |
+| `rate_clause` | wind | — | — | 尚未确认同口径取法 |
+| `rate_clause` | ifind | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
+| `rate_clause` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `maturity_call_price` | tushare | `tushare_cb_basic` → `cb_basic` | maturity_call_price | 原单位：元/张；×1；当前可用档案快照；不代表指定历史时点。 |
+| `maturity_call_price` | akshare | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
+| `maturity_call_price` | wind | — | — | 尚未确认同口径取法 |
+| `maturity_call_price` | ifind | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
+| `maturity_call_price` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+
+## cb_daily
+
+实际交易日；价格均为每100元面值报价，不复权。
+
+| 字段 | 名称 | 单位 | 含义与单位说明 |
+| --- | --- | --- | --- |
+| `open` | 开盘价 | 元/100元面值 | Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。  |
+| `high` | 最高价 | 元/100元面值 | Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。  |
+| `low` | 最低价 | 元/100元面值 | Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。  |
+| `close` | 收盘价 | 元/100元面值 | Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。  |
+| `pre_close` | 昨收盘价 | 元/100元面值 | Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。  |
+| `pct_change` | 涨跌幅 | % | Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。  |
+| `volume` | 成交量 | 手 | Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。  |
+| `amount` | 成交额 | 元 | Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。  |
+| `conversion_value` | 转股价值（平价） | 元/100元面值 | Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。  |
+| `conversion_premium` | 转股溢价率 | % | Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。  |
+| `bond_floor` | 纯债价值（债底） | 元/100元面值 | Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。  |
+| `bond_floor_premium` | 纯债溢价率 | % | Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。  |
+| `ytm` | 税前到期收益率 | % | Wind税前到期收益率，保留百分数；MCP未披露现金流、计息与税率算法。  |
+| `remaining_years` | 剩余期限 | 年 | 待探索历史逐日剩余期限，不能把当前剩余期限回填。  |
+| `outstanding` | 未转股余额 | 元 | 交易日未转股余额；按返回列元、万元或亿元换算为元，不使用当前档案回填历史。  |
+| `ytm_after_tax` | 税后到期收益率 | % | Wind税后到期收益率，保留百分数；MCP未披露投资者税率及现金流算法。  |
+| `ytm_provider` | 供应商到期收益率（税种未标明） | % | 供应商原始到期收益率；不等同于已核实税前或税后YTM。具体计算规则保留在来源说明中。  |
+| `conversion_price` | 转股价格 | 元/股 | iFinD实际交易日历史指标，保留来源原口径，不用当前档案回填。  |
+| `turnover_rate` | 换手率 | % | iFinD实际交易日历史指标，保留来源原口径，不用当前档案回填。  |
+
+| 字段 | 来源 | 取数方案 → 方法 | 返回列／问句指标 | 转换／说明 |
+| --- | --- | --- | --- | --- |
+| `open` | tushare | `tushare_cb_daily` → `cb_daily` | open | 原单位：元/100元面值；×1；Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。 |
+| `open` | akshare | `akshare_cb_daily` → `bond_zh_hs_cov_daily` | open | 原单位：按返回单位；×1 |
+| `open` | wind | — | — | 尚未确认同口径取法 |
+| `open` | ifind | `ifind_cb_daily` → `get_security_indicators` | 债券开盘价；问句：债券开盘价 | 原单位：按返回单位；×1；2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。 |
+| `open` | tdx | `tdx_cb_daily` → `tdx_kline` | Open | 原单位：元/100元面值；×1；TDX固定日K实测。 |
+| `high` | tushare | `tushare_cb_daily` → `cb_daily` | high | 原单位：元/100元面值；×1；Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。 |
+| `high` | akshare | `akshare_cb_daily` → `bond_zh_hs_cov_daily` | high | 原单位：按返回单位；×1 |
+| `high` | wind | — | — | 尚未确认同口径取法 |
+| `high` | ifind | `ifind_cb_daily` → `get_security_indicators` | 最高价 / 债券最高价；问句：债券最高价 | 原单位：按返回单位；×1；2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。 |
+| `high` | tdx | `tdx_cb_daily` → `tdx_kline` | High | 原单位：元/100元面值；×1；TDX固定日K实测。 |
+| `low` | tushare | `tushare_cb_daily` → `cb_daily` | low | 原单位：元/100元面值；×1；Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。 |
+| `low` | akshare | `akshare_cb_daily` → `bond_zh_hs_cov_daily` | low | 原单位：按返回单位；×1 |
+| `low` | wind | — | — | 尚未确认同口径取法 |
+| `low` | ifind | `ifind_cb_daily` → `get_security_indicators` | 最低价 / 债券最低价；问句：债券最低价 | 原单位：按返回单位；×1；2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。 |
+| `low` | tdx | `tdx_cb_daily` → `tdx_kline` | Low | 原单位：元/100元面值；×1；TDX固定日K实测。 |
+| `close` | tushare | `tushare_cb_daily` → `cb_daily` | close | 原单位：元/100元面值；×1；Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。 |
+| `close` | akshare | `akshare_cb_daily` → `bond_zh_hs_cov_daily` | close | 原单位：按返回单位；×1 |
+| `close` | wind | — | — | 尚未确认同口径取法 |
+| `close` | ifind | `ifind_cb_daily` → `get_security_indicators` | 收盘价；问句：收盘价 | 原单位：按上游表头单位；金额统一元；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
+| `close` | tdx | `tdx_cb_daily` → `tdx_kline` | Close | 原单位：元/100元面值；×1；TDX固定日K实测。 |
+| `pre_close` | tushare | `tushare_cb_daily` → `cb_daily` | pre_close | 原单位：元/100元面值；×1；Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。 |
+| `pre_close` | akshare | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
+| `pre_close` | wind | — | — | 尚未确认同口径取法 |
+| `pre_close` | ifind | `ifind_cb_daily` → `get_security_indicators` | 债券前收盘价；问句：债券前收盘价 | 原单位：按返回单位；×1；2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。 |
+| `pre_close` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `pct_change` | tushare | `tushare_cb_daily` → `cb_daily` | pct_chg | 原单位：%；×1；Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。 |
+| `pct_change` | akshare | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
+| `pct_change` | wind | — | — | 尚未确认同口径取法 |
+| `pct_change` | ifind | `ifind_cb_daily` → `get_security_indicators` | 涨跌幅；问句：涨跌幅 | 原单位：按返回单位；×1；2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。 |
+| `pct_change` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `volume` | tushare | `tushare_cb_daily` → `cb_daily` | vol | 原单位：手；×1；Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。 |
+| `volume` | akshare | — | — | 新浪volume文档缺少明确手/张单位，暂不混入手数列。 |
+| `volume` | wind | — | — | 尚未确认同口径取法 |
+| `volume` | ifind | `ifind_cb_daily` → `get_security_indicators` | 债券成交量；问句：债券成交量（单位设置=手，保留本指标单位参数） | 原单位：手；×1；2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。 |
+| `volume` | tdx | `tdx_cb_daily` → `tdx_kline` | RawVolume | 原单位：手；×1；TDX固定行情明示成交量手，BaseInfo.Unit=10；同日HQInfo.Volume与K线RawVolume一致。 |
+| `amount` | tushare | `tushare_cb_daily` → `cb_daily` | amount | 原单位：万元；×10000；Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。 |
+| `amount` | akshare | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
+| `amount` | wind | — | — | 尚未确认同口径取法 |
+| `amount` | ifind | `ifind_cb_daily` → `get_security_indicators` | 成交金额；问句：成交金额（元） | 原单位：按返回单位；×1；2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。 |
+| `amount` | tdx | `tdx_cb_daily` → `tdx_kline` | RawAmount | 原单位：元；×1；TDX固定日K实测。 |
+| `conversion_value` | tushare | `tushare_cb_daily` → `cb_daily` | cb_value | 原单位：元/100元面值；×1；Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。 |
+| `conversion_value` | akshare | `akshare_cb_value` → `bond_zh_cov_value_analysis` | SWAPVALUE | 原单位：按返回单位；×1 |
+| `conversion_value` | wind | `wind_cb_daily` → `get_stock_fundamentals` | 转换价值 / 转股价值；问句：转股价值（平价） | 原单位：以返回列单位为准；×1；真实MCP验证；日期与单位取自返回列，不从请求补写。 |
+| `conversion_value` | ifind | `ifind_cb_daily` → `get_security_indicators` | 转换价值；问句：转换价值 | 原单位：按上游表头单位；金额统一元；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
+| `conversion_value` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `conversion_premium` | tushare | `tushare_cb_daily` → `cb_daily` | cb_over_rate | 原单位：%；×1；Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。 |
+| `conversion_premium` | akshare | `akshare_cb_value` → `bond_zh_cov_value_analysis` | SWAPOR | 原单位：按返回单位；×1 |
+| `conversion_premium` | wind | `wind_cb_daily` → `get_stock_fundamentals` | 转股溢价率；问句：转股溢价率 | 原单位：以返回列单位为准；×1；真实MCP验证；日期与单位取自返回列，不从请求补写。 |
+| `conversion_premium` | ifind | `ifind_cb_daily` → `get_security_indicators` | 转股溢价率；问句：转股溢价率 | 原单位：按上游表头单位；金额统一元；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
+| `conversion_premium` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `bond_floor` | tushare | `tushare_cb_daily` → `cb_daily` | bond_value | 原单位：元/100元面值；×1；Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。 |
+| `bond_floor` | akshare | `akshare_cb_value` → `bond_zh_cov_value_analysis` | PUREBONDVALUE | 原单位：按返回单位；×1 |
+| `bond_floor` | wind | `wind_cb_daily` → `get_stock_fundamentals` | 纯债价值；问句：纯债价值（债底） | 原单位：以返回列单位为准；×1；真实MCP验证；日期与单位取自返回列，不从请求补写。 |
+| `bond_floor` | ifind | `ifind_cb_daily` → `get_security_indicators` | 纯债价值；问句：纯债价值 | 原单位：按上游表头单位；金额统一元；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
+| `bond_floor` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `bond_floor_premium` | tushare | `tushare_cb_daily` → `cb_daily` | bond_over_rate | 原单位：%；×1；Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。 |
+| `bond_floor_premium` | akshare | `akshare_cb_value` → `bond_zh_cov_value_analysis` | PUREBONDOR | 原单位：按返回单位；×1 |
+| `bond_floor_premium` | wind | — | — | 尚未确认同口径取法 |
+| `bond_floor_premium` | ifind | `ifind_cb_daily` → `get_security_indicators` | 纯债溢价率；问句：纯债溢价率 | 原单位：按返回单位；×1；2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。 |
+| `bond_floor_premium` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `ytm` | tushare | — | — | 尚未确认同口径取法 |
+| `ytm` | akshare | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
+| `ytm` | wind | `wind_cb_daily` → `get_stock_fundamentals` | 税前到期收益率；问句：税前到期收益率 | 原单位：以返回列单位为准；×1；真实MCP验证；日期与单位取自返回列，不从请求补写。 |
+| `ytm` | ifind | — | — | 实际返回到期收益率（央行规则）与行权YTM，均未标明税前/税后，不绑定两个税种字段。 |
+| `ytm` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `remaining_years` | tushare | — | — | 尚未确认同口径取法 |
+| `remaining_years` | akshare | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
+| `remaining_years` | wind | — | — | 尚未确认同口径取法 |
+| `remaining_years` | ifind | `ifind_cb_daily` → `get_security_indicators` | 剩余期限(年)；问句：剩余期限（年） | 原单位：按上游表头单位；金额统一元；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
+| `remaining_years` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `outstanding` | tushare | — | — | 尚未确认同口径取法 |
+| `outstanding` | akshare | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
+| `outstanding` | wind | `wind_cb_daily` → `get_stock_fundamentals` | 未转股余额；问句：未转股余额 | 原单位：以返回列单位为准；×1；真实MCP验证；日期与单位取自返回列，不从请求补写。 |
+| `outstanding` | ifind | `ifind_cb_daily` → `get_security_indicators` | 未转股余额；问句：未转股余额（亿元） | 原单位：按上游表头单位；金额统一元；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
+| `outstanding` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `ytm_after_tax` | tushare | — | — | 尚未确认同口径取法 |
+| `ytm_after_tax` | akshare | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
+| `ytm_after_tax` | wind | `wind_cb_daily` → `get_stock_fundamentals` | 税后到期收益率；问句：税后到期收益率 | 原单位：以返回列单位为准；×1；真实MCP验证；日期与单位取自返回列，不从请求补写。 |
+| `ytm_after_tax` | ifind | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
+| `ytm_after_tax` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `ytm_provider` | tushare | — | — | 尚未核实通用到期收益率口径 |
+| `ytm_provider` | akshare | — | — | 尚未核实通用到期收益率口径 |
+| `ytm_provider` | wind | — | — | 尚未核实通用到期收益率口径 |
+| `ytm_provider` | ifind | `ifind_cb_daily` → `get_security_indicators` | 到期收益率 / 纯债到期收益率；问句：纯债到期收益率（保留来源原口径） | 原单位：按上游表头单位；金额统一元；×1；来源原口径到期收益率；税前税后未披露，不作分类；计算方法以原始响应元数据为准，缺失则未知。 |
+| `ytm_provider` | tdx | — | — | 尚未核实通用到期收益率口径 |
+| `conversion_price` | tushare | — | — | 尚未确认同口径取法 |
+| `conversion_price` | akshare | — | — | 尚未确认同口径取法 |
+| `conversion_price` | wind | — | — | 尚未确认同口径取法 |
+| `conversion_price` | ifind | `ifind_cb_daily` → `get_security_indicators` | 转股价格；问句：转股价格 | 原单位：按返回单位；×1；2026-11-18原生债券MCP实测；有逐行实际交易日；百分比保留百分点，不用档案快照替代历史。 |
+| `conversion_price` | tdx | — | — | 尚未确认同口径取法 |
+| `turnover_rate` | tushare | — | — | 尚未确认同口径取法 |
+| `turnover_rate` | akshare | — | — | 尚未确认同口径取法 |
+| `turnover_rate` | wind | — | — | 尚未确认同口径取法 |
+| `turnover_rate` | ifind | `ifind_cb_daily` → `get_security_indicators` | 换手率%；问句：换手率% | 原单位：按返回单位；×1；2026-11-18原生债券MCP实测；有逐行实际交易日；百分比保留百分点，不用档案快照替代历史。 |
+| `turnover_rate` | tdx | — | — | 尚未确认同口径取法 |
+
+## cb_clauses
+
+历史公告事件，日期为公告日期；合同原文请查cb_basic的call_clause、put_clause、reset_clause。未接入来源返回unsupported，不代表没有公告。
+
+| 字段 | 名称 | 单位 | 含义与单位说明 |
+| --- | --- | --- | --- |
+| `call_type` | 赎回类型 | 文本 | 按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。  |
+| `call_status` | 赎回状态原文 | 文本 | 按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。  |
+| `call_date` | 赎回日期 | 日期 | 按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。  |
+| `call_price` | 赎回价格（含税） | 元/张 | 按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。  |
+| `call_price_after_tax` | 赎回价格（扣税） | 元/张 | 按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。  |
+| `call_volume` | 赎回数量 | 张 | 按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。  |
+| `call_amount` | 赎回金额 | 元 | 按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。  |
+| `payment_date` | 款项到账日 | 日期 | 按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。  |
+| `registration_date` | 赎回登记日 | 日期 | 按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。  |
+| `put_status` | 回售状态 | 文本 | 待探索并验证来源；无数据不代表未触发。  |
+| `reset_status` | 下修状态 | 文本 | 待探索并验证来源；无数据不代表未触发。  |
+| `redemption_progress` | 强赎触发进度 | 文本 | 待探索并验证来源；无数据不代表未触发。  |
+
+| 字段 | 来源 | 取数方案 → 方法 | 返回列／问句指标 | 转换／说明 |
+| --- | --- | --- | --- | --- |
+| `call_type` | tushare | `tushare_cb_call` → `cb_call` | call_type | 原单位：文本；×1；按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。 |
+| `call_type` | akshare | — | — | bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。 |
+| `call_type` | wind | — | — | 尚未确认同口径取法 |
+| `call_type` | ifind | — | — | 未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。 |
+| `call_type` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `call_status` | tushare | `tushare_cb_call` → `cb_call` | is_call | 原单位：文本；×1；按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。 |
+| `call_status` | akshare | — | — | bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。 |
+| `call_status` | wind | — | — | 尚未确认同口径取法 |
+| `call_status` | ifind | — | — | 未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。 |
+| `call_status` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `call_date` | tushare | `tushare_cb_call` → `cb_call` | call_date | 原单位：日期；×1；按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。 |
+| `call_date` | akshare | — | — | bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。 |
+| `call_date` | wind | — | — | 尚未确认同口径取法 |
+| `call_date` | ifind | — | — | 未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。 |
+| `call_date` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `call_price` | tushare | `tushare_cb_call` → `cb_call` | call_price | 原单位：元/张；×1；按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。 |
+| `call_price` | akshare | — | — | bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。 |
+| `call_price` | wind | — | — | 尚未确认同口径取法 |
+| `call_price` | ifind | — | — | 未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。 |
+| `call_price` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `call_price_after_tax` | tushare | `tushare_cb_call` → `cb_call` | call_price_tax | 原单位：元/张；×1；按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。 |
+| `call_price_after_tax` | akshare | — | — | bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。 |
+| `call_price_after_tax` | wind | — | — | 尚未确认同口径取法 |
+| `call_price_after_tax` | ifind | — | — | 未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。 |
+| `call_price_after_tax` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `call_volume` | tushare | `tushare_cb_call` → `cb_call` | call_vol | 原单位：张；×1；按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。 |
+| `call_volume` | akshare | — | — | bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。 |
+| `call_volume` | wind | — | — | 尚未确认同口径取法 |
+| `call_volume` | ifind | — | — | 未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。 |
+| `call_volume` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `call_amount` | tushare | `tushare_cb_call` → `cb_call` | call_amount | 原单位：万元；×10000；按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。 |
+| `call_amount` | akshare | — | — | bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。 |
+| `call_amount` | wind | — | — | 尚未确认同口径取法 |
+| `call_amount` | ifind | — | — | 未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。 |
+| `call_amount` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `payment_date` | tushare | `tushare_cb_call` → `cb_call` | payment_date | 原单位：日期；×1；按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。 |
+| `payment_date` | akshare | — | — | bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。 |
+| `payment_date` | wind | — | — | 尚未确认同口径取法 |
+| `payment_date` | ifind | — | — | 未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。 |
+| `payment_date` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `registration_date` | tushare | `tushare_cb_call` → `cb_call` | call_reg_date | 原单位：日期；×1；按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。 |
+| `registration_date` | akshare | — | — | bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。 |
+| `registration_date` | wind | — | — | 尚未确认同口径取法 |
+| `registration_date` | ifind | — | — | 未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。 |
+| `registration_date` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `put_status` | tushare | — | — | 尚未确认同口径取法 |
+| `put_status` | akshare | — | — | bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。 |
+| `put_status` | wind | — | — | 尚未确认同口径取法 |
+| `put_status` | ifind | — | — | 未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。 |
+| `put_status` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `reset_status` | tushare | — | — | 尚未确认同口径取法 |
+| `reset_status` | akshare | — | — | bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。 |
+| `reset_status` | wind | — | — | 尚未确认同口径取法 |
+| `reset_status` | ifind | — | — | 未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。 |
+| `reset_status` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `redemption_progress` | tushare | — | — | 尚未确认同口径取法 |
+| `redemption_progress` | akshare | — | — | bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。 |
+| `redemption_progress` | wind | — | — | 尚未确认同口径取法 |
+| `redemption_progress` | ifind | — | — | 未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。 |
+| `redemption_progress` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
 
 ## 取数方案详情
 
@@ -9584,6 +9926,330 @@
   "allow_request_identity": true,
   "notes": [
     "通达信固定代码接口，表格未重复证券代码时沿用请求代码。未确认注册资金单位，不映射注册资本。"
+  ]
+}
+```
+
+### tushare_cb_basic
+
+```json
+{
+  "provider": "tushare",
+  "dataset": "cb_basic",
+  "kind": "sdk",
+  "method": "cb_basic",
+  "params": {
+    "ts_code": "$symbol",
+    "fields": "$source_fields"
+  },
+  "handler": "convertible_bond",
+  "identity_columns": [
+    "ts_code"
+  ],
+  "select_columns": [
+    "ts_code"
+  ],
+  "upstream": "Tushare cb_basic",
+  "temporal": "snapshot"
+}
+```
+
+### tushare_cb_daily
+
+```json
+{
+  "provider": "tushare",
+  "dataset": "cb_daily",
+  "kind": "sdk",
+  "method": "cb_daily",
+  "params": {
+    "ts_code": "$symbol",
+    "start_date": "$start_compact",
+    "end_date": "$end_compact",
+    "fields": "$source_fields"
+  },
+  "handler": "convertible_bond",
+  "identity_columns": [
+    "ts_code"
+  ],
+  "select_columns": [
+    "ts_code"
+  ],
+  "upstream": "Tushare cb_daily",
+  "date_columns": [
+    "trade_date"
+  ],
+  "limit": 2000
+}
+```
+
+### tushare_cb_call
+
+```json
+{
+  "provider": "tushare",
+  "dataset": "cb_clauses",
+  "kind": "sdk",
+  "method": "cb_call",
+  "params": {
+    "ts_code": "$symbol",
+    "start_date": "$start_compact",
+    "end_date": "$end_compact",
+    "fields": "$source_fields"
+  },
+  "handler": "convertible_bond",
+  "identity_columns": [
+    "ts_code"
+  ],
+  "select_columns": [
+    "ts_code",
+    "ann_date",
+    "call_type"
+  ],
+  "upstream": "Tushare cb_call",
+  "date_columns": [
+    "ann_date"
+  ],
+  "limit": 2000
+}
+```
+
+### wind_cb_basic
+
+```json
+{
+  "provider": "wind",
+  "dataset": "cb_basic",
+  "kind": "mcp_nl",
+  "method": "get_stock_basicinfo",
+  "params": {
+    "question": "$question"
+  },
+  "handler": "convertible_bond_wind",
+  "template": "查询可转债{symbol}，{when}的{labels}。逐项返回原始值、明确单位、证券代码及每个指标实际日期。不要用正股替代转债，不要用最新值回填历史；缺失留空。",
+  "upstream": "Wind MCP",
+  "notes": [
+    "Wind逐项保留来源口径；收益率税率和现金流算法未由MCP披露，不能视为自行核算结果。"
+  ]
+}
+```
+
+### wind_cb_daily
+
+```json
+{
+  "provider": "wind",
+  "dataset": "cb_daily",
+  "kind": "mcp_nl",
+  "method": "get_stock_fundamentals",
+  "params": {
+    "question": "$question"
+  },
+  "handler": "convertible_bond_wind",
+  "template": "查询可转债{symbol}，{when}的{labels}。逐项返回原始值、明确单位、证券代码及每个指标实际日期。不要用正股替代转债，不要用最新值回填历史；缺失留空。",
+  "upstream": "Wind MCP",
+  "notes": [
+    "Wind逐项保留来源口径；收益率税率和现金流算法未由MCP披露，不能视为自行核算结果。"
+  ]
+}
+```
+
+### tdx_cb_daily
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "cb_daily",
+  "kind": "mcp_paged",
+  "method": "tdx_kline",
+  "handler": "convertible_bond_tdx",
+  "params": {
+    "code": "$code",
+    "setcode": "$market_code",
+    "period": "4",
+    "wantNum": "700",
+    "startxh": "$offset",
+    "tqFlag": "0"
+  },
+  "pagination": {
+    "size": 700,
+    "max_pages": 30,
+    "date_column": "Data"
+  },
+  "temporal": "history",
+  "notes": [
+    "固定日K、不复权；实测单页上限700，按startxh偏移分页。成交额为元，成交量为手（每手10张）；不使用AttachInfo的最新快照填历史。"
+  ],
+  "upstream": "TDX fixed K-line"
+}
+```
+
+### tdx_cb_basic
+
+```json
+{
+  "provider": "tdx",
+  "dataset": "cb_basic",
+  "kind": "mcp_paged",
+  "method": "tdx_kline",
+  "handler": "convertible_bond_tdx",
+  "params": {
+    "code": "$code",
+    "setcode": "$market_code",
+    "period": "4",
+    "wantNum": "1",
+    "startxh": "$offset",
+    "tqFlag": "0"
+  },
+  "pagination": {
+    "size": 700,
+    "max_pages": 30,
+    "date_column": "Data"
+  },
+  "temporal": "snapshot",
+  "notes": [
+    "仅证券简称来自K线AttachInfo当前快照；不提供历史档案。"
+  ],
+  "upstream": "TDX fixed K-line"
+}
+```
+
+### akshare_cb_profile
+
+```json
+{
+  "provider": "akshare",
+  "dataset": "cb_basic",
+  "kind": "sdk",
+  "handler": "convertible_bond_akshare",
+  "method": "bond_cb_profile_sina",
+  "params": {
+    "symbol": "$sina_symbol"
+  },
+  "upstream": "AKShare / 新浪财经",
+  "notes": [
+    "当前资料快照无历史观察日期；不用于回填历史。"
+  ],
+  "shape": "item_value",
+  "temporal": "snapshot",
+  "require_identity": true
+}
+```
+
+### akshare_cb_summary
+
+```json
+{
+  "provider": "akshare",
+  "dataset": "cb_basic",
+  "kind": "sdk",
+  "handler": "convertible_bond_akshare",
+  "method": "bond_cb_summary_sina",
+  "params": {
+    "symbol": "$sina_symbol"
+  },
+  "upstream": "AKShare / 新浪财经",
+  "notes": [
+    "当前资料快照无历史观察日期；不用于回填历史。"
+  ],
+  "shape": "item_value",
+  "temporal": "snapshot"
+}
+```
+
+### akshare_cb_daily
+
+```json
+{
+  "provider": "akshare",
+  "dataset": "cb_daily",
+  "kind": "sdk",
+  "handler": "convertible_bond_akshare",
+  "method": "bond_zh_hs_cov_daily",
+  "params": {
+    "symbol": "$sina_symbol"
+  },
+  "upstream": "AKShare / 新浪财经",
+  "notes": [],
+  "temporal": "history",
+  "date_columns": [
+    "date"
+  ]
+}
+```
+
+### akshare_cb_value
+
+```json
+{
+  "provider": "akshare",
+  "dataset": "cb_daily",
+  "kind": "sdk",
+  "handler": "convertible_bond_akshare",
+  "method": "bond_zh_cov_value_analysis",
+  "params": {},
+  "upstream": "AKShare documented Eastmoney RPTA_WEB_KZZ_LS (named JSON compatibility adapter)",
+  "notes": [
+    "AKShare 1.18.14价值分析SDK因列数变化失败；沿用其官方实现的同一东财接口，按字段名解析。",
+    "东财可能包含上市前估值日期；返回日期为上游观察日，并不证明当日可交易。"
+  ],
+  "temporal": "history",
+  "date_columns": [
+    "DATE"
+  ],
+  "named_value_endpoint": true
+}
+```
+
+### ifind_cb_basic
+
+```json
+{
+  "provider": "ifind",
+  "kind": "mcp_nl",
+  "dataset": "cb_basic",
+  "handler": "convertible_bond_ifind",
+  "method": "get_security_indicators",
+  "temporal": "snapshot",
+  "params": {},
+  "upstream": "iFinD 债券原生指标",
+  "verified_on": "2026-11-18",
+  "max_fields_per_call": 3
+}
+```
+
+### ifind_cb_daily
+
+```json
+{
+  "provider": "ifind",
+  "kind": "mcp_nl",
+  "dataset": "cb_daily",
+  "handler": "convertible_bond_ifind",
+  "method": "get_security_indicators",
+  "temporal": "series",
+  "params": {},
+  "upstream": "iFinD 债券原生指标",
+  "verified_on": "2026-11-18",
+  "max_fields_per_call": 3
+}
+```
+
+### akshare_cb_redeem_snapshot
+
+```json
+{
+  "provider": "akshare",
+  "dataset": "cb_basic",
+  "kind": "sdk",
+  "handler": "convertible_bond_akshare",
+  "method": "bond_cb_redeem_jsl",
+  "params": {},
+  "identity_column": "代码",
+  "temporal": "snapshot",
+  "upstream": "AKShare / 集思录强赎当前快照",
+  "notes": [
+    "仅当前资料；强赎状态无公告日期，不能充作公告历史。余额及发行规模单位亿元换算元。"
   ]
 }
 ```

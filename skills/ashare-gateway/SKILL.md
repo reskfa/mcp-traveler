@@ -1,6 +1,6 @@
 ---
 name: ashare-gateway
-description: 通过渡数 MCP 查询 A 股数据；字典未命中时先探索上游能力，保存成功取法并复用。
+description: 通过渡数 MCP 查询 A 股与可转债数据；字典未命中时先探索上游能力，保存成功取法并复用。
 ---
 
 # 渡数 MCP
@@ -15,6 +15,8 @@ description: 通过渡数 MCP 查询 A 股数据；字典未命中时先探索�
 4. `needs_confirmation` 不等于无数据：有 `data` 或 `candidates` 就向用户展示并标注疑点、实际来源和日期，用户或 Agent 可核对后接受；不要称为已核实，也不要仅因未自动保存就弃用或反复付费重试。
 5. 回答注明实际来源、日期和单位，保留缺值。查看 `coverage` 与完整结果路径，不把前100行预览、搜索片段或保存成功说成已经取全。基本信息当前档案不能冒充历史时点资料。
 
+可转债与股票分开：代码如 `113050.SH`、`123001.SZ`。用 `cb_basic` 搜当前档案，`cb_daily` 搜历史行情与估值，`cb_clauses` 搜条款公告事件。未知指标或名单用 `explore_data(..., market_hint="convertible_bond")`，能力搜索也传该提示；不拿股票估值或财务接口试可转债。个人取法按证券类型保存，不能跨市场套用。条款公告日期不是历史时点状态，当前转股价和余额也不能回填历史。
+
 ## 工具
 
 | 工具 | 用途 |
@@ -24,6 +26,9 @@ description: 通过渡数 MCP 查询 A 股数据；字典未命中时先探索�
 | `explore_data` | 不指定类别探索原始需求；支持已适配的记录表，成功默认保存取法 |
 | `query_data` | 按 `query_id` 复用个人取法，可更换证券和时间 |
 | `data_catalog` | 查字段定义、单位、来源与参数 |
+| `query_convertible_bond_basic` | 可转债基本信息当前档案 |
+| `query_convertible_bond_daily` | 可转债日期区间行情及估值 |
+| `query_convertible_bond_clauses` | 可转债条款公告事件，不重建历史状态 |
 | `query_basic_info` | 公司档案、名称历史、行业与板块 |
 | `query_daily_prices` | 日期区间内的日线与复权 |
 | `query_valuations` | 指定交易日估值，省略日期查最新 |

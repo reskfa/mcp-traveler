@@ -21,9 +21,15 @@ IDENTITY_COLUMNS=('symbol','code','ts_code','security_code','证券代码','股�
 DATE_COLUMNS=('date','trade_date','end_date','报告期','报告日期','截止日期','日期','数据日期')
 DATE_PATTERN=r'(20\d{2})[年/-](\d{1,2})[月/-](\d{1,2})日?'
 
+def infer_market(symbol, market_hint=None):
+    inferred='convertible_bond' if re.match(r'^(?:11\d{4}\.SH|12\d{4}\.SZ)$',symbol) else 'equity'
+    if market_hint and market_hint!=inferred:raise ValueError('证券代码与市场类型不一致')
+    return market_hint or inferred
+
 class ExploreDataRequest(BaseModel):
     request: str = Field(min_length=1,max_length=300)
     symbol: str = Field(pattern=r'^\d{6}\.(SH|SZ|BJ)$')
+    market_hint: Literal['equity','convertible_bond'] | None = None
     period: str | None = None
     start_date: str | None = None
     end_date: str | None = None
@@ -33,6 +39,7 @@ class ExploreDataRequest(BaseModel):
 
     @model_validator(mode='after')
     def valid(self):
+        self.market_hint=infer_market(self.symbol,self.market_hint)
         self.request=self.request.strip()
         if not self.request:raise ValueError('请说明要查询的信息')
         for value in (self.period,self.start_date,self.end_date):
@@ -45,6 +52,7 @@ class ExploreDataRequest(BaseModel):
 class DataQueryRequest(BaseModel):
     query_id: str = Field(pattern=r'^data_[a-f0-9]{16}$')
     symbol: str = Field(pattern=r'^\d{6}\.(SH|SZ|BJ)$')
+    market_hint: Literal['equity','convertible_bond'] | None = None
     period: str | None = None
     start_date: str | None = None
     end_date: str | None = None
@@ -112,7 +120,8 @@ def relevance(query,tool):
     hits=sum(g in corpus for g in grams)
     return hits/len(grams) if grams and hits/len(grams)>=.5 else 0
 
-async def search_capabilities(query,provider='auto',refresh=False,limit=8):
+async def search_capabilities(query,provider='auto',refresh=False,limit=8,market_hint=None):
+    if market_hint not in (None,'equity','convertible_bond'):raise ValueError('未知市场类型')
     if provider not in ('auto',*config.PROVIDERS):raise ValueError('未知数据源')
     if not str(query).strip():raise ValueError('请描述所需信息')
     limit=max(1,min(20,int(limit)))
@@ -121,9 +130,11 @@ async def search_capabilities(query,provider='auto',refresh=False,limit=8):
     # A partial dictionary match is only a suggestion, never a substitute answer.
     matches=dictionary.search_metrics(query,limit=limit)
     for m in matches['results']:
+        if market_hint=='convertible_bond' and not (m['dataset'].startswith('cb_') or m.get('market_hint')=='convertible_bond'):continue
+        if market_hint=='equity' and m['dataset'].startswith('cb_'):continue
         if provider!='auto' and provider not in m['sources']:continue
         exact=topic(query) in {topic(m['label']),topic(m['field']),*(topic(a) for a in m.get('aliases',[]))}
-        results.append({**m,'kind':'saved_query' if m.get('query_id') else 'field','status':'ready','exact_match':exact,'description':m['description']})
+        results.append({**m,'kind':'saved_query' if m.get('query_id') else 'field','status':'ready' if m['sources'] else 'not_adapted','exact_match':exact,'description':m['description']})
     capabilities=[]
     for priority,p in enumerate(order):
         if p not in REMOTE_PROVIDERS:continue
@@ -131,8 +142,14 @@ async def search_capabilities(query,provider='auto',refresh=False,limit=8):
         if error:errors.append({'provider':p,'error':error})
         for t in tools:
             score=relevance(query,t)
+            fallback=not score and market_hint=='convertible_bond' and runnable(t)
+            if fallback:
+                # Prefer broad company/security query surfaces over narrow risk
+                # or indicator tools when the vendor omits CB topics in its schema.
+                corpus=t.get('name','')+' '+t.get('description','')
+                score=.03 if re.search(r'fundamental|基本面',corpus,re.I) else .02 if re.search(r'basic.?info|基本信息|基本资料',corpus,re.I) else .01
             if score:
-                capabilities.append((priority,-score,{'kind':'upstream_tool','provider':p,'tool':t['name'],'description':t.get('description','')[:600],'status':'explorable' if runnable(t) else 'not_adapted','permission_status':'not_verified','required_parameters':t.get('inputSchema',{}).get('required',[]),'parameter_names':list(t.get('inputSchema',{}).get('properties',{}))[:24],'read_only':t.get('annotations',{}).get('readOnlyHint',runnable(t)),'score':score}))
+                capabilities.append((priority,-score,{'kind':'upstream_tool','provider':p,'tool':t['name'],'description':t.get('description','')[:600],'status':'explorable' if runnable(t) else 'not_adapted','permission_status':'not_verified','required_parameters':t.get('inputSchema',{}).get('required',[]),'parameter_names':list(t.get('inputSchema',{}).get('properties',{}))[:24],'read_only':t.get('annotations',{}).get('readOnlyHint',runnable(t)),'score':score,'match_kind':'broad_readonly_candidate' if fallback else 'topic_match','confidence':'low' if fallback else 'topic_match','market_support':'not_verified'}))
     capabilities.sort(key=lambda x:(x[0],x[1]))
     results.extend(x[2] for x in capabilities)
     return {'query':query,'results':results[:limit],'total':len(results),'errors':errors,'next_step':'字典未精确命中时调用 explore_data；未适配不等于供应商没有能力。','external_search_recommended':False}
@@ -141,14 +158,15 @@ async def search_capabilities(query,provider='auto',refresh=False,limit=8):
 def build_arguments(tool,request):
     props=tool['inputSchema'].get('properties',{})
     when=f'报告期精确为{request.period}' if request.period else f'发生日期范围{request.start_date}至{request.end_date}' if request.start_date else '最新可用报告期或最新记录，并给出实际日期'
-    question=(f'查询{request.symbol}的{request.request}，{when}。返回所请求对象的记录表，保留指标原义，不能用相近概念或单条摘要替代名单。'
+    market='可转债' if request.market_hint=='convertible_bond' else 'A股'
+    question=(f'查询{market}证券{request.symbol}的{request.request}，{when}。返回所请求对象的记录表，保留指标原义，不能用相近概念或单条摘要替代名单。'
               '每行必须包含证券代码、实际报告期或发生日期（YYYY-MM-DD），按名称/数量/比例/排名等实际列给出；数量和比例标明单位。'
               '必须单独给出实际日期列或在数据列名写明完整年月日，不要仅用年份标题，也不要以请求日期冒充实际日期。无法提供请留空。')
     key='question' if 'question' in props else 'query';args={key:question}
-    optional={'market':'A股','size':20,'symbol':request.symbol,'bdate':request.start_date or request.period,'edate':request.end_date or request.period}
+    optional={'market':market,'size':20,'symbol':request.symbol,'bdate':request.start_date or request.period,'edate':request.end_date or request.period}
     required=set(tool['inputSchema'].get('required',[]))
     for k,v in optional.items():
-        if k in props and v is not None and (k in required or k in ['symbol','bdate','edate']):args[k]=v
+        if k in props and v is not None and (k in required or k in ['market','symbol','bdate','edate']):args[k]=v
     for k,v in [('time_start',request.start_date or request.period),('time_end',request.end_date or request.period)]:
         if k in required:
             if not v:raise ValueError('该工具要求明确起止日期，请补充时间范围后探索')
@@ -268,7 +286,7 @@ def saved_queries():return dictionary._read_user().get('data_queries',{})
 
 def save_query(request,capability,result,exploration_id):
     target=topic(request.request)
-    query_id='data_'+hashlib.sha256((capability['provider']+'|'+capability['tool']+'|'+target).encode()).hexdigest()[:16]
+    query_id='data_'+hashlib.sha256((capability['provider']+'|'+capability['tool']+'|'+request.market_hint+'|'+target).encode()).hexdigest()[:16]
     # Strip the sample entity from the reusable question. Explicit identity and
     # dates are supplied afresh by query_data, never copied from this evidence.
     reusable=request.request.replace(request.symbol,'')
@@ -277,7 +295,7 @@ def save_query(request,capability,result,exploration_id):
         for key in ['证券简称','股票简称','公司名称','公司中文名称']:
             value=row.get(key)
             if isinstance(value,str) and value:reusable=reusable.replace(value,'')
-    definition={'id':query_id,'label':topic(reusable),'request':topic(reusable),'provider':capability['provider'],'tool':capability['tool'],'kind':'mcp_records','columns':result['columns'],'created_at':core.now(),'evidence_id':exploration_id,'schema_version':1}
+    definition={'id':query_id,'label':topic(reusable),'request':topic(reusable),'provider':capability['provider'],'tool':capability['tool'],'kind':'mcp_records','columns':result['columns'],'created_at':core.now(),'evidence_id':exploration_id,'schema_version':1,'market_hint':request.market_hint}
     with config.LOCK:
         user=dictionary._read_user();existing=user.setdefault('data_queries',{}).get(query_id)
         if existing and any(existing[k]!=definition[k] for k in ['request','provider','tool','kind']):raise ValueError('已存在不同取法，需确认后保存')
@@ -354,9 +372,9 @@ async def explore_data(request):
     # Only exact reusable recipe matches skip discovery. A 控股股东 field is not
     # considered a match for a 前十大股东 request.
     for key,definition in saved_queries().items():
-        if topic(request.request)==topic(definition['request']) and request.provider in ['auto',definition['provider']]:
+        if request.market_hint==definition.get('market_hint','equity') and topic(request.request)==topic(definition['request']) and request.provider in ['auto',definition['provider']]:
             return await query_data(DataQueryRequest(query_id=key,symbol=request.symbol,period=request.period,start_date=request.start_date,end_date=request.end_date))
-    found=await search_capabilities(request.request,request.provider,limit=20)
+    found=await search_capabilities(request.request,request.provider,limit=20,market_hint=request.market_hint)
     caps=[r for r in found['results'] if r.get('kind')=='upstream_tool' and r['status']=='explorable']
     answer=await run_capabilities(request,caps)
     answer['capability_search']={'total':found['total'],'errors':found['errors'],'tools':[{'provider':c['provider'],'tool':c['tool']} for c in caps]}
@@ -367,8 +385,10 @@ async def explore_data(request):
 async def query_data(request):
     definition=saved_queries().get(request.query_id)
     if not definition:raise ValueError('个人字典没有这个取法，请先 explore_data')
+    market_hint=infer_market(request.symbol,request.market_hint)
+    if market_hint!=definition.get('market_hint','equity'):raise ValueError('个人取法的证券类型不匹配，请按该市场重新 explore_data')
     await ensure_tools(definition['provider'])
-    r=ExploreDataRequest(request=definition['request'],symbol=request.symbol,period=request.period,start_date=request.start_date,end_date=request.end_date,provider=definition['provider'],auto_save=False,max_attempts=1)
+    r=ExploreDataRequest(request=definition['request'],market_hint=market_hint,symbol=request.symbol,period=request.period,start_date=request.start_date,end_date=request.end_date,provider=definition['provider'],auto_save=False,max_attempts=1)
     answer=await run_capabilities(r,[{'provider':definition['provider'],'tool':definition['tool']}],request.query_id)
     answer['reused']=True
     return answer

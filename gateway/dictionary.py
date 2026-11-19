@@ -70,6 +70,7 @@ def _safe_user(base, user):
     for query_id, definition in user.get('data_queries',{}).items():
         if not re.fullmatch(r'data_[a-f0-9]{16}',query_id) or definition.get('id')!=query_id or definition.get('kind')!='mcp_records':
             raise ValueError('Invalid personal data query')
+        if definition.get('market_hint','equity') not in ['equity','convertible_bond']:raise ValueError('Invalid market hint')
         if definition.get('provider') not in ['wind','ifind','tdx'] or not isinstance(definition.get('tool'),str) or not definition['tool'].isidentifier():
             raise ValueError('Invalid personal data source/tool')
         if not all(isinstance(definition.get(k),str) and definition[k].strip() for k in ['label','request']):
@@ -205,7 +206,7 @@ def search_metrics(query='', dataset=None, limit=10):
         for query_id,definition in _read_user().get('data_queries',{}).items():
             corpus=(query_id+' '+definition['label']+' '+definition['request']).casefold()
             if tokens and not all(t in corpus for t in tokens):continue
-            matches.append((0 if needle==definition['label'].casefold() else 1,'records',query_id,{'dataset':'records','field':query_id,'query_id':query_id,'query_tool':'query_data','label':definition['label'],'unit':'记录','description':'个人通用数据取法；实际日期和来源以每次返回为准。','aliases':[],'sources':[definition['provider']],'origin':'user'}))
+            matches.append((0 if needle==definition['label'].casefold() else 1,'records',query_id,{'dataset':'records','field':query_id,'query_id':query_id,'query_tool':'query_data','market_hint':definition.get('market_hint','equity'),'label':definition['label'],'unit':'记录','description':'个人通用数据取法；实际日期和来源以每次返回为准。','aliases':[],'sources':[definition['provider']],'origin':'user'}))
     matches.sort(key=lambda x:x[:3])
     return {'query':query,'total':len(matches),'results':[m[3] for m in matches[:limit]]}
 

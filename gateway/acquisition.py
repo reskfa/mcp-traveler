@@ -17,7 +17,7 @@ def context(q, recipe, bindings):
         ctx[target]=(q.get(source) or '').replace('-','')
     ctx['source_fields']=','.join(dict.fromkeys(recipe.get('select_columns',[])+[b['columns'][0] for b in bindings.values()]))
     ctx['labels']='、'.join(dict.fromkeys(b.get('prompt',fields(q['dataset'])[f]['label']) for f,b in bindings.items()))
-    ctx['when']=(q['start_date']+'至'+q['end_date']) if q['dataset']=='daily_prices' else q.get('date') or q.get('period') or '最新可用交易日'
+    ctx['when']=(q['start_date']+'至'+q['end_date']) if q['dataset'] in ['daily_prices','cb_daily','cb_clauses'] and q.get('start_date') else q.get('date') or q.get('period') or '最新可用交易日'
     period=q.get('period') or ''
     ctx['report']=period[:4]+'年年报' if period.endswith('-12-31') else period+'报告期累计'
     ctx['qualifier']=('按交易日返回，复权方式：'+{'none':'不复权','qfq':'前复权','hfq':'后复权'}[q['adjust']]+'。') if q['dataset']=='daily_prices' else '合并报表，报告期累计值，不要单季度或同比指标。' if q['dataset']=='financials' else ''
@@ -74,6 +74,21 @@ def indicator_dates(obj):
 
 
 def execute_recipe(rid,recipe,bindings,q,sdk,remote):
+    if recipe.get('handler')=='convertible_bond_akshare':
+        from .convertible_akshare import fetch
+        return fetch(recipe,bindings,q,sdk,remote)
+    if recipe.get('handler')=='convertible_bond_ifind':
+        from .ifind_convertible import fetch
+        return fetch(recipe,bindings,q,remote)
+    if recipe.get('handler')=='convertible_bond_tdx':
+        from .tdx_convertible import fetch
+        return fetch(recipe,bindings,q,remote)
+    if recipe.get('handler')=='convertible_bond_wind':
+        from .convertible_bonds import fetch_wind
+        return fetch_wind(recipe,bindings,q,remote)
+    if recipe.get('handler')=='convertible_bond':
+        from .convertible_bonds import fetch
+        return fetch(recipe,bindings,q,sdk,remote)
     if recipe.get('handler')=='basic_info':
         from .basic_info import fetch
         return fetch(recipe,bindings,q,sdk,remote)
@@ -184,7 +199,7 @@ def acquire(provider,q,sdk=None,remote=None):
         except Exception as exc:
             fallback=recipe.get('fallback')
             if not fallback:
-                if q['dataset']=='basic_info':
+                if q['dataset'] in ['basic_info','cb_basic','cb_clauses']:
                     from .config import redact
                     notes.append(f'{rid}失败：{redact(str(exc))}')
                     raw.append({'recipe':rid,'error':redact(str(exc))})
@@ -194,10 +209,15 @@ def acquire(provider,q,sdk=None,remote=None):
             rid=fallback;recipe=DICTIONARY['recipes'][rid];bindings=bindings_for(provider,q['dataset'],list(bindings),rid)
             data,response=execute_recipe(rid,recipe,bindings,q,sdk,remote)
         raw.append({'recipe':rid,'method':recipe['method'],'response':response})
+        if provider=='ifind' and isinstance(response,list):
+            from .config import redact
+            for diagnostic in response:
+                if isinstance(diagnostic,dict) and diagnostic.get('error') and diagnostic.get('batch_fields'):
+                    notes.append('批次 '+', '.join(diagnostic['batch_fields'])+' 失败：'+redact(str(diagnostic['error'])))
         notes.extend(recipe.get('notes',[]));notes.extend(b['note'] for b in bindings.values() if b.get('note'))
         upstreams.append(recipe.get('upstream',provider))
         for row in data:
-            target=merged.setdefault((row['symbol'],row['date']),{'symbol':row['symbol'],'date':row['date'],**{f:None for f in q['fields']}})
+            target=merged.setdefault((row['symbol'],row['date'],row.get('event_id')),{'symbol':row['symbol'],'date':row['date'],**({'event_id':row['event_id']} if 'event_id' in row else {}),**{f:None for f in q['fields']}})
             for f in bindings:
                 if target.get(f) is None and row.get(f) is not None:target[f]=row[f]
     if q['dataset']=='basic_info' and not merged:raise RuntimeError('基本信息取数方案均失败：'+'；'.join(notes))

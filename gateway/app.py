@@ -23,6 +23,21 @@ async def query_basic_info(symbol:str,fields:list[str]|None=None,provider:str='a
     return await core.query(core.Query(dataset='basic_info',symbol=symbol,fields=fields,provider=provider))
 
 @mcp.tool()
+async def query_convertible_bond_basic(symbol:str,fields:list[str]|None=None,provider:str='auto')->dict:
+    """查询可转债当前档案及合同原文：赎回call_clause、回售put_clause、下修reset_clause。不接受日期，原文不等于公告事件。先 search_metrics(dataset='cb_basic')。"""
+    return await core.query(core.Query(dataset='cb_basic',symbol=symbol,fields=fields,provider=provider))
+
+@mcp.tool()
+async def query_convertible_bond_daily(symbol:str,start_date:str,end_date:str,fields:list[str]|None=None,provider:str='auto')->dict:
+    """查询可转债历史日线与估值。先 search_metrics(dataset='cb_daily')；证券如113050.SH，不走股票接口。"""
+    return await core.query(core.Query(dataset='cb_daily',symbol=symbol,start_date=start_date,end_date=end_date,fields=fields,provider=provider))
+
+@mcp.tool()
+async def query_convertible_bond_clauses(symbol:str,start_date:str|None=None,end_date:str|None=None,fields:list[str]|None=None,provider:str='auto')->dict:
+    """查询可转债历史公告事件（赎回等）。日期指公告日期，不重建历史时点状态；缺失不推定为未触发。合同条款原文请用 query_convertible_bond_basic 的 call_clause/put_clause/reset_clause。未接入来源返回 status=unsupported；真实上游错误仍报告失败。"""
+    return await core.query(core.Query(dataset='cb_clauses',symbol=symbol,start_date=start_date,end_date=end_date,fields=fields,provider=provider))
+
+@mcp.tool()
 def data_catalog(dataset:str|None=None,field:str|None=None)->dict:
     """查看数据目录。传 dataset 和可选 field 可查询字段取法、来源映射、单位转换与接口参数。"""
     return dictionary_view(dataset,field) if dataset else catalog()
@@ -49,7 +64,7 @@ def provider_status()->dict:
 
 @mcp.tool()
 def search_metrics(query:str='',dataset:str|None=None,limit:int=10)->dict:
-    """搜索A股字段及已保存通用取法的中文名称、字段代码、别名和来源列；优先使用此工具，不必读取完整目录。返回个人及内置字典的紧凑结果。未精确命中时继续search_capabilities或explore_data，不能据此判断上游没有数据。"""
+    """搜索A股与可转债字段及已保存通用取法的中文名称、字段代码、别名和来源列；优先使用此工具，不必读取完整目录。返回个人及内置字典的紧凑结果。未精确命中时继续search_capabilities或explore_data，不能据此判断上游没有数据。"""
     return find_metrics(query,dataset,limit)
 
 @mcp.tool()
@@ -63,19 +78,19 @@ async def save_metric(exploration_id:str,field:str|None=None)->dict:
     return await save_exploration(exploration_id,field)
 
 @mcp.tool()
-async def search_capabilities(query:str,provider:str='auto',refresh:bool=False,limit:int=8)->dict:
+async def search_capabilities(query:str,provider:str='auto',refresh:bool=False,limit:int=8,market_hint:str|None=None)->dict:
     """搜索字典与供应商能力。字典未精确命中（或只有相近字段）时继续此入口，不直接绕开网关。返回已接入、可探索或未适配状态，未适配不等于来源不支持。"""
-    return await find_capabilities(query,provider,refresh,limit)
+    return await find_capabilities(query,provider,refresh,limit,market_hint=market_hint)
 
 @mcp.tool()
-async def explore_data(request:str,symbol:str,period:str|None=None,start_date:str|None=None,end_date:str|None=None,provider:str='auto',max_attempts:int=2,auto_save:bool=True)->dict:
-    """探索常用字典之外的信息，不要求先选数据类别。先发现上游能力再执行只读查询；本版验证结构化记录名单。成功默认保存个人字典取法并返回saved_query_id，复用query_data。相近字段不替代原需求，新闻全文尚未适配时明确报告，不冒充已查全。"""
-    return await explore_generic(ExploreDataRequest(request=request,symbol=symbol,period=period,start_date=start_date,end_date=end_date,provider=provider,max_attempts=max_attempts,auto_save=auto_save))
+async def explore_data(request:str,symbol:str,period:str|None=None,start_date:str|None=None,end_date:str|None=None,provider:str='auto',max_attempts:int=2,auto_save:bool=True,market_hint:str|None=None)->dict:
+    """探索常用字典之外的信息，不要求先选数据类别。market_hint 可为 convertible_bond 或 equity，省略按代码识别；可转债不会使用股票市场提示。先发现上游能力再执行只读查询；本版验证结构化记录名单。成功默认保存个人字典取法并返回saved_query_id，复用query_data。相近字段不替代原需求，新闻全文尚未适配时明确报告，不冒充已查全。"""
+    return await explore_generic(ExploreDataRequest(request=request,symbol=symbol,market_hint=market_hint,period=period,start_date=start_date,end_date=end_date,provider=provider,max_attempts=max_attempts,auto_save=auto_save))
 
 @mcp.tool()
-async def query_data(query_id:str,symbol:str,period:str|None=None,start_date:str|None=None,end_date:str|None=None)->dict:
+async def query_data(query_id:str,symbol:str,period:str|None=None,start_date:str|None=None,end_date:str|None=None,market_hint:str|None=None)->dict:
     """复用个人字典中探索成功的记录取法。query_id来自explore_data.saved_query_id或search_metrics，不重复探索；可换证券或报告期，仍校验本次实际返回。"""
-    return await query_generic(DataQueryRequest(query_id=query_id,symbol=symbol,period=period,start_date=start_date,end_date=end_date))
+    return await query_generic(DataQueryRequest(query_id=query_id,symbol=symbol,market_hint=market_hint,period=period,start_date=start_date,end_date=end_date))
 
 mcp_app=mcp.streamable_http_app()
 @asynccontextmanager
@@ -133,8 +148,8 @@ def metric_delete(dataset:str,field:str):
     return delete_user_metric(dataset,field)
 
 @app.get('/api/capabilities')
-async def capability_search(query:str,provider:str='auto',refresh:bool=False,limit:int=QueryParam(8,ge=1,le=20)):
-    return await find_capabilities(query,provider,refresh,limit)
+async def capability_search(query:str,provider:str='auto',refresh:bool=False,limit:int=QueryParam(8,ge=1,le=20),market_hint:str|None=None):
+    return await find_capabilities(query,provider,refresh,limit,market_hint=market_hint)
 
 @app.post('/api/explore-data')
 async def generic_explore(request:ExploreDataRequest):return await explore_generic(request)
