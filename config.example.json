@@ -45,6 +45,18 @@
           "auth_prefix": "Bearer "
         }
       }
+    },
+    "choice": {
+      "enabled": true,
+      "api_key_env": "CHOICE_MX_KEY",
+      "timeout_seconds": 60,
+      "mcp_servers": {
+        "stock_data": {
+          "url": "https://mxapi.eastmoney.com/mxds/mcp",
+          "auth_header": "em_api_key",
+          "auth_prefix": ""
+        }
+      }
     }
   },
   "routes": {
@@ -53,6 +65,7 @@
       "wind",
       "ifind",
       "tdx",
+      "choice",
       "akshare"
     ],
     "valuations": [
@@ -60,6 +73,7 @@
       "wind",
       "ifind",
       "tdx",
+      "choice",
       "akshare"
     ],
     "financials": [
@@ -67,6 +81,7 @@
       "wind",
       "ifind",
       "tdx",
+      "choice",
       "akshare"
     ]
   },
@@ -75,6 +90,7 @@
     "wind",
     "ifind",
     "tdx",
+    "choice",
     "akshare"
   ],
   "route_overrides": {}

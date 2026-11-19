@@ -54,11 +54,59 @@ def markdown_rows(text):
         i+=1
     return result
 
+def choice_identity(text):
+    m=re.search(r'(\d{6}\.(?:SH|SZ|BJ))',str(text or ''),re.I)
+    return m.group(1).upper() if m else None
+
+def choice_date(header):
+    s=re.sub(r'[（(]日[）)]$','',str(header).strip())
+    if s in ('','值','最新','-','--'):return None
+    if re.match(r'^\d{4}-\d{2}-\d{2}',s):return s[:10]
+    rules=[(r'^(20\d{2})(?:年)?年报$','12-31'),(r'^(20\d{2})(?:年)?(?:一季报|一季度|Q1)$','03-31'),
+           (r'^(20\d{2})(?:年)?(?:中报|半年报|二季报|二季度|Q2)$','06-30'),(r'^(20\d{2})(?:年)?(?:三季报|三季度|Q3)$','09-30')]
+    for pattern,month_day in rules:
+        m=re.match(pattern,s,re.I)
+        if m:return f'{m[1]}-{month_day}'
+    return norm_date(s)
+
+def is_choice_sheet(block):
+    columns=block.get('columns') if isinstance(block,dict) else None
+    items=block.get('items') if isinstance(block,dict) else None
+    return bool(isinstance(columns,list) and columns and isinstance(columns[0],str) and isinstance(items,list)
+                and all(isinstance(item,list) and item for item in items))
+
+def unpivot_choice_sheet(sheet):
+    """Turn Choice data-browser sheets (indicator rows × date columns) into record rows."""
+    columns=list(sheet.get('columns') or [])
+    identity=choice_identity(columns[0] if columns else '') or choice_identity(sheet.get('sheetName',''))
+    headers=columns[1:] if len(columns)>1 else ['值']
+    rows=[]
+    for i,header in enumerate(headers):
+        row={}
+        if identity:row['证券代码']=identity
+        day=choice_date(header)
+        if day:row['date']=day
+        for item in sheet.get('items') or []:
+            if i+1<len(item):row[str(item[0])]=item[i+1]
+        if any(k not in ('证券代码','date') for k in row):rows.append(row)
+    return rows
+
 def tables(obj):
     """Read actual data blocks, excluding vendor UI/presentation metadata."""
     result=[]
     def visit(x):
         if isinstance(x,dict):
+            data=x.get('data')
+            if isinstance(data,list) and data and all(is_choice_sheet(sheet) for sheet in data):
+                rows=[]
+                for sheet in data:rows.extend(unpivot_choice_sheet(sheet))
+                codes={row.get('证券代码') for row in rows if row.get('证券代码')}
+                if len(codes)==1:
+                    code=next(iter(codes))
+                    for row in rows:row.setdefault('证券代码',code)
+                result.extend((row,{}) for row in rows);return
+            if is_choice_sheet(x):
+                result.extend((row,{}) for row in unpivot_choice_sheet(x));return
             if isinstance(x.get('columns'),list) and isinstance(x.get('rows'),list):
                 cols=x['columns']; units={c['name']:c.get('unit','') for c in cols}
                 for k,v in x.get('indicator_units',{}).items(): units[k.split(' ')[0]]=v

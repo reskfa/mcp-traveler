@@ -73,6 +73,17 @@ def test_external_file_reload(personal_home):
     assert Query(dataset='financials',symbol='600000.SH',period='2025-12-31',fields=['external_metric']).fields==['external_metric']
 
 
+def test_legacy_user_sources_fill_new_provider(personal_home):
+    sources={p:[] for p in dictionary.DICTIONARY['providers'] if p!='choice'}
+    sources['tushare']=[{'recipe':'ts_fina_indicator','columns':['custom_column'],'source_unit':'%','note':'已验证来源口径'}]
+    user={'schema_version':1,'datasets':{'financials':{'fields':{'legacy_metric':{'label':'旧指标','unit':'%','description':'旧指标说明','aliases':[],'sources':sources}}}},'recipes':{}}
+    path=dictionary.user_dictionary_path();path.parent.mkdir(parents=True)
+    path.write_text(json.dumps(user))
+    dictionary.reload_dictionary()
+    assert dictionary.fields('financials')['legacy_metric']['sources']['choice']==[]
+    assert Query(dataset='financials',symbol='600000.SH',period='2025-12-31',fields=['legacy_metric']).fields==['legacy_metric']
+
+
 def test_approved_exploration_template(personal_home):
     recipe=copy.deepcopy(dictionary.DICTIONARY['recipes']['wind_financials'])
     recipe['template']=dictionary.EXPLORATION_TEMPLATE

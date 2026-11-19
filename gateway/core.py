@@ -22,7 +22,7 @@ class Query(BaseModel):
     date: str | None = None
     period: str | None = None
     fields: list[str] | None = None
-    provider: Literal['auto','tushare','akshare','wind','ifind','tdx']='auto'
+    provider: Literal['auto','tushare','akshare','wind','ifind','tdx','choice']='auto'
     adjust: Literal['none','qfq','hfq','native'] | None = None
     parameters: dict[str,StrictInt] | None = None
     frequency: Literal['daily']='daily'
@@ -114,7 +114,7 @@ async def query(request:Query):
         from .technical import resolve_parameters
         q['resolved_parameters']=resolve_parameters(q)
         if len(q['resolved_parameters'])==1:q['parameters']=next(iter(q['resolved_parameters'].values()))
-    order=c['routes'].get(q['dataset'],c.get('global_route',['tushare','wind','ifind','tdx','akshare'])) if request.provider=='auto' else [request.provider]
+    order=c['routes'].get(q['dataset'],c.get('global_route',config.PROVIDERS)) if request.provider=='auto' else [request.provider]
     data=None; provenance=[];raws=[];notes=[];contributors=[];upstreams=[]
     missing=list(request.fields)
     for name in order:

@@ -71,7 +71,7 @@ def _safe_user(base, user):
         if not re.fullmatch(r'data_[a-f0-9]{16}',query_id) or definition.get('id')!=query_id or definition.get('kind')!='mcp_records':
             raise ValueError('Invalid personal data query')
         if definition.get('market_hint','equity') not in ['equity','convertible_bond']:raise ValueError('Invalid market hint')
-        if definition.get('provider') not in ['wind','ifind','tdx'] or not isinstance(definition.get('tool'),str) or not definition['tool'].isidentifier():
+        if definition.get('provider') not in config.MCP_PROVIDERS or not isinstance(definition.get('tool'),str) or not definition['tool'].isidentifier():
             raise ValueError('Invalid personal data source/tool')
         if not all(isinstance(definition.get(k),str) and definition[k].strip() for k in ['label','request']):
             raise ValueError('Invalid personal data request')
@@ -102,7 +102,11 @@ def _safe_user(base, user):
                     raise ValueError('字段名称、单位和说明不能为空')
             if not isinstance(definition.get('aliases', []), list) or any(not isinstance(v,str) for v in definition.get('aliases', [])):
                 raise ValueError('Invalid aliases')
-            if not isinstance(definition.get('sources'), dict) or set(definition['sources']) != set(base['providers']):
+            if not isinstance(definition.get('sources'), dict):
+                raise ValueError('sources 必须包含所有 provider 的列表')
+            for provider_name in base['providers']:
+                definition['sources'].setdefault(provider_name, [])
+            if set(definition['sources']) != set(base['providers']):
                 raise ValueError('sources 必须包含所有 provider 的列表')
             for provider, bindings in definition['sources'].items():
                 if not isinstance(bindings, list): raise ValueError('sources 必须为列表')

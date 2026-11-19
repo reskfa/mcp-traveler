@@ -10,7 +10,7 @@ class Remote:
         self.s=requests.Session()
         self.s.headers.update({'Content-Type':'application/json','Accept':'application/json, text/event-stream',server['auth_header']:server['auth_prefix']+key})
         self.seq=0
-        if name=='tdx':
+        if name in config.HANDSHAKE_MCP:
             r=self.rpc('initialize',{'protocolVersion':'2024-11-05','capabilities':{},'clientInfo':{'name':'mcp-traveler','version':'0.1.0'}})
             self.s.headers['MCP-Protocol-Version']=r.get('protocolVersion','2024-11-05')
             self.rpc('notifications/initialized',{},notification=True)
@@ -47,7 +47,7 @@ def fetch(name,q,p,key):
         from .generic_data import fetch_remote
         return fetch_remote(name,p,key,q['generic_call'])
     if q.get('probe'):
-        if name in ['wind','ifind','tdx']:
+        if name in config.MCP_PROVIDERS:
             r=Remote(name,p,key).rpc('tools/list',{})
             return {'tools':[{'name':t['name'],'description':t.get('description',''),'inputSchema':t.get('inputSchema',{}),'annotations':t.get('annotations',{})} for t in r.get('tools',[])]}
         if name=='tushare':

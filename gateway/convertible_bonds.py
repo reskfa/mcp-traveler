@@ -51,7 +51,8 @@ def fetch_wind(recipe,bindings,q,remote):
     table=tables(raw)
     for row,_ in table:
         identity=pick(row,['Wind代码','证券代码','代码'])
-        if not identity or str(identity).upper()!=q['symbol']:raise RuntimeError('Wind转债结果缺少匹配的证券身份')
+        allowed={q['symbol'],q['symbol'].split('.')[0]}
+        if not identity or str(identity).upper() not in allowed:raise RuntimeError('转债结果缺少匹配的证券身份')
     if q['dataset']=='cb_basic':
         out={'symbol':q['symbol'],'date':None}
         for f,b in bindings.items():out[f]=next((v for row,_ in table if (v:=typed(pick(row,b['columns']),fields(q['dataset'])[f]['data_type'],b)) is not None),None)

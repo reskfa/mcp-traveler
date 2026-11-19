@@ -1,0 +1,9 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"data\":[{\"columns\":[\"贵州茅台(600519.SH)\",\"2024年报\"],\"items\":[[\"营运资本\",\"1952亿元\"]],\"meta\":{\"jumpUrlList\":[{\"choiceUrl\":\"EM://stockdatacenter?type=browser&modType=STOCK&code=600519.SH&indId=100000000003566|100:2024-12-31\",\"typeName\":\"股票数据浏览器\"}],\"dataType\":\"数据浏览器\"},\"sheetName\":\"贵州茅台(600519.SH)的营运资本\"}]}"
+    }
+  ],
+  "isError": false
+}

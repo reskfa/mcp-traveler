@@ -2,7 +2,7 @@
 
 由 `gateway/data/dictionary.json` 生成。该 JSON 同时驱动实际取数；不要直接编辑本表。
 
-现有 682 个分类字段：daily_prices 7 项、valuations 17 项、financials 169 项、technical_indicators 381 项、basic_info 56 项、cb_basic 21 项、cb_daily 19 项、cb_clauses 12 项。跨类别同名字段分开计数。空缺项明确保留，不等于来源永远不支持。
+现有 702 个分类字段：daily_prices 7 项、valuations 17 项、financials 169 项、technical_indicators 401 项、basic_info 56 项、cb_basic 21 项、cb_daily 19 项、cb_clauses 12 项。跨类别同名字段分开计数。空缺项明确保留，不等于来源永远不支持。
 
 修改 JSON 后下一次查询自动加载；运行 `python scripts/render_dictionary.py` 更新本表。各来源覆盖是当前实现配置，并非所有字段均经过全市场验证。
 
@@ -28,42 +28,49 @@
 | `open` | wind | `wind_kline` → `get_stock_kline` | OPEN / Open / 开盘 / 开盘价 | 原单位：返回表头或数值后缀；×1 |
 | `open` | ifind | `ifind_daily_prices` → `get_security_indicators` | OPEN / Open / 开盘 / 开盘价；问句：开盘价 | 原单位：返回表头或数值后缀；×1 |
 | `open` | tdx | `tdx_kline` → `tdx_kline` | OPEN / Open / 开盘 / 开盘价 | 原单位：元；×1 |
+| `open` | choice | `choice_daily_prices` → `mx_ashare_finance_data` | OPEN / Open / 开盘 / 开盘价；问句：开盘价 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `high` | tushare | `ts_daily` → `daily` | high | 原单位：元；×1 |
 | `high` | akshare | `ak_daily` → `stock_zh_a_hist` | HIGH / High / 最高 / 最高价 | 原单位：元；×1 |
 | `high` | akshare | `ak_daily_sina` → `stock_zh_a_daily` | high | 原单位：元；×1；主上游失败才调用 |
 | `high` | wind | `wind_kline` → `get_stock_kline` | HIGH / High / 最高 / 最高价 | 原单位：返回表头或数值后缀；×1 |
 | `high` | ifind | `ifind_daily_prices` → `get_security_indicators` | HIGH / High / 最高 / 最高价；问句：最高价 | 原单位：返回表头或数值后缀；×1 |
 | `high` | tdx | `tdx_kline` → `tdx_kline` | HIGH / High / 最高 / 最高价 | 原单位：元；×1 |
+| `high` | choice | `choice_daily_prices` → `mx_ashare_finance_data` | HIGH / High / 最高 / 最高价；问句：最高价 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `low` | tushare | `ts_daily` → `daily` | low | 原单位：元；×1 |
 | `low` | akshare | `ak_daily` → `stock_zh_a_hist` | LOW / Low / 最低 / 最低价 | 原单位：元；×1 |
 | `low` | akshare | `ak_daily_sina` → `stock_zh_a_daily` | low | 原单位：元；×1；主上游失败才调用 |
 | `low` | wind | `wind_kline` → `get_stock_kline` | LOW / Low / 最低 / 最低价 | 原单位：返回表头或数值后缀；×1 |
 | `low` | ifind | `ifind_daily_prices` → `get_security_indicators` | LOW / Low / 最低 / 最低价；问句：最低价 | 原单位：返回表头或数值后缀；×1 |
 | `low` | tdx | `tdx_kline` → `tdx_kline` | LOW / Low / 最低 / 最低价 | 原单位：元；×1 |
+| `low` | choice | `choice_daily_prices` → `mx_ashare_finance_data` | LOW / Low / 最低 / 最低价；问句：最低价 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `close` | tushare | `ts_daily` → `daily` | close | 原单位：元；×1 |
 | `close` | akshare | `ak_daily` → `stock_zh_a_hist` | MATCH / Close / 收盘 / 收盘价 | 原单位：元；×1 |
 | `close` | akshare | `ak_daily_sina` → `stock_zh_a_daily` | close | 原单位：元；×1；主上游失败才调用 |
 | `close` | wind | `wind_kline` → `get_stock_kline` | MATCH / Close / 收盘 / 收盘价 | 原单位：返回表头或数值后缀；×1 |
 | `close` | ifind | `ifind_daily_prices` → `get_security_indicators` | MATCH / Close / 收盘 / 收盘价；问句：收盘价 | 原单位：返回表头或数值后缀；×1 |
 | `close` | tdx | `tdx_kline` → `tdx_kline` | MATCH / Close / 收盘 / 收盘价 | 原单位：元；×1 |
+| `close` | choice | `choice_daily_prices` → `mx_ashare_finance_data` | MATCH / Close / 收盘 / 收盘价；问句：收盘价 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `volume` | tushare | `ts_daily` → `daily` | vol | 原单位：手；×100；取 0 位小数 |
 | `volume` | akshare | `ak_daily` → `stock_zh_a_hist` | VOLUME / Volume / 成交量 | 原单位：手；×100 |
 | `volume` | akshare | `ak_daily_sina` → `stock_zh_a_daily` | volume | 原单位：股；×1；主上游失败才调用 |
 | `volume` | wind | `wind_kline` → `get_stock_kline` | VOLUME / Volume / 成交量 | 原单位：返回表头或数值后缀；×1 |
 | `volume` | ifind | `ifind_daily_prices` → `get_security_indicators` | VOLUME / Volume / 成交量；问句：成交量 | 原单位：返回表头或数值后缀；×1 |
 | `volume` | tdx | `tdx_kline` → `tdx_kline` | RawVolume | 原单位：股；×1 |
+| `volume` | choice | `choice_daily_prices` → `mx_ashare_finance_data` | VOLUME / Volume / 成交量；问句：成交量 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `amount` | tushare | `ts_daily` → `daily` | amount | 原单位：千元；×1000 |
 | `amount` | akshare | `ak_daily` → `stock_zh_a_hist` | TURNOVER / Amount / 成交额 | 原单位：元；×1 |
 | `amount` | akshare | `ak_daily_sina` → `stock_zh_a_daily` | amount | 原单位：元；×1；主上游失败才调用 |
 | `amount` | wind | `wind_kline` → `get_stock_kline` | TURNOVER / Amount / 成交额 | 原单位：返回表头或数值后缀；×1 |
 | `amount` | ifind | `ifind_daily_prices` → `get_security_indicators` | TURNOVER / Amount / 成交额；问句：成交额 | 原单位：返回表头或数值后缀；×1 |
 | `amount` | tdx | `tdx_kline` → `tdx_kline` | TURNOVER / Amount / 成交额 | 原单位：元；×1 |
+| `amount` | choice | `choice_daily_prices` → `mx_ashare_finance_data` | TURNOVER / Amount / 成交额；问句：成交额 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `turnover_rate` | tushare | `ts_daily_basic` → `daily_basic` | turnover_rate | 原单位：%；×1 |
 | `turnover_rate` | akshare | `ak_daily` → `stock_zh_a_hist` | CHANGEHANDRATE / 换手率 | 原单位：%；×1 |
 | `turnover_rate` | akshare | `ak_daily_sina` → `stock_zh_a_daily` | turnover | 原单位：比例值；×100；主上游失败才调用 |
 | `turnover_rate` | wind | `wind_kline` → `get_stock_kline` | CHANGEHANDRATE / 换手率 | 原单位：返回表头或数值后缀；×1 |
 | `turnover_rate` | ifind | `ifind_daily_prices` → `get_security_indicators` | CHANGEHANDRATE / 换手率；问句：换手率 | 原单位：返回表头或数值后缀；×1 |
 | `turnover_rate` | tdx | — | — | 当前接口未提供或尚未映射 |
+| `turnover_rate` | choice | `choice_daily_prices` → `mx_ashare_finance_data` | CHANGEHANDRATE / 换手率；问句：换手率 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 
 ## valuations
 
@@ -96,86 +103,103 @@
 | `pe_ttm` | wind | `wind_valuations` → `get_stock_fundamentals` | 市盈率TTM / 市盈率(TTM) / 市盈率(PE,TTM) / 市盈率；问句：市盈率TTM | 原单位：返回表头或数值后缀；×1；按TTM请求，但Wind返回标题可能仅为市盈率，未单列口径。 |
 | `pe_ttm` | ifind | `ifind_valuations` → `get_security_indicators` | 市盈率TTM / 市盈率(TTM) / 市盈率(PE,TTM)；问句：市盈率TTM | 原单位：返回表头或数值后缀；×1 |
 | `pe_ttm` | tdx | `tdx_valuations` → `tdx_indicator_select` | 市盈率TTM / 市盈率(TTM) / 市盈率(PE,TTM)；问句：市盈率TTM | 原单位：倍；×1 |
+| `pe_ttm` | choice | `choice_valuations` → `mx_ashare_finance_data` | 市盈率TTM / 市盈率(TTM) / 市盈率(PE,TTM)；问句：市盈率TTM | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `pb` | tushare | `ts_valuation` → `daily_basic` | pb | 原单位：倍；×1；依据Tushare daily_basic官方输出定义；总市值除以扣除其他权益工具后的净资产；不是简单的总市值除以全部净资产。 |
 | `pb` | akshare | `ak_valuation` → `stock_zh_valuation_baidu` | value / 市净率；指标参数：市净率 | 原单位：倍；×1 |
 | `pb` | wind | `wind_valuations` → `get_stock_fundamentals` | 市净率 / 市净率(PB,最新) / 市净率(PB,MRQ) / 市净率(LF)；问句：市净率 | 原单位：返回表头或数值后缀；×1 |
 | `pb` | ifind | `ifind_valuations` → `get_security_indicators` | 市净率 / 市净率(PB,最新) / 市净率(PB,MRQ) / 市净率(LF)；问句：市净率 | 原单位：返回表头或数值后缀；×1 |
 | `pb` | tdx | `tdx_valuations` → `tdx_indicator_select` | 市净率 / 市净率(PB,最新) / 市净率(PB,MRQ) / 市净率(LF)；问句：市净率 | 原单位：倍；×1 |
+| `pb` | choice | `choice_valuations` → `mx_ashare_finance_data` | 市净率 / 市净率(PB,最新) / 市净率(PB,MRQ) / 市净率(LF) / 市净率PB；问句：市净率 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `total_mv` | tushare | `ts_valuation` → `daily_basic` | total_mv | 原单位：万元；×10000；依据Tushare daily_basic官方输出定义；全部股本对应的市场价值；上游万元乘10000统一为元。 |
 | `total_mv` | akshare | `ak_value_em` → `stock_value_em` | 总市值 | 原单位：元；×1 |
 | `total_mv` | wind | `wind_valuations` → `get_stock_fundamentals` | 总市值；问句：总市值 | 原单位：返回表头或数值后缀；×1 |
 | `total_mv` | ifind | `ifind_valuations` → `get_security_indicators` | 总市值；问句：总市值 | 原单位：返回表头或数值后缀；×1 |
 | `total_mv` | tdx | `tdx_valuations` → `tdx_indicator_select` | 总市值；问句：总市值 | 原单位：元；×1 |
+| `total_mv` | choice | `choice_valuations` → `mx_ashare_finance_data` | 总市值；问句：总市值 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `circ_mv` | tushare | `ts_valuation` → `daily_basic` | circ_mv | 原单位：万元；×10000；依据Tushare daily_basic官方输出定义；流通股本对应的市场价值；上游万元乘10000统一为元。 |
 | `circ_mv` | akshare | `ak_value_em` → `stock_value_em` | 流通市值 | 原单位：元；×1 |
 | `circ_mv` | wind | `wind_valuations` → `get_stock_fundamentals` | 流通市值 / A股流通市值；问句：流通市值 | 原单位：返回表头或数值后缀；×1 |
 | `circ_mv` | ifind | `ifind_valuations` → `get_security_indicators` | 流通市值 / A股流通市值；问句：流通市值 | 原单位：返回表头或数值后缀；×1 |
 | `circ_mv` | tdx | `tdx_valuations` → `tdx_indicator_select` | 流通市值 / A股流通市值；问句：流通市值 | 原单位：元；×1 |
+| `circ_mv` | choice | `choice_valuations` → `mx_ashare_finance_data` | 流通市值 / A股流通市值；问句：流通市值 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `close` | tushare | `ts_valuation` → `daily_basic` | close | 原单位：元；×1；依据Tushare daily_basic官方输出定义；交易日收盘价格；不复权。官方每日指标页只称当日收盘价，元单位与不复权口径沿用股票现价约定，未做实盘交叉核验。 |
 | `close` | akshare | `ak_value_em` → `stock_value_em` | 当日收盘价 | 原单位：元；×1 |
 | `close` | wind | `wind_valuations_expanded` → `get_stock_fundamentals` | 收盘价；问句：收盘价 | 原单位：返回表头或数值后缀；×1 |
 | `close` | ifind | `ifind_valuations_rechecked` → `get_security_indicators` | 收盘价；问句：不复权收盘价 | 原单位：元；×1；iFinD自身指标口径；与其他来源数值可能不同，按实际返回单位统一，不以Tushare数值作为标准。 |
 | `close` | tdx | `tdx_valuations` → `tdx_indicator_select` | 收盘价；问句：当日不复权收盘价 | 原单位：元；×1 |
+| `close` | choice | `choice_valuations` → `mx_ashare_finance_data` | 收盘价；问句：不复权收盘价 | 原单位：元；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `turnover_rate` | tushare | `ts_valuation` → `daily_basic` | turnover_rate | 原单位：%；×1；依据Tushare daily_basic官方输出定义；成交量相对无限售流通股数的百分比；数值1表示1%，不转为小数。 |
 | `turnover_rate` | akshare | — | — | 尚未核实该来源的对应字段、口径及单位，暂不接入 |
 | `turnover_rate` | wind | — | — | 尚未核实该来源的对应字段、口径及单位，暂不接入 |
 | `turnover_rate` | ifind | `ifind_valuations_rechecked` → `get_security_indicators` | 换手率；问句：换手率 | 原单位：%；×1；iFinD普通换手率2025-11-06为0.3062%，不是自由流通换手率；后者请求会退回同名普通指标，未接turnover_rate_f。 |
 | `turnover_rate` | tdx | `tdx_valuations` → `tdx_indicator_select` | 换手率；问句：当日普通换手率（非月换手率、非自由流通股换手率） | 原单位：%；×1 |
+| `turnover_rate` | choice | `choice_valuations` → `mx_ashare_finance_data` | 换手率；问句：换手率 | 原单位：%；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `turnover_rate_f` | tushare | `ts_valuation` → `daily_basic` | turnover_rate_f | 原单位：%；×1；依据Tushare daily_basic官方输出定义；成交量相对自由流通股数的百分比，分母不同于普通换手率。 |
 | `turnover_rate_f` | akshare | — | — | 尚未核实该来源的对应字段、口径及单位，暂不接入 |
 | `turnover_rate_f` | wind | — | — | 尚未核实该来源的对应字段、口径及单位，暂不接入 |
 | `turnover_rate_f` | ifind | — | — | 请求自由口径却返回普通换手率 |
 | `turnover_rate_f` | tdx | — | — | 请求日换手率却返回月换手率 |
+| `turnover_rate_f` | choice | — | — | 询问自由流通股换手率时返回区间换手率，与日换手率口径不同，暂不接入。 |
 | `volume_ratio` | tushare | `ts_valuation` → `daily_basic` | volume_ratio | 原单位：倍；×1；依据Tushare daily_basic官方输出定义；成交量相对其移动平均量的比值（官方写作VOL/MA），官方本页未注明均量窗口。 |
 | `volume_ratio` | akshare | — | — | 尚未核实该来源的对应字段、口径及单位，暂不接入 |
 | `volume_ratio` | wind | — | — | 尚未核实该来源的对应字段、口径及单位，暂不接入 |
 | `volume_ratio` | ifind | — | — | 尚未核实该来源的对应字段、口径及单位，暂不接入 |
 | `volume_ratio` | tdx | — | — | 尚未核实该来源的对应字段、口径及单位，暂不接入 |
+| `volume_ratio` | choice | `choice_valuations` → `mx_ashare_finance_data` | 量比；问句：量比 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `pe` | tushare | `ts_valuation` → `daily_basic` | pe | 原单位：倍；×1；依据Tushare daily_basic官方输出定义；总市值除以净利润，亏损时上游返回空值；不同于使用滚动净利润的pe_ttm。官方本页未明确净利润报告期，不能据此承诺年报静态或预测口径。 |
 | `pe` | akshare | `ak_value_em` → `stock_value_em` | PE(静) | 原单位：倍；×1 |
 | `pe` | wind | `wind_valuations_reconsider` → `get_stock_fundamentals` | 市盈率PE；问句：市盈率PE(总市值/上一完整会计年度归母净利润) | 原单位：返回表头或数值后缀；×1；按返回单位换算：{"%": 0.01, "倍": 1, "": 1}；Wind静态PE，分母上一完整年度归母净利润；实返2084.2041%，表示比值20.842041倍。按响应单位动态转换，不能一律乘0.01。 |
 | `pe` | ifind | — | — | 尚未核实该来源的对应字段、口径及单位，暂不接入 |
 | `pe` | tdx | — | — | 尚未核实该来源的对应字段、口径及单位，暂不接入 |
+| `pe` | choice | — | — | 询问静态/LYR市盈率时返回市盈率PE(TTM)，与年报口径不同，暂不接入。 |
 | `ps` | tushare | `ts_valuation` → `daily_basic` | ps | 原单位：倍；×1；依据Tushare daily_basic官方输出定义；总市值除以最新年报营业收入；与滚动十二个月营业收入口径的ps_ttm区分。 |
 | `ps` | akshare | — | — | 尚未核实该来源的对应字段、口径及单位，暂不接入 |
 | `ps` | wind | `wind_valuations_reconsider` → `get_stock_fundamentals` | 市销率PS；问句：市销率PS(总市值/上一完整会计年度营业收入) | 原单位：返回表头或数值后缀；×1；按返回单位换算：{"%": 0.01, "倍": 1, "": 1}；Wind静态PS，分母上一完整年度营业收入；实返1051.5971%，表示比值10.515971倍。按响应单位动态转换，不能一律乘0.01。 |
 | `ps` | ifind | `ifind_valuations_rechecked` → `get_security_indicators` | 市销率（PS，LYR）；问句：市销率（PS，LYR） | 原单位：倍；×1；iFinD PS-LYR市销率算法；实测2024-11-06为13.1076、2025-11-06为10.32。与Tushare ps不同，疑似采用营业总收入分母；算法差异保留注明，不认作日期错误。 |
 | `ps` | tdx | — | — | 尚未核实该来源的对应字段、口径及单位，暂不接入 |
+| `ps` | choice | `choice_valuations` → `mx_ashare_finance_data` | 市销率（PS，LYR）；问句：市销率（PS，LYR） | 原单位：倍；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `ps_ttm` | tushare | `ts_valuation` → `daily_basic` | ps_ttm | 原单位：倍；×1；依据Tushare daily_basic官方输出定义；总市值除以滚动十二个月营业收入。 |
 | `ps_ttm` | akshare | `ak_value_em` → `stock_value_em` | 市销率 | 原单位：倍；×1；AKShare SDK明确把东财PS_TTM重命名为市销率，为滚动市销率；营业收入分母等算法依东财。 |
 | `ps_ttm` | wind | `wind_valuations_expanded` → `get_stock_fundamentals` | 市销率PS_TTM；问句：市销率PS_TTM | 原单位：返回表头或数值后缀；×1 |
 | `ps_ttm` | ifind | `ifind_valuations_rechecked` → `get_security_indicators` | 市销率(PS,TTM)；问句：市销率(PS,TTM) | 原单位：倍；×1；iFinD PS-TTM，TTM基准日为报表公告日期；2025-11-06为9.8786，与其他来源滚动收入具体算法可不同。 |
 | `ps_ttm` | tdx | `tdx_valuations` → `tdx_indicator_select` | 市销率(PS,TTM) | 原单位：倍；×1；通达信明确为PS,TTM；算法依通达信，不能映为静态PS。 |
+| `ps_ttm` | choice | `choice_valuations` → `mx_ashare_finance_data` | 市销率(PS,TTM)；问句：市销率(PS,TTM) | 原单位：倍；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `dv_ratio` | tushare | `ts_valuation` → `daily_basic` | dv_ratio | 原单位：%；×1；依据Tushare daily_basic官方输出定义；按除息日落在上一自然年内的现金分红计算的股息率；保留百分数值，不视作近12个月口径。 |
 | `dv_ratio` | akshare | — | — | 尚未核实该来源的对应字段、口径及单位，暂不接入 |
 | `dv_ratio` | wind | `wind_valuations_reconsider` → `get_stock_fundamentals` | 股息率；问句：股息率(上一完整年度每股现金分红/当日收盘价) | 原单位：返回表头或数值后缀；×1；Wind历史股息率，本次3.5924%。请求上一完整年度现金分红/当日收盘价，实际附2024年度税前每股派息51.555元；来源分红归属/除息日算法允许不同。 |
 | `dv_ratio` | ifind | — | — | 尚未核实该来源的对应字段、口径及单位，暂不接入 |
 | `dv_ratio` | tdx | — | — | 尚未核实该来源的对应字段、口径及单位，暂不接入 |
+| `dv_ratio` | choice | — | — | 询问静态股息率时返回股息率(TTM)，与年报口径不同，暂不接入。 |
 | `dv_ttm` | tushare | `ts_valuation` → `daily_basic` | dv_ttm | 原单位：%；×1；依据Tushare daily_basic官方输出定义；股息率的滚动口径，官方同时约束除息日在近12个月、分红报告期在12个月内；不能只按支付日筛选。 |
 | `dv_ttm` | akshare | — | — | 尚未核实该来源的对应字段、口径及单位，暂不接入 |
 | `dv_ttm` | wind | `wind_valuations_reconsider` → `get_stock_fundamentals` | 股息率TTM；问句：股息率TTM(最近12个月现金分红/当日收盘价) | 原单位：返回表头或数值后缀；×1；Wind历史TTM股息率，本次3.5985%。来源滚动分红纳入规则未在响应展开，不宣称与其他来源除息日/报告期限制相同。 |
 | `dv_ttm` | ifind | — | — | 尚未核实该来源的对应字段、口径及单位，暂不接入 |
 | `dv_ttm` | tdx | — | — | 尚未核实该来源的对应字段、口径及单位，暂不接入 |
+| `dv_ttm` | choice | `choice_valuations` → `mx_ashare_finance_data` | 股息率(TTM)；问句：股息率(TTM) | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `total_share` | tushare | `ts_valuation` → `daily_basic` | total_share | 原单位：万股；×10000；依据Tushare daily_basic官方输出定义；全部股本；上游万股乘10000统一为股。 |
 | `total_share` | akshare | `ak_value_em` → `stock_value_em` | 总股本 | 原单位：股；×1 |
 | `total_share` | wind | `wind_valuations_expanded` → `get_stock_fundamentals` | 总股本；问句：总股本 | 原单位：返回表头或数值后缀；×1 |
 | `total_share` | ifind | `ifind_valuations_rechecked` → `get_security_indicators` | 总股本；问句：总股本 | 原单位：股；×1；期末全部股本；历史两日分别12.562亿/12.5227亿，按原始后缀换算为股；展示值有取整。 |
 | `total_share` | tdx | — | — | 历史请求返回未来报告期股本 |
+| `total_share` | choice | `choice_valuations` → `mx_ashare_finance_data` | 总股本；问句：总股本 | 原单位：股；×1；期末全部股本；历史两日分别12.562亿/12.5227亿，按原始后缀换算为股；展示值有取整。 |
 | `float_share` | tushare | `ts_valuation` → `daily_basic` | float_share | 原单位：万股；×10000；依据Tushare daily_basic官方输出定义；流通股本；与自由流通股本区分，上游万股乘10000统一为股。 |
 | `float_share` | akshare | `ak_value_em` → `stock_value_em` | 流通股本 | 原单位：股；×1；东财流通A股股本，不含B/H股；保留来源市场范围。 |
 | `float_share` | wind | `wind_valuations_reconsider` → `get_stock_fundamentals` | 流通A股；问句：流通A股股本 | 原单位：返回表头或数值后缀；×1；Wind实际返回流通A股股本，不含B/H股；本平台A股股票查询采用该可流通股口径，本次1252270215股。 |
 | `float_share` | ifind | `ifind_valuations_rechecked` → `get_security_indicators` | 流通A股；问句：流通A股 | 原单位：股；×1；流通A股股本，非自由流通股。2025-11-06为12.5227亿股；展示值有取整。 |
 | `float_share` | tdx | — | — | 历史请求返回未来报告期股本 |
+| `float_share` | choice | `choice_valuations` → `mx_ashare_finance_data` | 流通A股；问句：流通A股 | 原单位：股；×1；流通A股股本，非自由流通股。2025-11-06为12.5227亿股；展示值有取整。 |
 | `free_share` | tushare | `ts_valuation` → `daily_basic` | free_share | 原单位：万股；×10000；依据Tushare daily_basic官方输出定义；自由流通股本；不同于流通股本，上游万股乘10000统一为股。 |
 | `free_share` | akshare | — | — | 尚未核实该来源的对应字段、口径及单位，暂不接入 |
 | `free_share` | wind | `wind_valuations_reconsider` → `get_stock_fundamentals` | 自由流通股本；问句：自由流通股本 | 原单位：返回表头或数值后缀；×1；Wind自由流通股本口径，本次544411826股；来源自由流通范围定义可不同。 |
 | `free_share` | ifind | `ifind_valuations_rechecked` → `get_security_indicators` | 自由流通股；问句：自由流通股 | 原单位：股；×1；iFinD自由流通股算法，2025-11-06为5.7231亿股；与Tushare544463036股不同，来源排除大股东等规则未取得完整公式，保留来源算法差异。 |
 | `free_share` | tdx | `tdx_free_share` → `tdx_indicator_select` | 自由流通股本 | 原单位：股；×1；通达信自由流通股本，截止日期20251106；自由流通扣除规则依通达信。 |
+| `free_share` | choice | `choice_valuations` → `mx_ashare_finance_data` | 自由流通股；问句：自由流通股 | 原单位：股；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `limit_status` | tushare | `ts_valuation` → `daily_basic` | limit_status | 原单位：状态码；×1；依据Tushare daily_basic官方输出定义；收盘状态编码：0平盘，1上涨但未涨停，2涨停但非一字，3一字涨停，4下跌但未跌停，5跌停但非一字，6一字跌停。此字段非默认返回，需显式请求。 |
 | `limit_status` | akshare | — | — | 尚未核实该来源的对应字段、口径及单位，暂不接入 |
 | `limit_status` | wind | — | — | 尚未核实该来源的对应字段、口径及单位，暂不接入 |
 | `limit_status` | ifind | — | — | 尚未核实该来源的对应字段、口径及单位，暂不接入 |
 | `limit_status` | tdx | — | — | 尚未核实该来源的对应字段、口径及单位，暂不接入 |
+| `limit_status` | choice | — | — | 返回涨跌停状态编码，与Tushare收盘涨跌状态码不是同一套，暂不接入。 |
 
 ## financials
 
@@ -360,846 +384,1015 @@
 | `revenue` | wind | `wind_financials` → `get_stock_fundamentals` | 营业收入；问句：营业收入 | 原单位：返回表头或数值后缀；×1 |
 | `revenue` | ifind | `ifind_financials` → `get_security_indicators` | 营业收入；问句：营业收入 | 原单位：返回表头或数值后缀；×1 |
 | `revenue` | tdx | `tdx_lyb` → `tdx_api_data` | 营业收入 | 原单位：元；×1 |
+| `revenue` | choice | `choice_financials` → `mx_ashare_finance_data` | 营业收入；问句：营业收入 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `net_profit_parent` | tushare | `ts_income` → `income` | n_income_attr_p | 原单位：元；×1 |
 | `net_profit_parent` | akshare | `ak_income` → `stock_financial_report_sina` | 归属母公司净利润 / 归属于母公司所有者的净利润 / 归属母公司股东的净利润 / 归母净利润 | 原单位：元；×1 |
 | `net_profit_parent` | wind | `wind_financials` → `get_stock_fundamentals` | 归属母公司净利润 / 归属于母公司所有者的净利润 / 归属母公司股东的净利润 / 归母净利润；问句：归母净利润 | 原单位：返回表头或数值后缀；×1 |
 | `net_profit_parent` | ifind | `ifind_financials` → `get_security_indicators` | 归属母公司净利润 / 归属于母公司所有者的净利润 / 归属母公司股东的净利润 / 归母净利润；问句：归母净利润 | 原单位：返回表头或数值后缀；×1 |
 | `net_profit_parent` | tdx | `tdx_lyb` → `tdx_api_data` | 归属母公司净利润 / 归属于母公司所有者的净利润 / 归属母公司股东的净利润 / 归母净利润 | 原单位：元；×1 |
+| `net_profit_parent` | choice | `choice_financials` → `mx_ashare_finance_data` | 归属母公司净利润 / 归属于母公司所有者的净利润 / 归属母公司股东的净利润 / 归母净利润 / 归属于母公司股东的净利润；问句：归母净利润 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `net_profit_excl` | tushare | `ts_fina_indicator` → `fina_indicator` | profit_dedt | 原单位：元；×1 |
 | `net_profit_excl` | akshare | `ak_abstract` → `stock_financial_abstract` | 扣非净利润；指标参数：扣非净利润 | 原单位：元；×1 |
 | `net_profit_excl` | wind | `wind_deduction` → `get_stock_fundamentals` | 扣非净利润 / 扣除非经常性损益后的归属母公司净利润 / 扣除非经常性损益后的归属母公司股东净利润 / 扣除非经常性损益后归属于母公司股东的净利润 / 扣除非经常性损益后归母净利润；问句：扣除非经常性损益后归属于母公司股东的净利润 | 原单位：返回表头或数值后缀；×1 |
 | `net_profit_excl` | ifind | `ifind_financials` → `get_security_indicators` | 扣非净利润 / 扣除非经常性损益后的归属母公司净利润 / 扣除非经常性损益后的归属母公司股东净利润 / 扣除非经常性损益后归属于母公司股东的净利润 / 扣除非经常性损益后归母净利润；问句：扣非净利润 | 原单位：返回表头或数值后缀；×1 |
 | `net_profit_excl` | tdx | `tdx_lyb` → `tdx_api_data` | 扣非净利润 / 扣除非经常性损益后的归属母公司净利润 / 扣除非经常性损益后的归属母公司股东净利润 / 扣除非经常性损益后归属于母公司股东的净利润 / 扣除非经常性损益后归母净利润 | 原单位：元；×1 |
+| `net_profit_excl` | choice | `choice_financials` → `mx_ashare_finance_data` | 扣非净利润 / 扣除非经常性损益后的归属母公司净利润 / 扣除非经常性损益后的归属母公司股东净利润 / 扣除非经常性损益后归属于母公司股东的净利润 / 扣除非经常性损益后归母净利润；问句：扣非净利润 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `total_assets` | tushare | `ts_balancesheet` → `balancesheet` | total_assets | 原单位：元；×1 |
 | `total_assets` | akshare | `ak_balance` → `stock_financial_report_sina` | 资产总计 / 总资产 / 资产合计 | 原单位：元；×1 |
 | `total_assets` | wind | `wind_financials` → `get_stock_fundamentals` | 资产总计 / 总资产 / 资产合计；问句：总资产 | 原单位：返回表头或数值后缀；×1 |
 | `total_assets` | ifind | `ifind_financials` → `get_security_indicators` | 资产总计 / 总资产 / 资产合计；问句：总资产 | 原单位：返回表头或数值后缀；×1 |
 | `total_assets` | tdx | `tdx_zcfzb` → `tdx_api_data` | 资产总计 / 总资产 / 资产合计 | 原单位：元；×1 |
+| `total_assets` | choice | `choice_financials` → `mx_ashare_finance_data` | 资产总计 / 总资产 / 资产合计；问句：总资产 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `total_liab` | tushare | `ts_balancesheet` → `balancesheet` | total_liab | 原单位：元；×1 |
 | `total_liab` | akshare | `ak_balance` → `stock_financial_report_sina` | 负债合计 / 总负债 | 原单位：元；×1 |
 | `total_liab` | wind | `wind_financials` → `get_stock_fundamentals` | 负债合计 / 总负债；问句：总负债 | 原单位：返回表头或数值后缀；×1 |
 | `total_liab` | ifind | `ifind_financials` → `get_security_indicators` | 负债合计 / 总负债；问句：总负债 | 原单位：返回表头或数值后缀；×1 |
 | `total_liab` | tdx | `tdx_zcfzb` → `tdx_api_data` | 负债合计 / 总负债 | 原单位：元；×1 |
+| `total_liab` | choice | `choice_financials` → `mx_ashare_finance_data` | 负债合计 / 总负债；问句：总负债 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `equity_parent` | tushare | `ts_balancesheet` → `balancesheet` | total_hldr_eqy_exc_min_int | 原单位：元；×1 |
 | `equity_parent` | akshare | `ak_balance` → `stock_financial_report_sina` | 归属于母公司股东权益合计 / 归属母公司股东权益合计 / 归属于母公司所有者权益合计 / 归母权益 / 其中：母公司股东权益 | 原单位：元；×1 |
 | `equity_parent` | wind | `wind_financials` → `get_stock_fundamentals` | 归属于母公司股东权益合计 / 归属母公司股东权益合计 / 归属于母公司所有者权益合计 / 归母权益 / 其中：母公司股东权益；问句：归母权益 | 原单位：返回表头或数值后缀；×1 |
 | `equity_parent` | ifind | `ifind_financials` → `get_security_indicators` | 归属于母公司股东权益合计 / 归属母公司股东权益合计 / 归属于母公司所有者权益合计 / 归母权益 / 其中：母公司股东权益；问句：归母权益 | 原单位：返回表头或数值后缀；×1 |
 | `equity_parent` | tdx | `tdx_zcfzb` → `tdx_api_data` | 归属于母公司股东权益合计 / 归属母公司股东权益合计 / 归属于母公司所有者权益合计 / 归母权益 / 其中：母公司股东权益 | 原单位：元；×1 |
+| `equity_parent` | choice | `choice_financials` → `mx_ashare_finance_data` | 归属于母公司股东权益合计 / 归属母公司股东权益合计 / 归属于母公司所有者权益合计 / 归母权益 / 其中：母公司股东权益；问句：归母权益 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `operating_cashflow` | tushare | `ts_cashflow` → `cashflow` | n_cashflow_act | 原单位：元；×1 |
 | `operating_cashflow` | akshare | `ak_cashflow` → `stock_financial_report_sina` | 经营活动产生的现金流量净额 / 经营现金流 / 经营活动现金流量净额 | 原单位：元；×1 |
 | `operating_cashflow` | wind | `wind_financials` → `get_stock_fundamentals` | 经营活动产生的现金流量净额 / 经营现金流 / 经营活动现金流量净额；问句：经营现金流 | 原单位：返回表头或数值后缀；×1 |
 | `operating_cashflow` | ifind | `ifind_financials` → `get_security_indicators` | 经营活动产生的现金流量净额 / 经营现金流 / 经营活动现金流量净额；问句：经营现金流 | 原单位：返回表头或数值后缀；×1 |
 | `operating_cashflow` | tdx | `tdx_xjllb` → `tdx_api_data` | 经营活动产生的现金流量净额 / 经营现金流 / 经营活动现金流量净额 | 原单位：元；×1 |
+| `operating_cashflow` | choice | `choice_financials` → `mx_ashare_finance_data` | 经营活动产生的现金流量净额 / 经营现金流 / 经营活动现金流量净额；问句：经营现金流 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `eps` | tushare | `ts_income` → `income` | basic_eps | 原单位：元/股；×1 |
 | `eps` | akshare | `ak_income` → `stock_financial_report_sina` | 基本每股收益 | 原单位：元/股；×1 |
 | `eps` | wind | `wind_financials` → `get_stock_fundamentals` | 基本每股收益；问句：基本每股收益 | 原单位：返回表头或数值后缀；×1 |
 | `eps` | ifind | `ifind_financials` → `get_security_indicators` | 基本每股收益；问句：基本每股收益 | 原单位：返回表头或数值后缀；×1 |
 | `eps` | tdx | `tdx_lyb` → `tdx_api_data` | 基本每股收益 | 原单位：元/股；×1 |
+| `eps` | choice | `choice_financials` → `mx_ashare_finance_data` | 基本每股收益；问句：基本每股收益 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `roe` | tushare | `ts_fina_indicator` → `fina_indicator` | roe | 原单位：%；×1；Tushare报告期净资产收益率，使用Tushare自身算法。 |
 | `roe` | akshare | `ak_abstract` → `stock_financial_abstract` | 净资产收益率_平均；指标参数：净资产收益率_平均 | 原单位：%；×1；新浪平均净资产收益率，平均权益和计算方法按新浪定义。 |
 | `roe` | wind | `wind_financials_reconsider` → `get_stock_fundamentals` | 净资产收益率_摊薄；问句：净资产收益率(摊薄) | 原单位：返回表头或数值后缀；×1；Wind报告期累计摊薄ROE；不同于加权平均ROE。本次2024年报36.991%，来源算法可与其他来源不同。 |
 | `roe` | ifind | `ifind_financials_rechecked` → `get_security_indicators` | 净资产收益率ROE(加权,公布值)；问句：净资产收益率ROE(加权,公布值) | 原单位：%；×1；普通ROE在iFinD采用加权公布值：2023年34.19%、2024年36.02%；与其他来源平均或摊薄算法不同。该字段不是摊薄ROE；需比较同算法时请求roe_waa。 |
 | `roe` | tdx | — | — | 当前接口未提供或尚未映射 |
+| `roe` | choice | `choice_financials` → `mx_ashare_finance_data` | 净资产收益率ROE(加权,公布值)；问句：净资产收益率ROE(加权,公布值) | 原单位：%；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `dt_eps` | tushare | `ts_fina_indicator` → `fina_indicator` | dt_eps | 原单位：元/股；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `dt_eps` | akshare | `ak_fina_indicator_em` → `stock_financial_analysis_indicator_em` | EPSXS | 原单位：元/股；×1 |
 | `dt_eps` | wind | `wind_financials_expanded` → `get_stock_fundamentals` | 稀释每股收益；问句：稀释每股收益 | 原单位：返回表头或数值后缀；×1；Wind财务展示精度可能仅4位小数；报告期累计。 |
 | `dt_eps` | ifind | `ifind_financials_rechecked` → `get_security_indicators` | 稀释每股收益；问句：稀释每股收益 | 原单位：元/股；×1；iFinD自身指标口径；与其他来源数值可能不同，按实际返回单位统一，不以Tushare数值作为标准。 |
 | `dt_eps` | tdx | `tdx_lyb` → `tdx_api_data` | 稀释每股收益 | 原单位：元/股；×1 |
+| `dt_eps` | choice | `choice_financials` → `mx_ashare_finance_data` | 稀释每股收益；问句：稀释每股收益 | 原单位：元/股；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `total_revenue_ps` | tushare | `ts_fina_indicator` → `fina_indicator` | total_revenue_ps | 原单位：元/股；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `total_revenue_ps` | akshare | `ak_abstract` → `stock_financial_abstract` | 每股营业总收入；指标参数：每股营业总收入 | 原单位：元/股；×1 |
 | `total_revenue_ps` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `total_revenue_ps` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `total_revenue_ps` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `total_revenue_ps` | choice | `choice_financials` → `mx_ashare_finance_data` | 每股营业总收入；问句：每股营业总收入 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `revenue_ps` | tushare | `ts_fina_indicator` → `fina_indicator` | revenue_ps | 原单位：元/股；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `revenue_ps` | akshare | `ak_abstract` → `stock_financial_abstract` | 每股营业收入；指标参数：每股营业收入 | 原单位：元/股；×1 |
 | `revenue_ps` | wind | `wind_financials_expanded` → `get_stock_fundamentals` | 每股营业收入；问句：每股营业收入 | 原单位：返回表头或数值后缀；×1；Wind财务展示精度可能仅4位小数；报告期累计。 |
 | `revenue_ps` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `revenue_ps` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `revenue_ps` | choice | `choice_financials` → `mx_ashare_finance_data` | 每股营业收入；问句：每股营业收入 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `capital_rese_ps` | tushare | `ts_fina_indicator` → `fina_indicator` | capital_rese_ps | 原单位：元/股；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `capital_rese_ps` | akshare | `ak_fina_indicator_em` → `stock_financial_analysis_indicator_em` | MGZBGJ | 原单位：元/股；×1 |
 | `capital_rese_ps` | wind | `wind_financials_expanded` → `get_stock_fundamentals` | 每股资本公积；问句：每股资本公积 | 原单位：返回表头或数值后缀；×1；Wind财务展示精度可能仅4位小数；报告期累计。 |
 | `capital_rese_ps` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `capital_rese_ps` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `capital_rese_ps` | choice | `choice_financials` → `mx_ashare_finance_data` | 每股资本公积；问句：每股资本公积 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `surplus_rese_ps` | tushare | `ts_fina_indicator` → `fina_indicator` | surplus_rese_ps | 原单位：元/股；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `surplus_rese_ps` | akshare | `ak_abstract` → `stock_financial_abstract` | 每股盈余公积金；指标参数：每股盈余公积金 | 原单位：元/股；×1 |
 | `surplus_rese_ps` | wind | `wind_financials_expanded` → `get_stock_fundamentals` | 每股盈余公积；问句：每股盈余公积 | 原单位：返回表头或数值后缀；×1；Wind财务展示精度可能仅4位小数；报告期累计。 |
 | `surplus_rese_ps` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `surplus_rese_ps` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `surplus_rese_ps` | choice | `choice_financials` → `mx_ashare_finance_data` | 每股盈余公积；问句：每股盈余公积 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `undist_profit_ps` | tushare | `ts_fina_indicator` → `fina_indicator` | undist_profit_ps | 原单位：元/股；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `undist_profit_ps` | akshare | `ak_fina_indicator_em` → `stock_financial_analysis_indicator_em` | MGWFPLR | 原单位：元/股；×1 |
 | `undist_profit_ps` | wind | `wind_financials_expanded` → `get_stock_fundamentals` | 每股未分配利润；问句：每股未分配利润 | 原单位：返回表头或数值后缀；×1；Wind财务展示精度可能仅4位小数；报告期累计。 |
 | `undist_profit_ps` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `undist_profit_ps` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `undist_profit_ps` | choice | `choice_financials` → `mx_ashare_finance_data` | 每股未分配利润；问句：每股未分配利润 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `extra_item` | tushare | `ts_fina_indicator` → `fina_indicator` | extra_item | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `extra_item` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `extra_item` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `extra_item` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `extra_item` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `extra_item` | choice | `choice_financials` → `mx_ashare_finance_data` | 非经常性损益项目合计；问句：非经常性损益项目合计 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `gross_margin` | tushare | `ts_fina_indicator` → `fina_indicator` | gross_margin | 原单位：元；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 注意：此字段是毛利金额语义；销售毛利率是grossprofit_margin。 |
 | `gross_margin` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `gross_margin` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `gross_margin` | ifind | `ifind_financials_rechecked` → `get_security_indicators` | 毛利；问句：毛利 | 原单位：元；×1；毛利金额，不是毛利率；2024年1571.0967亿元，按亿后缀换算为元。 |
 | `gross_margin` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `gross_margin` | choice | `choice_financials` → `mx_ashare_finance_data` | 毛利；问句：毛利 | 原单位：元；×1；毛利金额，不是毛利率；2024年1571.0967亿元，按亿后缀换算为元。 |
 | `current_ratio` | tushare | `ts_fina_indicator` → `fina_indicator` | current_ratio | 原单位：倍；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `current_ratio` | akshare | `ak_fina_indicator_em` → `stock_financial_analysis_indicator_em` | LD | 原单位：倍；×1 |
 | `current_ratio` | wind | `wind_financials_expanded` → `get_stock_fundamentals` | 流动比率；问句：流动比率 | 原单位：无量纲比值；×1；无量纲比值，不乘100；Wind与Tushare茅台2024年报一致。 |
 | `current_ratio` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `current_ratio` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `current_ratio` | choice | `choice_financials` → `mx_ashare_finance_data` | 流动比率；问句：流动比率 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `quick_ratio` | tushare | `ts_fina_indicator` → `fina_indicator` | quick_ratio | 原单位：倍；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `quick_ratio` | akshare | `ak_fina_indicator_em` → `stock_financial_analysis_indicator_em` | SD | 原单位：倍；×1 |
 | `quick_ratio` | wind | `wind_financials_expanded` → `get_stock_fundamentals` | 速动比率；问句：速动比率 | 原单位：无量纲比值；×1；无量纲比值，不乘100；Wind与Tushare茅台2024年报一致。 |
 | `quick_ratio` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `quick_ratio` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `quick_ratio` | choice | `choice_financials` → `mx_ashare_finance_data` | 速动比率；问句：速动比率 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `cash_ratio` | tushare | `ts_fina_indicator` → `fina_indicator` | cash_ratio | 原单位：倍；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `cash_ratio` | akshare | `ak_abstract` → `stock_financial_abstract` | 保守速动比率；指标参数：保守速动比率 | 原单位：倍；×1；现金及可迅速变现资产定义依新浪；不是普通现金比率。 |
 | `cash_ratio` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `cash_ratio` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `cash_ratio` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `cash_ratio` | choice | `choice_financials` → `mx_ashare_finance_data` | 保守速动比率；问句：保守速动比率 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `invturn_days` | tushare | `ts_fina_indicator` → `fina_indicator` | invturn_days | 原单位：天；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `invturn_days` | akshare | `ak_abstract` → `stock_financial_abstract` | 存货周转天数；指标参数：存货周转天数 | 原单位：天；×1；期间平均存货、成本/日数计算依新浪；保留与其他源差异。 |
 | `invturn_days` | wind | `wind_financials_reconsider` → `get_stock_fundamentals` | 存货周转天数；问句：存货周转天数 | 原单位：返回表头或数值后缀；×1；Wind报告期累计存货周转天数，本次1315.5044天；来源周转天数计算法可不同。 |
 | `invturn_days` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `invturn_days` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `invturn_days` | choice | `choice_financials` → `mx_ashare_finance_data` | 存货周转天数；问句：存货周转天数 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `arturn_days` | tushare | `ts_fina_indicator` → `fina_indicator` | arturn_days | 原单位：天；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `arturn_days` | akshare | `ak_fina_indicator_em` → `stock_financial_analysis_indicator_em` | YSZKZZTS | 原单位：天；×1 |
 | `arturn_days` | wind | `wind_financials_expanded` → `get_stock_fundamentals` | 应收账款周转天数；问句：应收账款周转天数 | 原单位：返回表头或数值后缀；×1；Wind财务展示精度可能仅4位小数；报告期累计。 |
 | `arturn_days` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `arturn_days` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `arturn_days` | choice | `choice_financials` → `mx_ashare_finance_data` | 应收账款周转天数(含应收票据)；问句：应收账款周转天数(含应收票据) | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 来源列为应收账款周转天数(含应收票据)。 |
 | `inv_turn` | tushare | `ts_fina_indicator` → `fina_indicator` | inv_turn | 原单位：次；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `inv_turn` | akshare | `ak_fina_indicator_em` → `stock_financial_analysis_indicator_em` | CHZZL | 原单位：次；×1 |
 | `inv_turn` | wind | `wind_financials_expanded` → `get_stock_fundamentals` | 存货周转率；问句：存货周转率 | 原单位：返回表头或数值后缀；×1；Wind财务展示精度可能仅4位小数；报告期累计。 |
 | `inv_turn` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `inv_turn` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `inv_turn` | choice | `choice_financials` → `mx_ashare_finance_data` | 存货周转率；问句：存货周转率 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `ar_turn` | tushare | `ts_fina_indicator` → `fina_indicator` | ar_turn | 原单位：次；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `ar_turn` | akshare | `ak_fina_indicator_em` → `stock_financial_analysis_indicator_em` | YSZKZZL | 原单位：次；×1 |
 | `ar_turn` | wind | `wind_financials_expanded` → `get_stock_fundamentals` | 应收账款周转率；问句：应收账款周转率 | 原单位：返回表头或数值后缀；×1；Wind财务展示精度可能仅4位小数；报告期累计。 |
 | `ar_turn` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ar_turn` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `ar_turn` | choice | `choice_financials` → `mx_ashare_finance_data` | 应收账款周转率(含应收票据)；问句：应收账款周转率(含应收票据) | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 来源列为应收账款周转率(含应收票据)。 |
 | `ca_turn` | tushare | `ts_fina_indicator` → `fina_indicator` | ca_turn | 原单位：次；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `ca_turn` | akshare | `ak_abstract` → `stock_financial_abstract` | 流动资产周转率；指标参数：流动资产周转率 | 原单位：次；×1 |
 | `ca_turn` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ca_turn` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ca_turn` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `ca_turn` | choice | `choice_financials` → `mx_ashare_finance_data` | 流动资产周转率；问句：流动资产周转率 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `fa_turn` | tushare | `ts_fina_indicator` → `fina_indicator` | fa_turn | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `fa_turn` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `fa_turn` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `fa_turn` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `fa_turn` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `fa_turn` | choice | `choice_financials` → `mx_ashare_finance_data` | 固定资产周转率；问句：固定资产周转率 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `assets_turn` | tushare | `ts_fina_indicator` → `fina_indicator` | assets_turn | 原单位：次；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `assets_turn` | akshare | `ak_fina_indicator_em` → `stock_financial_analysis_indicator_em` | TOAZZL | 原单位：次；×1 |
 | `assets_turn` | wind | `wind_financials_expanded` → `get_stock_fundamentals` | 总资产周转率；问句：总资产周转率 | 原单位：返回表头或数值后缀；×1；Wind财务展示精度可能仅4位小数；报告期累计。 |
 | `assets_turn` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `assets_turn` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `assets_turn` | choice | `choice_financials` → `mx_ashare_finance_data` | 总资产周转率；问句：总资产周转率 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `op_income` | tushare | `ts_fina_indicator` → `fina_indicator` | op_income | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `op_income` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `op_income` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `op_income` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `op_income` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `op_income` | choice | `choice_financials` → `mx_ashare_finance_data` | 经营活动净收益；问句：经营活动净收益 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `valuechange_income` | tushare | `ts_fina_indicator` → `fina_indicator` | valuechange_income | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `valuechange_income` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `valuechange_income` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `valuechange_income` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `valuechange_income` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `valuechange_income` | choice | `choice_financials` → `mx_ashare_finance_data` | 价值变动净收益；问句：价值变动净收益 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `interst_income` | tushare | `ts_fina_indicator` → `fina_indicator` | interst_income | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 保留官方字段拼写与描述，不按英文名纠正或推断TTM。 |
 | `interst_income` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `interst_income` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `interst_income` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `interst_income` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `interst_income` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `daa` | tushare | `ts_fina_indicator` → `fina_indicator` | daa | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `daa` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `daa` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `daa` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `daa` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `daa` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `ebit` | tushare | `ts_fina_indicator` → `fina_indicator` | ebit | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `ebit` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ebit` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ebit` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ebit` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `ebit` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `ebitda` | tushare | `ts_fina_indicator` → `fina_indicator` | ebitda | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `ebitda` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ebitda` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ebitda` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ebitda` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `ebitda` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `fcff` | tushare | `ts_fina_indicator` → `fina_indicator` | fcff | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `fcff` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `fcff` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `fcff` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `fcff` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `fcff` | choice | `choice_financials` → `mx_ashare_finance_data` | 企业自由现金流量FCFF(反推法)；问句：企业自由现金流量FCFF(反推法) | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `fcfe` | tushare | `ts_fina_indicator` → `fina_indicator` | fcfe | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `fcfe` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `fcfe` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `fcfe` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `fcfe` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `fcfe` | choice | `choice_financials` → `mx_ashare_finance_data` | 股权自由现金流量FCFE；问句：股权自由现金流量FCFE | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `current_exint` | tushare | `ts_fina_indicator` → `fina_indicator` | current_exint | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `current_exint` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `current_exint` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `current_exint` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `current_exint` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `current_exint` | choice | `choice_financials` → `mx_ashare_finance_data` | 无息流动负债；问句：无息流动负债 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `noncurrent_exint` | tushare | `ts_fina_indicator` → `fina_indicator` | noncurrent_exint | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `noncurrent_exint` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `noncurrent_exint` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `noncurrent_exint` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `noncurrent_exint` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `noncurrent_exint` | choice | `choice_financials` → `mx_ashare_finance_data` | 无息非流动负债；问句：无息非流动负债 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `interestdebt` | tushare | `ts_fina_indicator` → `fina_indicator` | interestdebt | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `interestdebt` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `interestdebt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `interestdebt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `interestdebt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `interestdebt` | choice | `choice_financials` → `mx_ashare_finance_data` | 带息债务；问句：带息债务 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `netdebt` | tushare | `ts_fina_indicator` → `fina_indicator` | netdebt | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `netdebt` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `netdebt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `netdebt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `netdebt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `netdebt` | choice | `choice_financials` → `mx_ashare_finance_data` | 净债务；问句：净债务 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `tangible_asset` | tushare | `ts_fina_indicator` → `fina_indicator` | tangible_asset | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `tangible_asset` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `tangible_asset` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `tangible_asset` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `tangible_asset` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `tangible_asset` | choice | `choice_financials` → `mx_ashare_finance_data` | 有形资产；问句：有形资产 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `working_capital` | tushare | `ts_fina_indicator` → `fina_indicator` | working_capital | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `working_capital` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `working_capital` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `working_capital` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `working_capital` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `working_capital` | choice | `choice_financials` → `mx_ashare_finance_data` | 营运资本；问句：营运资本 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `networking_capital` | tushare | `ts_fina_indicator` → `fina_indicator` | networking_capital | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `networking_capital` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `networking_capital` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `networking_capital` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `networking_capital` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `networking_capital` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `invest_capital` | tushare | `ts_fina_indicator` → `fina_indicator` | invest_capital | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `invest_capital` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `invest_capital` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `invest_capital` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `invest_capital` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `invest_capital` | choice | `choice_financials` → `mx_ashare_finance_data` | 全部投入资本；问句：全部投入资本 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `retained_earnings` | tushare | `ts_fina_indicator` → `fina_indicator` | retained_earnings | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `retained_earnings` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `retained_earnings` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `retained_earnings` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `retained_earnings` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `retained_earnings` | choice | `choice_financials` → `mx_ashare_finance_data` | 留存收益；问句：留存收益 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `diluted2_eps` | tushare | `ts_fina_indicator` → `fina_indicator` | diluted2_eps | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `diluted2_eps` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `diluted2_eps` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `diluted2_eps` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `diluted2_eps` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `diluted2_eps` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `bps` | tushare | `ts_fina_indicator` → `fina_indicator` | bps | 原单位：元/股；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `bps` | akshare | `ak_fina_indicator_em` → `stock_financial_analysis_indicator_em` | BPS | 原单位：元/股；×1 |
 | `bps` | wind | `wind_financials_expanded` → `get_stock_fundamentals` | 每股净资产；问句：每股净资产 | 原单位：返回表头或数值后缀；×1；Wind财务展示精度可能仅4位小数；报告期累计。 |
 | `bps` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `bps` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `bps` | choice | `choice_financials` → `mx_ashare_finance_data` | 每股净资产BPS；问句：每股净资产BPS | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `ocfps` | tushare | `ts_fina_indicator` → `fina_indicator` | ocfps | 原单位：元/股；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `ocfps` | akshare | `ak_fina_indicator_em` → `stock_financial_analysis_indicator_em` | MGJYXJJE | 原单位：元/股；×1 |
 | `ocfps` | wind | `wind_financials_expanded` → `get_stock_fundamentals` | 每股经营现金流量净额；问句：每股经营现金流量净额 | 原单位：返回表头或数值后缀；×1；Wind财务展示精度可能仅4位小数；报告期累计。 |
 | `ocfps` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ocfps` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `ocfps` | choice | `choice_financials` → `mx_ashare_finance_data` | 每股经营活动产生的现金流量净额；问句：每股经营活动产生的现金流量净额 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `retainedps` | tushare | `ts_fina_indicator` → `fina_indicator` | retainedps | 原单位：元/股；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `retainedps` | akshare | `ak_abstract` → `stock_financial_abstract` | 每股留存收益；指标参数：每股留存收益 | 原单位：元/股；×1 |
 | `retainedps` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `retainedps` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `retainedps` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `retainedps` | choice | `choice_financials` → `mx_ashare_finance_data` | 每股留存收益；问句：每股留存收益 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `cfps` | tushare | `ts_fina_indicator` → `fina_indicator` | cfps | 原单位：元/股；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `cfps` | akshare | `ak_abstract` → `stock_financial_abstract` | 每股现金流量净额；指标参数：每股现金流量净额 | 原单位：元/股；×1 |
 | `cfps` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `cfps` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `cfps` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `cfps` | choice | `choice_financials` → `mx_ashare_finance_data` | 每股现金流量净额；问句：每股现金流量净额 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `ebit_ps` | tushare | `ts_fina_indicator` → `fina_indicator` | ebit_ps | 原单位：元/股；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `ebit_ps` | akshare | `ak_abstract` → `stock_financial_abstract` | 每股息税前利润；指标参数：每股息税前利润 | 原单位：元/股；×1；息税前利润调整项和股数分母依新浪。 |
 | `ebit_ps` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ebit_ps` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ebit_ps` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `ebit_ps` | choice | `choice_financials` → `mx_ashare_finance_data` | 每股息税前利润；问句：每股息税前利润 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `fcff_ps` | tushare | `ts_fina_indicator` → `fina_indicator` | fcff_ps | 原单位：元/股；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `fcff_ps` | akshare | `ak_abstract` → `stock_financial_abstract` | 每股企业自由现金流量；指标参数：每股企业自由现金流量 | 原单位：元/股；×1；企业自由现金流调整项与股数分母依新浪。 |
 | `fcff_ps` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `fcff_ps` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `fcff_ps` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `fcff_ps` | choice | `choice_financials` → `mx_ashare_finance_data` | 每股企业自由现金流量；问句：每股企业自由现金流量 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `fcfe_ps` | tushare | `ts_fina_indicator` → `fina_indicator` | fcfe_ps | 原单位：元/股；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `fcfe_ps` | akshare | `ak_abstract` → `stock_financial_abstract` | 每股股东自由现金流量；指标参数：每股股东自由现金流量 | 原单位：元/股；×1；股权自由现金流调整项与股数分母依新浪。 |
 | `fcfe_ps` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `fcfe_ps` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `fcfe_ps` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `fcfe_ps` | choice | `choice_financials` → `mx_ashare_finance_data` | 每股股东自由现金流量；问句：每股股东自由现金流量 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `netprofit_margin` | tushare | `ts_fina_indicator` → `fina_indicator` | netprofit_margin | 原单位：%；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `netprofit_margin` | akshare | `ak_fina_indicator_em` → `stock_financial_analysis_indicator_em` | XSJLL | 原单位：%；×1 |
 | `netprofit_margin` | wind | `wind_financials_expanded` → `get_stock_fundamentals` | 销售净利率；问句：销售净利率 | 原单位：返回表头或数值后缀；×1；Wind财务展示精度可能仅4位小数；报告期累计。 |
 | `netprofit_margin` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `netprofit_margin` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `netprofit_margin` | choice | `choice_financials` → `mx_ashare_finance_data` | 销售净利率；问句：销售净利率 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `grossprofit_margin` | tushare | `ts_fina_indicator` → `fina_indicator` | grossprofit_margin | 原单位：%；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `grossprofit_margin` | akshare | `ak_fina_indicator_em` → `stock_financial_analysis_indicator_em` | XSMLL | 原单位：%；×1 |
 | `grossprofit_margin` | wind | `wind_financials_expanded` → `get_stock_fundamentals` | 销售毛利率；问句：销售毛利率 | 原单位：返回表头或数值后缀；×1；Wind财务展示精度可能仅4位小数；报告期累计。 |
 | `grossprofit_margin` | ifind | `ifind_financials_rechecked` → `get_security_indicators` | 销售毛利率；问句：销售毛利率 | 原单位：%；×1；销售毛利率百分数；2024年91.9312%，不与毛利金额gross_margin混用。 |
 | `grossprofit_margin` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `grossprofit_margin` | choice | `choice_financials` → `mx_ashare_finance_data` | 销售毛利率；问句：销售毛利率 | 原单位：%；×1；销售毛利率百分数；2024年91.9312%，不与毛利金额gross_margin混用。 |
 | `cogs_of_sales` | tushare | `ts_fina_indicator` → `fina_indicator` | cogs_of_sales | 原单位：%；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `cogs_of_sales` | akshare | `ak_abstract` → `stock_financial_abstract` | 销售成本率；指标参数：销售成本率 | 原单位：%；×1 |
 | `cogs_of_sales` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `cogs_of_sales` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `cogs_of_sales` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `cogs_of_sales` | choice | `choice_financials` → `mx_ashare_finance_data` | 销售成本率；问句：销售成本率 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `expense_of_sales` | tushare | `ts_fina_indicator` → `fina_indicator` | expense_of_sales | 原单位：%；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `expense_of_sales` | akshare | `ak_abstract` → `stock_financial_abstract` | 期间费用率；指标参数：期间费用率 | 原单位：%；×1；新浪期间费用率，费用项目及收入分母依新浪算法。 |
 | `expense_of_sales` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `expense_of_sales` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `expense_of_sales` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `expense_of_sales` | choice | `choice_financials` → `mx_ashare_finance_data` | 销售期间费用率；问句：销售期间费用率 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `profit_to_gr` | tushare | `ts_fina_indicator` → `fina_indicator` | profit_to_gr | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `profit_to_gr` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `profit_to_gr` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `profit_to_gr` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `profit_to_gr` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `profit_to_gr` | choice | `choice_financials` → `mx_ashare_finance_data` | 净利润/营业总收入；问句：净利润/营业总收入 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `saleexp_to_gr` | tushare | `ts_fina_indicator` → `fina_indicator` | saleexp_to_gr | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `saleexp_to_gr` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `saleexp_to_gr` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `saleexp_to_gr` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `saleexp_to_gr` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `saleexp_to_gr` | choice | `choice_financials` → `mx_ashare_finance_data` | 销售费用/营业总收入；问句：销售费用/营业总收入 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `adminexp_of_gr` | tushare | `ts_fina_indicator` → `fina_indicator` | adminexp_of_gr | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `adminexp_of_gr` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `adminexp_of_gr` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `adminexp_of_gr` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `adminexp_of_gr` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `adminexp_of_gr` | choice | `choice_financials` → `mx_ashare_finance_data` | 管理费用/营业总收入；问句：管理费用/营业总收入 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `finaexp_of_gr` | tushare | `ts_fina_indicator` → `fina_indicator` | finaexp_of_gr | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `finaexp_of_gr` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `finaexp_of_gr` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `finaexp_of_gr` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `finaexp_of_gr` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `finaexp_of_gr` | choice | `choice_financials` → `mx_ashare_finance_data` | 财务费用/营业总收入；问句：财务费用/营业总收入 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `impai_ttm` | tushare | `ts_fina_indicator` → `fina_indicator` | impai_ttm | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 保留官方字段拼写与描述，不按英文名纠正或推断TTM。 |
 | `impai_ttm` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `impai_ttm` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `impai_ttm` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `impai_ttm` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `impai_ttm` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `gc_of_gr` | tushare | `ts_fina_indicator` → `fina_indicator` | gc_of_gr | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `gc_of_gr` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `gc_of_gr` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `gc_of_gr` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `gc_of_gr` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `gc_of_gr` | choice | `choice_financials` → `mx_ashare_finance_data` | 营业总成本/营业总收入；问句：营业总成本/营业总收入 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `op_of_gr` | tushare | `ts_fina_indicator` → `fina_indicator` | op_of_gr | 原单位：%；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `op_of_gr` | akshare | `ak_abstract` → `stock_financial_abstract` | 营业利润率；指标参数：营业利润率 | 原单位：%；×1；新浪营业利润/营业总收入；按来源保留。 |
 | `op_of_gr` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `op_of_gr` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `op_of_gr` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `op_of_gr` | choice | `choice_financials` → `mx_ashare_finance_data` | 营业利润/营业总收入；问句：营业利润/营业总收入 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `ebit_of_gr` | tushare | `ts_fina_indicator` → `fina_indicator` | ebit_of_gr | 原单位：%；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `ebit_of_gr` | akshare | `ak_abstract` → `stock_financial_abstract` | 息税前利润率；指标参数：息税前利润率 | 原单位：%；×1；新浪息税前利润/营业总收入，利润调整定义依来源。 |
 | `ebit_of_gr` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ebit_of_gr` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ebit_of_gr` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `ebit_of_gr` | choice | `choice_financials` → `mx_ashare_finance_data` | 息税前利润/营业总收入；问句：息税前利润/营业总收入 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `roe_waa` | tushare | `ts_fina_indicator` → `fina_indicator` | roe_waa | 原单位：%；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `roe_waa` | akshare | `ak_fina_indicator_em` → `stock_financial_analysis_indicator_em` | ROEJQ | 原单位：%；×1 |
 | `roe_waa` | wind | `wind_financials_expanded` → `get_stock_fundamentals` | 净资产收益率_加权 / 加权平均净资产收益率；问句：加权平均净资产收益率 | 原单位：返回表头或数值后缀；×1；Wind财务展示精度可能仅4位小数；报告期累计。 |
 | `roe_waa` | ifind | `ifind_financials_rechecked` → `get_security_indicators` | 净资产收益率ROE(加权,公布值)；问句：净资产收益率ROE(加权,公布值) | 原单位：%；×1；明确采用iFinD加权公布ROE，2024年36.02%，不与摊薄公布值36.991%混用。 |
 | `roe_waa` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `roe_waa` | choice | `choice_financials` → `mx_ashare_finance_data` | 净资产收益率ROE(加权,公布值)；问句：净资产收益率ROE(加权,公布值) | 原单位：%；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `roe_dt` | tushare | `ts_fina_indicator` → `fina_indicator` | roe_dt | 原单位：%；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `roe_dt` | akshare | `ak_abstract` → `stock_financial_abstract` | 净资产收益率_平均_扣除非经常损益；指标参数：净资产收益率_平均_扣除非经常损益 | 原单位：%；×1；新浪扣非平均净资产收益率；明确保留来源口径。 |
 | `roe_dt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `roe_dt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `roe_dt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `roe_dt` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `roa` | tushare | `ts_fina_indicator` → `fina_indicator` | roa | 原单位：%；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `roa` | akshare | `ak_abstract` → `stock_financial_abstract` | 总资产报酬率；指标参数：总资产报酬率 | 原单位：%；×1；总资产报酬率；利润调整项、平均资产定义依新浪。 |
 | `roa` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `roa` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `roa` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `roa` | choice | `choice_financials` → `mx_ashare_finance_data` | 总资产报酬率ROA；问句：总资产报酬率ROA | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `npta` | tushare | `ts_fina_indicator` → `fina_indicator` | npta | 原单位：%；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `npta` | akshare | `ak_abstract` → `stock_financial_abstract` | 总资产净利率_平均(含少数股东损益)；指标参数：总资产净利率_平均(含少数股东损益) | 原单位：%；×1；新浪含少数股东损益净利润/平均总资产。 |
 | `npta` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `npta` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `npta` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `npta` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `roic` | tushare | `ts_fina_indicator` → `fina_indicator` | roic | 原单位：%；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `roic` | akshare | `ak_abstract` → `stock_financial_abstract` | 投入资本回报率；指标参数：投入资本回报率 | 原单位：%；×1；投入资本及税后经营利润计算依新浪。 |
 | `roic` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `roic` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `roic` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `roic` | choice | `choice_financials` → `mx_ashare_finance_data` | 投入资本回报率ROIC；问句：投入资本回报率ROIC | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `roe_yearly` | tushare | `ts_fina_indicator` → `fina_indicator` | roe_yearly | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `roe_yearly` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `roe_yearly` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `roe_yearly` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `roe_yearly` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `roe_yearly` | choice | `choice_financials` → `mx_ashare_finance_data` | 年化净资产收益率；问句：年化净资产收益率 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `roa2_yearly` | tushare | `ts_fina_indicator` → `fina_indicator` | roa2_yearly | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `roa2_yearly` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `roa2_yearly` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `roa2_yearly` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `roa2_yearly` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `roa2_yearly` | choice | `choice_financials` → `mx_ashare_finance_data` | 年化总资产报酬率；问句：年化总资产报酬率 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `roe_avg` | tushare | `ts_fina_indicator` → `fina_indicator` | roe_avg | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `roe_avg` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `roe_avg` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `roe_avg` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `roe_avg` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `roe_avg` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `opincome_of_ebt` | tushare | `ts_fina_indicator` → `fina_indicator` | opincome_of_ebt | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `opincome_of_ebt` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `opincome_of_ebt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `opincome_of_ebt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `opincome_of_ebt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `opincome_of_ebt` | choice | `choice_financials` → `mx_ashare_finance_data` | 经营活动净收益/利润总额；问句：经营活动净收益/利润总额 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `investincome_of_ebt` | tushare | `ts_fina_indicator` → `fina_indicator` | investincome_of_ebt | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `investincome_of_ebt` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `investincome_of_ebt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `investincome_of_ebt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `investincome_of_ebt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `investincome_of_ebt` | choice | `choice_financials` → `mx_ashare_finance_data` | 价值变动净收益/利润总额；问句：价值变动净收益/利润总额 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `n_op_profit_of_ebt` | tushare | `ts_fina_indicator` → `fina_indicator` | n_op_profit_of_ebt | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `n_op_profit_of_ebt` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `n_op_profit_of_ebt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `n_op_profit_of_ebt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `n_op_profit_of_ebt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `n_op_profit_of_ebt` | choice | `choice_financials` → `mx_ashare_finance_data` | 营业外收支净额/利润总额；问句：营业外收支净额/利润总额 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `tax_to_ebt` | tushare | `ts_fina_indicator` → `fina_indicator` | tax_to_ebt | 原单位：%；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `tax_to_ebt` | akshare | `ak_abstract` → `stock_financial_abstract` | 所得税/利润总额；指标参数：所得税/利润总额 | 原单位：%；×1 |
 | `tax_to_ebt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `tax_to_ebt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `tax_to_ebt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `tax_to_ebt` | choice | `choice_financials` → `mx_ashare_finance_data` | 所得税/利润总额；问句：所得税/利润总额 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `dtprofit_to_profit` | tushare | `ts_fina_indicator` → `fina_indicator` | dtprofit_to_profit | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `dtprofit_to_profit` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `dtprofit_to_profit` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `dtprofit_to_profit` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `dtprofit_to_profit` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `dtprofit_to_profit` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `salescash_to_or` | tushare | `ts_fina_indicator` → `fina_indicator` | salescash_to_or | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `salescash_to_or` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `salescash_to_or` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `salescash_to_or` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `salescash_to_or` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `salescash_to_or` | choice | `choice_financials` → `mx_ashare_finance_data` | 销售商品提供劳务收到的现金/营业收入；问句：销售商品提供劳务收到的现金/营业收入 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `ocf_to_or` | tushare | `ts_fina_indicator` → `fina_indicator` | ocf_to_or | 原单位：倍；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `ocf_to_or` | akshare | `ak_abstract` → `stock_financial_abstract` | 经营活动净现金/销售收入；指标参数：经营活动净现金/销售收入 | 原单位：倍；×1；新浪经营活动净现金/销售收入，收入分母按新浪定义。 |
 | `ocf_to_or` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ocf_to_or` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ocf_to_or` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `ocf_to_or` | choice | `choice_financials` → `mx_ashare_finance_data` | 经营活动产生的现金流量净额/营业收入；问句：经营活动产生的现金流量净额/营业收入 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `ocf_to_opincome` | tushare | `ts_fina_indicator` → `fina_indicator` | ocf_to_opincome | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `ocf_to_opincome` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ocf_to_opincome` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ocf_to_opincome` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ocf_to_opincome` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `ocf_to_opincome` | choice | `choice_financials` → `mx_ashare_finance_data` | 经营活动产生的现金流量净额/经营活动净收益；问句：经营活动产生的现金流量净额/经营活动净收益 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `capitalized_to_da` | tushare | `ts_fina_indicator` → `fina_indicator` | capitalized_to_da | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `capitalized_to_da` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `capitalized_to_da` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `capitalized_to_da` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `capitalized_to_da` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `capitalized_to_da` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `debt_to_assets` | tushare | `ts_fina_indicator` → `fina_indicator` | debt_to_assets | 原单位：%；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `debt_to_assets` | akshare | `ak_fina_indicator_em` → `stock_financial_analysis_indicator_em` | ZCFZL | 原单位：%；×1 |
 | `debt_to_assets` | wind | `wind_financials_expanded` → `get_stock_fundamentals` | 资产负债率；问句：资产负债率 | 原单位：返回表头或数值后缀；×1；Wind财务展示精度可能仅4位小数；报告期累计。 |
 | `debt_to_assets` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `debt_to_assets` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `debt_to_assets` | choice | `choice_financials` → `mx_ashare_finance_data` | 资产负债率；问句：资产负债率 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `assets_to_eqt` | tushare | `ts_fina_indicator` → `fina_indicator` | assets_to_eqt | 原单位：倍；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `assets_to_eqt` | akshare | `ak_fina_indicator_em` → `stock_financial_analysis_indicator_em` | QYCS | 原单位：倍；×1；东财权益乘数，权益分母范围按东财定义。 |
 | `assets_to_eqt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `assets_to_eqt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `assets_to_eqt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `assets_to_eqt` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `dp_assets_to_eqt` | tushare | `ts_fina_indicator` → `fina_indicator` | dp_assets_to_eqt | 原单位：倍；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `dp_assets_to_eqt` | akshare | `ak_abstract` → `stock_financial_abstract` | 权益乘数；指标参数：权益乘数 | 原单位：倍；×1；新浪该指标采用归母净资产分母，含少数权益版本另为权益乘数(含少数股权的净资产)。 |
 | `dp_assets_to_eqt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `dp_assets_to_eqt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `dp_assets_to_eqt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `dp_assets_to_eqt` | choice | `choice_financials` → `mx_ashare_finance_data` | 权益乘数(杜邦分析)；问句：权益乘数(杜邦分析) | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `ca_to_assets` | tushare | `ts_fina_indicator` → `fina_indicator` | ca_to_assets | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `ca_to_assets` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ca_to_assets` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ca_to_assets` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ca_to_assets` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `ca_to_assets` | choice | `choice_financials` → `mx_ashare_finance_data` | 流动资产/总资产；问句：流动资产/总资产 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `nca_to_assets` | tushare | `ts_fina_indicator` → `fina_indicator` | nca_to_assets | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `nca_to_assets` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `nca_to_assets` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `nca_to_assets` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `nca_to_assets` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `nca_to_assets` | choice | `choice_financials` → `mx_ashare_finance_data` | 非流动资产/总资产；问句：非流动资产/总资产 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `tbassets_to_totalassets` | tushare | `ts_fina_indicator` → `fina_indicator` | tbassets_to_totalassets | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `tbassets_to_totalassets` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `tbassets_to_totalassets` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `tbassets_to_totalassets` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `tbassets_to_totalassets` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `tbassets_to_totalassets` | choice | `choice_financials` → `mx_ashare_finance_data` | 有形资产/总资产；问句：有形资产/总资产 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `int_to_talcap` | tushare | `ts_fina_indicator` → `fina_indicator` | int_to_talcap | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `int_to_talcap` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `int_to_talcap` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `int_to_talcap` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `int_to_talcap` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `int_to_talcap` | choice | `choice_financials` → `mx_ashare_finance_data` | 带息债务/全部投入资本；问句：带息债务/全部投入资本 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `eqt_to_talcapital` | tushare | `ts_fina_indicator` → `fina_indicator` | eqt_to_talcapital | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `eqt_to_talcapital` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `eqt_to_talcapital` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `eqt_to_talcapital` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `eqt_to_talcapital` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `eqt_to_talcapital` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `currentdebt_to_debt` | tushare | `ts_fina_indicator` → `fina_indicator` | currentdebt_to_debt | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `currentdebt_to_debt` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `currentdebt_to_debt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `currentdebt_to_debt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `currentdebt_to_debt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `currentdebt_to_debt` | choice | `choice_financials` → `mx_ashare_finance_data` | 流动负债/负债合计；问句：流动负债/负债合计 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `longdeb_to_debt` | tushare | `ts_fina_indicator` → `fina_indicator` | longdeb_to_debt | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `longdeb_to_debt` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `longdeb_to_debt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `longdeb_to_debt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `longdeb_to_debt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `longdeb_to_debt` | choice | `choice_financials` → `mx_ashare_finance_data` | 非流动负债/负债合计；问句：非流动负债/负债合计 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `ocf_to_shortdebt` | tushare | `ts_fina_indicator` → `fina_indicator` | ocf_to_shortdebt | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `ocf_to_shortdebt` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ocf_to_shortdebt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ocf_to_shortdebt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ocf_to_shortdebt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `ocf_to_shortdebt` | choice | `choice_financials` → `mx_ashare_finance_data` | 经营活动产生的现金流量净额/流动负债；问句：经营活动产生的现金流量净额/流动负债 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `debt_to_eqt` | tushare | `ts_fina_indicator` → `fina_indicator` | debt_to_eqt | 原单位：倍；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `debt_to_eqt` | akshare | `ak_abstract` → `stock_financial_abstract` | 产权比率；指标参数：产权比率 | 原单位：%；×0.01；新浪产权比率为负债/归母权益的百分数；转换为倍，保留权益分母与东财/Tushare差异。 |
 | `debt_to_eqt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `debt_to_eqt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `debt_to_eqt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `debt_to_eqt` | choice | `choice_financials` → `mx_ashare_finance_data` | 产权比率；问句：产权比率 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `eqt_to_debt` | tushare | `ts_fina_indicator` → `fina_indicator` | eqt_to_debt | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `eqt_to_debt` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `eqt_to_debt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `eqt_to_debt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `eqt_to_debt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `eqt_to_debt` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `eqt_to_interestdebt` | tushare | `ts_fina_indicator` → `fina_indicator` | eqt_to_interestdebt | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `eqt_to_interestdebt` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `eqt_to_interestdebt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `eqt_to_interestdebt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `eqt_to_interestdebt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `eqt_to_interestdebt` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `tangibleasset_to_debt` | tushare | `ts_fina_indicator` → `fina_indicator` | tangibleasset_to_debt | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `tangibleasset_to_debt` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `tangibleasset_to_debt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `tangibleasset_to_debt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `tangibleasset_to_debt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `tangibleasset_to_debt` | choice | `choice_financials` → `mx_ashare_finance_data` | 有形资产/负债合计；问句：有形资产/负债合计 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `tangasset_to_intdebt` | tushare | `ts_fina_indicator` → `fina_indicator` | tangasset_to_intdebt | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `tangasset_to_intdebt` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `tangasset_to_intdebt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `tangasset_to_intdebt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `tangasset_to_intdebt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `tangasset_to_intdebt` | choice | `choice_financials` → `mx_ashare_finance_data` | 有形资产/带息债务；问句：有形资产/带息债务 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `tangibleasset_to_netdebt` | tushare | `ts_fina_indicator` → `fina_indicator` | tangibleasset_to_netdebt | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `tangibleasset_to_netdebt` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `tangibleasset_to_netdebt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `tangibleasset_to_netdebt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `tangibleasset_to_netdebt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `tangibleasset_to_netdebt` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `ocf_to_debt` | tushare | `ts_fina_indicator` → `fina_indicator` | ocf_to_debt | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `ocf_to_debt` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ocf_to_debt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ocf_to_debt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ocf_to_debt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `ocf_to_debt` | choice | `choice_financials` → `mx_ashare_finance_data` | 经营活动产生的现金流量净额/负债合计；问句：经营活动产生的现金流量净额/负债合计 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `ocf_to_interestdebt` | tushare | `ts_fina_indicator` → `fina_indicator` | ocf_to_interestdebt | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `ocf_to_interestdebt` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ocf_to_interestdebt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ocf_to_interestdebt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ocf_to_interestdebt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `ocf_to_interestdebt` | choice | `choice_financials` → `mx_ashare_finance_data` | 经营活动产生的现金流量净额/带息债务；问句：经营活动产生的现金流量净额/带息债务 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `ocf_to_netdebt` | tushare | `ts_fina_indicator` → `fina_indicator` | ocf_to_netdebt | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `ocf_to_netdebt` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ocf_to_netdebt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ocf_to_netdebt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ocf_to_netdebt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `ocf_to_netdebt` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `ebit_to_interest` | tushare | `ts_fina_indicator` → `fina_indicator` | ebit_to_interest | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `ebit_to_interest` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ebit_to_interest` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ebit_to_interest` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ebit_to_interest` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `ebit_to_interest` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `longdebt_to_workingcapital` | tushare | `ts_fina_indicator` → `fina_indicator` | longdebt_to_workingcapital | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `longdebt_to_workingcapital` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `longdebt_to_workingcapital` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `longdebt_to_workingcapital` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `longdebt_to_workingcapital` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `longdebt_to_workingcapital` | choice | `choice_financials` → `mx_ashare_finance_data` | 长期债务与营运资金比率；问句：长期债务与营运资金比率 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `ebitda_to_debt` | tushare | `ts_fina_indicator` → `fina_indicator` | ebitda_to_debt | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `ebitda_to_debt` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ebitda_to_debt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ebitda_to_debt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ebitda_to_debt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `ebitda_to_debt` | choice | `choice_financials` → `mx_ashare_finance_data` | 息税折旧摊销前利润/负债合计；问句：息税折旧摊销前利润/负债合计 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `turn_days` | tushare | `ts_fina_indicator` → `fina_indicator` | turn_days | 原单位：天；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `turn_days` | akshare | `ak_fina_indicator_em` → `stock_financial_analysis_indicator_em` | OPERATE_CYCLE | 原单位：天；×1；东财营业周期，计算依东财；不因原值细小差异取消。 |
 | `turn_days` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `turn_days` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `turn_days` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `turn_days` | choice | `choice_financials` → `mx_ashare_finance_data` | 营业周期；问句：营业周期 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `roa_yearly` | tushare | `ts_fina_indicator` → `fina_indicator` | roa_yearly | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `roa_yearly` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `roa_yearly` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `roa_yearly` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `roa_yearly` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `roa_yearly` | choice | `choice_financials` → `mx_ashare_finance_data` | 年化总资产净利率；问句：年化总资产净利率 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `roa_dp` | tushare | `ts_fina_indicator` → `fina_indicator` | roa_dp | 原单位：%；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `roa_dp` | akshare | `ak_abstract` → `stock_financial_abstract` | 总资产净利率_平均；指标参数：总资产净利率_平均 | 原单位：%；×1；新浪使用归母净利润/平均总资产，区别含少数股东损益版本。 |
 | `roa_dp` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `roa_dp` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `roa_dp` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `roa_dp` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `fixed_assets` | tushare | `ts_fina_indicator` → `fina_indicator` | fixed_assets | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `fixed_assets` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `fixed_assets` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `fixed_assets` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `fixed_assets` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `fixed_assets` | choice | `choice_financials` → `mx_ashare_finance_data` | 固定资产(合计)；问句：固定资产(合计) | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `profit_prefin_exp` | tushare | `ts_fina_indicator` → `fina_indicator` | profit_prefin_exp | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `profit_prefin_exp` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `profit_prefin_exp` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `profit_prefin_exp` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `profit_prefin_exp` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `profit_prefin_exp` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `non_op_profit` | tushare | `ts_fina_indicator` → `fina_indicator` | non_op_profit | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `non_op_profit` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `non_op_profit` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `non_op_profit` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `non_op_profit` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `non_op_profit` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `op_to_ebt` | tushare | `ts_fina_indicator` → `fina_indicator` | op_to_ebt | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `op_to_ebt` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `op_to_ebt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `op_to_ebt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `op_to_ebt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `op_to_ebt` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `nop_to_ebt` | tushare | `ts_fina_indicator` → `fina_indicator` | nop_to_ebt | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `nop_to_ebt` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `nop_to_ebt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `nop_to_ebt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `nop_to_ebt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `nop_to_ebt` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `ocf_to_profit` | tushare | `ts_fina_indicator` → `fina_indicator` | ocf_to_profit | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `ocf_to_profit` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ocf_to_profit` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ocf_to_profit` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ocf_to_profit` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `ocf_to_profit` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `cash_to_liqdebt` | tushare | `ts_fina_indicator` → `fina_indicator` | cash_to_liqdebt | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `cash_to_liqdebt` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `cash_to_liqdebt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `cash_to_liqdebt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `cash_to_liqdebt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `cash_to_liqdebt` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `cash_to_liqdebt_withinterest` | tushare | `ts_fina_indicator` → `fina_indicator` | cash_to_liqdebt_withinterest | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `cash_to_liqdebt_withinterest` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `cash_to_liqdebt_withinterest` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `cash_to_liqdebt_withinterest` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `cash_to_liqdebt_withinterest` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `cash_to_liqdebt_withinterest` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `op_to_liqdebt` | tushare | `ts_fina_indicator` → `fina_indicator` | op_to_liqdebt | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `op_to_liqdebt` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `op_to_liqdebt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `op_to_liqdebt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `op_to_liqdebt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `op_to_liqdebt` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `op_to_debt` | tushare | `ts_fina_indicator` → `fina_indicator` | op_to_debt | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `op_to_debt` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `op_to_debt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `op_to_debt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `op_to_debt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `op_to_debt` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `roic_yearly` | tushare | `ts_fina_indicator` → `fina_indicator` | roic_yearly | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `roic_yearly` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `roic_yearly` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `roic_yearly` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `roic_yearly` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `roic_yearly` | choice | `choice_financials` → `mx_ashare_finance_data` | 年化投入资本回报率ROIC；问句：年化投入资本回报率ROIC | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `total_fa_trun` | tushare | `ts_fina_indicator` → `fina_indicator` | total_fa_trun | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 保留官方字段拼写与描述，不按英文名纠正或推断TTM。 |
 | `total_fa_trun` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `total_fa_trun` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `total_fa_trun` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `total_fa_trun` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `total_fa_trun` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `profit_to_op` | tushare | `ts_fina_indicator` → `fina_indicator` | profit_to_op | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `profit_to_op` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `profit_to_op` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `profit_to_op` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `profit_to_op` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `profit_to_op` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_opincome` | tushare | `ts_fina_indicator` → `fina_indicator` | q_opincome | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `q_opincome` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_opincome` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_opincome` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_opincome` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_opincome` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_investincome` | tushare | `ts_fina_indicator` → `fina_indicator` | q_investincome | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `q_investincome` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_investincome` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_investincome` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_investincome` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_investincome` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_dtprofit` | tushare | `ts_fina_indicator` → `fina_indicator` | q_dtprofit | 原单位：元；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `q_dtprofit` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_dtprofit` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_dtprofit` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_dtprofit` | tdx | `tdx_quarter_income` → `tdx_api_data` | 扣非净利润 | 原单位：元；×1 |
+| `q_dtprofit` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_eps` | tushare | `ts_fina_indicator` → `fina_indicator` | q_eps | 原单位：元/股；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `q_eps` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_eps` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_eps` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_eps` | tdx | `tdx_quarter_income` → `tdx_api_data` | 基本每股收益 | 原单位：元/股；×1；通达信单季度基本EPS只显示2位小数，可能与Tushare计算精度不同。 |
+| `q_eps` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_netprofit_margin` | tushare | `ts_fina_indicator` → `fina_indicator` | q_netprofit_margin | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `q_netprofit_margin` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_netprofit_margin` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_netprofit_margin` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_netprofit_margin` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_netprofit_margin` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_gsprofit_margin` | tushare | `ts_fina_indicator` → `fina_indicator` | q_gsprofit_margin | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `q_gsprofit_margin` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_gsprofit_margin` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_gsprofit_margin` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_gsprofit_margin` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_gsprofit_margin` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_exp_to_sales` | tushare | `ts_fina_indicator` → `fina_indicator` | q_exp_to_sales | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `q_exp_to_sales` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_exp_to_sales` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_exp_to_sales` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_exp_to_sales` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_exp_to_sales` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_profit_to_gr` | tushare | `ts_fina_indicator` → `fina_indicator` | q_profit_to_gr | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `q_profit_to_gr` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_profit_to_gr` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_profit_to_gr` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_profit_to_gr` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_profit_to_gr` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_saleexp_to_gr` | tushare | `ts_fina_indicator` → `fina_indicator` | q_saleexp_to_gr | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `q_saleexp_to_gr` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_saleexp_to_gr` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_saleexp_to_gr` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_saleexp_to_gr` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_saleexp_to_gr` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_adminexp_to_gr` | tushare | `ts_fina_indicator` → `fina_indicator` | q_adminexp_to_gr | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `q_adminexp_to_gr` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_adminexp_to_gr` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_adminexp_to_gr` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_adminexp_to_gr` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_adminexp_to_gr` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_finaexp_to_gr` | tushare | `ts_fina_indicator` → `fina_indicator` | q_finaexp_to_gr | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `q_finaexp_to_gr` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_finaexp_to_gr` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_finaexp_to_gr` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_finaexp_to_gr` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_finaexp_to_gr` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_impair_to_gr_ttm` | tushare | `ts_fina_indicator` → `fina_indicator` | q_impair_to_gr_ttm | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 保留官方字段拼写与描述，不按英文名纠正或推断TTM。 |
 | `q_impair_to_gr_ttm` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_impair_to_gr_ttm` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_impair_to_gr_ttm` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_impair_to_gr_ttm` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_impair_to_gr_ttm` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_gc_to_gr` | tushare | `ts_fina_indicator` → `fina_indicator` | q_gc_to_gr | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `q_gc_to_gr` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_gc_to_gr` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_gc_to_gr` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_gc_to_gr` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_gc_to_gr` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_op_to_gr` | tushare | `ts_fina_indicator` → `fina_indicator` | q_op_to_gr | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `q_op_to_gr` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_op_to_gr` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_op_to_gr` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_op_to_gr` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_op_to_gr` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_roe` | tushare | `ts_fina_indicator` → `fina_indicator` | q_roe | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `q_roe` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_roe` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_roe` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_roe` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_roe` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_dt_roe` | tushare | `ts_fina_indicator` → `fina_indicator` | q_dt_roe | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `q_dt_roe` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_dt_roe` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_dt_roe` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_dt_roe` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_dt_roe` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_npta` | tushare | `ts_fina_indicator` → `fina_indicator` | q_npta | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `q_npta` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_npta` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_npta` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_npta` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_npta` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_opincome_to_ebt` | tushare | `ts_fina_indicator` → `fina_indicator` | q_opincome_to_ebt | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `q_opincome_to_ebt` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_opincome_to_ebt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_opincome_to_ebt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_opincome_to_ebt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_opincome_to_ebt` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_investincome_to_ebt` | tushare | `ts_fina_indicator` → `fina_indicator` | q_investincome_to_ebt | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `q_investincome_to_ebt` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_investincome_to_ebt` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_investincome_to_ebt` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_investincome_to_ebt` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_investincome_to_ebt` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_dtprofit_to_profit` | tushare | `ts_fina_indicator` → `fina_indicator` | q_dtprofit_to_profit | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `q_dtprofit_to_profit` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_dtprofit_to_profit` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_dtprofit_to_profit` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_dtprofit_to_profit` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_dtprofit_to_profit` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_salescash_to_or` | tushare | `ts_fina_indicator` → `fina_indicator` | q_salescash_to_or | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `q_salescash_to_or` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_salescash_to_or` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_salescash_to_or` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_salescash_to_or` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_salescash_to_or` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_ocf_to_sales` | tushare | `ts_fina_indicator` → `fina_indicator` | q_ocf_to_sales | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `q_ocf_to_sales` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_ocf_to_sales` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_ocf_to_sales` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_ocf_to_sales` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_ocf_to_sales` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_ocf_to_or` | tushare | `ts_fina_indicator` → `fina_indicator` | q_ocf_to_or | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 注意：官方描述分母为经营活动净收益；不得按字段英文名猜成营业收入，后者是q_ocf_to_sales。 |
 | `q_ocf_to_or` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_ocf_to_or` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_ocf_to_or` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_ocf_to_or` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_ocf_to_or` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `basic_eps_yoy` | tushare | `ts_fina_indicator` → `fina_indicator` | basic_eps_yoy | 原单位：%；×1；官方描述明确百分数(%)，保留原数值、不缩放。 |
 | `basic_eps_yoy` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `basic_eps_yoy` | wind | `wind_financials_expanded` → `get_stock_fundamentals` | 基本每股收益同比增长率；问句：基本每股收益同比增长率 | 原单位：返回表头或数值后缀；×1；Wind财务展示精度可能仅4位小数；报告期累计。 |
 | `basic_eps_yoy` | ifind | `ifind_financial_growth_rechecked` → `get_security_indicators` | 基本每股收益(同比增长率)；问句：基本每股收益(同比增长率) | 原单位：%；×1；iFinD自身指标口径；与其他来源数值可能不同，按实际返回单位统一，不以Tushare数值作为标准。 |
 | `basic_eps_yoy` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `basic_eps_yoy` | choice | `choice_financials` → `mx_ashare_finance_data` | 基本每股收益(同比增长率)；问句：基本每股收益(同比增长率) | 原单位：%；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `dt_eps_yoy` | tushare | `ts_fina_indicator` → `fina_indicator` | dt_eps_yoy | 原单位：%；×1；官方描述明确百分数(%)，保留原数值、不缩放。 |
 | `dt_eps_yoy` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `dt_eps_yoy` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `dt_eps_yoy` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `dt_eps_yoy` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `dt_eps_yoy` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `cfps_yoy` | tushare | `ts_fina_indicator` → `fina_indicator` | cfps_yoy | 原单位：%；×1；官方描述明确百分数(%)，保留原数值、不缩放。 |
 | `cfps_yoy` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `cfps_yoy` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `cfps_yoy` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `cfps_yoy` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `cfps_yoy` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `op_yoy` | tushare | `ts_fina_indicator` → `fina_indicator` | op_yoy | 原单位：%；×1；官方描述明确百分数(%)，保留原数值、不缩放。 |
 | `op_yoy` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `op_yoy` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `op_yoy` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `op_yoy` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `op_yoy` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `ebt_yoy` | tushare | `ts_fina_indicator` → `fina_indicator` | ebt_yoy | 原单位：%；×1；官方描述明确百分数(%)，保留原数值、不缩放。 |
 | `ebt_yoy` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ebt_yoy` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ebt_yoy` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ebt_yoy` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `ebt_yoy` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `netprofit_yoy` | tushare | `ts_fina_indicator` → `fina_indicator` | netprofit_yoy | 原单位：%；×1；官方描述明确百分数(%)，保留原数值、不缩放。 |
 | `netprofit_yoy` | akshare | `ak_fina_indicator_em` → `stock_financial_analysis_indicator_em` | PARENTNETPROFITTZ | 原单位：%；×1 |
 | `netprofit_yoy` | wind | `wind_financials_expanded` → `get_stock_fundamentals` | 归母净利润同比增长率；问句：归母净利润同比增长率 | 原单位：返回表头或数值后缀；×1；Wind财务展示精度可能仅4位小数；报告期累计。 |
 | `netprofit_yoy` | ifind | `ifind_financial_growth_rechecked` → `get_security_indicators` | 归属母公司股东的净利润(同比增长率)；问句：归属母公司股东的净利润(同比增长率) | 原单位：%；×1；iFinD自身指标口径；与其他来源数值可能不同，按实际返回单位统一，不以Tushare数值作为标准。 |
 | `netprofit_yoy` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `netprofit_yoy` | choice | `choice_financials` → `mx_ashare_finance_data` | 归属母公司股东的净利润(同比增长率)；问句：归属母公司股东的净利润(同比增长率) | 原单位：%；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `dt_netprofit_yoy` | tushare | `ts_fina_indicator` → `fina_indicator` | dt_netprofit_yoy | 原单位：%；×1；官方描述明确百分数(%)，保留原数值、不缩放。 |
 | `dt_netprofit_yoy` | akshare | `ak_fina_indicator_em` → `stock_financial_analysis_indicator_em` | KCFJCXSYJLRTZ | 原单位：%；×1 |
 | `dt_netprofit_yoy` | wind | `wind_financials_expanded` → `get_stock_fundamentals` | 扣非归母净利润同比增长率；问句：扣非归母净利润同比增长率 | 原单位：返回表头或数值后缀；×1；Wind财务展示精度可能仅4位小数；报告期累计。 |
 | `dt_netprofit_yoy` | ifind | `ifind_financial_growth_rechecked` → `get_security_indicators` | 归属母公司股东的净利润-扣除非经常损益(同比增长率)；问句：归属母公司股东的净利润-扣除非经常损益(同比增长率) | 原单位：%；×1；iFinD自身指标口径；与其他来源数值可能不同，按实际返回单位统一，不以Tushare数值作为标准。 |
 | `dt_netprofit_yoy` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `dt_netprofit_yoy` | choice | `choice_financials` → `mx_ashare_finance_data` | 归属母公司股东的净利润-扣除非经常损益(同比增长率)；问句：归属母公司股东的净利润-扣除非经常损益(同比增长率) | 原单位：%；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `ocf_yoy` | tushare | `ts_fina_indicator` → `fina_indicator` | ocf_yoy | 原单位：%；×1；官方描述明确百分数(%)，保留原数值、不缩放。 |
 | `ocf_yoy` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `ocf_yoy` | wind | `wind_financials_expanded` → `get_stock_fundamentals` | 经营活动产生的现金流量净额同比增长率；问句：经营活动产生的现金流量净额同比增长率 | 原单位：返回表头或数值后缀；×1；Wind财务展示精度可能仅4位小数；报告期累计。 |
 | `ocf_yoy` | ifind | `ifind_financial_growth_rechecked` → `get_security_indicators` | 经营活动产生的现金流量净额(同比增长率)；问句：经营活动产生的现金流量净额(同比增长率) | 原单位：%；×1；iFinD自身指标口径；与其他来源数值可能不同，按实际返回单位统一，不以Tushare数值作为标准。 |
 | `ocf_yoy` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `ocf_yoy` | choice | `choice_financials` → `mx_ashare_finance_data` | 经营活动产生的现金流量净额(同比增长率)；问句：经营活动产生的现金流量净额(同比增长率) | 原单位：%；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `roe_yoy` | tushare | `ts_fina_indicator` → `fina_indicator` | roe_yoy | 原单位：%；×1；官方描述明确百分数(%)，保留原数值、不缩放。 |
 | `roe_yoy` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `roe_yoy` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `roe_yoy` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `roe_yoy` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `roe_yoy` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `bps_yoy` | tushare | `ts_fina_indicator` → `fina_indicator` | bps_yoy | 原单位：%；×1；官方描述明确百分数(%)，保留原数值、不缩放。 |
 | `bps_yoy` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `bps_yoy` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `bps_yoy` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `bps_yoy` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `bps_yoy` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `assets_yoy` | tushare | `ts_fina_indicator` → `fina_indicator` | assets_yoy | 原单位：%；×1；官方描述明确百分数(%)，保留原数值、不缩放。 |
 | `assets_yoy` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `assets_yoy` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `assets_yoy` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `assets_yoy` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `assets_yoy` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `eqt_yoy` | tushare | `ts_fina_indicator` → `fina_indicator` | eqt_yoy | 原单位：%；×1；官方描述明确百分数(%)，保留原数值、不缩放。 |
 | `eqt_yoy` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `eqt_yoy` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `eqt_yoy` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `eqt_yoy` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `eqt_yoy` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `tr_yoy` | tushare | `ts_fina_indicator` → `fina_indicator` | tr_yoy | 原单位：%；×1；官方描述明确百分数(%)，保留原数值、不缩放。 |
 | `tr_yoy` | akshare | `ak_fina_indicator_em` → `stock_financial_analysis_indicator_em` | TOTALOPERATEREVETZ | 原单位：%；×1 |
 | `tr_yoy` | wind | `wind_financials_expanded` → `get_stock_fundamentals` | 营业总收入同比增长率；问句：营业总收入同比增长率 | 原单位：返回表头或数值后缀；×1；Wind财务展示精度可能仅4位小数；报告期累计。 |
 | `tr_yoy` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `tr_yoy` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `tr_yoy` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `or_yoy` | tushare | `ts_fina_indicator` → `fina_indicator` | or_yoy | 原单位：%；×1；官方描述明确百分数(%)，保留原数值、不缩放。 |
 | `or_yoy` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `or_yoy` | wind | `wind_financials_expanded` → `get_stock_fundamentals` | 营业收入同比增长率；问句：营业收入同比增长率 | 原单位：返回表头或数值后缀；×1；Wind财务展示精度可能仅4位小数；报告期累计。 |
 | `or_yoy` | ifind | `ifind_financial_growth_rechecked` → `get_security_indicators` | 营业收入(同比增长率)；问句：营业收入(同比增长率) | 原单位：%；×1；iFinD自身指标口径；与其他来源数值可能不同，按实际返回单位统一，不以Tushare数值作为标准。 |
 | `or_yoy` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `or_yoy` | choice | `choice_financials` → `mx_ashare_finance_data` | 营业收入(同比增长率)；问句：营业收入(同比增长率) | 原单位：%；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `q_gr_yoy` | tushare | `ts_fina_indicator` → `fina_indicator` | q_gr_yoy | 原单位：%；×1；官方描述明确百分数(%)，保留原数值、不缩放。 |
 | `q_gr_yoy` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_gr_yoy` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_gr_yoy` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_gr_yoy` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_gr_yoy` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_gr_qoq` | tushare | `ts_fina_indicator` → `fina_indicator` | q_gr_qoq | 原单位：%；×1；官方描述明确百分数(%)，保留原数值、不缩放。 |
 | `q_gr_qoq` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_gr_qoq` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_gr_qoq` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_gr_qoq` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_gr_qoq` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_sales_yoy` | tushare | `ts_fina_indicator` → `fina_indicator` | q_sales_yoy | 原单位：%；×1；官方描述明确百分数(%)，保留原数值、不缩放。 |
 | `q_sales_yoy` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_sales_yoy` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_sales_yoy` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_sales_yoy` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_sales_yoy` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_sales_qoq` | tushare | `ts_fina_indicator` → `fina_indicator` | q_sales_qoq | 原单位：%；×1；官方描述明确百分数(%)，保留原数值、不缩放。 |
 | `q_sales_qoq` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_sales_qoq` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_sales_qoq` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_sales_qoq` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_sales_qoq` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_op_yoy` | tushare | `ts_fina_indicator` → `fina_indicator` | q_op_yoy | 原单位：%；×1；官方描述明确百分数(%)，保留原数值、不缩放。 |
 | `q_op_yoy` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_op_yoy` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_op_yoy` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_op_yoy` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_op_yoy` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_op_qoq` | tushare | `ts_fina_indicator` → `fina_indicator` | q_op_qoq | 原单位：%；×1；官方描述明确百分数(%)，保留原数值、不缩放。 |
 | `q_op_qoq` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_op_qoq` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_op_qoq` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_op_qoq` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_op_qoq` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_profit_yoy` | tushare | `ts_fina_indicator` → `fina_indicator` | q_profit_yoy | 原单位：%；×1；官方描述明确百分数(%)，保留原数值、不缩放。 |
 | `q_profit_yoy` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_profit_yoy` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_profit_yoy` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_profit_yoy` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_profit_yoy` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_profit_qoq` | tushare | `ts_fina_indicator` → `fina_indicator` | q_profit_qoq | 原单位：%；×1；官方描述明确百分数(%)，保留原数值、不缩放。 |
 | `q_profit_qoq` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_profit_qoq` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_profit_qoq` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_profit_qoq` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_profit_qoq` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_netprofit_yoy` | tushare | `ts_fina_indicator` → `fina_indicator` | q_netprofit_yoy | 原单位：%；×1；官方描述明确百分数(%)，保留原数值、不缩放。 |
 | `q_netprofit_yoy` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_netprofit_yoy` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_netprofit_yoy` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_netprofit_yoy` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_netprofit_yoy` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `q_netprofit_qoq` | tushare | `ts_fina_indicator` → `fina_indicator` | q_netprofit_qoq | 原单位：%；×1；官方描述明确百分数(%)，保留原数值、不缩放。 |
 | `q_netprofit_qoq` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_netprofit_qoq` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_netprofit_qoq` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `q_netprofit_qoq` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `q_netprofit_qoq` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `equity_yoy` | tushare | `ts_fina_indicator` → `fina_indicator` | equity_yoy | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `equity_yoy` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `equity_yoy` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `equity_yoy` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `equity_yoy` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `equity_yoy` | choice | `choice_financials` → `mx_ashare_finance_data` | 净资产同比增长率；问句：净资产同比增长率 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `rd_exp` | tushare | `ts_fina_indicator` → `fina_indicator` | rd_exp | 原单位：未确认；×1；此官方页未明确数值单位或缩放规则，单位未确认；保留原数值，不推断百分数、比例、币种或金额倍率。 |
 | `rd_exp` | akshare | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `rd_exp` | wind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `rd_exp` | ifind | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
 | `rd_exp` | tdx | — | — | 未核实此来源的等价字段与接口，尚未映射；不代表上游不存在。 |
+| `rd_exp` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 
 ## technical_indicators
 
@@ -1588,6 +1781,26 @@
 | `wind_history_dmi_adx` | Wind DMI（历史） ADX | 无量纲 | Wind DMI历史日线 ADX；来源默认参数；未披露项不假定与其他厂商相同。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_dmi_adxr` | Wind DMI（历史） ADXR | 无量纲 | Wind DMI历史日线 ADXR；来源默认参数；未披露项不假定与其他厂商相同。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_ma` | Wind MA（历史） | 元 | Wind MA历史日线；周期可调，返回周期须匹配。 按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
+| `choice_kdj_k` | 妙想 KDJ K值 | 无量纲 | 东方财富妙想 MCP 原生日线技术指标；独立来源字段，参数按来源默认，不映射通达信或其他厂商算法。 接口未附单位；按指标定义及返回量级标注，不与其他来源自动合并。 |
+| `choice_kdj_d` | 妙想 KDJ D值 | 无量纲 | 东方财富妙想 MCP 原生日线技术指标；独立来源字段，参数按来源默认，不映射通达信或其他厂商算法。 接口未附单位；按指标定义及返回量级标注，不与其他来源自动合并。 |
+| `choice_kdj_j` | 妙想 KDJ J值 | 无量纲 | 东方财富妙想 MCP 原生日线技术指标；独立来源字段，参数按来源默认，不映射通达信或其他厂商算法。 接口未附单位；按指标定义及返回量级标注，不与其他来源自动合并。 |
+| `choice_macd_diff` | 妙想 MACD DIFF | 元 | 东方财富妙想 MCP 原生日线技术指标；独立来源字段，参数按来源默认，不映射通达信或其他厂商算法。 接口未附单位；按指标定义及返回量级标注，不与其他来源自动合并。 |
+| `choice_macd_dea` | 妙想 MACD DEA | 元 | 东方财富妙想 MCP 原生日线技术指标；独立来源字段，参数按来源默认，不映射通达信或其他厂商算法。 接口未附单位；按指标定义及返回量级标注，不与其他来源自动合并。 |
+| `choice_macd_hist` | 妙想 MACD 柱状线 | 元 | 东方财富妙想 MCP 原生日线技术指标；独立来源字段，参数按来源默认，不映射通达信或其他厂商算法。 接口未附单位；按指标定义及返回量级标注，不与其他来源自动合并。 |
+| `choice_rsi` | 妙想 RSI | 无量纲 | 东方财富妙想 MCP 原生日线技术指标；独立来源字段，参数按来源默认，不映射通达信或其他厂商算法。 接口未附单位；按指标定义及返回量级标注，不与其他来源自动合并。 |
+| `choice_boll_up` | 妙想 布林上轨 | 元 | 东方财富妙想 MCP 原生日线技术指标；独立来源字段，参数按来源默认，不映射通达信或其他厂商算法。 接口未附单位；按指标定义及返回量级标注，不与其他来源自动合并。 |
+| `choice_boll_low` | 妙想 布林下轨 | 元 | 东方财富妙想 MCP 原生日线技术指标；独立来源字段，参数按来源默认，不映射通达信或其他厂商算法。 接口未附单位；按指标定义及返回量级标注，不与其他来源自动合并。 |
+| `choice_ma5` | 妙想 5日均线 | 元 | 东方财富妙想 MCP 原生日线技术指标；独立来源字段，参数按来源默认，不映射通达信或其他厂商算法。 接口未附单位；按指标定义及返回量级标注，不与其他来源自动合并。 |
+| `choice_ma10` | 妙想 10日均线 | 元 | 东方财富妙想 MCP 原生日线技术指标；独立来源字段，参数按来源默认，不映射通达信或其他厂商算法。 接口未附单位；按指标定义及返回量级标注，不与其他来源自动合并。 |
+| `choice_ma20` | 妙想 20日均线 | 元 | 东方财富妙想 MCP 原生日线技术指标；独立来源字段，参数按来源默认，不映射通达信或其他厂商算法。 接口未附单位；按指标定义及返回量级标注，不与其他来源自动合并。 |
+| `choice_ma30` | 妙想 30日均线 | 元 | 东方财富妙想 MCP 原生日线技术指标；独立来源字段，参数按来源默认，不映射通达信或其他厂商算法。 接口未附单位；按指标定义及返回量级标注，不与其他来源自动合并。 |
+| `choice_ma60` | 妙想 60日均线 | 元 | 东方财富妙想 MCP 原生日线技术指标；独立来源字段，参数按来源默认，不映射通达信或其他厂商算法。 接口未附单位；按指标定义及返回量级标注，不与其他来源自动合并。 |
+| `choice_expma` | 妙想 EXPMA | 元 | 东方财富妙想 MCP 原生日线技术指标；独立来源字段，参数按来源默认，不映射通达信或其他厂商算法。 接口未附单位；按指标定义及返回量级标注，不与其他来源自动合并。 |
+| `choice_cci` | 妙想 CCI | 无量纲 | 东方财富妙想 MCP 原生日线技术指标；独立来源字段，参数按来源默认，不映射通达信或其他厂商算法。 接口未附单位；按指标定义及返回量级标注，不与其他来源自动合并。 |
+| `choice_wr` | 妙想 WR | 无量纲 | 东方财富妙想 MCP 原生日线技术指标；独立来源字段，参数按来源默认，不映射通达信或其他厂商算法。 接口未附单位；按指标定义及返回量级标注，不与其他来源自动合并。 |
+| `choice_bias` | 妙想 BIAS | % | 东方财富妙想 MCP 原生日线技术指标；独立来源字段，参数按来源默认，不映射通达信或其他厂商算法。 接口未附单位；按指标定义及返回量级标注，不与其他来源自动合并。 |
+| `choice_psy` | 妙想 PSY | % | 东方财富妙想 MCP 原生日线技术指标；独立来源字段，参数按来源默认，不映射通达信或其他厂商算法。 接口未附单位；按指标定义及返回量级标注，不与其他来源自动合并。 |
+| `choice_dmi` | 妙想 DMI | 无量纲 | 东方财富妙想 MCP 原生日线技术指标；独立来源字段，参数按来源默认，不映射通达信或其他厂商算法。 接口未附单位；按指标定义及返回量级标注，不与其他来源自动合并。 |
 
 | 字段 | 来源 | 取数方案 → 方法 | 返回列／问句指标 | 转换／说明 |
 | --- | --- | --- | --- | --- |
@@ -1596,1906 +1809,2407 @@
 | `kdj_k` | wind | — | — | 尚未确认同口径取法 |
 | `kdj_k` | ifind | — | — | 尚未确认同口径取法 |
 | `kdj_k` | tdx | `tdx_kdj` → `tdx_technical_indicator_query` | K | 原单位：无量纲；×1；KDJ原生算法；复权方式未披露 |
+| `kdj_k` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `kdj_d` | tushare | — | — | 尚未确认同口径取法 |
 | `kdj_d` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `kdj_d` | wind | — | — | 尚未确认同口径取法 |
 | `kdj_d` | ifind | — | — | 尚未确认同口径取法 |
 | `kdj_d` | tdx | `tdx_kdj` → `tdx_technical_indicator_query` | D | 原单位：无量纲；×1；KDJ原生算法；复权方式未披露 |
+| `kdj_d` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `kdj_j` | tushare | — | — | 尚未确认同口径取法 |
 | `kdj_j` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `kdj_j` | wind | — | — | 尚未确认同口径取法 |
 | `kdj_j` | ifind | — | — | 尚未确认同口径取法 |
 | `kdj_j` | tdx | `tdx_kdj` → `tdx_technical_indicator_query` | J | 原单位：无量纲；×1；KDJ原生算法；复权方式未披露 |
+| `kdj_j` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `macd_dif` | tushare | — | — | 尚未确认同口径取法 |
 | `macd_dif` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `macd_dif` | wind | — | — | 尚未确认同口径取法 |
 | `macd_dif` | ifind | — | — | 尚未确认同口径取法 |
 | `macd_dif` | tdx | `tdx_macd` → `tdx_technical_indicator_query` | DIF | 原单位：元；×1；价格及价差以元计；RSI为0至100标度而非收益率百分比。 |
+| `macd_dif` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `macd_dea` | tushare | — | — | 尚未确认同口径取法 |
 | `macd_dea` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `macd_dea` | wind | — | — | 尚未确认同口径取法 |
 | `macd_dea` | ifind | — | — | 尚未确认同口径取法 |
 | `macd_dea` | tdx | `tdx_macd` → `tdx_technical_indicator_query` | DEA | 原单位：元；×1；价格及价差以元计；RSI为0至100标度而非收益率百分比。 |
+| `macd_dea` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `macd_macd` | tushare | — | — | 尚未确认同口径取法 |
 | `macd_macd` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `macd_macd` | wind | — | — | 尚未确认同口径取法 |
 | `macd_macd` | ifind | — | — | 尚未确认同口径取法 |
 | `macd_macd` | tdx | `tdx_macd` → `tdx_technical_indicator_query` | MACD | 原单位：元；×1；价格及价差以元计；RSI为0至100标度而非收益率百分比。 |
+| `macd_macd` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `rsi_rsi1` | tushare | — | — | 尚未确认同口径取法 |
 | `rsi_rsi1` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `rsi_rsi1` | wind | — | — | 尚未确认同口径取法 |
 | `rsi_rsi1` | ifind | — | — | 尚未确认同口径取法 |
 | `rsi_rsi1` | tdx | `tdx_rsi` → `tdx_technical_indicator_query` | RSI1 | 原单位：无量纲；×1；价格及价差以元计；RSI为0至100标度而非收益率百分比。 |
+| `rsi_rsi1` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `rsi_rsi2` | tushare | — | — | 尚未确认同口径取法 |
 | `rsi_rsi2` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `rsi_rsi2` | wind | — | — | 尚未确认同口径取法 |
 | `rsi_rsi2` | ifind | — | — | 尚未确认同口径取法 |
 | `rsi_rsi2` | tdx | `tdx_rsi` → `tdx_technical_indicator_query` | RSI2 | 原单位：无量纲；×1；价格及价差以元计；RSI为0至100标度而非收益率百分比。 |
+| `rsi_rsi2` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `rsi_rsi3` | tushare | — | — | 尚未确认同口径取法 |
 | `rsi_rsi3` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `rsi_rsi3` | wind | — | — | 尚未确认同口径取法 |
 | `rsi_rsi3` | ifind | — | — | 尚未确认同口径取法 |
 | `rsi_rsi3` | tdx | `tdx_rsi` → `tdx_technical_indicator_query` | RSI3 | 原单位：无量纲；×1；价格及价差以元计；RSI为0至100标度而非收益率百分比。 |
+| `rsi_rsi3` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `boll_boll` | tushare | — | — | 尚未确认同口径取法 |
 | `boll_boll` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `boll_boll` | wind | — | — | 尚未确认同口径取法 |
 | `boll_boll` | ifind | — | — | 尚未确认同口径取法 |
 | `boll_boll` | tdx | `tdx_boll` → `tdx_technical_indicator_query` | BOLL | 原单位：元；×1；价格及价差以元计；RSI为0至100标度而非收益率百分比。 |
+| `boll_boll` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `boll_ub` | tushare | — | — | 尚未确认同口径取法 |
 | `boll_ub` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `boll_ub` | wind | — | — | 尚未确认同口径取法 |
 | `boll_ub` | ifind | — | — | 尚未确认同口径取法 |
 | `boll_ub` | tdx | `tdx_boll` → `tdx_technical_indicator_query` | UB | 原单位：元；×1；价格及价差以元计；RSI为0至100标度而非收益率百分比。 |
+| `boll_ub` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `boll_lb` | tushare | — | — | 尚未确认同口径取法 |
 | `boll_lb` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `boll_lb` | wind | — | — | 尚未确认同口径取法 |
 | `boll_lb` | ifind | — | — | 尚未确认同口径取法 |
 | `boll_lb` | tdx | `tdx_boll` → `tdx_technical_indicator_query` | LB | 原单位：元；×1；价格及价差以元计；RSI为0至100标度而非收益率百分比。 |
+| `boll_lb` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ma_ma1` | tushare | — | — | 尚未确认同口径取法 |
 | `ma_ma1` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ma_ma1` | wind | — | — | 尚未确认同口径取法 |
 | `ma_ma1` | ifind | — | — | 尚未确认同口径取法 |
 | `ma_ma1` | tdx | `tdx_ma` → `tdx_technical_indicator_query` | MA1 | 原单位：元；×1；M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 |
+| `ma_ma1` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ma_ma2` | tushare | — | — | 尚未确认同口径取法 |
 | `ma_ma2` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ma_ma2` | wind | — | — | 尚未确认同口径取法 |
 | `ma_ma2` | ifind | — | — | 尚未确认同口径取法 |
 | `ma_ma2` | tdx | `tdx_ma` → `tdx_technical_indicator_query` | MA2 | 原单位：元；×1；M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 |
+| `ma_ma2` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ma_ma3` | tushare | — | — | 尚未确认同口径取法 |
 | `ma_ma3` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ma_ma3` | wind | — | — | 尚未确认同口径取法 |
 | `ma_ma3` | ifind | — | — | 尚未确认同口径取法 |
 | `ma_ma3` | tdx | `tdx_ma` → `tdx_technical_indicator_query` | MA3 | 原单位：元；×1；M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 |
+| `ma_ma3` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ma_ma4` | tushare | — | — | 尚未确认同口径取法 |
 | `ma_ma4` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ma_ma4` | wind | — | — | 尚未确认同口径取法 |
 | `ma_ma4` | ifind | — | — | 尚未确认同口径取法 |
 | `ma_ma4` | tdx | `tdx_ma` → `tdx_technical_indicator_query` | MA4 | 原单位：元；×1；M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 |
+| `ma_ma4` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ma_ma5` | tushare | — | — | 尚未确认同口径取法 |
 | `ma_ma5` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ma_ma5` | wind | — | — | 尚未确认同口径取法 |
 | `ma_ma5` | ifind | — | — | 尚未确认同口径取法 |
 | `ma_ma5` | tdx | `tdx_ma` → `tdx_technical_indicator_query` | MA5 | 原单位：元；×1；M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 |
+| `ma_ma5` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ma_ma6` | tushare | — | — | 尚未确认同口径取法 |
 | `ma_ma6` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ma_ma6` | wind | — | — | 尚未确认同口径取法 |
 | `ma_ma6` | ifind | — | — | 尚未确认同口径取法 |
 | `ma_ma6` | tdx | `tdx_ma` → `tdx_technical_indicator_query` | MA6 | 原单位：元；×1；M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 |
+| `ma_ma6` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ma_ma7` | tushare | — | — | 尚未确认同口径取法 |
 | `ma_ma7` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ma_ma7` | wind | — | — | 尚未确认同口径取法 |
 | `ma_ma7` | ifind | — | — | 尚未确认同口径取法 |
 | `ma_ma7` | tdx | `tdx_ma` → `tdx_technical_indicator_query` | MA7 | 原单位：元；×1；M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 |
+| `ma_ma7` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ma_ma8` | tushare | — | — | 尚未确认同口径取法 |
 | `ma_ma8` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ma_ma8` | wind | — | — | 尚未确认同口径取法 |
 | `ma_ma8` | ifind | — | — | 尚未确认同口径取法 |
 | `ma_ma8` | tdx | `tdx_ma` → `tdx_technical_indicator_query` | MA8 | 原单位：元；×1；M5至M8默认0表示关闭，该线返回0是厂商关闭占位；使用前设置正周期。 |
+| `ma_ma8` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `expma_exp1` | tushare | — | — | 尚未确认同口径取法 |
 | `expma_exp1` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `expma_exp1` | wind | — | — | 尚未确认同口径取法 |
 | `expma_exp1` | ifind | — | — | 尚未确认同口径取法 |
 | `expma_exp1` | tdx | `tdx_expma` → `tdx_technical_indicator_query` | EXP1 | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `expma_exp1` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `expma_exp2` | tushare | — | — | 尚未确认同口径取法 |
 | `expma_exp2` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `expma_exp2` | wind | — | — | 尚未确认同口径取法 |
 | `expma_exp2` | ifind | — | — | 尚未确认同口径取法 |
 | `expma_exp2` | tdx | `tdx_expma` → `tdx_technical_indicator_query` | EXP2 | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `expma_exp2` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `bbi_bbi` | tushare | — | — | 尚未确认同口径取法 |
 | `bbi_bbi` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `bbi_bbi` | wind | — | — | 尚未确认同口径取法 |
 | `bbi_bbi` | ifind | — | — | 尚未确认同口径取法 |
 | `bbi_bbi` | tdx | `tdx_bbi` → `tdx_technical_indicator_query` | BBI | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `bbi_bbi` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `dmi_pdi` | tushare | — | — | 尚未确认同口径取法 |
 | `dmi_pdi` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `dmi_pdi` | wind | — | — | 尚未确认同口径取法 |
 | `dmi_pdi` | ifind | — | — | 尚未确认同口径取法 |
 | `dmi_pdi` | tdx | `tdx_dmi` → `tdx_technical_indicator_query` | PDI | 原单位：无量纲；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `dmi_pdi` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `dmi_mdi` | tushare | — | — | 尚未确认同口径取法 |
 | `dmi_mdi` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `dmi_mdi` | wind | — | — | 尚未确认同口径取法 |
 | `dmi_mdi` | ifind | — | — | 尚未确认同口径取法 |
 | `dmi_mdi` | tdx | `tdx_dmi` → `tdx_technical_indicator_query` | MDI | 原单位：无量纲；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `dmi_mdi` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `dmi_adx` | tushare | — | — | 尚未确认同口径取法 |
 | `dmi_adx` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `dmi_adx` | wind | — | — | 尚未确认同口径取法 |
 | `dmi_adx` | ifind | — | — | 尚未确认同口径取法 |
 | `dmi_adx` | tdx | `tdx_dmi` → `tdx_technical_indicator_query` | ADX | 原单位：无量纲；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `dmi_adx` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `dmi_adxr` | tushare | — | — | 尚未确认同口径取法 |
 | `dmi_adxr` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `dmi_adxr` | wind | — | — | 尚未确认同口径取法 |
 | `dmi_adxr` | ifind | — | — | 尚未确认同口径取法 |
 | `dmi_adxr` | tdx | `tdx_dmi` → `tdx_technical_indicator_query` | ADXR | 原单位：无量纲；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `dmi_adxr` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `cci_cci` | tushare | — | — | 尚未确认同口径取法 |
 | `cci_cci` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `cci_cci` | wind | — | — | 尚未确认同口径取法 |
 | `cci_cci` | ifind | — | — | 尚未确认同口径取法 |
 | `cci_cci` | tdx | `tdx_cci` → `tdx_technical_indicator_query` | CCI | 原单位：无量纲；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `cci_cci` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `roc_roc` | tushare | — | — | 尚未确认同口径取法 |
 | `roc_roc` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `roc_roc` | wind | — | — | 尚未确认同口径取法 |
 | `roc_roc` | ifind | — | — | 尚未确认同口径取法 |
 | `roc_roc` | tdx | `tdx_roc` → `tdx_technical_indicator_query` | ROC | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `roc_roc` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `roc_maroc` | tushare | — | — | 尚未确认同口径取法 |
 | `roc_maroc` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `roc_maroc` | wind | — | — | 尚未确认同口径取法 |
 | `roc_maroc` | ifind | — | — | 尚未确认同口径取法 |
 | `roc_maroc` | tdx | `tdx_roc` → `tdx_technical_indicator_query` | MAROC | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `roc_maroc` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `mtm_mtm` | tushare | — | — | 尚未确认同口径取法 |
 | `mtm_mtm` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `mtm_mtm` | wind | — | — | 尚未确认同口径取法 |
 | `mtm_mtm` | ifind | — | — | 尚未确认同口径取法 |
 | `mtm_mtm` | tdx | `tdx_mtm` → `tdx_technical_indicator_query` | MTM | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `mtm_mtm` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `mtm_mtmma` | tushare | — | — | 尚未确认同口径取法 |
 | `mtm_mtmma` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `mtm_mtmma` | wind | — | — | 尚未确认同口径取法 |
 | `mtm_mtmma` | ifind | — | — | 尚未确认同口径取法 |
 | `mtm_mtmma` | tdx | `tdx_mtm` → `tdx_technical_indicator_query` | MTMMA | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `mtm_mtmma` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wr_wr1` | tushare | — | — | 尚未确认同口径取法 |
 | `wr_wr1` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `wr_wr1` | wind | — | — | 尚未确认同口径取法 |
 | `wr_wr1` | ifind | — | — | 尚未确认同口径取法 |
 | `wr_wr1` | tdx | `tdx_wr` → `tdx_technical_indicator_query` | WR1 | 原单位：无量纲；×1；通达信0至100反向标度，数值越小越靠近区间高点；不转为负值Williams %R。 |
+| `wr_wr1` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wr_wr2` | tushare | — | — | 尚未确认同口径取法 |
 | `wr_wr2` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `wr_wr2` | wind | — | — | 尚未确认同口径取法 |
 | `wr_wr2` | ifind | — | — | 尚未确认同口径取法 |
 | `wr_wr2` | tdx | `tdx_wr` → `tdx_technical_indicator_query` | WR2 | 原单位：无量纲；×1；通达信0至100反向标度，数值越小越靠近区间高点；不转为负值Williams %R。 |
+| `wr_wr2` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `bias_bias1` | tushare | — | — | 尚未确认同口径取法 |
 | `bias_bias1` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `bias_bias1` | wind | — | — | 尚未确认同口径取法 |
 | `bias_bias1` | ifind | — | — | 尚未确认同口径取法 |
 | `bias_bias1` | tdx | `tdx_bias` → `tdx_technical_indicator_query` | BIAS1 | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `bias_bias1` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `bias_bias2` | tushare | — | — | 尚未确认同口径取法 |
 | `bias_bias2` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `bias_bias2` | wind | — | — | 尚未确认同口径取法 |
 | `bias_bias2` | ifind | — | — | 尚未确认同口径取法 |
 | `bias_bias2` | tdx | `tdx_bias` → `tdx_technical_indicator_query` | BIAS2 | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `bias_bias2` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `bias_bias3` | tushare | — | — | 尚未确认同口径取法 |
 | `bias_bias3` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `bias_bias3` | wind | — | — | 尚未确认同口径取法 |
 | `bias_bias3` | ifind | — | — | 尚未确认同口径取法 |
 | `bias_bias3` | tdx | `tdx_bias` → `tdx_technical_indicator_query` | BIAS3 | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `bias_bias3` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `trix_trix` | tushare | — | — | 尚未确认同口径取法 |
 | `trix_trix` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `trix_trix` | wind | — | — | 尚未确认同口径取法 |
 | `trix_trix` | ifind | — | — | 尚未确认同口径取法 |
 | `trix_trix` | tdx | `tdx_trix` → `tdx_technical_indicator_query` | TRIX | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `trix_trix` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `trix_matrix` | tushare | — | — | 尚未确认同口径取法 |
 | `trix_matrix` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `trix_matrix` | wind | — | — | 尚未确认同口径取法 |
 | `trix_matrix` | ifind | — | — | 尚未确认同口径取法 |
 | `trix_matrix` | tdx | `tdx_trix` → `tdx_technical_indicator_query` | MATRIX | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `trix_matrix` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `psy_psy` | tushare | — | — | 尚未确认同口径取法 |
 | `psy_psy` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `psy_psy` | wind | — | — | 尚未确认同口径取法 |
 | `psy_psy` | ifind | — | — | 尚未确认同口径取法 |
 | `psy_psy` | tdx | `tdx_psy` → `tdx_technical_indicator_query` | PSY | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `psy_psy` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `psy_psyma` | tushare | — | — | 尚未确认同口径取法 |
 | `psy_psyma` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `psy_psyma` | wind | — | — | 尚未确认同口径取法 |
 | `psy_psyma` | ifind | — | — | 尚未确认同口径取法 |
 | `psy_psyma` | tdx | `tdx_psy` → `tdx_technical_indicator_query` | PSYMA | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `psy_psyma` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `obv_obv` | tushare | — | — | 尚未确认同口径取法 |
 | `obv_obv` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `obv_obv` | wind | — | — | 尚未确认同口径取法 |
 | `obv_obv` | ifind | — | — | 尚未确认同口径取法 |
 | `obv_obv` | tdx | `tdx_obv` → `tdx_technical_indicator_query` | OBV | 原单位：手；×1；有符号成交量累计，单位手；起始累计基准由厂商决定。样本相邻差值与VOL一致。 |
+| `obv_obv` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `obv_maobv` | tushare | — | — | 尚未确认同口径取法 |
 | `obv_maobv` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `obv_maobv` | wind | — | — | 尚未确认同口径取法 |
 | `obv_maobv` | ifind | — | — | 尚未确认同口径取法 |
 | `obv_maobv` | tdx | `tdx_obv` → `tdx_technical_indicator_query` | MAOBV | 原单位：手；×1；有符号成交量累计，单位手；起始累计基准由厂商决定。样本相邻差值与VOL一致。 |
+| `obv_maobv` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `vr_vr` | tushare | — | — | 尚未确认同口径取法 |
 | `vr_vr` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `vr_vr` | wind | — | — | 尚未确认同口径取法 |
 | `vr_vr` | ifind | — | — | 尚未确认同口径取法 |
 | `vr_vr` | tdx | `tdx_vr` → `tdx_technical_indicator_query` | VR | 原单位：%；×1；成交量比率乘100的原生标度；100表示比率1，不是证券收益率。 |
+| `vr_vr` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `vr_mavr` | tushare | — | — | 尚未确认同口径取法 |
 | `vr_mavr` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `vr_mavr` | wind | — | — | 尚未确认同口径取法 |
 | `vr_mavr` | ifind | — | — | 尚未确认同口径取法 |
 | `vr_mavr` | tdx | `tdx_vr` → `tdx_technical_indicator_query` | MAVR | 原单位：%；×1；成交量比率乘100的原生标度；100表示比率1，不是证券收益率。 |
+| `vr_mavr` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `vol_volume` | tushare | — | — | 尚未确认同口径取法 |
 | `vol_volume` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `vol_volume` | wind | — | — | 尚未确认同口径取法 |
 | `vol_volume` | ifind | — | — | 尚未确认同口径取法 |
 | `vol_volume` | tdx | `tdx_vol` → `tdx_technical_indicator_query` | VOLUME | 原单位：手；×1；A股成交量单位按通达信手计；1手=100股。 |
+| `vol_volume` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `vol_mavol1` | tushare | — | — | 尚未确认同口径取法 |
 | `vol_mavol1` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `vol_mavol1` | wind | — | — | 尚未确认同口径取法 |
 | `vol_mavol1` | ifind | — | — | 尚未确认同口径取法 |
 | `vol_mavol1` | tdx | `tdx_vol` → `tdx_technical_indicator_query` | MAVOL1 | 原单位：手；×1；A股成交量单位按通达信手计；1手=100股。 |
+| `vol_mavol1` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `vol_mavol2` | tushare | — | — | 尚未确认同口径取法 |
 | `vol_mavol2` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `vol_mavol2` | wind | — | — | 尚未确认同口径取法 |
 | `vol_mavol2` | ifind | — | — | 尚未确认同口径取法 |
 | `vol_mavol2` | tdx | `tdx_vol` → `tdx_technical_indicator_query` | MAVOL2 | 原单位：手；×1；A股成交量单位按通达信手计；1手=100股。 |
+| `vol_mavol2` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `atr_mtr` | tushare | — | — | 尚未确认同口径取法 |
 | `atr_mtr` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `atr_mtr` | wind | — | — | 尚未确认同口径取法 |
 | `atr_mtr` | ifind | — | — | 尚未确认同口径取法 |
 | `atr_mtr` | tdx | `tdx_atr` → `tdx_technical_indicator_query` | MTR | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `atr_mtr` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `atr_atr` | tushare | — | — | 尚未确认同口径取法 |
 | `atr_atr` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `atr_atr` | wind | — | — | 尚未确认同口径取法 |
 | `atr_atr` | ifind | — | — | 尚未确认同口径取法 |
 | `atr_atr` | tdx | `tdx_atr` → `tdx_technical_indicator_query` | ATR | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `atr_atr` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `dma_dif` | tushare | — | — | 尚未确认同口径取法 |
 | `dma_dif` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `dma_dif` | wind | — | — | 尚未确认同口径取法 |
 | `dma_dif` | ifind | — | — | 尚未确认同口径取法 |
 | `dma_dif` | tdx | `tdx_dma` → `tdx_technical_indicator_query` | DIF | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `dma_dif` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `dma_difma` | tushare | — | — | 尚未确认同口径取法 |
 | `dma_difma` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `dma_difma` | wind | — | — | 尚未确认同口径取法 |
 | `dma_difma` | ifind | — | — | 尚未确认同口径取法 |
 | `dma_difma` | tdx | `tdx_dma` → `tdx_technical_indicator_query` | DIFMA | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `dma_difma` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `emv_emv` | tushare | — | — | 尚未确认同口径取法 |
 | `emv_emv` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `emv_emv` | wind | — | — | 尚未确认同口径取法 |
 | `emv_emv` | ifind | — | — | 尚未确认同口径取法 |
 | `emv_emv` | tdx | `tdx_emv` → `tdx_technical_indicator_query` | EMV | 原单位：来源原生值；×1；接口未披露该分量公式量纲及缩放，保留厂商原生值，不认定为元或百分比。 |
+| `emv_emv` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `emv_maemv` | tushare | — | — | 尚未确认同口径取法 |
 | `emv_maemv` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `emv_maemv` | wind | — | — | 尚未确认同口径取法 |
 | `emv_maemv` | ifind | — | — | 尚未确认同口径取法 |
 | `emv_maemv` | tdx | `tdx_emv` → `tdx_technical_indicator_query` | MAEMV | 原单位：来源原生值；×1；接口未披露该分量公式量纲及缩放，保留厂商原生值，不认定为元或百分比。 |
+| `emv_maemv` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `dpo_dpo` | tushare | — | — | 尚未确认同口径取法 |
 | `dpo_dpo` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `dpo_dpo` | wind | — | — | 尚未确认同口径取法 |
 | `dpo_dpo` | ifind | — | — | 尚未确认同口径取法 |
 | `dpo_dpo` | tdx | `tdx_dpo` → `tdx_technical_indicator_query` | DPO | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `dpo_dpo` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `dpo_madpo` | tushare | — | — | 尚未确认同口径取法 |
 | `dpo_madpo` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `dpo_madpo` | wind | — | — | 尚未确认同口径取法 |
 | `dpo_madpo` | ifind | — | — | 尚未确认同口径取法 |
 | `dpo_madpo` | tdx | `tdx_dpo` → `tdx_technical_indicator_query` | MADPO | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `dpo_madpo` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `brar_br` | tushare | — | — | 尚未确认同口径取法 |
 | `brar_br` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `brar_br` | wind | — | — | 尚未确认同口径取法 |
 | `brar_br` | ifind | — | — | 尚未确认同口径取法 |
 | `brar_br` | tdx | `tdx_brar` → `tdx_technical_indicator_query` | BR | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `brar_br` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `brar_ar` | tushare | — | — | 尚未确认同口径取法 |
 | `brar_ar` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `brar_ar` | wind | — | — | 尚未确认同口径取法 |
 | `brar_ar` | ifind | — | — | 尚未确认同口径取法 |
 | `brar_ar` | tdx | `tdx_brar` → `tdx_technical_indicator_query` | AR | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `brar_ar` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `mfi_mfi` | tushare | — | — | 尚未确认同口径取法 |
 | `mfi_mfi` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `mfi_mfi` | wind | — | — | 尚未确认同口径取法 |
 | `mfi_mfi` | ifind | — | — | 尚未确认同口径取法 |
 | `mfi_mfi` | tdx | `tdx_mfi` → `tdx_technical_indicator_query` | MFI | 原单位：无量纲；×1；N2为厂商公开参数；本接口仅输出MFI一线。 |
+| `mfi_mfi` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `cr_cr` | tushare | — | — | 尚未确认同口径取法 |
 | `cr_cr` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `cr_cr` | wind | — | — | 尚未确认同口径取法 |
 | `cr_cr` | ifind | — | — | 尚未确认同口径取法 |
 | `cr_cr` | tdx | `tdx_cr` → `tdx_technical_indicator_query` | CR | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `cr_cr` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `cr_ma1` | tushare | — | — | 尚未确认同口径取法 |
 | `cr_ma1` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `cr_ma1` | wind | — | — | 尚未确认同口径取法 |
 | `cr_ma1` | ifind | — | — | 尚未确认同口径取法 |
 | `cr_ma1` | tdx | `tdx_cr` → `tdx_technical_indicator_query` | MA1 | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `cr_ma1` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `cr_ma2` | tushare | — | — | 尚未确认同口径取法 |
 | `cr_ma2` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `cr_ma2` | wind | — | — | 尚未确认同口径取法 |
 | `cr_ma2` | ifind | — | — | 尚未确认同口径取法 |
 | `cr_ma2` | tdx | `tdx_cr` → `tdx_technical_indicator_query` | MA2 | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `cr_ma2` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `cr_ma3` | tushare | — | — | 尚未确认同口径取法 |
 | `cr_ma3` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `cr_ma3` | wind | — | — | 尚未确认同口径取法 |
 | `cr_ma3` | ifind | — | — | 尚未确认同口径取法 |
 | `cr_ma3` | tdx | `tdx_cr` → `tdx_technical_indicator_query` | MA3 | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `cr_ma3` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `cr_ma4` | tushare | — | — | 尚未确认同口径取法 |
 | `cr_ma4` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `cr_ma4` | wind | — | — | 尚未确认同口径取法 |
 | `cr_ma4` | ifind | — | — | 尚未确认同口径取法 |
 | `cr_ma4` | tdx | `tdx_cr` → `tdx_technical_indicator_query` | MA4 | 原单位：%；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `cr_ma4` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `asi_asi` | tushare | — | — | 尚未确认同口径取法 |
 | `asi_asi` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `asi_asi` | wind | — | — | 尚未确认同口径取法 |
 | `asi_asi` | ifind | — | — | 尚未确认同口径取法 |
 | `asi_asi` | tdx | `tdx_asi` → `tdx_technical_indicator_query` | ASI | 原单位：来源原生值；×1；接口未披露公式量纲及缩放，保留厂商原生值，不认定为元或百分比。 |
+| `asi_asi` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `asi_ma` | tushare | — | — | 尚未确认同口径取法 |
 | `asi_ma` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `asi_ma` | wind | — | — | 尚未确认同口径取法 |
 | `asi_ma` | ifind | — | — | 尚未确认同口径取法 |
 | `asi_ma` | tdx | `tdx_asi` → `tdx_technical_indicator_query` | MA | 原单位：来源原生值；×1；接口未披露公式量纲及缩放，保留厂商原生值，不认定为元或百分比。 |
+| `asi_ma` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `mass_mass` | tushare | — | — | 尚未确认同口径取法 |
 | `mass_mass` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `mass_mass` | wind | — | — | 尚未确认同口径取法 |
 | `mass_mass` | ifind | — | — | 尚未确认同口径取法 |
 | `mass_mass` | tdx | `tdx_mass` → `tdx_technical_indicator_query` | MASS | 原单位：无量纲；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `mass_mass` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `mass_mamass` | tushare | — | — | 尚未确认同口径取法 |
 | `mass_mamass` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `mass_mamass` | wind | — | — | 尚未确认同口径取法 |
 | `mass_mamass` | ifind | — | — | 尚未确认同口径取法 |
 | `mass_mamass` | tdx | `tdx_mass` → `tdx_technical_indicator_query` | MAMASS | 原单位：无量纲；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `mass_mamass` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `xsii_td1` | tushare | — | — | 尚未确认同口径取法 |
 | `xsii_td1` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `xsii_td1` | wind | — | — | 尚未确认同口径取法 |
 | `xsii_td1` | ifind | — | — | 尚未确认同口径取法 |
 | `xsii_td1` | tdx | `tdx_xsii` → `tdx_technical_indicator_query` | 通道1 | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `xsii_td1` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `xsii_td2` | tushare | — | — | 尚未确认同口径取法 |
 | `xsii_td2` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `xsii_td2` | wind | — | — | 尚未确认同口径取法 |
 | `xsii_td2` | ifind | — | — | 尚未确认同口径取法 |
 | `xsii_td2` | tdx | `tdx_xsii` → `tdx_technical_indicator_query` | 通道2 | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `xsii_td2` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `xsii_td3` | tushare | — | — | 尚未确认同口径取法 |
 | `xsii_td3` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `xsii_td3` | wind | — | — | 尚未确认同口径取法 |
 | `xsii_td3` | ifind | — | — | 尚未确认同口径取法 |
 | `xsii_td3` | tdx | `tdx_xsii` → `tdx_technical_indicator_query` | 通道3 | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `xsii_td3` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `xsii_td4` | tushare | — | — | 尚未确认同口径取法 |
 | `xsii_td4` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `xsii_td4` | wind | — | — | 尚未确认同口径取法 |
 | `xsii_td4` | ifind | — | — | 尚未确认同口径取法 |
 | `xsii_td4` | tdx | `tdx_xsii` → `tdx_technical_indicator_query` | 通道4 | 原单位：元；×1；接口未返回单位标签；按该分量的指标含义标注。 |
+| `xsii_td4` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `donchian_upper` | tushare | — | — | 尚未确认同口径取法 |
 | `donchian_upper` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `donchian_upper` | wind | — | — | 尚未确认同口径取法 |
 | `donchian_upper` | ifind | — | — | 尚未确认同口径取法 |
 | `donchian_upper` | tdx | `tdx_donchian` → `tdx_technical_indicator_query` | 周期高点 | 原单位：元；×1；X1高点周期、X2低点周期不同；不冒称Tushare TAQ的三线通道。 |
+| `donchian_upper` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `donchian_lower` | tushare | — | — | 尚未确认同口径取法 |
 | `donchian_lower` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `donchian_lower` | wind | — | — | 尚未确认同口径取法 |
 | `donchian_lower` | ifind | — | — | 尚未确认同口径取法 |
 | `donchian_lower` | tdx | `tdx_donchian` → `tdx_technical_indicator_query` | 周期低点 | 原单位：元；×1；X1高点周期、X2低点周期不同；不冒称Tushare TAQ的三线通道。 |
+| `donchian_lower` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_asi_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | asi_bfq | 原单位：未确认；×1；振动升降指标-OPEN, CLOSE, HIGH, LOW, M1=26, M2=10；来源未明确缩放单位，保留原值 |
 | `ts_asi_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_asi_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_asi_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_asi_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_asi_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_asit_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | asit_bfq | 原单位：未确认；×1；振动升降指标-OPEN, CLOSE, HIGH, LOW, M1=26, M2=10；来源未明确缩放单位，保留原值 |
 | `ts_asit_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_asit_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_asit_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_asit_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_asit_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_atr_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | atr_bfq | 原单位：元；×1；真实波动N日平均值-CLOSE, HIGH, LOW, N=20；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_atr_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_atr_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_atr_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_atr_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_atr_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_bbi_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | bbi_bfq | 原单位：元；×1；BBI多空指标-CLOSE, M1=3, M2=6, M3=12, M4=20；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_bbi_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_bbi_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_bbi_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_bbi_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_bbi_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_bias1_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | bias1_bfq | 原单位：无量纲；×1；BIAS乖离率-CLOSE, L1=6, L2=12, L3=24；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_bias1_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_bias1_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_bias1_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_bias1_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias1_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_bias2_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | bias2_bfq | 原单位：无量纲；×1；BIAS乖离率-CLOSE, L1=6, L2=12, L3=24；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_bias2_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_bias2_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_bias2_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_bias2_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias2_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_bias3_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | bias3_bfq | 原单位：无量纲；×1；BIAS乖离率-CLOSE, L1=6, L2=12, L3=24；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_bias3_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_bias3_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_bias3_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_bias3_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias3_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_boll_lower_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | boll_lower_bfq | 原单位：元；×1；BOLL指标，布林带-CLOSE, N=20, P=2；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_boll_lower_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_boll_lower_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_boll_lower_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_boll_lower_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_lower_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_boll_mid_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | boll_mid_bfq | 原单位：元；×1；BOLL指标，布林带-CLOSE, N=20, P=2；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_boll_mid_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_boll_mid_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_boll_mid_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_boll_mid_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_mid_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_boll_upper_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | boll_upper_bfq | 原单位：元；×1；BOLL指标，布林带-CLOSE, N=20, P=2；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_boll_upper_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_boll_upper_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_boll_upper_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_boll_upper_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_upper_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_brar_ar_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | brar_ar_bfq | 原单位：无量纲；×1；BRAR情绪指标-OPEN, CLOSE, HIGH, LOW, M1=26；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_brar_ar_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_brar_ar_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_brar_ar_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_brar_ar_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_brar_ar_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_brar_br_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | brar_br_bfq | 原单位：无量纲；×1；BRAR情绪指标-OPEN, CLOSE, HIGH, LOW, M1=26；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_brar_br_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_brar_br_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_brar_br_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_brar_br_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_brar_br_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_cci_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | cci_bfq | 原单位：无量纲；×1；顺势指标又叫CCI指标-CLOSE, HIGH, LOW, N=14；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_cci_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_cci_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_cci_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_cci_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_cci_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_cr_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | cr_bfq | 原单位：无量纲；×1；CR价格动量指标-CLOSE, HIGH, LOW, N=20；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_cr_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_cr_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_cr_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_cr_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_cr_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_dfma_dif_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | dfma_dif_bfq | 原单位：元；×1；平行线差指标-CLOSE, N1=10, N2=50, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_dfma_dif_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_dfma_dif_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dfma_dif_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dfma_dif_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dfma_dif_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_dfma_difma_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | dfma_difma_bfq | 原单位：元；×1；平行线差指标-CLOSE, N1=10, N2=50, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_dfma_difma_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_dfma_difma_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dfma_difma_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dfma_difma_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dfma_difma_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_dmi_adx_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | dmi_adx_bfq | 原单位：无量纲；×1；动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_dmi_adx_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_dmi_adx_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dmi_adx_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dmi_adx_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_adx_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_dmi_adxr_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | dmi_adxr_bfq | 原单位：无量纲；×1；动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_dmi_adxr_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_dmi_adxr_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dmi_adxr_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dmi_adxr_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_adxr_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_dmi_mdi_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | dmi_mdi_bfq | 原单位：无量纲；×1；动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_dmi_mdi_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_dmi_mdi_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dmi_mdi_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dmi_mdi_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_mdi_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_dmi_pdi_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | dmi_pdi_bfq | 原单位：无量纲；×1；动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_dmi_pdi_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_dmi_pdi_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dmi_pdi_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dmi_pdi_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_pdi_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_dpo_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | dpo_bfq | 原单位：元；×1；区间震荡线-CLOSE, M1=20, M2=10, M3=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_dpo_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_dpo_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dpo_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dpo_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dpo_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_madpo_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | madpo_bfq | 原单位：元；×1；区间震荡线-CLOSE, M1=20, M2=10, M3=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_madpo_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_madpo_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_madpo_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_madpo_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_madpo_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ema_bfq_10` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ema_bfq_10 | 原单位：元；×1；指数移动平均-N=10；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ema_bfq_10` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ema_bfq_10` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_bfq_10` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_bfq_10` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_bfq_10` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ema_bfq_20` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ema_bfq_20 | 原单位：元；×1；指数移动平均-N=20；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ema_bfq_20` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ema_bfq_20` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_bfq_20` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_bfq_20` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_bfq_20` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ema_bfq_250` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ema_bfq_250 | 原单位：元；×1；指数移动平均-N=250；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ema_bfq_250` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ema_bfq_250` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_bfq_250` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_bfq_250` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_bfq_250` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ema_bfq_30` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ema_bfq_30 | 原单位：元；×1；指数移动平均-N=30；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ema_bfq_30` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ema_bfq_30` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_bfq_30` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_bfq_30` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_bfq_30` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ema_bfq_5` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ema_bfq_5 | 原单位：元；×1；指数移动平均-N=5；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ema_bfq_5` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ema_bfq_5` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_bfq_5` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_bfq_5` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_bfq_5` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ema_bfq_60` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ema_bfq_60 | 原单位：元；×1；指数移动平均-N=60；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ema_bfq_60` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ema_bfq_60` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_bfq_60` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_bfq_60` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_bfq_60` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ema_bfq_90` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ema_bfq_90 | 原单位：元；×1；指数移动平均-N=90；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ema_bfq_90` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ema_bfq_90` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_bfq_90` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_bfq_90` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_bfq_90` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_emv_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | emv_bfq | 原单位：未确认；×1；简易波动指标-HIGH, LOW, VOL, N=14, M=9；来源未明确缩放单位，保留原值 |
 | `ts_emv_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_emv_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_emv_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_emv_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_emv_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_maemv_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | maemv_bfq | 原单位：未确认；×1；简易波动指标-HIGH, LOW, VOL, N=14, M=9；来源未明确缩放单位，保留原值 |
 | `ts_maemv_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_maemv_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_maemv_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_maemv_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_maemv_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_expma_12_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | expma_12_bfq | 原单位：元；×1；EMA指数平均数指标-CLOSE, N1=12, N2=50；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_expma_12_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_expma_12_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_expma_12_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_expma_12_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_expma_12_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_expma_50_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | expma_50_bfq | 原单位：元；×1；EMA指数平均数指标-CLOSE, N1=12, N2=50；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_expma_50_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_expma_50_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_expma_50_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_expma_50_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_expma_50_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_kdj_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | kdj_bfq | 原单位：无量纲；×1；KDJ指标-CLOSE, HIGH, LOW, N=9, M1=3, M2=3；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_kdj_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_kdj_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_kdj_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_kdj_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_kdj_d_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | kdj_d_bfq | 原单位：无量纲；×1；KDJ指标-CLOSE, HIGH, LOW, N=9, M1=3, M2=3；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_kdj_d_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_kdj_d_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_kdj_d_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_kdj_d_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_d_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_kdj_k_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | kdj_k_bfq | 原单位：无量纲；×1；KDJ指标-CLOSE, HIGH, LOW, N=9, M1=3, M2=3；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_kdj_k_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_kdj_k_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_kdj_k_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_kdj_k_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_k_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ktn_down_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ktn_down_bfq | 原单位：元；×1；肯特纳交易通道, N选20日，ATR选10日-CLOSE, HIGH, LOW, N=20, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ktn_down_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ktn_down_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ktn_down_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ktn_down_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_down_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ktn_mid_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ktn_mid_bfq | 原单位：元；×1；肯特纳交易通道, N选20日，ATR选10日-CLOSE, HIGH, LOW, N=20, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ktn_mid_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ktn_mid_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ktn_mid_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ktn_mid_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_mid_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ktn_upper_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ktn_upper_bfq | 原单位：元；×1；肯特纳交易通道, N选20日，ATR选10日-CLOSE, HIGH, LOW, N=20, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ktn_upper_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ktn_upper_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ktn_upper_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ktn_upper_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_upper_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ma_bfq_10` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ma_bfq_10 | 原单位：元；×1；简单移动平均-N=10；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ma_bfq_10` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ma_bfq_10` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_bfq_10` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_bfq_10` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_bfq_10` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ma_bfq_20` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ma_bfq_20 | 原单位：元；×1；简单移动平均-N=20；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ma_bfq_20` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ma_bfq_20` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_bfq_20` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_bfq_20` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_bfq_20` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ma_bfq_250` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ma_bfq_250 | 原单位：元；×1；简单移动平均-N=250；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ma_bfq_250` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ma_bfq_250` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_bfq_250` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_bfq_250` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_bfq_250` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ma_bfq_30` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ma_bfq_30 | 原单位：元；×1；简单移动平均-N=30；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ma_bfq_30` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ma_bfq_30` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_bfq_30` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_bfq_30` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_bfq_30` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ma_bfq_5` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ma_bfq_5 | 原单位：元；×1；简单移动平均-N=5；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ma_bfq_5` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ma_bfq_5` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_bfq_5` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_bfq_5` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_bfq_5` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ma_bfq_60` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ma_bfq_60 | 原单位：元；×1；简单移动平均-N=60；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ma_bfq_60` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ma_bfq_60` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_bfq_60` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_bfq_60` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_bfq_60` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ma_bfq_90` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ma_bfq_90 | 原单位：元；×1；简单移动平均-N=90；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ma_bfq_90` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ma_bfq_90` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_bfq_90` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_bfq_90` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_bfq_90` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_macd_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | macd_bfq | 原单位：元；×1；MACD指标-CLOSE, SHORT=12, LONG=26, M=9；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_macd_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_macd_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_macd_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_macd_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_macd_dea_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | macd_dea_bfq | 原单位：元；×1；MACD指标-CLOSE, SHORT=12, LONG=26, M=9；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_macd_dea_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_macd_dea_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_macd_dea_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_macd_dea_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_dea_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_macd_dif_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | macd_dif_bfq | 原单位：元；×1；MACD指标-CLOSE, SHORT=12, LONG=26, M=9；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_macd_dif_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_macd_dif_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_macd_dif_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_macd_dif_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_dif_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_mass_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | mass_bfq | 原单位：无量纲；×1；梅斯线-HIGH, LOW, N1=9, N2=25, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_mass_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_mass_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_mass_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_mass_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_mass_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ma_mass_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | ma_mass_bfq | 原单位：元；×1；梅斯线-HIGH, LOW, N1=9, N2=25, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ma_mass_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ma_mass_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_mass_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_mass_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_mass_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_mfi_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | mfi_bfq | 原单位：无量纲；×1；MFI指标是成交量的RSI指标-CLOSE, HIGH, LOW, VOL, N=14；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_mfi_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_mfi_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_mfi_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_mfi_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_mfi_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_mtm_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | mtm_bfq | 原单位：元；×1；动量指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_mtm_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_mtm_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_mtm_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_mtm_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_mtm_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_mtmma_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | mtmma_bfq | 原单位：元；×1；动量指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_mtmma_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_mtmma_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_mtmma_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_mtmma_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_mtmma_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_obv_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | obv_bfq | 原单位：未确认；×1；能量潮指标-CLOSE, VOL；来源未明确缩放单位，保留原值 |
 | `ts_obv_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_obv_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_obv_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_obv_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_obv_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_psy_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | psy_bfq | 原单位：无量纲；×1；投资者对股市涨跌产生心理波动的情绪指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_psy_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_psy_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_psy_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_psy_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_psy_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_psyma_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | psyma_bfq | 原单位：无量纲；×1；投资者对股市涨跌产生心理波动的情绪指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_psyma_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_psyma_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_psyma_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_psyma_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_psyma_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_roc_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | roc_bfq | 原单位：无量纲；×1；变动率指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_roc_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_roc_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_roc_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_roc_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_roc_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_maroc_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | maroc_bfq | 原单位：无量纲；×1；变动率指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_maroc_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_maroc_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_maroc_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_maroc_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_maroc_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_rsi_bfq_12` | tushare | `ts_factor_bfq` → `stk_factor_pro` | rsi_bfq_12 | 原单位：无量纲；×1；RSI指标-CLOSE, N=12；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_rsi_bfq_12` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_rsi_bfq_12` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_rsi_bfq_12` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_rsi_bfq_12` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_bfq_12` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_rsi_bfq_24` | tushare | `ts_factor_bfq` → `stk_factor_pro` | rsi_bfq_24 | 原单位：无量纲；×1；RSI指标-CLOSE, N=24；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_rsi_bfq_24` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_rsi_bfq_24` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_rsi_bfq_24` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_rsi_bfq_24` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_bfq_24` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_rsi_bfq_6` | tushare | `ts_factor_bfq` → `stk_factor_pro` | rsi_bfq_6 | 原单位：无量纲；×1；RSI指标-CLOSE, N=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_rsi_bfq_6` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_rsi_bfq_6` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_rsi_bfq_6` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_rsi_bfq_6` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_bfq_6` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_taq_down_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | taq_down_bfq | 原单位：元；×1；唐安奇通道(海龟)交易指标-HIGH, LOW, 20；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_taq_down_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_taq_down_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_taq_down_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_taq_down_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_down_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_taq_mid_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | taq_mid_bfq | 原单位：元；×1；唐安奇通道(海龟)交易指标-HIGH, LOW, 20；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_taq_mid_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_taq_mid_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_taq_mid_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_taq_mid_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_mid_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_taq_up_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | taq_up_bfq | 原单位：元；×1；唐安奇通道(海龟)交易指标-HIGH, LOW, 20；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_taq_up_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_taq_up_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_taq_up_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_taq_up_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_up_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_trix_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | trix_bfq | 原单位：无量纲；×1；三重指数平滑平均线-CLOSE, M1=12, M2=20；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_trix_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_trix_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_trix_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_trix_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_trix_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_trma_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | trma_bfq | 原单位：无量纲；×1；三重指数平滑平均线-CLOSE, M1=12, M2=20；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_trma_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_trma_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_trma_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_trma_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_trma_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_vr_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | vr_bfq | 原单位：无量纲；×1；VR容量比率-CLOSE, VOL, M1=26；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_vr_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_vr_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_vr_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_vr_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_vr_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_wr_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | wr_bfq | 原单位：无量纲；×1；W&R 威廉指标-CLOSE, HIGH, LOW, N=10, N1=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_wr_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_wr_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_wr_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_wr_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_wr_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_wr1_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | wr1_bfq | 原单位：无量纲；×1；W&R 威廉指标-CLOSE, HIGH, LOW, N=10, N1=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_wr1_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_wr1_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_wr1_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_wr1_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_wr1_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_xsii_td1_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | xsii_td1_bfq | 原单位：元；×1；薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_xsii_td1_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_xsii_td1_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_xsii_td1_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_xsii_td1_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td1_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_xsii_td2_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | xsii_td2_bfq | 原单位：元；×1；薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_xsii_td2_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_xsii_td2_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_xsii_td2_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_xsii_td2_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td2_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_xsii_td3_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | xsii_td3_bfq | 原单位：元；×1；薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_xsii_td3_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_xsii_td3_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_xsii_td3_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_xsii_td3_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td3_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_xsii_td4_bfq` | tushare | `ts_factor_bfq` → `stk_factor_pro` | xsii_td4_bfq | 原单位：元；×1；薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_xsii_td4_bfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_xsii_td4_bfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_xsii_td4_bfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_xsii_td4_bfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td4_bfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_asi_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | asi_qfq | 原单位：未确认；×1；振动升降指标-OPEN, CLOSE, HIGH, LOW, M1=26, M2=10；来源未明确缩放单位，保留原值 |
 | `ts_asi_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_asi_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_asi_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_asi_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_asi_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_asit_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | asit_qfq | 原单位：未确认；×1；振动升降指标-OPEN, CLOSE, HIGH, LOW, M1=26, M2=10；来源未明确缩放单位，保留原值 |
 | `ts_asit_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_asit_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_asit_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_asit_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_asit_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_atr_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | atr_qfq | 原单位：元；×1；真实波动N日平均值-CLOSE, HIGH, LOW, N=20；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_atr_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_atr_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_atr_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_atr_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_atr_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_bbi_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | bbi_qfq | 原单位：元；×1；BBI多空指标-CLOSE, M1=3, M2=6, M3=12, M4=22；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_bbi_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_bbi_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_bbi_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_bbi_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_bbi_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_bias1_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | bias1_qfq | 原单位：无量纲；×1；BIAS乖离率-CLOSE, L1=6, L2=12, L3=24；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_bias1_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_bias1_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_bias1_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_bias1_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias1_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_bias2_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | bias2_qfq | 原单位：无量纲；×1；BIAS乖离率-CLOSE, L1=6, L2=12, L3=24；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_bias2_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_bias2_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_bias2_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_bias2_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias2_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_bias3_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | bias3_qfq | 原单位：无量纲；×1；BIAS乖离率-CLOSE, L1=6, L2=12, L3=24；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_bias3_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_bias3_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_bias3_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_bias3_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias3_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_boll_lower_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | boll_lower_qfq | 原单位：元；×1；BOLL指标，布林带-CLOSE, N=20, P=2；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_boll_lower_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_boll_lower_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_boll_lower_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_boll_lower_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_lower_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_boll_mid_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | boll_mid_qfq | 原单位：元；×1；BOLL指标，布林带-CLOSE, N=20, P=2；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_boll_mid_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_boll_mid_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_boll_mid_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_boll_mid_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_mid_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_boll_upper_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | boll_upper_qfq | 原单位：元；×1；BOLL指标，布林带-CLOSE, N=20, P=2；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_boll_upper_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_boll_upper_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_boll_upper_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_boll_upper_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_upper_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_brar_ar_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | brar_ar_qfq | 原单位：无量纲；×1；BRAR情绪指标-OPEN, CLOSE, HIGH, LOW, M1=26；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_brar_ar_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_brar_ar_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_brar_ar_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_brar_ar_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_brar_ar_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_brar_br_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | brar_br_qfq | 原单位：无量纲；×1；BRAR情绪指标-OPEN, CLOSE, HIGH, LOW, M1=26；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_brar_br_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_brar_br_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_brar_br_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_brar_br_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_brar_br_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_cci_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | cci_qfq | 原单位：无量纲；×1；顺势指标又叫CCI指标-CLOSE, HIGH, LOW, N=14；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_cci_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_cci_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_cci_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_cci_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_cci_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_cr_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | cr_qfq | 原单位：无量纲；×1；CR价格动量指标-CLOSE, HIGH, LOW, N=20；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_cr_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_cr_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_cr_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_cr_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_cr_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_dfma_dif_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | dfma_dif_qfq | 原单位：元；×1；平行线差指标-CLOSE, N1=10, N2=50, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_dfma_dif_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_dfma_dif_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dfma_dif_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dfma_dif_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dfma_dif_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_dfma_difma_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | dfma_difma_qfq | 原单位：元；×1；平行线差指标-CLOSE, N1=10, N2=50, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_dfma_difma_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_dfma_difma_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dfma_difma_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dfma_difma_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dfma_difma_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_dmi_adx_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | dmi_adx_qfq | 原单位：无量纲；×1；动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_dmi_adx_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_dmi_adx_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dmi_adx_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dmi_adx_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_adx_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_dmi_adxr_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | dmi_adxr_qfq | 原单位：无量纲；×1；动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_dmi_adxr_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_dmi_adxr_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dmi_adxr_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dmi_adxr_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_adxr_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_dmi_mdi_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | dmi_mdi_qfq | 原单位：无量纲；×1；动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_dmi_mdi_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_dmi_mdi_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dmi_mdi_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dmi_mdi_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_mdi_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_dmi_pdi_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | dmi_pdi_qfq | 原单位：无量纲；×1；动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_dmi_pdi_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_dmi_pdi_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dmi_pdi_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dmi_pdi_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_pdi_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_dpo_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | dpo_qfq | 原单位：元；×1；区间震荡线-CLOSE, M1=20, M2=10, M3=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_dpo_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_dpo_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dpo_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dpo_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dpo_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_madpo_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | madpo_qfq | 原单位：元；×1；区间震荡线-CLOSE, M1=20, M2=10, M3=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_madpo_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_madpo_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_madpo_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_madpo_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_madpo_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ema_qfq_10` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ema_qfq_10 | 原单位：元；×1；指数移动平均-N=10；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ema_qfq_10` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ema_qfq_10` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_qfq_10` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_qfq_10` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_qfq_10` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ema_qfq_20` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ema_qfq_20 | 原单位：元；×1；指数移动平均-N=20；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ema_qfq_20` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ema_qfq_20` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_qfq_20` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_qfq_20` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_qfq_20` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ema_qfq_250` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ema_qfq_250 | 原单位：元；×1；指数移动平均-N=250；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ema_qfq_250` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ema_qfq_250` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_qfq_250` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_qfq_250` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_qfq_250` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ema_qfq_30` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ema_qfq_30 | 原单位：元；×1；指数移动平均-N=30；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ema_qfq_30` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ema_qfq_30` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_qfq_30` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_qfq_30` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_qfq_30` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ema_qfq_5` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ema_qfq_5 | 原单位：元；×1；指数移动平均-N=5；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ema_qfq_5` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ema_qfq_5` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_qfq_5` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_qfq_5` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_qfq_5` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ema_qfq_60` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ema_qfq_60 | 原单位：元；×1；指数移动平均-N=60；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ema_qfq_60` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ema_qfq_60` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_qfq_60` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_qfq_60` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_qfq_60` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ema_qfq_90` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ema_qfq_90 | 原单位：元；×1；指数移动平均-N=90；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ema_qfq_90` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ema_qfq_90` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_qfq_90` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_qfq_90` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_qfq_90` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_emv_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | emv_qfq | 原单位：未确认；×1；简易波动指标-HIGH, LOW, VOL, N=14, M=9；来源未明确缩放单位，保留原值 |
 | `ts_emv_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_emv_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_emv_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_emv_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_emv_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_maemv_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | maemv_qfq | 原单位：未确认；×1；简易波动指标-HIGH, LOW, VOL, N=14, M=9；来源未明确缩放单位，保留原值 |
 | `ts_maemv_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_maemv_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_maemv_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_maemv_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_maemv_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_expma_12_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | expma_12_qfq | 原单位：元；×1；EMA指数平均数指标-CLOSE, N1=12, N2=50；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_expma_12_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_expma_12_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_expma_12_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_expma_12_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_expma_12_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_expma_50_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | expma_50_qfq | 原单位：元；×1；EMA指数平均数指标-CLOSE, N1=12, N2=50；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_expma_50_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_expma_50_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_expma_50_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_expma_50_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_expma_50_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_kdj_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | kdj_qfq | 原单位：无量纲；×1；KDJ指标-CLOSE, HIGH, LOW, N=9, M1=3, M2=3；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_kdj_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_kdj_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_kdj_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_kdj_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_kdj_d_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | kdj_d_qfq | 原单位：无量纲；×1；KDJ指标-CLOSE, HIGH, LOW, N=9, M1=3, M2=3；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_kdj_d_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_kdj_d_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_kdj_d_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_kdj_d_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_d_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_kdj_k_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | kdj_k_qfq | 原单位：无量纲；×1；KDJ指标-CLOSE, HIGH, LOW, N=9, M1=3, M2=3；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_kdj_k_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_kdj_k_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_kdj_k_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_kdj_k_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_k_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ktn_down_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ktn_down_qfq | 原单位：元；×1；肯特纳交易通道, N选20日，ATR选10日-CLOSE, HIGH, LOW, N=20, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ktn_down_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ktn_down_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ktn_down_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ktn_down_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_down_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ktn_mid_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ktn_mid_qfq | 原单位：元；×1；肯特纳交易通道, N选20日，ATR选10日-CLOSE, HIGH, LOW, N=20, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ktn_mid_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ktn_mid_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ktn_mid_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ktn_mid_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_mid_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ktn_upper_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ktn_upper_qfq | 原单位：元；×1；肯特纳交易通道, N选20日，ATR选10日-CLOSE, HIGH, LOW, N=20, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ktn_upper_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ktn_upper_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ktn_upper_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ktn_upper_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_upper_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ma_qfq_10` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ma_qfq_10 | 原单位：元；×1；简单移动平均-N=10；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ma_qfq_10` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ma_qfq_10` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_qfq_10` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_qfq_10` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_qfq_10` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ma_qfq_20` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ma_qfq_20 | 原单位：元；×1；简单移动平均-N=20；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ma_qfq_20` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ma_qfq_20` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_qfq_20` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_qfq_20` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_qfq_20` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ma_qfq_250` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ma_qfq_250 | 原单位：元；×1；简单移动平均-N=250；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ma_qfq_250` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ma_qfq_250` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_qfq_250` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_qfq_250` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_qfq_250` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ma_qfq_30` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ma_qfq_30 | 原单位：元；×1；简单移动平均-N=30；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ma_qfq_30` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ma_qfq_30` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_qfq_30` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_qfq_30` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_qfq_30` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ma_qfq_5` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ma_qfq_5 | 原单位：元；×1；简单移动平均-N=5；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ma_qfq_5` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ma_qfq_5` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_qfq_5` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_qfq_5` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_qfq_5` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ma_qfq_60` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ma_qfq_60 | 原单位：元；×1；简单移动平均-N=60；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ma_qfq_60` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ma_qfq_60` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_qfq_60` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_qfq_60` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_qfq_60` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ma_qfq_90` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ma_qfq_90 | 原单位：元；×1；简单移动平均-N=90；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ma_qfq_90` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ma_qfq_90` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_qfq_90` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_qfq_90` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_qfq_90` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_macd_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | macd_qfq | 原单位：元；×1；MACD指标-CLOSE, SHORT=12, LONG=26, M=9；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_macd_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_macd_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_macd_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_macd_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_macd_dea_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | macd_dea_qfq | 原单位：元；×1；MACD指标-CLOSE, SHORT=12, LONG=26, M=9；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_macd_dea_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_macd_dea_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_macd_dea_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_macd_dea_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_dea_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_macd_dif_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | macd_dif_qfq | 原单位：元；×1；MACD指标-CLOSE, SHORT=12, LONG=26, M=9；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_macd_dif_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_macd_dif_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_macd_dif_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_macd_dif_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_dif_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_mass_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | mass_qfq | 原单位：无量纲；×1；梅斯线-HIGH, LOW, N1=9, N2=25, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_mass_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_mass_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_mass_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_mass_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_mass_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ma_mass_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | ma_mass_qfq | 原单位：元；×1；梅斯线-HIGH, LOW, N1=9, N2=25, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ma_mass_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ma_mass_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_mass_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_mass_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_mass_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_mfi_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | mfi_qfq | 原单位：无量纲；×1；MFI指标是成交量的RSI指标-CLOSE, HIGH, LOW, VOL, N=14；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_mfi_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_mfi_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_mfi_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_mfi_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_mfi_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_mtm_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | mtm_qfq | 原单位：元；×1；动量指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_mtm_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_mtm_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_mtm_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_mtm_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_mtm_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_mtmma_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | mtmma_qfq | 原单位：元；×1；动量指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_mtmma_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_mtmma_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_mtmma_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_mtmma_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_mtmma_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_obv_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | obv_qfq | 原单位：未确认；×1；能量潮指标-CLOSE, VOL；来源未明确缩放单位，保留原值 |
 | `ts_obv_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_obv_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_obv_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_obv_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_obv_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_psy_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | psy_qfq | 原单位：无量纲；×1；投资者对股市涨跌产生心理波动的情绪指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_psy_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_psy_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_psy_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_psy_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_psy_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_psyma_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | psyma_qfq | 原单位：无量纲；×1；投资者对股市涨跌产生心理波动的情绪指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_psyma_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_psyma_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_psyma_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_psyma_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_psyma_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_roc_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | roc_qfq | 原单位：无量纲；×1；变动率指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_roc_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_roc_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_roc_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_roc_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_roc_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_maroc_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | maroc_qfq | 原单位：无量纲；×1；变动率指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_maroc_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_maroc_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_maroc_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_maroc_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_maroc_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_rsi_qfq_12` | tushare | `ts_factor_qfq` → `stk_factor_pro` | rsi_qfq_12 | 原单位：无量纲；×1；RSI指标-CLOSE, N=12；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_rsi_qfq_12` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_rsi_qfq_12` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_rsi_qfq_12` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_rsi_qfq_12` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_qfq_12` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_rsi_qfq_24` | tushare | `ts_factor_qfq` → `stk_factor_pro` | rsi_qfq_24 | 原单位：无量纲；×1；RSI指标-CLOSE, N=24；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_rsi_qfq_24` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_rsi_qfq_24` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_rsi_qfq_24` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_rsi_qfq_24` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_qfq_24` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_rsi_qfq_6` | tushare | `ts_factor_qfq` → `stk_factor_pro` | rsi_qfq_6 | 原单位：无量纲；×1；RSI指标-CLOSE, N=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_rsi_qfq_6` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_rsi_qfq_6` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_rsi_qfq_6` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_rsi_qfq_6` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_qfq_6` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_taq_down_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | taq_down_qfq | 原单位：元；×1；唐安奇通道(海龟)交易指标-HIGH, LOW, 20；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_taq_down_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_taq_down_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_taq_down_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_taq_down_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_down_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_taq_mid_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | taq_mid_qfq | 原单位：元；×1；唐安奇通道(海龟)交易指标-HIGH, LOW, 20；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_taq_mid_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_taq_mid_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_taq_mid_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_taq_mid_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_mid_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_taq_up_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | taq_up_qfq | 原单位：元；×1；唐安奇通道(海龟)交易指标-HIGH, LOW, 20；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_taq_up_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_taq_up_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_taq_up_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_taq_up_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_up_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_trix_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | trix_qfq | 原单位：无量纲；×1；三重指数平滑平均线-CLOSE, M1=12, M2=20；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_trix_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_trix_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_trix_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_trix_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_trix_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_trma_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | trma_qfq | 原单位：无量纲；×1；三重指数平滑平均线-CLOSE, M1=12, M2=20；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_trma_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_trma_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_trma_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_trma_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_trma_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_vr_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | vr_qfq | 原单位：无量纲；×1；VR容量比率-CLOSE, VOL, M1=26；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_vr_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_vr_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_vr_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_vr_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_vr_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_wr_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | wr_qfq | 原单位：无量纲；×1；W&R 威廉指标-CLOSE, HIGH, LOW, N=10, N1=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_wr_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_wr_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_wr_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_wr_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_wr_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_wr1_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | wr1_qfq | 原单位：无量纲；×1；W&R 威廉指标-CLOSE, HIGH, LOW, N=10, N1=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_wr1_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_wr1_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_wr1_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_wr1_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_wr1_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_xsii_td1_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | xsii_td1_qfq | 原单位：元；×1；薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_xsii_td1_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_xsii_td1_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_xsii_td1_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_xsii_td1_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td1_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_xsii_td2_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | xsii_td2_qfq | 原单位：元；×1；薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_xsii_td2_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_xsii_td2_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_xsii_td2_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_xsii_td2_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td2_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_xsii_td3_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | xsii_td3_qfq | 原单位：元；×1；薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_xsii_td3_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_xsii_td3_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_xsii_td3_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_xsii_td3_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td3_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_xsii_td4_qfq` | tushare | `ts_factor_qfq` → `stk_factor_pro` | xsii_td4_qfq | 原单位：元；×1；薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_xsii_td4_qfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_xsii_td4_qfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_xsii_td4_qfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_xsii_td4_qfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td4_qfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_asi_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | asi_hfq | 原单位：未确认；×1；振动升降指标-OPEN, CLOSE, HIGH, LOW, M1=26, M2=10；来源未明确缩放单位，保留原值 |
 | `ts_asi_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_asi_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_asi_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_asi_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_asi_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_asit_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | asit_hfq | 原单位：未确认；×1；振动升降指标-OPEN, CLOSE, HIGH, LOW, M1=26, M2=10；来源未明确缩放单位，保留原值 |
 | `ts_asit_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_asit_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_asit_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_asit_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_asit_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_atr_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | atr_hfq | 原单位：元；×1；真实波动N日平均值-CLOSE, HIGH, LOW, N=20；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_atr_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_atr_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_atr_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_atr_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_atr_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_bbi_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | bbi_hfq | 原单位：元；×1；BBI多空指标-CLOSE, M1=3, M2=6, M3=12, M4=21；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_bbi_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_bbi_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_bbi_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_bbi_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_bbi_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_bias1_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | bias1_hfq | 原单位：无量纲；×1；BIAS乖离率-CLOSE, L1=6, L2=12, L3=24；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_bias1_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_bias1_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_bias1_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_bias1_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias1_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_bias2_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | bias2_hfq | 原单位：无量纲；×1；BIAS乖离率-CLOSE, L1=6, L2=12, L3=24；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_bias2_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_bias2_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_bias2_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_bias2_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias2_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_bias3_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | bias3_hfq | 原单位：无量纲；×1；BIAS乖离率-CLOSE, L1=6, L2=12, L3=24；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_bias3_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_bias3_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_bias3_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_bias3_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_bias3_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_boll_lower_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | boll_lower_hfq | 原单位：元；×1；BOLL指标，布林带-CLOSE, N=20, P=2；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_boll_lower_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_boll_lower_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_boll_lower_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_boll_lower_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_lower_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_boll_mid_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | boll_mid_hfq | 原单位：元；×1；BOLL指标，布林带-CLOSE, N=20, P=2；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_boll_mid_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_boll_mid_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_boll_mid_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_boll_mid_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_mid_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_boll_upper_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | boll_upper_hfq | 原单位：元；×1；BOLL指标，布林带-CLOSE, N=20, P=2；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_boll_upper_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_boll_upper_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_boll_upper_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_boll_upper_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_boll_upper_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_brar_ar_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | brar_ar_hfq | 原单位：无量纲；×1；BRAR情绪指标-OPEN, CLOSE, HIGH, LOW, M1=26；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_brar_ar_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_brar_ar_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_brar_ar_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_brar_ar_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_brar_ar_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_brar_br_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | brar_br_hfq | 原单位：无量纲；×1；BRAR情绪指标-OPEN, CLOSE, HIGH, LOW, M1=26；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_brar_br_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_brar_br_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_brar_br_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_brar_br_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_brar_br_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_cci_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | cci_hfq | 原单位：无量纲；×1；顺势指标又叫CCI指标-CLOSE, HIGH, LOW, N=14；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_cci_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_cci_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_cci_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_cci_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_cci_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_cr_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | cr_hfq | 原单位：无量纲；×1；CR价格动量指标-CLOSE, HIGH, LOW, N=20；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_cr_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_cr_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_cr_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_cr_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_cr_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_dfma_dif_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | dfma_dif_hfq | 原单位：元；×1；平行线差指标-CLOSE, N1=10, N2=50, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_dfma_dif_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_dfma_dif_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dfma_dif_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dfma_dif_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dfma_dif_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_dfma_difma_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | dfma_difma_hfq | 原单位：元；×1；平行线差指标-CLOSE, N1=10, N2=50, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_dfma_difma_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_dfma_difma_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dfma_difma_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dfma_difma_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dfma_difma_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_dmi_adx_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | dmi_adx_hfq | 原单位：无量纲；×1；动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_dmi_adx_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_dmi_adx_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dmi_adx_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dmi_adx_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_adx_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_dmi_adxr_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | dmi_adxr_hfq | 原单位：无量纲；×1；动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_dmi_adxr_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_dmi_adxr_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dmi_adxr_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dmi_adxr_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_adxr_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_dmi_mdi_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | dmi_mdi_hfq | 原单位：无量纲；×1；动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_dmi_mdi_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_dmi_mdi_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dmi_mdi_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dmi_mdi_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_mdi_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_dmi_pdi_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | dmi_pdi_hfq | 原单位：无量纲；×1；动向指标-CLOSE, HIGH, LOW, M1=14, M2=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_dmi_pdi_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_dmi_pdi_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dmi_pdi_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dmi_pdi_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dmi_pdi_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_dpo_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | dpo_hfq | 原单位：元；×1；区间震荡线-CLOSE, M1=20, M2=10, M3=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_dpo_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_dpo_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dpo_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_dpo_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_dpo_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_madpo_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | madpo_hfq | 原单位：元；×1；区间震荡线-CLOSE, M1=20, M2=10, M3=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_madpo_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_madpo_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_madpo_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_madpo_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_madpo_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ema_hfq_10` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ema_hfq_10 | 原单位：元；×1；指数移动平均-N=10；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ema_hfq_10` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ema_hfq_10` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_hfq_10` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_hfq_10` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_hfq_10` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ema_hfq_20` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ema_hfq_20 | 原单位：元；×1；指数移动平均-N=20；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ema_hfq_20` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ema_hfq_20` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_hfq_20` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_hfq_20` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_hfq_20` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ema_hfq_250` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ema_hfq_250 | 原单位：元；×1；指数移动平均-N=250；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ema_hfq_250` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ema_hfq_250` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_hfq_250` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_hfq_250` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_hfq_250` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ema_hfq_30` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ema_hfq_30 | 原单位：元；×1；指数移动平均-N=30；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ema_hfq_30` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ema_hfq_30` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_hfq_30` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_hfq_30` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_hfq_30` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ema_hfq_5` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ema_hfq_5 | 原单位：元；×1；指数移动平均-N=5；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ema_hfq_5` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ema_hfq_5` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_hfq_5` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_hfq_5` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_hfq_5` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ema_hfq_60` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ema_hfq_60 | 原单位：元；×1；指数移动平均-N=60；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ema_hfq_60` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ema_hfq_60` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_hfq_60` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_hfq_60` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_hfq_60` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ema_hfq_90` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ema_hfq_90 | 原单位：元；×1；指数移动平均-N=90；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ema_hfq_90` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ema_hfq_90` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_hfq_90` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ema_hfq_90` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ema_hfq_90` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_emv_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | emv_hfq | 原单位：未确认；×1；简易波动指标-HIGH, LOW, VOL, N=14, M=9；来源未明确缩放单位，保留原值 |
 | `ts_emv_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_emv_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_emv_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_emv_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_emv_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_maemv_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | maemv_hfq | 原单位：未确认；×1；简易波动指标-HIGH, LOW, VOL, N=14, M=9；来源未明确缩放单位，保留原值 |
 | `ts_maemv_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_maemv_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_maemv_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_maemv_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_maemv_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_expma_12_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | expma_12_hfq | 原单位：元；×1；EMA指数平均数指标-CLOSE, N1=12, N2=50；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_expma_12_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_expma_12_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_expma_12_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_expma_12_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_expma_12_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_expma_50_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | expma_50_hfq | 原单位：元；×1；EMA指数平均数指标-CLOSE, N1=12, N2=50；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_expma_50_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_expma_50_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_expma_50_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_expma_50_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_expma_50_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_kdj_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | kdj_hfq | 原单位：无量纲；×1；KDJ指标-CLOSE, HIGH, LOW, N=9, M1=3, M2=3；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_kdj_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_kdj_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_kdj_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_kdj_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_kdj_d_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | kdj_d_hfq | 原单位：无量纲；×1；KDJ指标-CLOSE, HIGH, LOW, N=9, M1=3, M2=3；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_kdj_d_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_kdj_d_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_kdj_d_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_kdj_d_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_d_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_kdj_k_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | kdj_k_hfq | 原单位：无量纲；×1；KDJ指标-CLOSE, HIGH, LOW, N=9, M1=3, M2=3；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_kdj_k_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_kdj_k_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_kdj_k_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_kdj_k_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_kdj_k_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ktn_down_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ktn_down_hfq | 原单位：元；×1；肯特纳交易通道, N选20日，ATR选10日-CLOSE, HIGH, LOW, N=20, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ktn_down_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ktn_down_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ktn_down_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ktn_down_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_down_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ktn_mid_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ktn_mid_hfq | 原单位：元；×1；肯特纳交易通道, N选20日，ATR选10日-CLOSE, HIGH, LOW, N=20, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ktn_mid_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ktn_mid_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ktn_mid_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ktn_mid_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_mid_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ktn_upper_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ktn_upper_hfq | 原单位：元；×1；肯特纳交易通道, N选20日，ATR选10日-CLOSE, HIGH, LOW, N=20, M=10；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ktn_upper_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ktn_upper_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ktn_upper_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ktn_upper_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ktn_upper_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ma_hfq_10` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ma_hfq_10 | 原单位：元；×1；简单移动平均-N=10；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ma_hfq_10` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ma_hfq_10` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_hfq_10` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_hfq_10` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_hfq_10` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ma_hfq_20` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ma_hfq_20 | 原单位：元；×1；简单移动平均-N=20；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ma_hfq_20` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ma_hfq_20` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_hfq_20` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_hfq_20` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_hfq_20` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ma_hfq_250` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ma_hfq_250 | 原单位：元；×1；简单移动平均-N=250；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ma_hfq_250` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ma_hfq_250` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_hfq_250` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_hfq_250` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_hfq_250` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ma_hfq_30` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ma_hfq_30 | 原单位：元；×1；简单移动平均-N=30；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ma_hfq_30` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ma_hfq_30` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_hfq_30` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_hfq_30` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_hfq_30` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ma_hfq_5` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ma_hfq_5 | 原单位：元；×1；简单移动平均-N=5；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ma_hfq_5` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ma_hfq_5` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_hfq_5` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_hfq_5` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_hfq_5` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ma_hfq_60` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ma_hfq_60 | 原单位：元；×1；简单移动平均-N=60；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ma_hfq_60` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ma_hfq_60` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_hfq_60` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_hfq_60` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_hfq_60` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ma_hfq_90` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ma_hfq_90 | 原单位：元；×1；简单移动平均-N=90；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ma_hfq_90` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ma_hfq_90` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_hfq_90` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_hfq_90` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_hfq_90` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_macd_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | macd_hfq | 原单位：元；×1；MACD指标-CLOSE, SHORT=12, LONG=26, M=9；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_macd_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_macd_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_macd_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_macd_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_macd_dea_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | macd_dea_hfq | 原单位：元；×1；MACD指标-CLOSE, SHORT=12, LONG=26, M=9；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_macd_dea_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_macd_dea_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_macd_dea_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_macd_dea_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_dea_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_macd_dif_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | macd_dif_hfq | 原单位：元；×1；MACD指标-CLOSE, SHORT=12, LONG=26, M=9；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_macd_dif_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_macd_dif_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_macd_dif_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_macd_dif_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_macd_dif_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_mass_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | mass_hfq | 原单位：无量纲；×1；梅斯线-HIGH, LOW, N1=9, N2=25, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_mass_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_mass_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_mass_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_mass_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_mass_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_ma_mass_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | ma_mass_hfq | 原单位：元；×1；梅斯线-HIGH, LOW, N1=9, N2=25, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_ma_mass_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_ma_mass_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_mass_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_ma_mass_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_ma_mass_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_mfi_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | mfi_hfq | 原单位：无量纲；×1；MFI指标是成交量的RSI指标-CLOSE, HIGH, LOW, VOL, N=14；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_mfi_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_mfi_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_mfi_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_mfi_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_mfi_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_mtm_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | mtm_hfq | 原单位：元；×1；动量指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_mtm_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_mtm_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_mtm_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_mtm_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_mtm_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_mtmma_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | mtmma_hfq | 原单位：元；×1；动量指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_mtmma_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_mtmma_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_mtmma_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_mtmma_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_mtmma_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_obv_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | obv_hfq | 原单位：未确认；×1；能量潮指标-CLOSE, VOL；来源未明确缩放单位，保留原值 |
 | `ts_obv_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_obv_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_obv_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_obv_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_obv_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_psy_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | psy_hfq | 原单位：无量纲；×1；投资者对股市涨跌产生心理波动的情绪指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_psy_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_psy_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_psy_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_psy_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_psy_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_psyma_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | psyma_hfq | 原单位：无量纲；×1；投资者对股市涨跌产生心理波动的情绪指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_psyma_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_psyma_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_psyma_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_psyma_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_psyma_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_roc_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | roc_hfq | 原单位：无量纲；×1；变动率指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_roc_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_roc_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_roc_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_roc_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_roc_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_maroc_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | maroc_hfq | 原单位：无量纲；×1；变动率指标-CLOSE, N=12, M=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_maroc_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_maroc_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_maroc_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_maroc_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_maroc_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_rsi_hfq_12` | tushare | `ts_factor_hfq` → `stk_factor_pro` | rsi_hfq_12 | 原单位：无量纲；×1；RSI指标-CLOSE, N=12；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_rsi_hfq_12` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_rsi_hfq_12` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_rsi_hfq_12` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_rsi_hfq_12` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_hfq_12` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_rsi_hfq_24` | tushare | `ts_factor_hfq` → `stk_factor_pro` | rsi_hfq_24 | 原单位：无量纲；×1；RSI指标-CLOSE, N=24；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_rsi_hfq_24` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_rsi_hfq_24` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_rsi_hfq_24` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_rsi_hfq_24` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_hfq_24` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_rsi_hfq_6` | tushare | `ts_factor_hfq` → `stk_factor_pro` | rsi_hfq_6 | 原单位：无量纲；×1；RSI指标-CLOSE, N=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_rsi_hfq_6` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_rsi_hfq_6` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_rsi_hfq_6` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_rsi_hfq_6` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_rsi_hfq_6` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_taq_down_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | taq_down_hfq | 原单位：元；×1；唐安奇通道(海龟)交易指标-HIGH, LOW, 20；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_taq_down_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_taq_down_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_taq_down_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_taq_down_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_down_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_taq_mid_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | taq_mid_hfq | 原单位：元；×1；唐安奇通道(海龟)交易指标-HIGH, LOW, 20；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_taq_mid_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_taq_mid_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_taq_mid_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_taq_mid_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_mid_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_taq_up_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | taq_up_hfq | 原单位：元；×1；唐安奇通道(海龟)交易指标-HIGH, LOW, 20；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_taq_up_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_taq_up_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_taq_up_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_taq_up_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_taq_up_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_trix_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | trix_hfq | 原单位：无量纲；×1；三重指数平滑平均线-CLOSE, M1=12, M2=20；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_trix_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_trix_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_trix_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_trix_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_trix_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_trma_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | trma_hfq | 原单位：无量纲；×1；三重指数平滑平均线-CLOSE, M1=12, M2=20；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_trma_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_trma_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_trma_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_trma_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_trma_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_vr_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | vr_hfq | 原单位：无量纲；×1；VR容量比率-CLOSE, VOL, M1=26；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_vr_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_vr_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_vr_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_vr_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_vr_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_wr_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | wr_hfq | 原单位：无量纲；×1；W&R 威廉指标-CLOSE, HIGH, LOW, N=10, N1=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_wr_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_wr_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_wr_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_wr_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_wr_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_wr1_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | wr1_hfq | 原单位：无量纲；×1；W&R 威廉指标-CLOSE, HIGH, LOW, N=10, N1=6；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_wr1_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_wr1_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_wr1_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_wr1_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_wr1_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_xsii_td1_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | xsii_td1_hfq | 原单位：元；×1；薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_xsii_td1_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_xsii_td1_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_xsii_td1_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_xsii_td1_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td1_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_xsii_td2_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | xsii_td2_hfq | 原单位：元；×1；薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_xsii_td2_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_xsii_td2_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_xsii_td2_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_xsii_td2_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td2_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_xsii_td3_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | xsii_td3_hfq | 原单位：元；×1；薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_xsii_td3_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_xsii_td3_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_xsii_td3_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_xsii_td3_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td3_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_xsii_td4_hfq` | tushare | `ts_factor_hfq` → `stk_factor_pro` | xsii_td4_hfq | 原单位：元；×1；薛斯通道II-CLOSE, HIGH, LOW, N=102, M=7；按指标定义推断，非Tushare接口显式单位承诺 |
 | `ts_xsii_td4_hfq` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_xsii_td4_hfq` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_xsii_td4_hfq` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_xsii_td4_hfq` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_xsii_td4_hfq` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_downdays` | tushare | `ts_factor_counts` → `stk_factor_pro` | downdays | 原单位：天；×1；连跌天数；周期为日线，字段表示天数 |
 | `ts_downdays` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_downdays` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_downdays` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_downdays` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_downdays` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_updays` | tushare | `ts_factor_counts` → `stk_factor_pro` | updays | 原单位：天；×1；连涨天数；周期为日线，字段表示天数 |
 | `ts_updays` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_updays` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_updays` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_updays` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_updays` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_lowdays` | tushare | `ts_factor_counts` → `stk_factor_pro` | lowdays | 原单位：天；×1；LOWRANGE(LOW)表示当前最低价是近多少周期内最低价的最小值；周期为日线，字段表示天数 |
 | `ts_lowdays` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_lowdays` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_lowdays` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_lowdays` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_lowdays` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ts_topdays` | tushare | `ts_factor_counts` → `stk_factor_pro` | topdays | 原单位：天；×1；TOPRANGE(HIGH)表示当前最高价是近多少周期内最高价的最大值；周期为日线，字段表示天数 |
 | `ts_topdays` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `ts_topdays` | wind | — | — | 该字段保留Tushare原生口径 |
 | `ts_topdays` | ifind | — | — | 该字段保留Tushare原生口径 |
 | `ts_topdays` | tdx | — | — | 该字段保留Tushare原生口径 |
+| `ts_topdays` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_macd_native` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_macd_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `wind_macd_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 指数平滑异同移动平均 | 原单位：元；×1 |
 | `wind_macd_native` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_macd_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_macd_native` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_macd_dif_native` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_macd_dif_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `wind_macd_dif_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | DIF快线 | 原单位：元；×1 |
 | `wind_macd_dif_native` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_macd_dif_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_macd_dif_native` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_sar_native` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_sar_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `wind_sar_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 抛物线转向指标 | 原单位：元；×1 |
 | `wind_sar_native` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_sar_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_sar_native` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_boll_mid_native` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_boll_mid_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `wind_boll_mid_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 布林中轨 | 原单位：元；×1 |
 | `wind_boll_mid_native` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_boll_mid_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_boll_mid_native` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_boll_upper_native` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_boll_upper_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `wind_boll_upper_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 布林上轨 | 原单位：元；×1 |
 | `wind_boll_upper_native` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_boll_upper_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_boll_upper_native` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_boll_lower_native` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_boll_lower_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `wind_boll_lower_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 布林下轨 | 原单位：元；×1 |
 | `wind_boll_lower_native` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_boll_lower_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_boll_lower_native` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_ma_5_native` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_ma_5_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `wind_ma_5_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 5周期移动平均 | 原单位：元；×1 |
 | `wind_ma_5_native` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_ma_5_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_ma_5_native` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_ma_10_native` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_ma_10_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `wind_ma_10_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 10周期移动平均 | 原单位：元；×1 |
 | `wind_ma_10_native` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_ma_10_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_ma_10_native` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_ma_20_native` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_ma_20_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `wind_ma_20_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 20周期移动平均 | 原单位：元；×1 |
 | `wind_ma_20_native` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_ma_20_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_ma_20_native` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_ma_60_native` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_ma_60_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `wind_ma_60_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 60周期移动平均 | 原单位：元；×1 |
 | `wind_ma_60_native` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_ma_60_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_ma_60_native` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_ma_120_native` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_ma_120_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `wind_ma_120_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 120周期移动平均 | 原单位：元；×1 |
 | `wind_ma_120_native` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_ma_120_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_ma_120_native` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_ma_250_native` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_ma_250_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `wind_ma_250_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 250日均线 | 原单位：元；×1 |
 | `wind_ma_250_native` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_ma_250_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_ma_250_native` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_kdj_k_native` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_kdj_k_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `wind_kdj_k_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 随机指标K值 | 原单位：无量纲；×1 |
 | `wind_kdj_k_native` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_kdj_k_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_kdj_k_native` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_kdj_d_native` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_kdj_d_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `wind_kdj_d_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 随机指标D值 | 原单位：无量纲；×1 |
 | `wind_kdj_d_native` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_kdj_d_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_kdj_d_native` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_kdj_j_native` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_kdj_j_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `wind_kdj_j_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 随机指标J值 | 原单位：无量纲；×1 |
 | `wind_kdj_j_native` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_kdj_j_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_kdj_j_native` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_rsi_6_native` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_rsi_6_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `wind_rsi_6_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 6周期相对强弱指标 | 原单位：无量纲；×1 |
 | `wind_rsi_6_native` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_rsi_6_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_rsi_6_native` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_rsi_12_native` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_rsi_12_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `wind_rsi_12_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 12周期相对强弱指标 | 原单位：无量纲；×1 |
 | `wind_rsi_12_native` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_rsi_12_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_rsi_12_native` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_bias_5_native` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_bias_5_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `wind_bias_5_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 5日乖离率 | 原单位：%；×1 |
 | `wind_bias_5_native` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_bias_5_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_bias_5_native` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_bias_36_native` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_bias_36_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `wind_bias_36_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 36日乖离 | 原单位：%；×1 |
 | `wind_bias_36_native` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_bias_36_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_bias_36_native` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_cci_14_native` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_cci_14_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `wind_cci_14_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 14周期顺势指标 | 原单位：无量纲；×1 |
 | `wind_cci_14_native` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_cci_14_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_cci_14_native` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_psy_12_native` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_psy_12_native` | akshare | — | — | 已核实AKShare公开技术指标文档与本机SDK；现有技术选股榜单不提供该字段的个股历史日线数值，暂未映射。 |
 | `wind_psy_12_native` | wind | `wind_technical_snapshot` → `get_stock_price_indicators` | 12周期心理线指标 | 原单位：%；×1 |
 | `wind_psy_12_native` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_psy_12_native` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_psy_12_native` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ifind_macd_diff` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_macd_diff` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_macd_diff` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_macd_diff` | ifind | `ifind_macd_diff_daily` → `get_security_indicators` | MACD指数平滑异同平均（MACD指标选项：DIFF） | 原单位：元；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
 | `ifind_macd_diff` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_macd_diff` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ifind_cci` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_cci` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_cci` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_cci` | ifind | `ifind_cci_daily` → `get_security_indicators` | CCI顺势指标 | 原单位：无量纲；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
 | `ifind_cci` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_cci` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ifind_macd_dea` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_macd_dea` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_macd_dea` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_macd_dea` | ifind | `ifind_macd_dea_daily` → `get_security_indicators` | MACD指数平滑异同平均（MACD指标选项：DEA） | 原单位：元；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
 | `ifind_macd_dea` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_macd_dea` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ifind_boll_mid` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_boll_mid` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_boll_mid` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_boll_mid` | ifind | `ifind_boll_mid_daily` → `get_security_indicators` | BOLL布林线 | 原单位：元；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
 | `ifind_boll_mid` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_boll_mid` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ifind_macd_macd` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_macd_macd` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_macd_macd` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_macd_macd` | ifind | `ifind_macd_macd_daily` → `get_security_indicators` | MACD指数平滑异同平均（MACD指标选项：MACD） | 原单位：元；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
 | `ifind_macd_macd` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_macd_macd` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ifind_rsi` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_rsi` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_rsi` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_rsi` | ifind | `ifind_rsi_daily` → `get_security_indicators` | RSI相对强弱指标 | 原单位：无量纲；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
 | `ifind_rsi` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_rsi` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ifind_ma` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_ma` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_ma` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_ma` | ifind | `ifind_ma_daily` → `get_security_indicators` | MA简单移动平均 | 原单位：元；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
 | `ifind_ma` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_ma` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ifind_mtm_mtm` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_mtm_mtm` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_mtm_mtm` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_mtm_mtm` | ifind | `ifind_mtm_mtm_daily` → `get_security_indicators` | MTM动力指标 | 原单位：元；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
 | `ifind_mtm_mtm` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_mtm_mtm` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ifind_bbi` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_bbi` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_bbi` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_bbi` | ifind | `ifind_bbi_daily` → `get_security_indicators` | BBI多空指数 | 原单位：元；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
 | `ifind_bbi` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_bbi` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ifind_roc_roc` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_roc_roc` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_roc_roc` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_roc_roc` | ifind | `ifind_roc_roc_daily` → `get_security_indicators` | ROC变动速率 | 原单位：%；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
 | `ifind_roc_roc` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_roc_roc` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ifind_expma` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_expma` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_expma` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_expma` | ifind | `ifind_expma_daily` → `get_security_indicators` | EXPMA指数平均数 | 原单位：元；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
 | `ifind_expma` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_expma` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ifind_wr` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_wr` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_wr` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_wr` | ifind | `ifind_wr_daily` → `get_security_indicators` | WR威廉指标 | 原单位：无量纲；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
 | `ifind_wr` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_wr` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ifind_bias` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_bias` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_bias` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_bias` | ifind | `ifind_bias_daily` → `get_security_indicators` | BIAS乖离率 | 原单位：%；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
 | `ifind_bias` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_bias` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ifind_trix_trix` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_trix_trix` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_trix_trix` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_trix_trix` | ifind | `ifind_trix_trix_daily` → `get_security_indicators` | TRIX三重指数平滑平均 | 原单位：%；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
 | `ifind_trix_trix` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_trix_trix` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ifind_obv_obv` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_obv_obv` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_obv_obv` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_obv_obv` | ifind | `ifind_obv_obv_daily` → `get_security_indicators` | OBV能量潮 | 原单位：来源原值；×1；原生原值；单位和缩放未披露；不复权日线。 |
 | `ifind_obv_obv` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_obv_obv` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ifind_psy_psy` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_psy_psy` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_psy_psy` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_psy_psy` | ifind | `ifind_psy_psy_daily` → `get_security_indicators` | PSY心理指标 | 原单位：%；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
 | `ifind_psy_psy` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_psy_psy` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ifind_dpo_dpo` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_dpo_dpo` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_dpo_dpo` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_dpo_dpo` | ifind | `ifind_dpo_dpo_daily` → `get_security_indicators` | DPO区间震荡线 | 原单位：元；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
 | `ifind_dpo_dpo` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_dpo_dpo` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ifind_atr_atr` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_atr_atr` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_atr_atr` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_atr_atr` | ifind | `ifind_atr_atr_daily` → `get_security_indicators` | ATR真实波幅 | 原单位：元；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
 | `ifind_atr_atr` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_atr_atr` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ifind_dma_ddd` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_dma_ddd` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_dma_ddd` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_dma_ddd` | ifind | `ifind_dma_ddd_daily` → `get_security_indicators` | DMA平均线差 | 原单位：元；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
 | `ifind_dma_ddd` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_dma_ddd` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ifind_arbr_br` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_arbr_br` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_arbr_br` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_arbr_br` | ifind | `ifind_arbr_br_daily` → `get_security_indicators` | 人气意愿指标(ARBR) | 原单位：无量纲；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
 | `ifind_arbr_br` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_arbr_br` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ifind_mass` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_mass` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_mass` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_mass` | ifind | `ifind_mass_daily` → `get_security_indicators` | MASS梅斯线 | 原单位：无量纲；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
 | `ifind_mass` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_mass` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ifind_mfi` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_mfi` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_mfi` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_mfi` | ifind | `ifind_mfi_daily` → `get_security_indicators` | MFI资金流向指标 | 原单位：无量纲；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
 | `ifind_mfi` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_mfi` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ifind_cr` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_cr` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_cr` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_cr` | ifind | `ifind_cr_daily` → `get_security_indicators` | CR能量指标 | 原单位：无量纲；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
 | `ifind_cr` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_cr` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ifind_kdj_k` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_kdj_k` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_kdj_k` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_kdj_k` | ifind | `ifind_kdj_k_daily` → `get_security_indicators` | KDJ随机指标 | 原单位：无量纲；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
 | `ifind_kdj_k` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_kdj_k` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ifind_boll_upper` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_boll_upper` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_boll_upper` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_boll_upper` | ifind | `ifind_boll_upper_daily` → `get_security_indicators` | BOLL布林线 | 原单位：元；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
 | `ifind_boll_upper` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_boll_upper` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ifind_boll_lower` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_boll_lower` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_boll_lower` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_boll_lower` | ifind | `ifind_boll_lower_daily` → `get_security_indicators` | BOLL布林线 | 原单位：元；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
 | `ifind_boll_lower` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_boll_lower` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ifind_kdj_j` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_kdj_j` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_kdj_j` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_kdj_j` | ifind | `ifind_kdj_j_daily` → `get_security_indicators` | KDJ随机指标 | 原单位：无量纲；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
 | `ifind_kdj_j` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_kdj_j` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `ifind_kdj_d` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_kdj_d` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_kdj_d` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_kdj_d` | ifind | `ifind_kdj_d_daily` → `get_security_indicators` | KDJ随机指标 | 原单位：无量纲；×1；单位按定义及返回量级推断，未获厂商单位标签；不复权日线。 |
 | `ifind_kdj_d` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_kdj_d` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_bbi` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_bbi` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_bbi` | wind | `wind_history_bbi` → `get_stock_technicals` | BBI | 原单位：元；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_bbi` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_bbi` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_bbi` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_expma` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_expma` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_expma` | wind | `wind_history_expma` → `get_stock_technicals` | EXPMA | 原单位：元；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_expma` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_expma` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_expma` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_psy` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_psy` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_psy` | wind | `wind_history_psy` → `get_stock_technicals` | PSY | 原单位：%；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_psy` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_psy` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_psy` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_kdj_k` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_kdj_k` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_kdj_k` | wind | `wind_history_kdj` → `get_stock_technicals` | 每日K值 | 原单位：无量纲；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_kdj_k` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_kdj_k` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_kdj_k` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_kdj_d` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_kdj_d` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_kdj_d` | wind | `wind_history_kdj` → `get_stock_technicals` | 每日D值 | 原单位：无量纲；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_kdj_d` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_kdj_d` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_kdj_d` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_kdj_j` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_kdj_j` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_kdj_j` | wind | `wind_history_kdj` → `get_stock_technicals` | 每日J值 | 原单位：无量纲；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_kdj_j` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_kdj_j` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_kdj_j` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_wr` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_wr` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_wr` | wind | `wind_history_wr` → `get_stock_technicals` | 威廉指标WR | 原单位：无量纲；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_wr` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_wr` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_wr` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_ar` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_ar` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_ar` | wind | `wind_history_ar` → `get_stock_technicals` | AR人气意愿指标 | 原单位：无量纲；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_ar` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_ar` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_ar` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_sar` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_sar` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_sar` | wind | `wind_history_sar` → `get_stock_technicals` | SAR | 原单位：元；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_sar` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_sar` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_sar` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_dma` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_dma` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_dma` | wind | `wind_history_dma` → `get_stock_technicals` | DMA | 原单位：元；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_dma` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_dma` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_dma` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_boll_upper` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_boll_upper` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_boll_upper` | wind | `wind_history_boll` → `get_stock_technicals` | 每日布林带上轨 | 原单位：元；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_boll_upper` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_boll_upper` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_boll_upper` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_boll_mid` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_boll_mid` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_boll_mid` | wind | `wind_history_boll` → `get_stock_technicals` | 每日布林带中轨 | 原单位：元；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_boll_mid` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_boll_mid` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_boll_mid` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_boll_lower` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_boll_lower` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_boll_lower` | wind | `wind_history_boll` → `get_stock_technicals` | 每日布林带下轨 | 原单位：元；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_boll_lower` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_boll_lower` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_boll_lower` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_mfi` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_mfi` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_mfi` | wind | `wind_history_mfi` → `get_stock_technicals` | MFI | 原单位：无量纲；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_mfi` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_mfi` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_mfi` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_mtm` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_mtm` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_mtm` | wind | `wind_history_mtm` → `get_stock_technicals` | MTM动力指标 | 原单位：元；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_mtm` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_mtm` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_mtm` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_trix` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_trix` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_trix` | wind | `wind_history_trix` → `get_stock_technicals` | TRIX | 原单位：%；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_trix` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_trix` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_trix` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_roc` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_roc` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_roc` | wind | `wind_history_roc` → `get_stock_technicals` | ROC | 原单位：%；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_roc` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_roc` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_roc` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_rsi` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_rsi` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_rsi` | wind | `wind_history_rsi` → `get_stock_technicals` | {n}日RSI | 原单位：无量纲；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_rsi` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_rsi` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_rsi` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_atr` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_atr` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_atr` | wind | `wind_history_atr` → `get_stock_technicals` | ATR | 原单位：元；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_atr` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_atr` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_atr` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_obv` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_obv` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_obv` | wind | `wind_history_obv` → `get_stock_technicals` | OBV | 原单位：来源原值；×1；来源未披露成交量单位或比率缩放，保留原值，不能据此当作股、手或百分数。 |
 | `wind_history_obv` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_obv` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_obv` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_bias` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_bias` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_bias` | wind | `wind_history_bias` → `get_stock_technicals` | BIAS乖离率 | 原单位：%；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_bias` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_bias` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_bias` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_macd_dif` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_macd_dif` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_macd_dif` | wind | `wind_history_macd` → `get_stock_technicals` | DIF线 | 原单位：元；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_macd_dif` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_macd_dif` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_macd_dif` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_macd_dea` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_macd_dea` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_macd_dea` | wind | `wind_history_macd` → `get_stock_technicals` | DEA线 | 原单位：元；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_macd_dea` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_macd_dea` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_macd_dea` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_macd_macd` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_macd_macd` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_macd_macd` | wind | `wind_history_macd` → `get_stock_technicals` | MACD柱 | 原单位：元；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_macd_macd` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_macd_macd` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_macd_macd` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_cci` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_cci` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_cci` | wind | `wind_history_cci` → `get_stock_technicals` | CCI | 原单位：无量纲；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_cci` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_cci` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_cci` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_cr` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_cr` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_cr` | wind | `wind_history_cr` → `get_stock_technicals` | CR能量指标 | 原单位：无量纲；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_cr` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_cr` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_cr` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_vr` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_vr` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_vr` | wind | `wind_history_vr` → `get_stock_technicals` | VR成交量比率 | 原单位：来源原值；×1；来源未披露成交量单位或比率缩放，保留原值，不能据此当作股、手或百分数。 |
 | `wind_history_vr` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_vr` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_vr` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_dmi_pdi` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_dmi_pdi` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_dmi_pdi` | wind | `wind_history_dmi` → `get_stock_technicals` | DMI上升指标线PDI | 原单位：无量纲；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_dmi_pdi` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_dmi_pdi` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_dmi_pdi` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_dmi_mdi` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_dmi_mdi` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_dmi_mdi` | wind | `wind_history_dmi` → `get_stock_technicals` | DMI下降指标线MDI | 原单位：无量纲；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_dmi_mdi` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_dmi_mdi` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_dmi_mdi` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_dmi_adx` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_dmi_adx` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_dmi_adx` | wind | `wind_history_dmi` → `get_stock_technicals` | DMI趋向指标ADX | 原单位：无量纲；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_dmi_adx` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_dmi_adx` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_dmi_adx` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_dmi_adxr` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_dmi_adxr` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_dmi_adxr` | wind | `wind_history_dmi` → `get_stock_technicals` | DMI趋向指标ADXR | 原单位：无量纲；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_dmi_adxr` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_dmi_adxr` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_dmi_adxr` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
 | `wind_history_ma` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_history_ma` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_history_ma` | wind | `wind_history_ma` → `get_stock_technicals` | {n}日均线 | 原单位：元；×1；按价格量纲或指标定义标注；来源未直接声明单位，保留原值，不统一厂商算法。 |
 | `wind_history_ma` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_history_ma` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_history_ma` | choice | — | — | 妙想返回的是自身数据浏览器技术指标，算法与参数不同于该字段所属来源；请用妙想技术指标字段查询。 |
+| `choice_kdj_k` | tushare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_kdj_k` | akshare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_kdj_k` | wind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_kdj_k` | ifind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_kdj_k` | tdx | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_kdj_k` | choice | `choice_technical` → `mx_ashare_finance_data` | KDJ(K值)；问句：KDJ(K值) | 原单位：无量纲；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
+| `choice_kdj_d` | tushare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_kdj_d` | akshare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_kdj_d` | wind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_kdj_d` | ifind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_kdj_d` | tdx | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_kdj_d` | choice | `choice_technical` → `mx_ashare_finance_data` | KDJ(D值)；问句：KDJ(D值) | 原单位：无量纲；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
+| `choice_kdj_j` | tushare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_kdj_j` | akshare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_kdj_j` | wind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_kdj_j` | ifind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_kdj_j` | tdx | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_kdj_j` | choice | `choice_technical` → `mx_ashare_finance_data` | KDJ(J值)；问句：KDJ(J值) | 原单位：无量纲；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
+| `choice_macd_diff` | tushare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_macd_diff` | akshare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_macd_diff` | wind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_macd_diff` | ifind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_macd_diff` | tdx | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_macd_diff` | choice | `choice_technical` → `mx_ashare_finance_data` | MACD指数平滑异同平均-DIFF；问句：MACD指数平滑异同平均-DIFF | 原单位：元；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
+| `choice_macd_dea` | tushare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_macd_dea` | akshare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_macd_dea` | wind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_macd_dea` | ifind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_macd_dea` | tdx | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_macd_dea` | choice | `choice_technical` → `mx_ashare_finance_data` | MACD指数平滑异同平均-DEA；问句：MACD指数平滑异同平均-DEA | 原单位：元；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
+| `choice_macd_hist` | tushare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_macd_hist` | akshare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_macd_hist` | wind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_macd_hist` | ifind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_macd_hist` | tdx | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_macd_hist` | choice | `choice_technical` → `mx_ashare_finance_data` | MACD柱状线；问句：MACD柱状线 | 原单位：元；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
+| `choice_rsi` | tushare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_rsi` | akshare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_rsi` | wind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_rsi` | ifind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_rsi` | tdx | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_rsi` | choice | `choice_technical` → `mx_ashare_finance_data` | RSI相对强弱指标；问句：RSI相对强弱指标 | 原单位：无量纲；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
+| `choice_boll_up` | tushare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_boll_up` | akshare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_boll_up` | wind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_boll_up` | ifind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_boll_up` | tdx | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_boll_up` | choice | `choice_technical` → `mx_ashare_finance_data` | BOLL布林线UP；问句：BOLL布林线UP | 原单位：元；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
+| `choice_boll_low` | tushare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_boll_low` | akshare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_boll_low` | wind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_boll_low` | ifind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_boll_low` | tdx | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_boll_low` | choice | `choice_technical` → `mx_ashare_finance_data` | BOLL布林线LOW；问句：BOLL布林线LOW | 原单位：元；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
+| `choice_ma5` | tushare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_ma5` | akshare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_ma5` | wind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_ma5` | ifind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_ma5` | tdx | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_ma5` | choice | `choice_technical` → `mx_ashare_finance_data` | 5日MA简单移动平均；问句：5日MA简单移动平均 | 原单位：元；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
+| `choice_ma10` | tushare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_ma10` | akshare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_ma10` | wind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_ma10` | ifind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_ma10` | tdx | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_ma10` | choice | `choice_technical` → `mx_ashare_finance_data` | 10日MA简单移动平均；问句：10日MA简单移动平均 | 原单位：元；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
+| `choice_ma20` | tushare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_ma20` | akshare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_ma20` | wind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_ma20` | ifind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_ma20` | tdx | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_ma20` | choice | `choice_technical` → `mx_ashare_finance_data` | 20日MA简单移动平均；问句：20日MA简单移动平均 | 原单位：元；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
+| `choice_ma30` | tushare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_ma30` | akshare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_ma30` | wind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_ma30` | ifind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_ma30` | tdx | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_ma30` | choice | `choice_technical` → `mx_ashare_finance_data` | 30日MA简单移动平均；问句：30日MA简单移动平均 | 原单位：元；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
+| `choice_ma60` | tushare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_ma60` | akshare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_ma60` | wind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_ma60` | ifind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_ma60` | tdx | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_ma60` | choice | `choice_technical` → `mx_ashare_finance_data` | 60日MA简单移动平均；问句：60日MA简单移动平均 | 原单位：元；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
+| `choice_expma` | tushare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_expma` | akshare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_expma` | wind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_expma` | ifind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_expma` | tdx | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_expma` | choice | `choice_technical` → `mx_ashare_finance_data` | EXPMA指数平均数；问句：EXPMA指数平均数 | 原单位：元；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
+| `choice_cci` | tushare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_cci` | akshare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_cci` | wind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_cci` | ifind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_cci` | tdx | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_cci` | choice | `choice_technical` → `mx_ashare_finance_data` | CCI顺势指标；问句：CCI顺势指标 | 原单位：无量纲；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
+| `choice_wr` | tushare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_wr` | akshare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_wr` | wind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_wr` | ifind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_wr` | tdx | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_wr` | choice | `choice_technical` → `mx_ashare_finance_data` | WR威廉指标；问句：WR威廉指标 | 原单位：无量纲；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
+| `choice_bias` | tushare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_bias` | akshare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_bias` | wind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_bias` | ifind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_bias` | tdx | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_bias` | choice | `choice_technical` → `mx_ashare_finance_data` | BIAS乖离率；问句：BIAS乖离率 | 原单位：%；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
+| `choice_psy` | tushare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_psy` | akshare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_psy` | wind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_psy` | ifind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_psy` | tdx | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_psy` | choice | `choice_technical` → `mx_ashare_finance_data` | PSY心理指标；问句：PSY心理指标 | 原单位：%；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
+| `choice_dmi` | tushare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_dmi` | akshare | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_dmi` | wind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_dmi` | ifind | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_dmi` | tdx | — | — | 独立妙想字段；请使用对应来源自己的技术指标字段。 |
+| `choice_dmi` | choice | `choice_technical` → `mx_ashare_finance_data` | DMI趋向指标；问句：DMI趋向指标 | 原单位：无量纲；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 
 ## basic_info
 
@@ -3567,282 +4281,338 @@
 | `security_name` | wind | `wind_identity` → `get_stock_basicinfo` | 证券简称 | 原单位：按返回单位；×1 |
 | `security_name` | ifind | `ifind_profile` → `get_security_indicators` | 股票简称 / 证券简称 | 原单位：按返回单位；×1 |
 | `security_name` | tdx | — | — | 尚未确认同口径取法 |
+| `security_name` | choice | `choice_profile` → `mx_ashare_finance_data` | 股票简称 / 证券简称 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `company_name` | tushare | `ts_basic` → `stock_basic` | fullname | 原单位：按返回单位；×1 |
 | `company_name` | tushare | `ts_company` → `stock_company` | com_name | 原单位：按返回单位；×1 |
 | `company_name` | akshare | `ak_profile` → `stock_profile_cninfo` | 公司名称 | 原单位：按返回单位；×1 |
 | `company_name` | wind | `wind_identity` → `get_stock_basicinfo` | 公司中文名称 | 原单位：按返回单位；×1 |
 | `company_name` | ifind | `ifind_profile` → `get_security_indicators` | 公司中文名称 | 原单位：按返回单位；×1 |
 | `company_name` | tdx | `tdx_profile` → `tdx_api_data` | 公司名称 | 原单位：按返回单位；×1 |
+| `company_name` | choice | `choice_profile` → `mx_ashare_finance_data` | 公司中文名称 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `english_name` | tushare | `ts_basic` → `stock_basic` | enname | 原单位：按返回单位；×1 |
 | `english_name` | akshare | `ak_profile` → `stock_profile_cninfo` | 英文名称 | 原单位：按返回单位；×1 |
 | `english_name` | wind | — | — | 尚未确认同口径取法 |
 | `english_name` | ifind | — | — | 尚未确认同口径取法 |
 | `english_name` | tdx | `tdx_profile` → `tdx_api_data` | 英文名称 | 原单位：按返回单位；×1 |
+| `english_name` | choice | `choice_profile` → `mx_ashare_finance_data` | 公司英文名称 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `exchange` | tushare | `ts_basic` → `stock_basic` | exchange | 原单位：按返回单位；×1 |
 | `exchange` | akshare | — | — | 尚未确认同口径取法 |
 | `exchange` | wind | — | — | 尚未确认同口径取法 |
 | `exchange` | ifind | — | — | 尚未确认同口径取法 |
 | `exchange` | tdx | — | — | 尚未确认同口径取法 |
+| `exchange` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `listing_board` | tushare | `ts_basic` → `stock_basic` | market | 原单位：按返回单位；×1 |
 | `listing_board` | akshare | — | — | 尚未确认同口径取法 |
 | `listing_board` | wind | `wind_region` → `get_stock_basicinfo` | 上市板 | 原单位：按返回单位；×1 |
 | `listing_board` | ifind | — | — | 尚未确认同口径取法 |
 | `listing_board` | tdx | — | — | 尚未确认同口径取法 |
+| `listing_board` | choice | `choice_contact` → `mx_ashare_finance_data` | 证券板块 / 上市板块 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `listing_status` | tushare | `ts_basic` → `stock_basic` | list_status | 原单位：按返回单位；×1 |
 | `listing_status` | akshare | — | — | 尚未确认同口径取法 |
 | `listing_status` | wind | — | — | 尚未确认同口径取法 |
 | `listing_status` | ifind | — | — | 尚未确认同口径取法 |
 | `listing_status` | tdx | — | — | 尚未确认同口径取法 |
+| `listing_status` | choice | `choice_contact` → `mx_ashare_finance_data` | 是否上市 / 上市状态 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `listing_date` | tushare | `ts_basic` → `stock_basic` | list_date | 原单位：按返回单位；×1 |
 | `listing_date` | akshare | `ak_profile` → `stock_profile_cninfo` | 上市日期 | 原单位：按返回单位；×1 |
 | `listing_date` | wind | `wind_identity` → `get_stock_basicinfo` | 首发上市日期 | 原单位：按返回单位；×1 |
 | `listing_date` | ifind | `ifind_region` → `get_security_indicators` | 上市日期 | 原单位：按返回单位；×1 |
 | `listing_date` | tdx | — | — | 尚未确认同口径取法 |
+| `listing_date` | choice | `choice_region` → `mx_ashare_finance_data` | 上市日期 / 首发上市日 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `delisting_date` | tushare | `ts_basic` → `stock_basic` | delist_date | 原单位：按返回单位；×1 |
 | `delisting_date` | akshare | — | — | 尚未确认同口径取法 |
 | `delisting_date` | wind | — | — | 尚未确认同口径取法 |
 | `delisting_date` | ifind | — | — | 尚未确认同口径取法 |
 | `delisting_date` | tdx | — | — | 尚未确认同口径取法 |
+| `delisting_date` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `established_date` | tushare | `ts_company` → `stock_company` | setup_date | 原单位：按返回单位；×1 |
 | `established_date` | akshare | `ak_profile` → `stock_profile_cninfo` | 成立日期 | 原单位：按返回单位；×1 |
 | `established_date` | wind | `wind_region` → `get_stock_basicinfo` | 成立日期 | 原单位：按返回单位；×1 |
 | `established_date` | ifind | — | — | 尚未确认同口径取法 |
 | `established_date` | tdx | — | — | 尚未确认同口径取法 |
+| `established_date` | choice | `choice_profile` → `mx_ashare_finance_data` | 成立日期 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `ownership_type` | tushare | — | — | 尚未确认同口径取法 |
 | `ownership_type` | akshare | — | — | 尚未确认同口径取法 |
 | `ownership_type` | wind | `wind_identity` → `get_stock_basicinfo` | 企业所有制性质 | 原单位：按返回单位；×1 |
 | `ownership_type` | ifind | — | — | 尚未确认同口径取法 |
 | `ownership_type` | tdx | — | — | 尚未确认同口径取法 |
+| `ownership_type` | choice | `choice_profile` → `mx_ashare_finance_data` | 企业性质 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `controller_name` | tushare | `ts_basic` → `stock_basic` | act_name | 原单位：按返回单位；×1 |
 | `controller_name` | akshare | — | — | 尚未确认同口径取法 |
 | `controller_name` | wind | `wind_identity` → `get_stock_basicinfo` | 实际控制人名称 | 原单位：按返回单位；×1 |
 | `controller_name` | ifind | `ifind_profile` → `get_security_indicators` | 实际控制人 | 原单位：按返回单位；×1 |
 | `controller_name` | tdx | — | — | 尚未确认同口径取法 |
+| `controller_name` | choice | `choice_profile` → `mx_ashare_finance_data` | 实际控制人 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `controller_type` | tushare | `ts_basic` → `stock_basic` | act_ent_type | 原单位：按返回单位；×1 |
 | `controller_type` | akshare | — | — | 尚未确认同口径取法 |
 | `controller_type` | wind | — | — | 尚未确认同口径取法 |
 | `controller_type` | ifind | `ifind_profile` → `get_security_indicators` | 实际控制人类型 | 原单位：按返回单位；×1 |
 | `controller_type` | tdx | — | — | 尚未确认同口径取法 |
+| `controller_type` | choice | `choice_profile` → `mx_ashare_finance_data` | 实际控制人类型 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `province` | tushare | `ts_company` → `stock_company` | province | 原单位：按返回单位；×1 |
 | `province` | akshare | — | — | 尚未确认同口径取法 |
 | `province` | wind | `wind_region` → `get_stock_basicinfo` | 省份 | 原单位：按返回单位；×1 |
 | `province` | ifind | `ifind_region` → `get_security_indicators` | 省份 | 原单位：按返回单位；×1 |
 | `province` | tdx | — | — | 尚未确认同口径取法 |
+| `province` | choice | `choice_region` → `mx_ashare_finance_data` | 省份 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `city` | tushare | `ts_company` → `stock_company` | city | 原单位：按返回单位；×1 |
 | `city` | akshare | — | — | 尚未确认同口径取法 |
 | `city` | wind | `wind_region` → `get_stock_basicinfo` | 城市 | 原单位：按返回单位；×1 |
 | `city` | ifind | `ifind_region` → `get_security_indicators` | 地级市 | 原单位：按返回单位；×1 |
 | `city` | tdx | — | — | 尚未确认同口径取法 |
+| `city` | choice | `choice_region` → `mx_ashare_finance_data` | 地级市 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `registered_address` | tushare | — | — | 尚未确认同口径取法 |
 | `registered_address` | akshare | `ak_profile` → `stock_profile_cninfo` | 注册地址 | 原单位：按返回单位；×1 |
 | `registered_address` | wind | `wind_identity` → `get_stock_basicinfo` | 注册地址 | 原单位：按返回单位；×1 |
 | `registered_address` | ifind | `ifind_region` → `get_security_indicators` | 注册地址 | 原单位：按返回单位；×1 |
 | `registered_address` | tdx | `tdx_profile` → `tdx_api_data` | 注册地址 | 原单位：按返回单位；×1 |
+| `registered_address` | choice | `choice_region` → `mx_ashare_finance_data` | 注册地址 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `office_address` | tushare | `ts_company` → `stock_company` | office | 原单位：按返回单位；×1 |
 | `office_address` | akshare | `ak_profile` → `stock_profile_cninfo` | 办公地址 | 原单位：按返回单位；×1 |
 | `office_address` | wind | `wind_identity` → `get_stock_basicinfo` | 办公地址 | 原单位：按返回单位；×1 |
 | `office_address` | ifind | `ifind_region` → `get_security_indicators` | 办公地址 | 原单位：按返回单位；×1 |
 | `office_address` | tdx | `tdx_profile` → `tdx_api_data` | 办公地址 | 原单位：按返回单位；×1 |
+| `office_address` | choice | `choice_region` → `mx_ashare_finance_data` | 办公地址 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `website` | tushare | `ts_company` → `stock_company` | website | 原单位：按返回单位；×1 |
 | `website` | akshare | `ak_profile` → `stock_profile_cninfo` | 官方网站 | 原单位：按返回单位；×1 |
 | `website` | wind | `wind_business` → `get_stock_basicinfo` | 公司网站 | 原单位：按返回单位；×1 |
 | `website` | ifind | — | — | 尚未确认同口径取法 |
 | `website` | tdx | `tdx_profile` → `tdx_api_data` | 公司网址 | 原单位：按返回单位；×1 |
+| `website` | choice | `choice_contact` → `mx_ashare_finance_data` | 公司网址 / 公司网站 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `email` | tushare | `ts_company` → `stock_company` | email | 原单位：按返回单位；×1 |
 | `email` | akshare | `ak_profile` → `stock_profile_cninfo` | 电子邮箱 | 原单位：按返回单位；×1 |
 | `email` | wind | — | — | 尚未确认同口径取法 |
 | `email` | ifind | — | — | 尚未确认同口径取法 |
 | `email` | tdx | — | — | 尚未确认同口径取法 |
+| `email` | choice | `choice_contact` → `mx_ashare_finance_data` | 公司电子邮件地址 / 公司邮箱 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `phone` | tushare | — | — | 尚未确认同口径取法 |
 | `phone` | akshare | `ak_profile` → `stock_profile_cninfo` | 联系电话 | 原单位：按返回单位；×1 |
 | `phone` | wind | — | — | 尚未确认同口径取法 |
 | `phone` | ifind | — | — | 尚未确认同口径取法 |
 | `phone` | tdx | `tdx_profile` → `tdx_api_data` | 联系电话 | 原单位：按返回单位；×1 |
+| `phone` | choice | `choice_profile` → `mx_ashare_finance_data` | 联系电话 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `introduction` | tushare | `ts_company` → `stock_company` | introduction | 原单位：按返回单位；×1 |
 | `introduction` | akshare | `ak_profile` → `stock_profile_cninfo` | 机构简介 | 原单位：按返回单位；×1 |
 | `introduction` | wind | `wind_business` → `get_stock_basicinfo` | 公司简介 | 原单位：按返回单位；×1 |
 | `introduction` | ifind | — | — | 尚未确认同口径取法 |
 | `introduction` | tdx | `tdx_profile` → `tdx_api_data` | 公司简介 | 原单位：按返回单位；×1 |
+| `introduction` | choice | `choice_profile` → `mx_ashare_finance_data` | 公司简介 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `main_business` | tushare | `ts_company` → `stock_company` | main_business | 原单位：按返回单位；×1 |
 | `main_business` | akshare | `ak_profile` → `stock_profile_cninfo` | 主营业务 | 原单位：按返回单位；×1 |
 | `main_business` | wind | — | — | 尚未确认同口径取法 |
 | `main_business` | ifind | — | — | 尚未确认同口径取法 |
 | `main_business` | tdx | `tdx_profile` → `tdx_api_data` | 主营业务 | 原单位：按返回单位；×1 |
+| `main_business` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `business_scope` | tushare | `ts_company` → `stock_company` | business_scope | 原单位：按返回单位；×1 |
 | `business_scope` | akshare | `ak_profile` → `stock_profile_cninfo` | 经营范围 | 原单位：按返回单位；×1 |
 | `business_scope` | wind | — | — | 尚未确认同口径取法 |
 | `business_scope` | ifind | — | — | 尚未确认同口径取法 |
 | `business_scope` | tdx | `tdx_profile` → `tdx_api_data` | 经营范围 | 原单位：按返回单位；×1 |
+| `business_scope` | choice | `choice_profile` → `mx_ashare_finance_data` | 经营范围 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `legal_representative` | tushare | — | — | 尚未确认同口径取法 |
 | `legal_representative` | akshare | `ak_profile` → `stock_profile_cninfo` | 法人代表 | 原单位：按返回单位；×1 |
 | `legal_representative` | wind | — | — | 尚未确认同口径取法 |
 | `legal_representative` | ifind | — | — | 尚未确认同口径取法 |
 | `legal_representative` | tdx | `tdx_profile` → `tdx_api_data` | 法人代表 | 原单位：按返回单位；×1 |
+| `legal_representative` | choice | `choice_profile` → `mx_ashare_finance_data` | 法定代表人 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `general_manager` | tushare | `ts_company` → `stock_company` | manager | 原单位：按返回单位；×1 |
 | `general_manager` | akshare | — | — | 尚未确认同口径取法 |
 | `general_manager` | wind | — | — | 尚未确认同口径取法 |
 | `general_manager` | ifind | — | — | 尚未确认同口径取法 |
 | `general_manager` | tdx | `tdx_profile` → `tdx_api_data` | 总经理 | 原单位：按返回单位；×1 |
+| `general_manager` | choice | `choice_profile` → `mx_ashare_finance_data` | 总经理 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `controlling_shareholder` | tushare | — | — | 尚未确认同口径取法 |
 | `controlling_shareholder` | akshare | — | — | 尚未确认同口径取法 |
 | `controlling_shareholder` | wind | — | — | 尚未确认同口径取法 |
 | `controlling_shareholder` | ifind | — | — | 尚未确认同口径取法 |
 | `controlling_shareholder` | tdx | `tdx_profile` → `tdx_api_data` | 控股股东 | 原单位：按返回单位；×1 |
+| `controlling_shareholder` | choice | `choice_profile` → `mx_ashare_finance_data` | 控股股东名称 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `credit_code` | tushare | — | — | 尚未确认同口径取法 |
 | `credit_code` | akshare | — | — | 尚未确认同口径取法 |
 | `credit_code` | wind | — | — | 尚未确认同口径取法 |
 | `credit_code` | ifind | — | — | 尚未确认同口径取法 |
 | `credit_code` | tdx | `tdx_profile` → `tdx_api_data` | 社会信用代码 | 原单位：按返回单位；×1 |
+| `credit_code` | choice | `choice_profile` → `mx_ashare_finance_data` | 社会信用代码 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `employees` | tushare | `ts_company` → `stock_company` | employees | 原单位：按返回单位；×1 |
 | `employees` | akshare | — | — | 尚未确认同口径取法 |
 | `employees` | wind | — | — | 尚未确认同口径取法 |
 | `employees` | ifind | — | — | 尚未确认同口径取法 |
 | `employees` | tdx | `tdx_profile` → `tdx_api_data` | 员工总数 | 原单位：按返回单位；×1 |
+| `employees` | choice | `choice_contact` → `mx_ashare_finance_data` | 员工总数 / 员工人数 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `registered_capital` | tushare | `ts_company` → `stock_company` | reg_capital | 原单位：万元；×10000 |
 | `registered_capital` | akshare | — | — | 尚未确认同口径取法 |
 | `registered_capital` | wind | — | — | 尚未确认同口径取法 |
 | `registered_capital` | ifind | — | — | 尚未确认同口径取法 |
 | `registered_capital` | tdx | — | — | 尚未确认同口径取法 |
+| `registered_capital` | choice | `choice_profile` → `mx_ashare_finance_data` | 注册资本(万元) | 原单位：按返回单位；×10000；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `ts_area` | tushare | `ts_basic` → `stock_basic` | area | 原单位：按返回单位；×1 |
 | `ts_area` | akshare | — | — | 尚未确认同口径取法 |
 | `ts_area` | wind | — | — | 尚未确认同口径取法 |
 | `ts_area` | ifind | — | — | 尚未确认同口径取法 |
 | `ts_area` | tdx | — | — | 尚未确认同口径取法 |
+| `ts_area` | choice | `choice_region` → `mx_ashare_finance_data` | 地域 / 所属地区 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `ak_market` | tushare | — | — | 尚未确认同口径取法 |
 | `ak_market` | akshare | `ak_profile` → `stock_profile_cninfo` | 所属市场 | 原单位：按返回单位；×1 |
 | `ak_market` | wind | — | — | 尚未确认同口径取法 |
 | `ak_market` | ifind | — | — | 尚未确认同口径取法 |
 | `ak_market` | tdx | — | — | 尚未确认同口径取法 |
+| `ak_market` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `tdx_region` | tushare | — | — | 尚未确认同口径取法 |
 | `tdx_region` | akshare | — | — | 尚未确认同口径取法 |
 | `tdx_region` | wind | — | — | 尚未确认同口径取法 |
 | `tdx_region` | ifind | — | — | 尚未确认同口径取法 |
 | `tdx_region` | tdx | `tdx_profile` → `tdx_api_data` | 所属区域 | 原单位：按返回单位；×1 |
+| `tdx_region` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `ifind_enterprise_type` | tushare | — | — | 尚未确认同口径取法 |
 | `ifind_enterprise_type` | akshare | — | — | 尚未确认同口径取法 |
 | `ifind_enterprise_type` | wind | — | — | 尚未确认同口径取法 |
 | `ifind_enterprise_type` | ifind | `ifind_profile` → `get_security_indicators` | 企业类型 | 原单位：按返回单位；×1 |
 | `ifind_enterprise_type` | tdx | — | — | 尚未确认同口径取法 |
+| `ifind_enterprise_type` | choice | `choice_profile` → `mx_ashare_finance_data` | 企业类型 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `name_history` | tushare | `ts_names` → `namechange` | name | 原单位：按返回单位；×1 |
 | `name_history` | akshare | — | — | 尚未确认同口径取法 |
 | `name_history` | wind | — | — | 尚未确认同口径取法 |
 | `name_history` | ifind | — | — | 尚未确认同口径取法 |
 | `name_history` | tdx | — | — | 尚未确认同口径取法 |
+| `name_history` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `former_names` | tushare | — | — | 尚未确认同口径取法 |
 | `former_names` | akshare | `ak_profile` → `stock_profile_cninfo` | 曾用简称 | 原单位：按返回单位；×1 |
 | `former_names` | wind | `wind_names` → `get_stock_basicinfo` | 证券曾用名 | 原单位：按返回单位；×1 |
 | `former_names` | ifind | `ifind_profile` → `get_security_indicators` | 证券曾用名 | 原单位：按返回单位；×1 |
 | `former_names` | tdx | `tdx_profile` → `tdx_api_data` | 曾用名 | 原单位：按返回单位；×1 |
+| `former_names` | choice | `choice_profile` → `mx_ashare_finance_data` | 证券曾用名 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `sw_industry_l1` | tushare | `ts_sw` → `index_member_all` | l1_name | 原单位：按返回单位；×1 |
 | `sw_industry_l1` | akshare | — | — | 尚未确认同口径取法 |
 | `sw_industry_l1` | wind | `wind_classifications` → `get_stock_basicinfo` | 所属申万行业明细 | 原单位：按返回单位；×1 |
 | `sw_industry_l1` | ifind | `ifind_classifications` → `get_security_indicators` | 所属申万行业 | 原单位：按返回单位；×1 |
 | `sw_industry_l1` | tdx | — | — | 尚未确认同口径取法 |
+| `sw_industry_l1` | choice | `choice_classifications` → `mx_ashare_finance_data` | 所属申万行业 / 所属申万行业(可查历史) | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `sw_industry_l1_code` | tushare | `ts_sw` → `index_member_all` | l1_code | 原单位：按返回单位；×1 |
 | `sw_industry_l1_code` | akshare | — | — | 尚未确认同口径取法 |
 | `sw_industry_l1_code` | wind | — | — | 尚未确认同口径取法 |
 | `sw_industry_l1_code` | ifind | — | — | 尚未确认同口径取法 |
 | `sw_industry_l1_code` | tdx | — | — | 尚未确认同口径取法 |
+| `sw_industry_l1_code` | choice | `choice_classifications` → `mx_ashare_finance_data` | 所属申万行业代码(可查历史) / 所属申万行业代码 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `sw_industry_l2` | tushare | `ts_sw` → `index_member_all` | l2_name | 原单位：按返回单位；×1 |
 | `sw_industry_l2` | akshare | — | — | 尚未确认同口径取法 |
 | `sw_industry_l2` | wind | `wind_classifications` → `get_stock_basicinfo` | 所属申万行业明细 | 原单位：按返回单位；×1 |
 | `sw_industry_l2` | ifind | — | — | 尚未确认同口径取法 |
 | `sw_industry_l2` | tdx | — | — | 尚未确认同口径取法 |
+| `sw_industry_l2` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `sw_industry_l2_code` | tushare | `ts_sw` → `index_member_all` | l2_code | 原单位：按返回单位；×1 |
 | `sw_industry_l2_code` | akshare | — | — | 尚未确认同口径取法 |
 | `sw_industry_l2_code` | wind | — | — | 尚未确认同口径取法 |
 | `sw_industry_l2_code` | ifind | — | — | 尚未确认同口径取法 |
 | `sw_industry_l2_code` | tdx | — | — | 尚未确认同口径取法 |
+| `sw_industry_l2_code` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `sw_industry_l3` | tushare | `ts_sw` → `index_member_all` | l3_name | 原单位：按返回单位；×1 |
 | `sw_industry_l3` | akshare | — | — | 尚未确认同口径取法 |
 | `sw_industry_l3` | wind | `wind_classifications` → `get_stock_basicinfo` | 所属申万行业明细 | 原单位：按返回单位；×1 |
 | `sw_industry_l3` | ifind | — | — | 尚未确认同口径取法 |
 | `sw_industry_l3` | tdx | — | — | 尚未确认同口径取法 |
+| `sw_industry_l3` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `sw_industry_l3_code` | tushare | `ts_sw` → `index_member_all` | l3_code | 原单位：按返回单位；×1 |
 | `sw_industry_l3_code` | akshare | — | — | 尚未确认同口径取法 |
 | `sw_industry_l3_code` | wind | — | — | 尚未确认同口径取法 |
 | `sw_industry_l3_code` | ifind | — | — | 尚未确认同口径取法 |
 | `sw_industry_l3_code` | tdx | — | — | 尚未确认同口径取法 |
+| `sw_industry_l3_code` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `wind_industry_l1` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_industry_l1` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_industry_l1` | wind | `wind_classifications` → `get_stock_basicinfo` | 所属WIND行业明细 | 原单位：按返回单位；×1 |
 | `wind_industry_l1` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_industry_l1` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_industry_l1` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `wind_industry_l2` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_industry_l2` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_industry_l2` | wind | `wind_classifications` → `get_stock_basicinfo` | 所属WIND行业明细 | 原单位：按返回单位；×1 |
 | `wind_industry_l2` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_industry_l2` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_industry_l2` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `wind_industry_l3` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_industry_l3` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_industry_l3` | wind | `wind_classifications` → `get_stock_basicinfo` | 所属WIND行业明细 | 原单位：按返回单位；×1 |
 | `wind_industry_l3` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_industry_l3` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_industry_l3` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `wind_industry_l4` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_industry_l4` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_industry_l4` | wind | `wind_classifications` → `get_stock_basicinfo` | 所属WIND行业明细 | 原单位：按返回单位；×1 |
 | `wind_industry_l4` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_industry_l4` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_industry_l4` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `ts_industry` | tushare | `ts_basic` → `stock_basic` | industry | 原单位：按返回单位；×1 |
 | `ts_industry` | akshare | — | — | 尚未确认同口径取法 |
 | `ts_industry` | wind | — | — | 尚未确认同口径取法 |
 | `ts_industry` | ifind | — | — | 尚未确认同口径取法 |
 | `ts_industry` | tdx | — | — | 尚未确认同口径取法 |
+| `ts_industry` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `cninfo_industry` | tushare | — | — | 尚未确认同口径取法 |
 | `cninfo_industry` | akshare | `ak_profile` → `stock_profile_cninfo` | 所属行业 | 原单位：按返回单位；×1 |
 | `cninfo_industry` | wind | — | — | 尚未确认同口径取法 |
 | `cninfo_industry` | ifind | — | — | 尚未确认同口径取法 |
 | `cninfo_industry` | tdx | — | — | 尚未确认同口径取法 |
+| `cninfo_industry` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `ths_industry_l1` | tushare | — | — | 尚未确认同口径取法 |
 | `ths_industry_l1` | akshare | — | — | 尚未确认同口径取法 |
 | `ths_industry_l1` | wind | — | — | 尚未确认同口径取法 |
 | `ths_industry_l1` | ifind | `ifind_classifications` → `get_security_indicators` | 所属同花顺行业 | 原单位：按返回单位；×1 |
 | `ths_industry_l1` | tdx | — | — | 尚未确认同口径取法 |
+| `ths_industry_l1` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `tdx_industry` | tushare | — | — | 尚未确认同口径取法 |
 | `tdx_industry` | akshare | — | — | 尚未确认同口径取法 |
 | `tdx_industry` | wind | — | — | 尚未确认同口径取法 |
 | `tdx_industry` | ifind | — | — | 尚未确认同口径取法 |
 | `tdx_industry` | tdx | `tdx_profile` → `tdx_api_data` | 通达信研究行业 | 原单位：按返回单位；×1 |
+| `tdx_industry` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `tdx_csrc_industry` | tushare | — | — | 尚未确认同口径取法 |
 | `tdx_csrc_industry` | akshare | — | — | 尚未确认同口径取法 |
 | `tdx_csrc_industry` | wind | — | — | 尚未确认同口径取法 |
 | `tdx_csrc_industry` | ifind | — | — | 尚未确认同口径取法 |
 | `tdx_csrc_industry` | tdx | `tdx_profile` → `tdx_api_data` | 证监会行业 | 原单位：按返回单位；×1 |
+| `tdx_csrc_industry` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `sw_memberships` | tushare | `ts_sw` → `index_member_all` | l1_name | 原单位：按返回单位；×1 |
 | `sw_memberships` | akshare | — | — | 尚未确认同口径取法 |
 | `sw_memberships` | wind | — | — | 尚未确认同口径取法 |
 | `sw_memberships` | ifind | — | — | 尚未确认同口径取法 |
 | `sw_memberships` | tdx | — | — | 尚未确认同口径取法 |
+| `sw_memberships` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `ths_boards` | tushare | `ts_boards` → `ths_member` | board_name | 原单位：按返回单位；×1 |
 | `ths_boards` | akshare | — | — | 尚未确认同口径取法 |
 | `ths_boards` | wind | — | — | 尚未确认同口径取法 |
 | `ths_boards` | ifind | — | — | 尚未确认同口径取法 |
 | `ths_boards` | tdx | — | — | 尚未确认同口径取法 |
+| `ths_boards` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `wind_boards` | tushare | — | — | 尚未确认同口径取法 |
 | `wind_boards` | akshare | — | — | 尚未确认同口径取法 |
 | `wind_boards` | wind | `wind_classifications` → `get_stock_basicinfo` | 所属概念板块 | 原单位：按返回单位；×1 |
 | `wind_boards` | ifind | — | — | 尚未确认同口径取法 |
 | `wind_boards` | tdx | — | — | 尚未确认同口径取法 |
+| `wind_boards` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `tdx_themes` | tushare | — | — | 尚未确认同口径取法 |
 | `tdx_themes` | akshare | — | — | 尚未确认同口径取法 |
 | `tdx_themes` | wind | — | — | 尚未确认同口径取法 |
 | `tdx_themes` | ifind | — | — | 尚未确认同口径取法 |
 | `tdx_themes` | tdx | `tdx_summary` → `tdx_api_data` | 关联主题 | 原单位：按返回单位；×1 |
+| `tdx_themes` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `cninfo_indexes` | tushare | — | — | 尚未确认同口径取法 |
 | `cninfo_indexes` | akshare | `ak_profile` → `stock_profile_cninfo` | 入选指数 | 原单位：按返回单位；×1 |
 | `cninfo_indexes` | wind | — | — | 尚未确认同口径取法 |
 | `cninfo_indexes` | ifind | — | — | 尚未确认同口径取法 |
 | `cninfo_indexes` | tdx | — | — | 尚未确认同口径取法 |
+| `cninfo_indexes` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `tdx_indexes` | tushare | — | — | 尚未确认同口径取法 |
 | `tdx_indexes` | akshare | — | — | 尚未确认同口径取法 |
 | `tdx_indexes` | wind | — | — | 尚未确认同口径取法 |
 | `tdx_indexes` | ifind | — | — | 尚未确认同口径取法 |
 | `tdx_indexes` | tdx | `tdx_profile` → `tdx_api_data` | 相关指数 | 原单位：按返回单位；×1 |
+| `tdx_indexes` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `ths_concepts` | tushare | `ts_boards` → `ths_member` | board_name | 原单位：按返回单位；×1 |
 | `ths_concepts` | akshare | — | — | 尚未确认同口径取法 |
 | `ths_concepts` | wind | — | — | 尚未确认同口径取法 |
 | `ths_concepts` | ifind | `ifind_classifications` → `get_security_indicators` | 所属同花顺概念指数 | 原单位：按返回单位；×1；iFinD仅返回名称，无板块代码；不与其他来源的列表逐项拼接。 |
 | `ths_concepts` | tdx | — | — | 尚未确认同口径取法 |
+| `ths_concepts` | choice | `choice_classifications` → `mx_ashare_finance_data` | 所属同花顺概念指数 | 原单位：按返回单位；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 
 ## cb_basic
 
@@ -3879,106 +4649,127 @@
 | `name` | wind | — | — | 尚未确认同口径取法 |
 | `name` | ifind | `ifind_cb_basic` → `get_security_indicators` | 债券简称；问句：债券简称 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `name` | tdx | `tdx_cb_basic` → `tdx_kline` | Name | 原单位：文本；×1 |
+| `name` | choice | `choice_cb_basic` → `mx_bond_finance_data` | 债券简称；问句：债券简称 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `full_name` | tushare | `tushare_cb_basic` → `cb_basic` | bond_full_name | 原单位：文本；×1；当前可用档案快照；不代表指定历史时点。 |
 | `full_name` | akshare | `akshare_cb_profile` → `bond_cb_profile_sina` | 债券名称 | 原单位：按返回单位；×1 |
 | `full_name` | wind | — | — | 尚未确认同口径取法 |
 | `full_name` | ifind | `ifind_cb_basic` → `get_security_indicators` | 债券名称；问句：债券全称 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `full_name` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `full_name` | choice | `choice_cb_basic` → `mx_bond_finance_data` | 债券名称；问句：债券全称 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `stock_code` | tushare | `tushare_cb_basic` → `cb_basic` | stk_code | 原单位：代码；×1；当前可用档案快照；不代表指定历史时点。 |
 | `stock_code` | akshare | `akshare_cb_redeem_snapshot` → `bond_cb_redeem_jsl` | 正股代码 | 原单位：按返回单位；×1 |
 | `stock_code` | wind | — | — | 尚未确认同口径取法 |
 | `stock_code` | ifind | `ifind_cb_basic` → `get_security_indicators` | 正股代码；问句：正股代码 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `stock_code` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `stock_code` | choice | `choice_cb_basic` → `mx_bond_finance_data` | 正股代码；问句：正股代码 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `stock_name` | tushare | `tushare_cb_basic` → `cb_basic` | stk_short_name | 原单位：文本；×1；当前可用档案快照；不代表指定历史时点。 |
 | `stock_name` | akshare | `akshare_cb_redeem_snapshot` → `bond_cb_redeem_jsl` | 正股名称 | 原单位：按返回单位；×1 |
 | `stock_name` | wind | — | — | 尚未确认同口径取法 |
 | `stock_name` | ifind | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
 | `stock_name` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `stock_name` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `bond_type` | tushare | `tushare_cb_basic` → `cb_basic` | cb_type | 原单位：文本；×1；当前可用档案快照；不代表指定历史时点。 |
 | `bond_type` | akshare | `akshare_cb_profile` → `bond_cb_profile_sina` | 债券类型 | 原单位：按返回单位；×1 |
 | `bond_type` | wind | — | — | 尚未确认同口径取法 |
 | `bond_type` | ifind | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
 | `bond_type` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `bond_type` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `list_date` | tushare | `tushare_cb_basic` → `cb_basic` | list_date | 原单位：日期；×1；当前可用档案快照；不代表指定历史时点。 |
 | `list_date` | akshare | `akshare_cb_profile` → `bond_cb_profile_sina` | 上市日期 | 原单位：按返回单位；×1 |
 | `list_date` | wind | — | — | 尚未确认同口径取法 |
 | `list_date` | ifind | `ifind_cb_basic` → `get_security_indicators` | 上市日期；问句：上市日期 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `list_date` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `list_date` | choice | `choice_cb_basic` → `mx_bond_finance_data` | 上市日期；问句：上市日期 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `delist_date` | tushare | `tushare_cb_basic` → `cb_basic` | delist_date | 原单位：日期；×1；当前可用档案快照；不代表指定历史时点。 |
 | `delist_date` | akshare | `akshare_cb_profile` → `bond_cb_profile_sina` | 摘牌日 | 原单位：按返回单位；×1 |
 | `delist_date` | wind | — | — | 尚未确认同口径取法 |
 | `delist_date` | ifind | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
 | `delist_date` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `delist_date` | choice | `choice_cb_basic` → `mx_bond_finance_data` | 摘牌日期；问句：摘牌日期 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `value_date` | tushare | `tushare_cb_basic` → `cb_basic` | value_date | 原单位：日期；×1；当前可用档案快照；不代表指定历史时点。 |
 | `value_date` | akshare | `akshare_cb_profile` → `bond_cb_profile_sina` | 起息日期 | 原单位：按返回单位；×1 |
 | `value_date` | wind | — | — | 尚未确认同口径取法 |
 | `value_date` | ifind | `ifind_cb_basic` → `get_security_indicators` | 起息日期；问句：起息日期 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `value_date` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `value_date` | choice | `choice_cb_basic` → `mx_bond_finance_data` | 起息日期；问句：起息日期 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `maturity_date` | tushare | `tushare_cb_basic` → `cb_basic` | maturity_date | 原单位：日期；×1；当前可用档案快照；不代表指定历史时点。 |
 | `maturity_date` | akshare | `akshare_cb_profile` → `bond_cb_profile_sina` | 到期日 | 原单位：按返回单位；×1 |
 | `maturity_date` | wind | — | — | 尚未确认同口径取法 |
 | `maturity_date` | ifind | `ifind_cb_basic` → `get_security_indicators` | 到期日期；问句：到期日期 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `maturity_date` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `maturity_date` | choice | `choice_cb_basic` → `mx_bond_finance_data` | 到期日期；问句：到期日期 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `conversion_start_date` | tushare | `tushare_cb_basic` → `cb_basic` | conv_start_date | 原单位：日期；×1；当前可用档案快照；不代表指定历史时点。 |
 | `conversion_start_date` | akshare | `akshare_cb_summary` → `bond_cb_summary_sina` | 转换期间 | 原单位：按返回单位；×1 |
 | `conversion_start_date` | wind | `wind_cb_basic` → `get_stock_basicinfo` | 自愿转股起始日期；问句：转股起始日 | 原单位：以返回列单位为准；×1；真实MCP验证；日期与单位取自返回列，不从请求补写。 |
 | `conversion_start_date` | ifind | `ifind_cb_basic` → `get_security_indicators` | 转股起始日期；问句：转股起始日期 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `conversion_start_date` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `conversion_start_date` | choice | `choice_cb_basic` → `mx_bond_finance_data` | 转股起始日期；问句：转股起始日期 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `conversion_end_date` | tushare | `tushare_cb_basic` → `cb_basic` | conv_end_date | 原单位：日期；×1；当前可用档案快照；不代表指定历史时点。 |
 | `conversion_end_date` | akshare | `akshare_cb_summary` → `bond_cb_summary_sina` | 转换期间 | 原单位：按返回单位；×1 |
 | `conversion_end_date` | wind | `wind_cb_basic` → `get_stock_basicinfo` | 自愿转股终止日期；问句：转股截止日 | 原单位：以返回列单位为准；×1；真实MCP验证；日期与单位取自返回列，不从请求补写。 |
 | `conversion_end_date` | ifind | `ifind_cb_basic` → `get_security_indicators` | 转股终止日期；问句：转股终止日期 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `conversion_end_date` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `conversion_end_date` | choice | `choice_cb_basic` → `mx_bond_finance_data` | 转股终止日期；问句：转股终止日期 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `conversion_price` | tushare | `tushare_cb_basic` → `cb_basic` | conv_price | 原单位：元/股；×1；当前可用档案快照；不代表指定历史时点。 |
 | `conversion_price` | akshare | `akshare_cb_summary` → `bond_cb_summary_sina` | 最新转股价（元） | 原单位：按返回单位；×1 |
 | `conversion_price` | wind | `wind_cb_basic` → `get_stock_basicinfo` | 最新转股价；问句：最新转股价 | 原单位：以返回列单位为准；×1；真实MCP验证；日期与单位取自返回列，不从请求补写。 |
 | `conversion_price` | ifind | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
 | `conversion_price` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `conversion_price` | choice | `choice_cb_basic` → `mx_bond_finance_data` | 转股价格 / 最新转股价；问句：最新转股价 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `initial_conversion_price` | tushare | `tushare_cb_basic` → `cb_basic` | first_conv_price | 原单位：元/股；×1；当前可用档案快照；不代表指定历史时点。 |
 | `initial_conversion_price` | akshare | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
 | `initial_conversion_price` | wind | — | — | 尚未确认同口径取法 |
 | `initial_conversion_price` | ifind | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
 | `initial_conversion_price` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `initial_conversion_price` | choice | — | — | 已向东方财富妙想 MCP 询问该指标；返回未包含可核对的同口径列，暂不接入。 |
 | `outstanding` | tushare | `tushare_cb_basic` → `cb_basic` | remain_size | 原单位：元；×1；当前可用档案快照；不代表指定历史时点。 |
 | `outstanding` | akshare | `akshare_cb_redeem_snapshot` → `bond_cb_redeem_jsl` | 剩余规模 | 原单位：按返回单位；×100000000 |
 | `outstanding` | wind | — | — | 尚未确认同口径取法 |
 | `outstanding` | ifind | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
 | `outstanding` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `outstanding` | choice | `choice_cb_basic` → `mx_bond_finance_data` | 未转股余额 / 当前未转股余额；问句：未转股余额 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `issue_size` | tushare | `tushare_cb_basic` → `cb_basic` | issue_size | 原单位：元；×1；当前可用档案快照；不代表指定历史时点。 |
 | `issue_size` | akshare | `akshare_cb_profile` → `bond_cb_profile_sina` | 发行规模（亿元） | 原单位：按返回单位；×100000000 |
 | `issue_size` | wind | — | — | 尚未确认同口径取法 |
 | `issue_size` | ifind | `ifind_cb_basic` → `get_security_indicators` | 发行总额；问句：发行总额（亿元） | 原单位：按上游表头单位；金额统一元；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `issue_size` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `issue_size` | choice | `choice_cb_basic` → `mx_bond_finance_data` | 发行总额；问句：发行总额（亿元） | 原单位：按上游表头单位；金额统一元；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `rating` | tushare | `tushare_cb_basic` → `cb_basic` | newest_rating | 原单位：文本；×1；当前可用档案快照；不代表指定历史时点。 |
 | `rating` | akshare | `akshare_cb_profile` → `bond_cb_profile_sina` | 信用等级 | 原单位：按返回单位；×1 |
 | `rating` | wind | — | — | 尚未确认同口径取法 |
 | `rating` | ifind | `ifind_cb_basic` → `get_security_indicators` | 债券最新信用评级；问句：债券最新信用评级 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `rating` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `rating` | choice | `choice_cb_basic` → `mx_bond_finance_data` | 债券最新信用评级；问句：债券最新信用评级 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `call_clause` | tushare | `tushare_cb_basic` → `cb_basic` | call_clause | 原单位：文本；×1；当前可用档案快照；不代表指定历史时点。 |
 | `call_clause` | akshare | `akshare_cb_redeem_snapshot` → `bond_cb_redeem_jsl` | 强赎条款 | 原单位：按返回单位；×1 |
 | `call_clause` | wind | `wind_cb_basic` → `get_stock_basicinfo` | 赎回条件；问句：赎回条款 | 原单位：以返回列单位为准；×1；真实MCP验证；日期与单位取自返回列，不从请求补写。 |
 | `call_clause` | ifind | `ifind_cb_basic` → `get_security_indicators` | 赎回条款；问句：赎回条款 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `call_clause` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `call_clause` | choice | `choice_cb_basic` → `mx_bond_finance_data` | 赎回条款；问句：赎回条款 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `put_clause` | tushare | `tushare_cb_basic` → `cb_basic` | put_clause | 原单位：文本；×1；当前可用档案快照；不代表指定历史时点。 |
 | `put_clause` | akshare | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
 | `put_clause` | wind | — | — | 尚未确认同口径取法 |
 | `put_clause` | ifind | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
 | `put_clause` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `put_clause` | choice | `choice_cb_basic` → `mx_bond_finance_data` | 条件回售条款全文 / 回售条款；问句：回售条款 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `reset_clause` | tushare | `tushare_cb_basic` → `cb_basic` | reset_clause | 原单位：文本；×1；当前可用档案快照；不代表指定历史时点。 |
 | `reset_clause` | akshare | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
 | `reset_clause` | wind | — | — | 尚未确认同口径取法 |
 | `reset_clause` | ifind | `ifind_cb_basic` → `get_security_indicators` | 特别向下修正条款全文；问句：特别向下修正条款全文 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `reset_clause` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `reset_clause` | choice | `choice_cb_basic` → `mx_bond_finance_data` | 特别向下修正条款全文；问句：特别向下修正条款全文 | 原单位：按返回单位；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `rate_clause` | tushare | `tushare_cb_basic` → `cb_basic` | rate_clause | 原单位：文本；×1；当前可用档案快照；不代表指定历史时点。 |
 | `rate_clause` | akshare | `akshare_cb_profile` → `bond_cb_profile_sina` | 利率说明 | 原单位：按返回单位；×1 |
 | `rate_clause` | wind | — | — | 尚未确认同口径取法 |
 | `rate_clause` | ifind | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
 | `rate_clause` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `rate_clause` | choice | `choice_cb_basic` → `mx_bond_finance_data` | 票面利率说明 / 票息说明；问句：票息说明 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 | `maturity_call_price` | tushare | `tushare_cb_basic` → `cb_basic` | maturity_call_price | 原单位：元/张；×1；当前可用档案快照；不代表指定历史时点。 |
 | `maturity_call_price` | akshare | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
 | `maturity_call_price` | wind | — | — | 尚未确认同口径取法 |
 | `maturity_call_price` | ifind | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
 | `maturity_call_price` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `maturity_call_price` | choice | `choice_cb_basic` → `mx_bond_finance_data` | 到期赎回价格(公告) / 到期赎回价格；问句：到期赎回价格 | 原单位：返回表头或数值后缀；×1；东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。 |
 
 ## cb_daily
 
@@ -4013,96 +4804,115 @@
 | `open` | wind | — | — | 尚未确认同口径取法 |
 | `open` | ifind | `ifind_cb_daily` → `get_security_indicators` | 债券开盘价；问句：债券开盘价 | 原单位：按返回单位；×1；2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。 |
 | `open` | tdx | `tdx_cb_daily` → `tdx_kline` | Open | 原单位：元/100元面值；×1；TDX固定日K实测。 |
+| `open` | choice | `choice_cb_daily` → `mx_bond_finance_data` | 债券开盘价；问句：债券开盘价 | 原单位：按返回单位；×1；2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。 |
 | `high` | tushare | `tushare_cb_daily` → `cb_daily` | high | 原单位：元/100元面值；×1；Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。 |
 | `high` | akshare | `akshare_cb_daily` → `bond_zh_hs_cov_daily` | high | 原单位：按返回单位；×1 |
 | `high` | wind | — | — | 尚未确认同口径取法 |
 | `high` | ifind | `ifind_cb_daily` → `get_security_indicators` | 最高价 / 债券最高价；问句：债券最高价 | 原单位：按返回单位；×1；2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。 |
 | `high` | tdx | `tdx_cb_daily` → `tdx_kline` | High | 原单位：元/100元面值；×1；TDX固定日K实测。 |
+| `high` | choice | `choice_cb_daily` → `mx_bond_finance_data` | 最高价 / 债券最高价；问句：债券最高价 | 原单位：按返回单位；×1；2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。 |
 | `low` | tushare | `tushare_cb_daily` → `cb_daily` | low | 原单位：元/100元面值；×1；Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。 |
 | `low` | akshare | `akshare_cb_daily` → `bond_zh_hs_cov_daily` | low | 原单位：按返回单位；×1 |
 | `low` | wind | — | — | 尚未确认同口径取法 |
 | `low` | ifind | `ifind_cb_daily` → `get_security_indicators` | 最低价 / 债券最低价；问句：债券最低价 | 原单位：按返回单位；×1；2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。 |
 | `low` | tdx | `tdx_cb_daily` → `tdx_kline` | Low | 原单位：元/100元面值；×1；TDX固定日K实测。 |
+| `low` | choice | `choice_cb_daily` → `mx_bond_finance_data` | 最低价 / 债券最低价；问句：债券最低价 | 原单位：按返回单位；×1；2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。 |
 | `close` | tushare | `tushare_cb_daily` → `cb_daily` | close | 原单位：元/100元面值；×1；Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。 |
 | `close` | akshare | `akshare_cb_daily` → `bond_zh_hs_cov_daily` | close | 原单位：按返回单位；×1 |
 | `close` | wind | — | — | 尚未确认同口径取法 |
 | `close` | ifind | `ifind_cb_daily` → `get_security_indicators` | 收盘价；问句：收盘价 | 原单位：按上游表头单位；金额统一元；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `close` | tdx | `tdx_cb_daily` → `tdx_kline` | Close | 原单位：元/100元面值；×1；TDX固定日K实测。 |
+| `close` | choice | `choice_cb_daily` → `mx_bond_finance_data` | 收盘价；问句：收盘价 | 原单位：按上游表头单位；金额统一元；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `pre_close` | tushare | `tushare_cb_daily` → `cb_daily` | pre_close | 原单位：元/100元面值；×1；Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。 |
 | `pre_close` | akshare | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
 | `pre_close` | wind | — | — | 尚未确认同口径取法 |
 | `pre_close` | ifind | `ifind_cb_daily` → `get_security_indicators` | 债券前收盘价；问句：债券前收盘价 | 原单位：按返回单位；×1；2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。 |
 | `pre_close` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `pre_close` | choice | `choice_cb_daily` → `mx_bond_finance_data` | 债券前收盘价；问句：债券前收盘价 | 原单位：按返回单位；×1；2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。 |
 | `pct_change` | tushare | `tushare_cb_daily` → `cb_daily` | pct_chg | 原单位：%；×1；Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。 |
 | `pct_change` | akshare | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
 | `pct_change` | wind | — | — | 尚未确认同口径取法 |
 | `pct_change` | ifind | `ifind_cb_daily` → `get_security_indicators` | 涨跌幅；问句：涨跌幅 | 原单位：按返回单位；×1；2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。 |
 | `pct_change` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `pct_change` | choice | `choice_cb_daily` → `mx_bond_finance_data` | 涨跌幅；问句：涨跌幅 | 原单位：按返回单位；×1；2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。 |
 | `volume` | tushare | `tushare_cb_daily` → `cb_daily` | vol | 原单位：手；×1；Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。 |
 | `volume` | akshare | — | — | 新浪volume文档缺少明确手/张单位，暂不混入手数列。 |
 | `volume` | wind | — | — | 尚未确认同口径取法 |
 | `volume` | ifind | `ifind_cb_daily` → `get_security_indicators` | 债券成交量；问句：债券成交量（单位设置=手，保留本指标单位参数） | 原单位：手；×1；2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。 |
 | `volume` | tdx | `tdx_cb_daily` → `tdx_kline` | RawVolume | 原单位：手；×1；TDX固定行情明示成交量手，BaseInfo.Unit=10；同日HQInfo.Volume与K线RawVolume一致。 |
+| `volume` | choice | — | — | 已询问成交量(手)/债券成交量及税前税后到期收益率；未返回可解析数据表，暂不接入。 |
 | `amount` | tushare | `tushare_cb_daily` → `cb_daily` | amount | 原单位：万元；×10000；Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。 |
 | `amount` | akshare | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
 | `amount` | wind | — | — | 尚未确认同口径取法 |
 | `amount` | ifind | `ifind_cb_daily` → `get_security_indicators` | 成交金额；问句：成交金额（元） | 原单位：按返回单位；×1；2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。 |
 | `amount` | tdx | `tdx_cb_daily` → `tdx_kline` | RawAmount | 原单位：元；×1；TDX固定日K实测。 |
+| `amount` | choice | `choice_cb_daily` → `mx_bond_finance_data` | 成交金额；问句：成交金额（元） | 原单位：按返回单位；×1；2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。 |
 | `conversion_value` | tushare | `tushare_cb_daily` → `cb_daily` | cb_value | 原单位：元/100元面值；×1；Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。 |
 | `conversion_value` | akshare | `akshare_cb_value` → `bond_zh_cov_value_analysis` | SWAPVALUE | 原单位：按返回单位；×1 |
 | `conversion_value` | wind | `wind_cb_daily` → `get_stock_fundamentals` | 转换价值 / 转股价值；问句：转股价值（平价） | 原单位：以返回列单位为准；×1；真实MCP验证；日期与单位取自返回列，不从请求补写。 |
 | `conversion_value` | ifind | `ifind_cb_daily` → `get_security_indicators` | 转换价值；问句：转换价值 | 原单位：按上游表头单位；金额统一元；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `conversion_value` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `conversion_value` | choice | `choice_cb_daily` → `mx_bond_finance_data` | 转换价值；问句：转换价值 | 原单位：按上游表头单位；金额统一元；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `conversion_premium` | tushare | `tushare_cb_daily` → `cb_daily` | cb_over_rate | 原单位：%；×1；Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。 |
 | `conversion_premium` | akshare | `akshare_cb_value` → `bond_zh_cov_value_analysis` | SWAPOR | 原单位：按返回单位；×1 |
 | `conversion_premium` | wind | `wind_cb_daily` → `get_stock_fundamentals` | 转股溢价率；问句：转股溢价率 | 原单位：以返回列单位为准；×1；真实MCP验证；日期与单位取自返回列，不从请求补写。 |
 | `conversion_premium` | ifind | `ifind_cb_daily` → `get_security_indicators` | 转股溢价率；问句：转股溢价率 | 原单位：按上游表头单位；金额统一元；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `conversion_premium` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `conversion_premium` | choice | `choice_cb_daily` → `mx_bond_finance_data` | 转股溢价率；问句：转股溢价率 | 原单位：按上游表头单位；金额统一元；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `bond_floor` | tushare | `tushare_cb_daily` → `cb_daily` | bond_value | 原单位：元/100元面值；×1；Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。 |
 | `bond_floor` | akshare | `akshare_cb_value` → `bond_zh_cov_value_analysis` | PUREBONDVALUE | 原单位：按返回单位；×1 |
 | `bond_floor` | wind | `wind_cb_daily` → `get_stock_fundamentals` | 纯债价值；问句：纯债价值（债底） | 原单位：以返回列单位为准；×1；真实MCP验证；日期与单位取自返回列，不从请求补写。 |
 | `bond_floor` | ifind | `ifind_cb_daily` → `get_security_indicators` | 纯债价值；问句：纯债价值 | 原单位：按上游表头单位；金额统一元；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `bond_floor` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `bond_floor` | choice | `choice_cb_daily` → `mx_bond_finance_data` | 纯债价值；问句：纯债价值 | 原单位：按上游表头单位；金额统一元；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `bond_floor_premium` | tushare | `tushare_cb_daily` → `cb_daily` | bond_over_rate | 原单位：%；×1；Tushare cb_daily；成交量为上游手数，不换算成张；百分比保留百分数。 |
 | `bond_floor_premium` | akshare | `akshare_cb_value` → `bond_zh_cov_value_analysis` | PUREBONDOR | 原单位：按返回单位；×1 |
 | `bond_floor_premium` | wind | — | — | 尚未确认同口径取法 |
 | `bond_floor_premium` | ifind | `ifind_cb_daily` → `get_security_indicators` | 纯债溢价率；问句：纯债溢价率 | 原单位：按返回单位；×1；2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。 |
 | `bond_floor_premium` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `bond_floor_premium` | choice | `choice_cb_daily` → `mx_bond_finance_data` | 纯债溢价率；问句：纯债溢价率 | 原单位：按返回单位；×1；2026-11-18原生债券MCP实测；逐行实际交易日，保留供应商原口径；成交额统一元，成交量手。 |
 | `ytm` | tushare | — | — | 尚未确认同口径取法 |
 | `ytm` | akshare | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
 | `ytm` | wind | `wind_cb_daily` → `get_stock_fundamentals` | 税前到期收益率；问句：税前到期收益率 | 原单位：以返回列单位为准；×1；真实MCP验证；日期与单位取自返回列，不从请求补写。 |
 | `ytm` | ifind | — | — | 实际返回到期收益率（央行规则）与行权YTM，均未标明税前/税后，不绑定两个税种字段。 |
 | `ytm` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `ytm` | choice | — | — | 已询问成交量(手)/债券成交量及税前税后到期收益率；未返回可解析数据表，暂不接入。 |
 | `remaining_years` | tushare | — | — | 尚未确认同口径取法 |
 | `remaining_years` | akshare | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
 | `remaining_years` | wind | — | — | 尚未确认同口径取法 |
 | `remaining_years` | ifind | `ifind_cb_daily` → `get_security_indicators` | 剩余期限(年)；问句：剩余期限（年） | 原单位：按上游表头单位；金额统一元；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `remaining_years` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `remaining_years` | choice | `choice_cb_daily` → `mx_bond_finance_data` | 剩余期限(年)；问句：剩余期限（年） | 原单位：按上游表头单位；金额统一元；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `outstanding` | tushare | — | — | 尚未确认同口径取法 |
 | `outstanding` | akshare | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
 | `outstanding` | wind | `wind_cb_daily` → `get_stock_fundamentals` | 未转股余额；问句：未转股余额 | 原单位：以返回列单位为准；×1；真实MCP验证；日期与单位取自返回列，不从请求补写。 |
 | `outstanding` | ifind | `ifind_cb_daily` → `get_security_indicators` | 未转股余额；问句：未转股余额（亿元） | 原单位：按上游表头单位；金额统一元；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `outstanding` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `outstanding` | choice | `choice_cb_daily` → `mx_bond_finance_data` | 未转股余额；问句：未转股余额（亿元） | 原单位：按上游表头单位；金额统一元；×1；真实债券MCP验证；仅匹配证券身份及指标列；历史必须逐行交易日，锁定或缺失保留空。 |
 | `ytm_after_tax` | tushare | — | — | 尚未确认同口径取法 |
 | `ytm_after_tax` | akshare | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
 | `ytm_after_tax` | wind | `wind_cb_daily` → `get_stock_fundamentals` | 税后到期收益率；问句：税后到期收益率 | 原单位：以返回列单位为准；×1；真实MCP验证；日期与单位取自返回列，不从请求补写。 |
 | `ytm_after_tax` | ifind | — | — | 未核实该来源对应字段、日期与单位，不作推断。 |
 | `ytm_after_tax` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `ytm_after_tax` | choice | — | — | 已询问成交量(手)/债券成交量及税前税后到期收益率；未返回可解析数据表，暂不接入。 |
 | `ytm_provider` | tushare | — | — | 尚未核实通用到期收益率口径 |
 | `ytm_provider` | akshare | — | — | 尚未核实通用到期收益率口径 |
 | `ytm_provider` | wind | — | — | 尚未核实通用到期收益率口径 |
 | `ytm_provider` | ifind | `ifind_cb_daily` → `get_security_indicators` | 到期收益率 / 纯债到期收益率；问句：纯债到期收益率（保留来源原口径） | 原单位：按上游表头单位；金额统一元；×1；来源原口径到期收益率；税前税后未披露，不作分类；计算方法以原始响应元数据为准，缺失则未知。 |
 | `ytm_provider` | tdx | — | — | 尚未核实通用到期收益率口径 |
+| `ytm_provider` | choice | `choice_cb_daily` → `mx_bond_finance_data` | 到期收益率 / 纯债到期收益率；问句：纯债到期收益率（保留来源原口径） | 原单位：按上游表头单位；金额统一元；×1；来源原口径到期收益率；税前税后未披露，不作分类；计算方法以原始响应元数据为准，缺失则未知。 |
 | `conversion_price` | tushare | — | — | 尚未确认同口径取法 |
 | `conversion_price` | akshare | — | — | 尚未确认同口径取法 |
 | `conversion_price` | wind | — | — | 尚未确认同口径取法 |
 | `conversion_price` | ifind | `ifind_cb_daily` → `get_security_indicators` | 转股价格；问句：转股价格 | 原单位：按返回单位；×1；2026-11-18原生债券MCP实测；有逐行实际交易日；百分比保留百分点，不用档案快照替代历史。 |
 | `conversion_price` | tdx | — | — | 尚未确认同口径取法 |
+| `conversion_price` | choice | `choice_cb_daily` → `mx_bond_finance_data` | 转股价格；问句：转股价格 | 原单位：按返回单位；×1；2026-11-18原生债券MCP实测；有逐行实际交易日；百分比保留百分点，不用档案快照替代历史。 |
 | `turnover_rate` | tushare | — | — | 尚未确认同口径取法 |
 | `turnover_rate` | akshare | — | — | 尚未确认同口径取法 |
 | `turnover_rate` | wind | — | — | 尚未确认同口径取法 |
 | `turnover_rate` | ifind | `ifind_cb_daily` → `get_security_indicators` | 换手率%；问句：换手率% | 原单位：按返回单位；×1；2026-11-18原生债券MCP实测；有逐行实际交易日；百分比保留百分点，不用档案快照替代历史。 |
 | `turnover_rate` | tdx | — | — | 尚未确认同口径取法 |
+| `turnover_rate` | choice | `choice_cb_daily` → `mx_bond_finance_data` | 换手率%；问句：换手率% | 原单位：按返回单位；×1；2026-11-18原生债券MCP实测；有逐行实际交易日；百分比保留百分点，不用档案快照替代历史。 |
 
 ## cb_clauses
 
@@ -4130,61 +4940,73 @@
 | `call_type` | wind | — | — | 尚未确认同口径取法 |
 | `call_type` | ifind | — | — | 未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。 |
 | `call_type` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `call_type` | choice | — | — | 已询问妙想 MCP；返回的是合同条款快照或赎回强度计数，不是公告事件明细，暂不接入。 |
 | `call_status` | tushare | `tushare_cb_call` → `cb_call` | is_call | 原单位：文本；×1；按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。 |
 | `call_status` | akshare | — | — | bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。 |
 | `call_status` | wind | — | — | 尚未确认同口径取法 |
 | `call_status` | ifind | — | — | 未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。 |
 | `call_status` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `call_status` | choice | — | — | 已询问妙想 MCP；返回的是合同条款快照或赎回强度计数，不是公告事件明细，暂不接入。 |
 | `call_date` | tushare | `tushare_cb_call` → `cb_call` | call_date | 原单位：日期；×1；按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。 |
 | `call_date` | akshare | — | — | bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。 |
 | `call_date` | wind | — | — | 尚未确认同口径取法 |
 | `call_date` | ifind | — | — | 未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。 |
 | `call_date` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `call_date` | choice | — | — | 已询问妙想 MCP；返回的是合同条款快照或赎回强度计数，不是公告事件明细，暂不接入。 |
 | `call_price` | tushare | `tushare_cb_call` → `cb_call` | call_price | 原单位：元/张；×1；按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。 |
 | `call_price` | akshare | — | — | bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。 |
 | `call_price` | wind | — | — | 尚未确认同口径取法 |
 | `call_price` | ifind | — | — | 未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。 |
 | `call_price` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `call_price` | choice | — | — | 已询问妙想 MCP；返回的是合同条款快照或赎回强度计数，不是公告事件明细，暂不接入。 |
 | `call_price_after_tax` | tushare | `tushare_cb_call` → `cb_call` | call_price_tax | 原单位：元/张；×1；按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。 |
 | `call_price_after_tax` | akshare | — | — | bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。 |
 | `call_price_after_tax` | wind | — | — | 尚未确认同口径取法 |
 | `call_price_after_tax` | ifind | — | — | 未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。 |
 | `call_price_after_tax` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `call_price_after_tax` | choice | — | — | 已询问妙想 MCP；返回的是合同条款快照或赎回强度计数，不是公告事件明细，暂不接入。 |
 | `call_volume` | tushare | `tushare_cb_call` → `cb_call` | call_vol | 原单位：张；×1；按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。 |
 | `call_volume` | akshare | — | — | bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。 |
 | `call_volume` | wind | — | — | 尚未确认同口径取法 |
 | `call_volume` | ifind | — | — | 未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。 |
 | `call_volume` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `call_volume` | choice | — | — | 已询问妙想 MCP；返回的是合同条款快照或赎回强度计数，不是公告事件明细，暂不接入。 |
 | `call_amount` | tushare | `tushare_cb_call` → `cb_call` | call_amount | 原单位：万元；×10000；按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。 |
 | `call_amount` | akshare | — | — | bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。 |
 | `call_amount` | wind | — | — | 尚未确认同口径取法 |
 | `call_amount` | ifind | — | — | 未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。 |
 | `call_amount` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `call_amount` | choice | — | — | 已询问妙想 MCP；返回的是合同条款快照或赎回强度计数，不是公告事件明细，暂不接入。 |
 | `payment_date` | tushare | `tushare_cb_call` → `cb_call` | payment_date | 原单位：日期；×1；按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。 |
 | `payment_date` | akshare | — | — | bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。 |
 | `payment_date` | wind | — | — | 尚未确认同口径取法 |
 | `payment_date` | ifind | — | — | 未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。 |
 | `payment_date` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `payment_date` | choice | — | — | 已询问妙想 MCP；返回的是合同条款快照或赎回强度计数，不是公告事件明细，暂不接入。 |
 | `registration_date` | tushare | `tushare_cb_call` → `cb_call` | call_reg_date | 原单位：日期；×1；按公告日期返回事件原文；已满足条件、提示、实施、不强赎分别保留，不推断董事会决策。 |
 | `registration_date` | akshare | — | — | bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。 |
 | `registration_date` | wind | — | — | 尚未确认同口径取法 |
 | `registration_date` | ifind | — | — | 未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。 |
 | `registration_date` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `registration_date` | choice | — | — | 已询问妙想 MCP；返回的是合同条款快照或赎回强度计数，不是公告事件明细，暂不接入。 |
 | `put_status` | tushare | — | — | 尚未确认同口径取法 |
 | `put_status` | akshare | — | — | bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。 |
 | `put_status` | wind | — | — | 尚未确认同口径取法 |
 | `put_status` | ifind | — | — | 未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。 |
 | `put_status` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `put_status` | choice | — | — | 已询问妙想 MCP；返回的是合同条款快照或赎回强度计数，不是公告事件明细，暂不接入。 |
 | `reset_status` | tushare | — | — | 尚未确认同口径取法 |
 | `reset_status` | akshare | — | — | bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。 |
 | `reset_status` | wind | — | — | 尚未确认同口径取法 |
 | `reset_status` | ifind | — | — | 未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。 |
 | `reset_status` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `reset_status` | choice | — | — | 已询问妙想 MCP；返回的是合同条款快照或赎回强度计数，不是公告事件明细，暂不接入。 |
 | `redemption_progress` | tushare | — | — | 尚未确认同口径取法 |
 | `redemption_progress` | akshare | — | — | bond_cb_redeem_jsl为当前强赎状态，无公告日期；bond_cb_adj_logs_jsl是转股价调整及生效日期，不等同公告日期或下修决策。没有映射为公告历史。 |
 | `redemption_progress` | wind | — | — | 尚未确认同口径取法 |
 | `redemption_progress` | ifind | — | — | 未验证公告日期及事件表；合同原文属于cb_basic，不能当作公告事件或强赎进度。 |
 | `redemption_progress` | tdx | — | — | 固定K线未提供；tdx_indicator_select仅支持AG/ZS/JJ，实测转债实体返回400未找到相关实体。 |
+| `redemption_progress` | choice | — | — | 已询问妙想 MCP；返回的是合同条款快照或赎回强度计数，不是公告事件明细，暂不接入。 |
 
 ## 取数方案详情
 
@@ -10250,6 +11072,259 @@
   "upstream": "AKShare / 集思录强赎当前快照",
   "notes": [
     "仅当前资料；强赎状态无公告日期，不能充作公告历史。余额及发行规模单位亿元换算元。"
+  ]
+}
+```
+
+### choice_daily_prices
+
+```json
+{
+  "kind": "mcp_nl",
+  "params": {
+    "query": "$question"
+  },
+  "template": "查询{symbol}，{when}的{labels}。{qualifier}只返回指定指标，含证券代码、日期及单位。金额用人民币元，成交量用股。",
+  "date_evidence": "explicit",
+  "upstream": "东方财富妙想 MCP",
+  "notes": [
+    "东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。",
+    "未核实的字段保持空缺；可用 explore_metric 或 explore_data 继续探索。"
+  ],
+  "provider": "choice",
+  "dataset": "daily_prices",
+  "method": "mx_ashare_finance_data"
+}
+```
+
+### choice_valuations
+
+```json
+{
+  "kind": "mcp_nl",
+  "params": {
+    "query": "$question"
+  },
+  "template": "查询{symbol}，{when}的{labels}。{qualifier}只返回指定指标，含证券代码、日期及单位。金额用人民币元，成交量用股。",
+  "date_evidence": "explicit",
+  "upstream": "东方财富妙想 MCP",
+  "notes": [
+    "东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。",
+    "未核实的字段保持空缺；可用 explore_metric 或 explore_data 继续探索。"
+  ],
+  "provider": "choice",
+  "dataset": "valuations",
+  "method": "mx_ashare_finance_data"
+}
+```
+
+### choice_financials
+
+```json
+{
+  "kind": "mcp_nl",
+  "params": {
+    "query": "$question"
+  },
+  "template": "查询{symbol}，{when}的{labels}。{qualifier}只返回指定指标，含证券代码、日期及单位。金额用人民币元，成交量用股。",
+  "date_evidence": "explicit",
+  "upstream": "东方财富妙想 MCP",
+  "notes": [
+    "东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。",
+    "未核实的字段保持空缺；可用 explore_metric 或 explore_data 继续探索。"
+  ],
+  "provider": "choice",
+  "dataset": "financials",
+  "method": "mx_ashare_finance_data",
+  "qualifier": "合并报表，损益取报告期累计值，资产和股本取期末值；不要单季度。"
+}
+```
+
+### choice_profile
+
+```json
+{
+  "provider": "choice",
+  "dataset": "basic_info",
+  "kind": "mcp_nl",
+  "handler": "basic_info",
+  "method": "mx_ashare_finance_data",
+  "params": {
+    "query": "$question"
+  },
+  "template": "查询{symbol}的公司全称、股票简称、公司英文名称、企业性质、实际控制人、控股股东名称、曾用简称、成立日期、经营范围、总经理、法定代表人、公司简介、联系电话、注册资本、社会信用代码。",
+  "identity_columns": [
+    "证券代码",
+    "股票代码"
+  ],
+  "upstream": "东方财富妙想 MCP",
+  "notes": [
+    "东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。"
+  ]
+}
+```
+
+### choice_region
+
+```json
+{
+  "provider": "choice",
+  "dataset": "basic_info",
+  "kind": "mcp_nl",
+  "handler": "basic_info",
+  "method": "mx_ashare_finance_data",
+  "params": {
+    "query": "$question"
+  },
+  "template": "查询{symbol}的注册地址、办公地址、所属省份、所属城市、上市日期、地域。",
+  "identity_columns": [
+    "证券代码",
+    "股票代码"
+  ],
+  "upstream": "东方财富妙想 MCP",
+  "notes": [
+    "东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。"
+  ]
+}
+```
+
+### choice_classifications
+
+```json
+{
+  "provider": "choice",
+  "dataset": "basic_info",
+  "kind": "mcp_nl",
+  "handler": "basic_info",
+  "method": "mx_ashare_finance_data",
+  "params": {
+    "query": "$question"
+  },
+  "template": "查询{symbol}的申万行业分类、申万行业代码、同花顺行业分类、所属概念板块。",
+  "identity_columns": [
+    "证券代码",
+    "股票代码"
+  ],
+  "upstream": "东方财富妙想 MCP",
+  "notes": [
+    "东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。",
+    "所属申万行业未标明级别时只映射一级，不推定二/三级。"
+  ]
+}
+```
+
+### choice_cb_basic
+
+```json
+{
+  "provider": "choice",
+  "dataset": "cb_basic",
+  "kind": "mcp_nl",
+  "handler": "convertible_bond_wind",
+  "method": "mx_bond_finance_data",
+  "params": {
+    "query": "$question"
+  },
+  "template": "查询可转债{symbol}，{when}的{labels}。逐项返回原始值、明确单位、证券代码及每个指标实际日期。不要用正股替代转债，不要用最新值回填历史；缺失留空。",
+  "upstream": "东方财富妙想 MCP",
+  "notes": [
+    "东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。"
+  ]
+}
+```
+
+### choice_cb_daily
+
+```json
+{
+  "provider": "choice",
+  "dataset": "cb_daily",
+  "kind": "mcp_nl",
+  "handler": "convertible_bond_wind",
+  "method": "mx_bond_finance_data",
+  "params": {
+    "query": "$question"
+  },
+  "template": "查询可转债{symbol}，{when}的{labels}。逐项返回原始值、明确单位、证券代码及每个指标实际日期。不要用正股替代转债，不要用最新值回填历史；缺失留空。",
+  "upstream": "东方财富妙想 MCP",
+  "notes": [
+    "东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。"
+  ]
+}
+```
+
+### choice_contact
+
+```json
+{
+  "provider": "choice",
+  "dataset": "basic_info",
+  "kind": "mcp_nl",
+  "handler": "basic_info",
+  "method": "mx_ashare_finance_data",
+  "params": {
+    "query": "$question"
+  },
+  "template": "查询{symbol}的公司网址、公司电子邮件地址、员工总数、是否上市、上市板块。",
+  "identity_columns": [
+    "证券代码",
+    "股票代码"
+  ],
+  "upstream": "东方财富妙想 MCP",
+  "notes": [
+    "东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。"
+  ]
+}
+```
+
+### choice_technical
+
+```json
+{
+  "provider": "choice",
+  "dataset": "technical_indicators",
+  "kind": "mcp_nl",
+  "method": "mx_ashare_finance_data",
+  "params": {
+    "query": "$question"
+  },
+  "template": "查询{symbol}，{when}的{labels}。日线技术指标，参数按来源默认，给出各分量名称与数值。只返回指定指标，含证券代码、日期及单位。",
+  "date_evidence": "explicit",
+  "upstream": "东方财富妙想 MCP",
+  "label": "妙想技术指标",
+  "technical": {
+    "indicator_id": "CHOICE_TECH",
+    "required_lines": [
+      "K",
+      "D",
+      "J",
+      "DIFF",
+      "DEA",
+      "MACD",
+      "RSI",
+      "BOLL_UP",
+      "BOLL_LOW",
+      "MA5",
+      "MA10",
+      "MA20",
+      "MA30",
+      "MA60",
+      "EXPMA",
+      "CCI",
+      "WR",
+      "BIAS",
+      "PSY",
+      "DMI"
+    ],
+    "adjustment": "native",
+    "temporal": "historical",
+    "default_parameters": {},
+    "parameter_schema": {},
+    "parameter_keys": {}
+  },
+  "notes": [
+    "东方财富妙想 MCP 数据浏览器；日期与单位取自返回表，不从请求补写。采用来源原生口径。",
+    "参数按来源默认，不映射通达信/iFinD/Tushare 分量。"
   ]
 }
 ```

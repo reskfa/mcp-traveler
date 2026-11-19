@@ -176,7 +176,7 @@ async def explore(request:ExplorationRequest):
     for provider in dict.fromkeys(order):
         if used>=request.max_attempts or time.monotonic()-started>=budget:break
         recipe=_recipe(provider,request.dataset,request.name)
-        if not recipe or provider not in ['wind','ifind','tdx']:
+        if not recipe or provider not in config.MCP_PROVIDERS:
             attempts.append({'provider':provider,'status':'skipped','reason':'没有明确的自然语言工具或SDK接口字段映射，不猜测接口'});continue
         if not core.available(provider,c['providers'][provider]):attempts.append({'provider':provider,'status':'skipped','reason':'来源未配置或未启用'});continue
         used+=1;tick=time.monotonic()

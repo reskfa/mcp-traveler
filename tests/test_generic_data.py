@@ -34,7 +34,7 @@ def home(tmp_path,monkeypatch):
     settings={'global_route':['wind','ifind','tdx','tushare','akshare'],'routes':{},'providers':{p:{'enabled':True,'timeout_seconds':10} for p in config.PROVIDERS}}
     config.write_json(tmp_path/'config.json',settings)
     (tmp_path/'.env').write_text('')
-    for p in ['wind','ifind','tdx']:config.write_json(tmp_path/f'local/schemas/{p}.json',{'tools':[capability()] if p=='wind' else []})
+    for p in config.MCP_PROVIDERS:config.write_json(tmp_path/f'local/schemas/{p}.json',{'tools':[capability()] if p=='wind' else []})
     yield tmp_path
     dictionary.DICTIONARY.clear();dictionary.DICTIONARY.update(snapshot)
     from gateway.catalog import refresh_catalog

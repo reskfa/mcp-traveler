@@ -40,6 +40,14 @@ def test_secrets_and_config(home):
     config.save_routes({'daily_prices':['akshare','tushare']})
     assert config.load()['routes']['daily_prices'][0]=='akshare'
 
+def test_public_survives_unknown_provider(home):
+    c=json.loads((home/'config.json').read_text())
+    c['providers']['future_source']={'enabled':False,'timeout_seconds':30}
+    (home/'config.json').write_text(json.dumps(c))
+    public=config.public()
+    assert public['providers']['future_source']['official_url']==''
+    assert 'future_source' in public['providers']
+
 def test_origin_and_paths(home):
     with TestClient(app, raise_server_exceptions=True) as c:
         assert c.get('/api/config').status_code==200

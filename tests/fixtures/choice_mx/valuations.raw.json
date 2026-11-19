@@ -1,0 +1,9 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"data\":[{\"columns\":[\"贵州茅台(600519.SH)\",\"2025-11-05(日)\"],\"items\":[[\"总市值\",\"1.778万亿\"],[\"市净率PB\",\"6.918倍\"],[\"市盈率PE(TTM)\",\"19.75倍\"]],\"meta\":{\"jumpUrlList\":[{\"choiceUrl\":\"EM://stockdatacenter?type=browser&modType=STOCK&code=600519.SH&indId=100000000004751|121:2025-11-05|261:101:元:元,100000000042693|121:2025-11-05,100000000034044|121:2025-11-05\",\"typeName\":\"股票数据浏览器\"}],\"dataType\":\"数据浏览器\"},\"sheetName\":\"贵州茅台(600519.SH)的总市值、市净率PB等\"},{\"columns\":[\"贵州茅台(600519.SH)\",\"2025-11-05\"],\"items\":[[\"流通市值\",\"1.778万亿元\"]],\"meta\":{\"jumpUrlList\":[{\"choiceUrl\":\"EM://stockdatacenter?type=browser&modType=STOCK&code=600519.SH&indId=100000000043007|121:2025-11-05\",\"typeName\":\"股票数据浏览器\"}],\"dataType\":\"数据浏览器\"},\"sheetName\":\"贵州茅台(600519.SH)的流通市值\"}]}"
+    }
+  ],
+  "isError": false
+}

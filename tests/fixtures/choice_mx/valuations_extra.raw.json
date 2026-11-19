@@ -1,0 +1,9 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"data\":[{\"columns\":[\"贵州茅台(600519.SH)\",\"2025-11-05\"],\"items\":[[\"区间换手率(基准.自由流通股本)\",\"0.5489%\"]],\"meta\":{\"jumpUrlList\":[{\"choiceUrl\":\"EM://stockdatacenter?type=browser&modType=STOCK&code=600519.SH&indId=100000000020784|102:2025-11-05|101:2025-11-05\",\"typeName\":\"股票数据浏览器\"}],\"dataType\":\"数据浏览器\"},\"sheetName\":\"贵州茅台(600519.SH)的区间换手率(基准.自由流通股本)\"},{\"columns\":[\"贵州茅台(600519.SH)\",\"2025-11-05(日)\"],\"items\":[[\"涨跌\",\"-8.92元\"],[\"市盈率PE(TTM)\",\"19.75倍\"]],\"meta\":{\"jumpUrlList\":[{\"choiceUrl\":\"EM://stockdatacenter?type=browser&modType=STOCK&code=600519.SH&indId=100000000001103|121:2025-11-05|513:1,100000000034044|121:2025-11-05\",\"typeName\":\"股票数据浏览器\"}],\"dataType\":\"数据浏览器\"},\"sheetName\":\"贵州茅台(600519.SH)的涨跌、市盈率PE(TTM)\"},{\"columns\":[\"贵州茅台(600519.SH)\",\"2025-11-05\"],\"items\":[[\"股息率(TTM)\",\"3.637%\"],[\"量比\",\"0.9673\"]],\"meta\":{\"jumpUrlList\":[{\"choiceUrl\":\"EM://stockdatacenter?type=browser&modType=STOCK&code=600519.SH&indId=100000000045682|121:2025-11-05,100000000017538|121:2025-11-05|205:5\",\"typeName\":\"股票数据浏览器\"}],\"dataType\":\"数据浏览器\"},\"sheetName\":\"贵州茅台(600519.SH)的股息率(TTM)、量比\"}]}"
+    }
+  ],
+  "isError": false
+}

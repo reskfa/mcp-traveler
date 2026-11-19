@@ -16,7 +16,7 @@ from pydantic import BaseModel, Field, model_validator
 from . import config, core, dictionary
 from .parsing import tables, norm_date
 
-REMOTE_PROVIDERS=('wind','ifind','tdx')
+REMOTE_PROVIDERS=config.MCP_PROVIDERS
 IDENTITY_COLUMNS=('symbol','code','ts_code','security_code','证券代码','股票代码','代码','Wind代码')
 DATE_COLUMNS=('date','trade_date','end_date','报告期','报告日期','截止日期','日期','数据日期')
 DATE_PATTERN=r'(20\d{2})[年/-](\d{1,2})[月/-](\d{1,2})日?'
@@ -33,7 +33,7 @@ class ExploreDataRequest(BaseModel):
     period: str | None = None
     start_date: str | None = None
     end_date: str | None = None
-    provider: Literal['auto','tushare','akshare','wind','ifind','tdx']='auto'
+    provider: Literal['auto','tushare','akshare','wind','ifind','tdx','choice']='auto'
     max_attempts: int = Field(default=2,ge=1,le=3)
     auto_save: bool = True
 
@@ -101,7 +101,7 @@ async def ensure_tools(provider,refresh=False):
 
 def runnable(tool):
     name=tool.get('name','')
-    readonly=tool.get('annotations',{}).get('readOnlyHint') is True or bool(re.match(r'^(get_|search_|wenda_.*_query$)',name))
+    readonly=tool.get('annotations',{}).get('readOnlyHint') is True or bool(re.match(r'^(get_|search_|wenda_.*_query$|mx_)',name))
     schema=tool.get('inputSchema',{});props=schema.get('properties',{})
     nl=next((k for k in ('question','query') if props.get(k,{}).get('type')=='string'),None)
     required=set(schema.get('required',[]))

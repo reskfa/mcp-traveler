@@ -7,9 +7,11 @@ from dotenv import dotenv_values
 
 ROOT = Path(os.environ.get('MCP_TRAVELER_HOME', Path(__file__).resolve().parents[1]))
 LOCK = threading.RLock()
-PROVIDERS = ['tushare', 'akshare', 'wind', 'ifind', 'tdx']
-KEYS = {'tushare': 'TUSHARE_TOKEN', 'wind': 'WIND_API_KEY', 'ifind': 'IFIND_API_KEY', 'tdx': 'TDX_API_KEY'}
-OFFICIAL = {'tushare': 'https://tushare.pro/', 'akshare': 'https://akshare.akfamily.xyz/', 'wind': 'https://market.windalice.com/', 'ifind': 'https://mcp.51ifind.com/', 'tdx': 'https://vip.tdx.com.cn/'}
+PROVIDERS = ['tushare', 'akshare', 'wind', 'ifind', 'tdx', 'choice']
+MCP_PROVIDERS = ['wind', 'ifind', 'tdx', 'choice']
+HANDSHAKE_MCP = ['tdx', 'choice']
+KEYS = {'tushare': 'TUSHARE_TOKEN', 'wind': 'WIND_API_KEY', 'ifind': 'IFIND_API_KEY', 'tdx': 'TDX_API_KEY', 'choice': 'CHOICE_MX_KEY'}
+OFFICIAL = {'tushare': 'https://tushare.pro/', 'akshare': 'https://akshare.akfamily.xyz/', 'wind': 'https://market.windalice.com/', 'ifind': 'https://mcp.51ifind.com/', 'tdx': 'https://vip.tdx.com.cn/', 'choice': 'https://mxapi.eastmoney.com/mxds/doc/mcp-install.md'}
 
 def atomic(path, text):
     path = Path(path)
@@ -51,7 +53,7 @@ def public():
         key = keys.get(KEYS.get(name, ''), '')
         p['configured'] = name == 'akshare' or bool(key and '填写' not in key)
         p['key_hint'] = ('••••' + key[-4:]) if p['configured'] and key else ''
-        p['official_url'] = OFFICIAL[name]
+        p['official_url'] = OFFICIAL.get(name, '')
     return redact(c)
 
 def save_provider(name, patch):
