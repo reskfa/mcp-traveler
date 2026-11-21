@@ -1,7 +1,211 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>渡数 · A 股数据网关</title><link rel="stylesheet" href="/static/style.css"></head><body>
-<aside><a class="brand" href="/">渡数<span>DATA TRAVELER / 01</span></a><div class="rail-label">本地研究工作台</div><nav><button data-page="query" class="active">01 <span>试查数据</span></button><button data-page="sources">02 <span>数据源</span></button><button data-page="routes">03 <span>路由顺序</span></button><button data-page="dictionary">04 <span>指标字典</span></button><button data-page="agent">05 <span>接入 Agent</span></button></nav><div class="rail-bottom"><i></i> LOCAL FIRST<br><small>五个来源，一个入口。<br>凭证保存在你的电脑。</small></div></aside>
-<main><header><span>A 股与可转债 / 量价 · 估值 · 条款</span><span class="endpoint">MCP <code id="endpoint"></code></span></header>
-<section id="query" class="page"><div class="eyebrow">EXPLORE THE DATA</div><h1>从一个问题，<br><em>到一张数据表。</em></h1><p class="lede">选择你要看的数据。我们负责连接来源，也保留每一步的出处。</p><div class="workspace"><form id="query-form" class="query-panel"><div class="panel-title">查询条件 <span>01—03</span></div><label>数据类别<select id="dataset"><option value="daily_prices">日线量价</option><option value="technical_indicators">技术指标</option><option value="valuations">估值指标</option><option value="financials">基础财务</option><option value="basic_info">股票基本信息</option><option value="cb_basic">可转债档案与合同条款</option><option value="cb_daily">可转债日线与估值</option><option value="cb_clauses">可转债历史公告事件</option></select></label><label>证券代码<input id="symbol" value="600519.SH" required pattern="[0-9]{6}\.(SH|SZ|BJ)"><small>股票如 600519.SH；可转债如 113050.SH、123001.SZ</small></label><div id="range" class="two"><label>开始日期<input id="start" type="date" value="2025-11-03"></label><label>结束日期<input id="end" type="date" value="2025-11-05"></label></div><label id="single-date" hidden>交易日 <input id="value-date" type="date" value="2025-11-05"><small>清空日期查询最新可用数据</small></label><label id="report" hidden>报告期<input id="period" type="date" value="2024-12-31"></label><label id="adjust-label">复权方式<select id="adjust"><option value="none">不复权</option><option value="qfq">前复权</option><option value="hfq">后复权</option></select></label><label>数据来源<select id="provider"><option value="auto">自动 · 按路由顺序</option><option>tushare</option><option>akshare</option><option>wind</option><option>ifind</option><option>tdx</option></select></label><div id="query-technical" hidden><label>指标族<select id="query-profile"></select></label><div id="query-parameters" class="technical-parameters"></div><small>日频 · 复权口径与可调参数由所选定义决定；从字典选择个人字段时会带入保存的参数。</small></div><fieldset><legend>返回字段</legend><div id="fields"></div></fieldset><button class="primary" id="run">查询数据 <span>↗</span></button></form><div class="result-panel"><div class="panel-title">查询结果 <span id="result-meta">等待查询</span></div><div id="result"><div class="empty"><div class="empty-mark">↗</div><h2>数据在这里汇合</h2><p>先试查茅台的三天日线。<br>再切换来源，看看同一份数据的不同表达。</p><div class="source-tags">TUSHARE · AKSHARE · WIND<br>IFIND · TDX</div></div></div></div></div></section>
-<section id="sources" class="page" hidden><div class="eyebrow">CONNECTED SOURCES</div><h1>你的数据来源。</h1><p class="lede">连接、试用、记录额度。空白密钥输入框表示保留已保存的值。</p><div id="source-list"></div></section>
-<section id="routes" class="page" hidden><div class="eyebrow">CHOOSE THE ORDER</div><h1>让数据，按顺序来。</h1><p class="lede">排在前面的来源优先。缺失字段继续向后补齐，已有数值保留，并标明每个字段的来源。首个正常空结果仍直接返回。</p><div id="route-list"></div><button id="save-routes" class="primary">保存路由 ↗</button><p class="muted">指定来源的试查不会使用自动换源。</p></section>
-<section id="dictionary" class="page" hidden><div class="eyebrow">A DICTIONARY THAT GROWS</div><h1>指标，先找再探。</h1><p class="lede">先搜索常用字典。没有精确匹配时，直接描述需求，让网关继续探索上游能力。</p><div class="dictionary-search"><form id="metric-search-form"><label class="search-term">指标名称<input id="metric-search" type="search" placeholder="例如：营业收入 / revenue / PE" autocomplete="off"></label><label>数据类别<select id="metric-dataset"><option value="">全部类别</option><option value="financials">基础财务</option><option value="valuations">估值指标</option><option value="daily_prices">日线量价</option><option value="technical_indicators">技术指标</option><option value="basic_info">股票基本信息</option><option value="cb_basic">可转债档案与合同条款</option><option value="cb_daily">可转债日线与估值</option><option value="cb_clauses">可转债历史公告事件</option><option value="records">个人记录取法</option></select></label><button class="primary" id="metric-search-button">搜索 ↗</button></form><div class="panel-title">字典结果 <span id="metric-search-status" role="status">输入名称开始搜索</span></div><div id="metric-results"><p class="note">内置定义与个人条目会一起显示。个人字典保存在本地文件中。</p></div></div><details id="data-explore-panel" class="explore-panel"><summary>字典里没有？先向网关探索 <span>↗</span></summary><p class="note">直接描述要找的数据，不用先选类别。常用字典不是能力全集，相近字段也不会替代你的原始需求。</p><div class="explore-layout"><form id="data-explore-form"><label>想找什么<input id="data-request" required maxlength="300" placeholder="例如：前十大股东名单及持股比例"></label><label>证券代码<input id="data-symbol" required pattern="[0-9]{6}\.(SH|SZ|BJ)" value="600519.SH"></label><label>市场类型<select id="data-market"><option value="">按证券代码识别</option><option value="equity">A 股</option><option value="convertible_bond">可转债</option></select></label><label>报告期（可选）<input id="data-period" type="date"><small>查报告期名单时填写；未指定时按来源最新可用结果。</small></label><details class="data-time-options"><summary>按时间区间查找</summary><div class="two"><label>开始日期<input id="data-start" type="date"></label><label>结束日期<input id="data-end" type="date"></label></div></details><label>来源<select id="data-provider"><option value="auto">自动 · 按偏好顺序</option><option>tushare</option><option>akshare</option><option>wind</option><option>ifind</option><option>tdx</option></select></label><label class="data-save-toggle"><input id="data-auto-save" type="checkbox" checked>成功后保存到个人字典</label><div class="actions"><button class="secondary" type="button" id="data-capabilities">先看可用能力</button></div><button class="primary" id="data-explore-run">探索这项数据 ↗</button></form><div id="data-explore-result" aria-live="polite"><div class="empty"><div class="empty-mark">↗</div><h2>从需求找到取法</h2><p>先看厂商能力，再尝试取数。<br>结果保留来源、报告期和探索记录。</p></div></div></div></details><details id="explore-panel" class="explore-panel"><summary>已明确类别？探索数值指标 <span>↗</span></summary><p class="note">此入口支持 A 股数值指标；可转债未知指标请使用上方通用探索并选择可转债。探索会实际调用所选来源；取法明确时默认自动加入个人字典，并告知保存结果；有歧义才需确认。</p><div class="explore-layout"><form id="explore-form"><div class="two"><label>指标名称<input id="explore-name" required placeholder="你想查的指标"></label><label>数据类别<select id="explore-dataset"><option value="financials">基础财务</option><option value="valuations">估值指标</option><option value="daily_prices">日线量价</option><option value="technical_indicators">技术指标</option></select></label></div><label>证券代码<input id="explore-symbol" value="600519.SH" required pattern="[0-9]{6}\.(SH|SZ|BJ)"></label><label id="explore-report">报告期<input id="explore-period" type="date" value="2024-12-31" required></label><label id="explore-single" hidden>交易日<input id="explore-date" type="date" value="2025-11-05"></label><div id="explore-range" class="two" hidden><label>开始日期<input id="explore-start" type="date" value="2025-11-03"></label><label>结束日期<input id="explore-end" type="date" value="2025-11-05"></label></div><div id="explore-technical" hidden><div class="panel-title">技术指标定义 <span>逐个分量保存</span></div><div class="two"><label>指标族<select id="explore-profile"></select></label><label>分量<select id="explore-component"></select></label></div><div id="explore-parameters" class="technical-parameters"></div><p class="note">日频 · 采用所选字段的复权口径，未披露时不推定。</p><p class="note">所选参数与分量会随定义保存。来源采用的算法以返回说明为准。</p></div><div class="two"><label>期望单位 · 可选<input id="explore-unit" placeholder="例如：元、%"></label><label>别名 · 可选<input id="explore-aliases" placeholder="逗号分隔"></label></div><label>数据来源<select id="explore-provider"><option value="auto">自动 · 按路由顺序</option><option>tushare</option><option>akshare</option><option>wind</option><option>ifind</option><option>tdx</option></select></label><button class="primary" id="explore-run">探索指标 ↗</button></form><div id="explore-result" aria-live="polite"><div class="empty"><div class="empty-mark">＋</div><h2>从一次取数，积累一个定义</h2><p>结果会保留实际来源、耗时和尝试记录。</p></div></div></div></details></section><section id="agent" class="page" hidden><div class="eyebrow">ONE LOCAL CONNECTION</div><h1>让 Agent，<br><em>接上你的数据。</em></h1><p class="lede">连接一次，就能让本机 Agent 搜索指标、探索取法，再查询真实数据。</p><article class="agent-card agent-quickstart"><div class="panel-title">最省心的接入方式 <span>COPY &amp; CONNECT</span></div><h2>复制这段话，发给你的 Agent。</h2><p>让它读取精简 Skill，并检查 MCP 连接。需要时才查具体字段和参数。</p><pre id="agent-prompt" aria-label="给 Agent 的接入指令"></pre><button class="primary" data-copy="agent-prompt">复制接入指令 <span>↗</span></button><small class="note">适用于能访问本机服务的 Agent。若客户端不支持自动配置，它会告诉你需要在哪里添加 MCP。</small></article><div class="agent-grid"><article class="agent-card"><div class="panel-title">01 / 连接本地 MCP <span>STREAMABLE HTTP</span></div><p>先保持渡数服务运行，再把下面的地址添加到 Agent 的 MCP 设置中，传输方式选择 <strong>Streamable HTTP</strong>。</p><div class="copy-row"><code id="agent-url"></code><button class="secondary" data-copy="agent-url">复制地址</button></div><p class="note">这是本机服务地址，适用于与渡数运行在同一台电脑的 Agent。云端 Agent 无法直接访问你的 localhost。</p><div class="panel-title">通用配置 JSON <button class="secondary" data-copy="agent-config">复制配置</button></div><pre id="agent-config"></pre><small>各客户端的配置入口和格式可能不同；若提供表单，直接填写上方 URL 和传输方式。</small></article><article class="agent-card"><div class="panel-title">02 / 配上使用说明 <span>SKILL</span></div><h2>先找指标，再问数据。</h2><p>配套 Skill 告诉 Agent 如何选择字段、处理缺失数据，并把成功探索的指标保存成可重复使用的定义。</p><div class="actions"><a class="secondary" href="/api/agent/skill" download="SKILL.md">下载 SKILL.md ↓</a><a href="/api/agent/skill?download=0" target="_blank" rel="noopener">查看 Skill ↗</a></div><p class="note">将文件安装到 Agent 支持的 Skill 目录。它是操作说明；实际取数仍通过上方 MCP 连接完成。</p><ol class="agent-flow"><li><strong>搜索</strong><span>search_metrics 找名称、代码与别名</span></li><li><strong>探索</strong><span>explore_data 字典未命中，先探索上游能力</span></li><li><strong>保存</strong><span>探索成功默认自动保存，有歧义再确认</span></li><li><strong>普通查询</strong><span>使用字段 ID 或 query_id，再次查询</span></li></ol><button class="secondary" id="agent-open-dictionary">先在网页试一次 ↗</button></article></div><div class="agent-tools"><div class="panel-title">Agent 可用工具 <span id="agent-tool-count"></span></div><div id="agent-tool-list"></div></div></section><footer>渡数 / MVP <span>原始结果可追溯 · 缺失字段不猜测</span></footer></main><div id="toast" role="status" hidden></div><script src="/static/app.js"></script></body></html>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>羊毛伞 · A 股与可转债数据网关</title>
+  <meta name="theme-color" content="#f3f6fa">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <aside>
+    <a class="brand" href="/" aria-label="羊毛伞首页">
+      <svg class="brand-mark" viewBox="0 0 46 48" fill="none" aria-hidden="true">
+        <path class="umbrella-canopy" d="M4 23C4 12.5 12.5 4 23 4s19 8.5 19 19c-4.2-2.8-8.4-2.8-12.7 0-4.2-2.8-8.4-2.8-12.6 0C12.5 20.2 8.2 20.2 4 23Z"/>
+        <path class="umbrella-handle" d="M23 4v30.5c0 6.5 9.5 6.5 9.5 0"/>
+        <path class="umbrella-stitch" d="m11 11 1.8 1.8M15 8.5l1.8 1.8"/>
+      </svg>
+      <span class="brand-type">羊毛伞<small>YOUR LOCAL DATA UMBRELLA</small></span>
+    </a>
+    <div class="rail-label">日常使用 / DAILY</div>
+    <nav aria-label="主导航">
+      <button data-page="query" class="active"><b>01</b><span>取数与指标</span><i>↗</i></button>
+      <button data-page="routes"><b>02</b><span>省心路由</span><i>↗</i></button>
+      <button data-page="sources"><b>03</b><span>数据源</span><i>↗</i></button>
+      <button data-page="agent"><b>04</b><span>接入 Agent</span><i>↗</i></button>
+    </nav>
+    <div class="rail-bottom">
+      <div class="local-status"><i></i>一切留在本机</div>
+      <small>来源持续扩展，接口始终一个。<br>厂商密钥不交给 Agent。</small>
+      <code>127.0.0.1 : 8765</code>
+    </div>
+  </aside>
+
+  <main>
+    <header>
+      <span class="header-context">羊毛伞 <b>/</b> A 股与可转债工作台</span>
+      <span class="endpoint"><i></i>本地 MCP 运行中<code id="endpoint"></code></span>
+    </header>
+
+    <section id="query" class="page">
+      <div class="hero-layout">
+        <div class="hero-copy-block">
+          <div class="eyebrow">YOUR SOURCES, ONE UMBRELLA</div>
+          <h1>不用懂接口，<br>也能拿到<em>干净的数据。</em></h1>
+          <p class="lede">告诉羊毛伞你要什么。已接入的来源自动接力，缺字段向后补齐，<br class="desktop-break">每个数值都留下来源——你只管拿走结果。</p>
+        </div>
+        <aside class="hero-note">
+          <svg viewBox="0 0 60 48" fill="none" aria-hidden="true"><path d="M4 25C4 13 15 4 30 4s26 9 26 21c-6-4-12-4-18 0-5-4-11-4-17 0-5-4-11-4-17 0Z"/><path d="M30 4v32c0 8 12 8 12 0"/><path d="M4 25h52"/></svg>
+          <strong>一把伞，<br>接住每个 Agent。</strong>
+          <p>一个本地 MCP，连接 Claude、<br>Codex 与你的任何工具。</p>
+        </aside>
+      </div>
+
+      <div class="workspace-switch" role="tablist" aria-label="取数与指标">
+        <button class="active" data-open-page="query" role="tab" aria-selected="true">手动试查</button>
+        <button data-open-page="dictionary" role="tab" aria-selected="false">指标字典</button>
+        <span>先试查已有指标；新取法交给 Agent 探索。</span>
+      </div>
+
+      <div class="workspace">
+        <form id="query-form" class="query-panel">
+          <div class="panel-title"><strong>今天想查什么？</strong><span class="auto-badge"><i></i>智能路由 · 缺项自动补齐</span></div>
+          <div class="query-grid">
+            <label class="query-dataset">数据类别
+              <select id="dataset">
+                <option value="daily_prices">日线量价</option>
+                <option value="technical_indicators">技术指标</option>
+                <option value="valuations">估值指标</option>
+                <option value="financials">基础财务</option>
+                <option value="basic_info">股票基本信息</option>
+                <option value="cb_basic">可转债档案与合同条款</option>
+                <option value="cb_daily">可转债日线与估值</option>
+                <option value="cb_clauses">可转债历史公告事件</option>
+              </select>
+            </label>
+            <label class="query-symbol">证券代码
+              <input id="symbol" value="600519.SH" required pattern="[0-9]{6}\.(SH|SZ|BJ)">
+              <small>股票如 600519.SH；可转债如 113050.SH、123001.SZ</small>
+            </label>
+            <div id="range" class="two query-range"><label>开始日期<input id="start" type="date" value="2025-11-03"></label><label>结束日期<input id="end" type="date" value="2025-11-05"></label></div>
+            <label id="single-date" hidden>交易日<input id="value-date" type="date" value="2025-11-05"><small>清空日期查询最新可用数据</small></label>
+            <label id="report" hidden>报告期<input id="period" type="date" value="2024-12-31"></label>
+            <label id="adjust-label">复权方式
+              <select id="adjust"><option value="none">不复权</option><option value="qfq">前复权</option><option value="hfq">后复权</option></select>
+            </label>
+            <label class="query-provider">数据来源
+              <select id="provider"><option value="auto">自动 · 按路由顺序</option></select>
+            </label>
+          </div>
+          <div id="query-technical" hidden>
+            <label>指标族<select id="query-profile"></select></label>
+            <div id="query-parameters" class="technical-parameters"></div>
+            <small>日频 · 复权口径与可调参数由所选定义决定；从字典选择个人字段时会带入保存的参数。</small>
+          </div>
+          <fieldset>
+            <legend>返回字段 <span>点击选择，支持中文或字段代码搜索</span></legend>
+            <div id="fields"></div>
+          </fieldset>
+          <div class="query-submit"><p>你选数据，来源交给我们。<br><span>已有值不覆盖，缺失不猜测。</span></p><button class="primary" id="run">开始取数 <span>↗</span></button></div>
+        </form>
+
+        <div class="result-panel">
+          <div class="panel-title"><strong>查询结果</strong><span id="result-meta">等待查询</span></div>
+          <div id="result">
+            <div class="empty"><div class="empty-mark">↗</div><h2>数据在这里汇合</h2><p>先试查茅台的三天日线。<br>再切换来源，看看同一份数据的不同表达。</p><div class="source-tags" id="source-tags">正在读取已接入来源…</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sources" class="page" hidden>
+      <div class="eyebrow">CONNECTED SOURCES</div>
+      <h1>你的数据来源。</h1>
+      <p class="lede">连接、试用、记录额度。空白密钥输入框表示保留已保存的值。</p>
+      <div id="source-list"></div>
+    </section>
+
+    <section id="routes" class="page" hidden>
+      <div class="eyebrow">CHOOSE THE ORDER</div>
+      <h1>让数据，按顺序来。</h1>
+      <p class="lede">排在前面的来源优先。缺失字段继续向后补齐，已有数值保留，并标明每个字段的来源。首个正常空结果仍直接返回。</p>
+      <div id="route-list"></div>
+      <button id="save-routes" class="primary">保存路由 <span>↗</span></button>
+      <p class="muted">指定来源的试查不会使用自动换源。</p>
+    </section>
+
+    <section id="dictionary" class="page" hidden>
+      <div class="workspace-switch" role="tablist" aria-label="取数与指标">
+        <button data-open-page="query" role="tab" aria-selected="false">手动试查</button>
+        <button class="active" data-open-page="dictionary" role="tab" aria-selected="true">指标字典</button>
+        <span>内置指标与个人取法，都可以直接复用。</span>
+      </div>
+      <div class="eyebrow">A DICTIONARY THAT GROWS</div>
+      <h1>找到指标，直接试查。</h1>
+      <p class="lede">搜索内置指标与 Agent 保存的个人取法。没找到的新数据，由 Agent 探索、核实并保存。</p>
+      <div class="dictionary-search">
+        <form id="metric-search-form">
+          <label class="search-term">指标名称<input id="metric-search" type="search" placeholder="例如：营业收入 / revenue / PE" autocomplete="off"></label>
+          <label>数据类别
+            <select id="metric-dataset"><option value="">全部类别</option><option value="financials">基础财务</option><option value="valuations">估值指标</option><option value="daily_prices">日线量价</option><option value="technical_indicators">技术指标</option><option value="basic_info">股票基本信息</option><option value="cb_basic">可转债档案与合同条款</option><option value="cb_daily">可转债日线与估值</option><option value="cb_clauses">可转债历史公告事件</option><option value="records">个人记录取法</option></select>
+          </label>
+          <button class="primary" id="metric-search-button">搜索 <span>↗</span></button>
+        </form>
+        <div class="panel-title"><strong>字典结果</strong><span id="metric-search-status" role="status">输入名称开始搜索</span></div>
+        <div id="metric-results"><p class="note">内置定义与个人条目会一起显示。个人字典保存在本地文件中。</p></div>
+      </div>
+
+      <details id="data-explore-panel" class="explore-panel" hidden>
+        <summary>复用已保存的数据取法 <span>↗</span></summary>
+        <p class="note">这是 Agent 已核实并保存的取法。可更换证券和时间再次查询，不会在网页重新探索。</p>
+        <div class="explore-layout">
+          <form id="data-explore-form">
+            <label>取法名称<input id="data-request" required maxlength="300" placeholder="选择一项已保存取法" readonly></label>
+            <label>证券代码<input id="data-symbol" required pattern="[0-9]{6}\.(SH|SZ|BJ)" value="600519.SH"></label>
+            <label>市场类型<select id="data-market"><option value="">按证券代码识别</option><option value="equity">A 股</option><option value="convertible_bond">可转债</option></select></label>
+            <label>报告期（可选）<input id="data-period" type="date"><small>查报告期名单时填写；未指定时按来源最新可用结果。</small></label>
+            <details class="data-time-options"><summary>按时间区间查找</summary><div class="two"><label>开始日期<input id="data-start" type="date"></label><label>结束日期<input id="data-end" type="date"></label></div></details>
+            <label>来源<select id="data-provider" disabled><option value="auto">沿用取法保存的来源</option></select></label>
+            <label class="data-save-toggle" hidden><input id="data-auto-save" type="checkbox">成功后保存到个人字典</label>
+            <div class="actions"><button class="secondary" type="button" id="data-capabilities" hidden>先看可用能力</button></div>
+            <button class="primary" id="data-explore-run">按已保存取法查询 <span>↗</span></button>
+          </form>
+          <div id="data-explore-result" aria-live="polite"><div class="empty"><div class="empty-mark">↗</div><h2>复用已保存的取法</h2><p>更换证券或时间后查询。<br>新数据探索请交给已接入的 Agent。</p></div></div>
+        </div>
+      </details>
+    </section>
+
+    <section id="agent" class="page" hidden>
+      <div class="eyebrow">ONE LOCAL CONNECTION</div>
+      <h1>让 Agent，<br><em>接上你的数据。</em></h1>
+      <p class="lede">连接一次，就能让本机 Agent 搜索指标、探索取法，再查询真实数据。</p>
+      <article class="agent-card agent-quickstart">
+        <div class="panel-title"><strong>最省心的接入方式</strong><span>COPY &amp; CONNECT</span></div>
+        <h2>复制这段话，发给你的 Agent。</h2>
+        <p>让它读取精简 Skill，并检查 MCP 连接。需要时才查具体字段和参数。</p>
+        <pre id="agent-prompt" aria-label="给 Agent 的接入指令"></pre>
+        <button class="primary" data-copy="agent-prompt">复制接入指令 <span>↗</span></button>
+        <small class="note">适用于能访问本机服务的 Agent。若客户端不支持自动配置，它会告诉你需要在哪里添加 MCP。</small>
+      </article>
+      <div class="agent-grid">
+        <article class="agent-card">
+          <div class="panel-title"><strong>01 / 连接本地 MCP</strong><span>STREAMABLE HTTP</span></div>
+          <p>先保持羊毛伞服务运行，再把下面的地址添加到 Agent 的 MCP 设置中，传输方式选择 <strong>Streamable HTTP</strong>。</p>
+          <div class="copy-row"><code id="agent-url"></code><button class="secondary" data-copy="agent-url">复制地址</button></div>
+          <p class="note">这是本机服务地址，适用于与羊毛伞运行在同一台电脑的 Agent。云端 Agent 无法直接访问你的 localhost。</p>
+          <div class="panel-title"><strong>通用配置 JSON</strong><button class="secondary" data-copy="agent-config">复制配置</button></div>
+          <pre id="agent-config"></pre>
+          <small>各客户端的配置入口和格式可能不同；若提供表单，直接填写上方 URL 和传输类型。</small>
+        </article>
+        <article class="agent-card">
+          <div class="panel-title"><strong>02 / 配上使用说明</strong><span>SKILL</span></div>
+          <h2>先找指标，再问数据。</h2>
+          <p>配套 Skill 告诉 Agent 如何选择字段、处理缺失数据，并把成功探索的指标保存成可重复使用的定义。</p>
+          <div class="actions"><a class="secondary" href="/api/agent/skill" download="SKILL.md">下载 SKILL.md ↓</a><a href="/api/agent/skill?download=0" target="_blank" rel="noopener">查看 Skill ↗</a></div>
+          <p class="note">将文件安装到 Agent 支持的 Skill 目录。它是操作说明；实际取数仍通过上方 MCP 连接完成。</p>
+          <ol class="agent-flow"><li><strong>搜索</strong><span>search_metrics 找名称、代码与别名</span></li><li><strong>探索</strong><span>explore_data 字典未命中，先探索上游能力</span></li><li><strong>保存</strong><span>探索成功默认自动保存，有歧义再确认</span></li><li><strong>普通查询</strong><span>使用字段 ID 或 query_id，再次查询</span></li></ol>
+          <button class="secondary" id="agent-open-dictionary">先在网页试一次 ↗</button>
+        </article>
+      </div>
+      <div class="agent-tools"><div class="panel-title"><strong>Agent 可用工具</strong><span id="agent-tool-count"></span></div><div id="agent-tool-list"></div></div>
+    </section>
+
+    <footer><span>羊毛伞 / LOCAL DATA UMBRELLA</span><span>原始结果可追溯 · 缺失字段不猜测</span></footer>
+  </main>
+  <div id="toast" role="status" hidden></div>
+  <script src="/static/app.js"></script>
+</body>
+</html>

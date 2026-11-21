@@ -102,3 +102,54 @@ def test_real_wind_replay_and_future_year_binding():
     assert c['data'][0]['date']=='2025-11-06'
     # Year-only evidence cannot establish a nonannual reporting date.
     assert e.validate_response(request.model_copy(update={'period':'2024-09-30'}),'wind',recipe,raw)[0] is None
+
+
+@pytest.mark.parametrize('raw',[
+    response(code='600001'),response(day='2024-12-31'),response(unit=''),response(column='其他指标')])
+def test_validation_differences_still_expose_original_rows(raw):
+    request=req();recipe=e._recipe('ifind','valuations')
+    assert e.validate_response(request,'ifind',recipe,raw)[0] is None
+    candidate=e._unverified_candidate(request,'ifind',recipe,raw,['存在差异'])
+    assert candidate['row_count']==1 and candidate['data'][0]
+    assert candidate['validation_status']=='unverified'
+    assert candidate['warnings']==['存在差异']
+
+
+def test_name_difference_returns_real_value_without_saving(tmp_path):
+    raw={'columns':[{'name':'Wind代码'},{'name':'证券简称'},{'name':'2024年研发投入总额占营业收入比例','unit':'%'}], 'rows':[['600519.SH','贵州茅台',0.41]]}
+    request=e.ExplorationRequest(dataset='financials',symbol='600519.SH',period='2024-12-31',name='研发投入占营业收入比例',unit='%',auto_save=True)
+    settings={'routes':{'financials':['wind']},'providers':{'wind':{'timeout_seconds':60}}}
+    assert e.validate_response(request,'wind',e._recipe('wind','financials'),raw)[0] is None
+    with patch.object(e.config,'ROOT',tmp_path),patch.object(e.config,'load',return_value=settings),patch.object(e.config,'redact',side_effect=lambda x:x),patch.object(e.core,'available',return_value=True),patch.object(e.core,'record'),patch.object(e,'invoke',new=AsyncMock(return_value=raw)):
+        result=asyncio.run(e.explore(request))
+        assert result['status']=='needs_confirmation' and not result['saved']
+        assert result['candidate'] is None and result['validation_status']=='unverified'
+        assert result['data'][0]['2024年研发投入总额占营业收入比例']==0.41
+        assert result['candidates'][0]['numeric_columns_by_row']==[['2024年研发投入总额占营业收入比例']]
+        assert result['attempts'][0]['candidate_rows']==1
+        assert json.loads((tmp_path/'local/explorations'/f"{result['id']}.json").read_text())['data']==result['data']
+        with pytest.raises(ValueError,match='可保存'):asyncio.run(e.save_exploration(result['id']))
+    assert not (tmp_path/'local/user_dictionary.json').exists()
+
+
+def test_unverified_rows_do_not_stop_later_exact_match(tmp_path):
+    settings={'routes':{'valuations':['wind','ifind']},'providers':{p:{'timeout_seconds':60} for p in ['wind','ifind']}}
+    invoke=AsyncMock(side_effect=[response(column='其他指标'),response()])
+    with patch.object(e.config,'ROOT',tmp_path),patch.object(e.config,'load',return_value=settings),patch.object(e.config,'redact',side_effect=lambda x:x),patch.object(e.core,'available',return_value=True),patch.object(e.core,'record'),patch.object(e,'invoke',new=invoke):
+        result=asyncio.run(e.explore(req(auto_save=False,max_attempts=2)))
+    assert result['status']=='success' and invoke.await_count==2
+    assert result['candidate']['data'][0][result['candidate']['field']]==3
+    assert len(result['candidates'])==1 and result['candidates'][0]['data'][0]['其他指标']==3
+
+
+def test_technical_parameter_difference_returns_vendor_lines(tmp_path):
+    raw={'structuredContent':{'error_code':0,'data':[{'stock_code':'600519','period':'4','date_list':[20261112,20261113], 'indicator':[{'name':'KDJ','params_used':{'N':'9','M1':'3','M2':'3'},'line':['K','D','J'],'data':[[10,20,-10],[30,25,40]]}]}]}}
+    request=e.ExplorationRequest(dataset='technical_indicators',symbol='600519.SH',date='2026-11-13',name='KDJ J值',parameters={'n':14},auto_save=False)
+    settings={'routes':{'technical_indicators':['tdx']},'providers':{'tdx':{'timeout_seconds':60}}}
+    with patch.object(e.config,'ROOT',tmp_path),patch.object(e.config,'load',return_value=settings),patch.object(e.config,'redact',side_effect=lambda x:x),patch.object(e.core,'available',return_value=True),patch.object(e.core,'record'),patch.object(e,'invoke',new=AsyncMock(return_value=raw)):
+        result=asyncio.run(e.explore(request))
+    assert result['status']=='needs_confirmation' and not result['saved']
+    assert result['candidate'] is None and result['validation_status']=='unverified'
+    assert [row['J'] for row in result['data']]==[-10,40]
+    assert result['data'][0]['params_used']['N']=='9'
+    assert result['candidates'][0]['warnings']

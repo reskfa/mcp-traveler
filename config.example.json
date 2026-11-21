@@ -59,6 +59,15 @@
       }
     }
   },
+  "market": {
+    "batch_size": 50,
+    "max_concurrency": 4,
+    "per_provider_concurrency": 2,
+    "min_request_interval_seconds": 0.25,
+    "max_elapsed_seconds": 900,
+    "max_symbols": 10000,
+    "max_symbol_days": 250000
+  },
   "routes": {
     "daily_prices": [
       "tushare",

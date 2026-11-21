@@ -179,3 +179,170 @@ def test_unverified_rows_return_without_relabeling_or_save(home,monkeypatch):
     assert r['candidates'][0]['warnings']
     assert not (home/'local/user_dictionary.json').exists()
     assert json.loads(Path(r['data_path']).read_text())['data']==r['data']
+
+
+def market_response(count=120,date='2026-11-20'):
+    return {'content':[{'type':'text','text':json.dumps({'summary':f'共计 {count} 条数据','data':{
+        'columns':[{'name':'债券代码'},{'name':'交易日期'},{'name':'收盘价','unit':'元'},{'name':'涨跌幅','unit':'%'}],
+        'rows':[[f'{120000+i:06d}.SZ',date,100+i,i/10] for i in range(count)]}},ensure_ascii=False)}]}
+
+
+def market_request(**kw):
+    return g.ExploreDataRequest(**{'request':'收盘价及涨跌幅','query_scope':'market','market_kind':'daily',
+        'market_hint':'convertible_bond','start_date':'2026-11-20','end_date':'2026-11-20',**kw})
+
+
+def test_market_request_requires_no_symbol_and_explicit_kind():
+    assert market_request().symbol is None
+    with pytest.raises(ValueError,match='不接受symbol'):
+        market_request(symbol='120001.SZ')
+    with pytest.raises(ValueError,match='market_kind'):
+        g.ExploreDataRequest(request='日线',query_scope='market',market_hint='equity')
+    with pytest.raises(ValueError,match='有效symbol'):
+        g.ExploreDataRequest(request='前十大股东')
+
+
+def test_market_validation_preserves_identities_and_full_coverage():
+    result,errors=g.validate_market_records(market_response(),market_request())
+    assert not errors and len(result['data'])==120
+    assert result['coverage']['status']=='complete'
+    assert result['coverage']['distinct_symbols']==120
+    assert len({row['symbol'] for row in result['data']})==120
+    reused,_=g.validate_market_records(market_response(date='2026-11-19'),market_request())
+    assert reused is None
+
+
+def test_market_choice_security_rows_by_date_columns_are_expanded():
+    raw={'data':[{'columns':['涨跌幅','2026-11-20'],'items':[
+        ['珀莱转债(113634.SH)','0.6035'],['煜邦转债(118039.SH)','-0.07696']]}]}
+    wrapped={'content':[{'type':'text','text':json.dumps(raw,ensure_ascii=False)}]}
+    for payload in (raw,wrapped):
+        result,errors=g.validate_market_records(payload,market_request(request='涨跌幅'))
+        assert not errors and len(result['data'])==2
+        assert [row['symbol'] for row in result['data']]==['113634.SH','118039.SH']
+        assert {row['date'] for row in result['data']}=={'2026-11-20'}
+        assert result['data'][0]['涨跌幅']=='0.6035'
+    assert raw['data'][0]['columns']==['涨跌幅','2026-11-20']
+
+
+def test_market_conflicting_duplicate_not_saved():
+    raw=json.loads(market_response(count=2)['content'][0]['text'])
+    raw['data']['rows'].append(['120000.SZ','2026-11-20',999,0])
+    result,_=g.validate_market_records(raw,market_request())
+    assert result['coverage']['status']=='partial' and not result['save_allowed']
+    assert any('冲突' in note for note in result['notes'])
+
+
+def test_market_explore_save_reuse_and_no_100_row_trim(home,monkeypatch):
+    config.write_json(home/'local/schemas/wind.json',{'tools':[capability('mx_ashare_finance_data','全部A股和可转债日线行情、收盘价、涨跌幅')]})
+    calls=[]
+    async def invoke(provider,q,timeout):
+        if q.get('probe'):return {'tools':[]}
+        args=q['generic_call']['arguments'];calls.append(args)
+        text=args['question']
+        assert 'size' not in args and '120000.SZ' not in text
+        assert '逐券日行情' in text and '成交统计' in text
+        return market_response(date='2026-11-19' if '2026-11-19' in text else '2026-11-20')
+    monkeypatch.setattr(core,'invoke',invoke)
+    async def check():
+        explored=await g.explore_data(market_request())
+        assert explored['status']=='success' and explored['saved'] and explored['complete']
+        assert len(explored['data'])==120 and explored['row_count']==120
+        definition=json.loads((home/'local/user_dictionary.json').read_text())['data_queries'][explored['saved_query_id']]
+        assert definition['query_scope']=='market' and definition['market_kind']=='daily'
+        assert 'symbols' not in definition and '120000.SZ' not in json.dumps(definition)
+        reused=await g.query_data(g.DataQueryRequest(query_id=explored['saved_query_id'],start_date='2026-11-19',end_date='2026-11-19'))
+        assert reused['reused'] and len(reused['data'])==120
+        assert {row['date'] for row in reused['data']}=={'2026-11-19'}
+        assert len(calls)==2 and all('size' not in args for args in calls)
+        found=await g.search_capabilities('收盘价',market_hint='convertible_bond',query_scope='market',market_kind='daily')
+        assert any(row.get('query_id')==explored['saved_query_id'] for row in found['results'])
+    asyncio.run(check())
+
+
+def test_market_rejects_fixed_size_tool():
+    tool=capability()
+    tool['inputSchema']['properties']['size']={'type':'integer'}
+    tool['inputSchema']['required'].append('size')
+    with pytest.raises(ValueError,match='固定size'):
+        g.build_arguments(tool,market_request())
+
+
+def test_market_rejects_wrong_security_type_and_substitute_columns():
+    raw=json.loads(market_response(count=1)['content'][0]['text'])
+    raw['data']['rows'][0][0]='600519.SH'
+    assert g.validate_market_records(raw,market_request())[0] is None
+    raw=json.loads(market_response(count=1)['content'][0]['text'])
+    raw['data']['columns']=[raw['data']['columns'][0],raw['data']['columns'][1],raw['data']['columns'][3]]
+    raw['data']['rows']=[[row[0],row[1],row[3]] for row in raw['data']['rows']]
+    assert g.validate_market_records(raw,market_request(request='收盘价'))[0] is None
+
+
+def test_market_universe_historical_filter_and_standard_fields():
+    raw={'data':{'columns':[{'name':'债券代码'},{'name':'债券简称'},{'name':'上市日期'},{'name':'摘牌日期'}],
+        'rows':[['120001.SZ','存续','2020-01-01',None],['120002.SZ','已退出','2020-01-01','2024-01-01'],
+                ['120003.SZ','尚未上市','2025-01-01',None],['120004.SZ','过早退出','2020-01-01','2022-01-01']]}}
+    request=market_request(request='证券名单',market_kind='universe',start_date=None,end_date='2023-01-01')
+    result,errors=g.validate_market_records(raw,request)
+    assert not errors and [row['symbol'] for row in result['data']]==['120001.SZ','120002.SZ']
+    assert result['data'][1]['delist_date']=='2024-01-01'
+    assert result['columns']['list_date']['label']=='上市日期'
+    assert result['coverage']['status']=='not_verified'
+
+
+def test_market_empty_requested_values_are_not_complete():
+    raw=json.loads(market_response(count=2)['content'][0]['text'])
+    for row in raw['data']['rows']:row[2]=None
+    assert g.validate_market_records(raw,market_request(request='收盘价'))[0] is None
+    raw['data']['rows'][1][2]=101
+    result,_=g.validate_market_records(raw,market_request())
+    assert result['coverage']['status']=='partial' and result['save_allowed']
+    universe={'data':{'columns':[{'name':'债券代码'},{'name':'债券简称'},{'name':'上市日期'}],
+                      'rows':[['120001.SZ',None,'2020-01-01']]}}
+    request=market_request(request='证券名单',market_kind='universe',start_date=None,end_date=None)
+    assert g.validate_market_records(universe,request)[0] is None
+
+
+def test_market_multiday_total_count_does_not_prove_daily_coverage():
+    request=market_request(start_date='2026-11-19',end_date='2026-11-20')
+    result,_=g.validate_market_records(market_response(count=1,date='2026-11-19'),request)
+    assert result['coverage']['status']=='not_verified'
+    assert '逐交易日' in result['coverage']['note']
+
+
+def test_market_unrelated_header_cannot_supply_trade_date():
+    raw={'data':{'columns':[{'name':'债券代码'},{'name':'2026-11-19公司名称'},{'name':'收盘价'}],
+                 'rows':[['120001.SZ','某公司',100]]}}
+    assert g.validate_market_records(raw,market_request(request='收盘价'))[0] is None
+
+
+def test_market_choice_tool_priority_and_same_provider_retry(home,monkeypatch):
+    def choice_tool(name,description):
+        tool=capability(name,description)
+        schema=tool['inputSchema'];schema['properties']['query']=schema['properties'].pop('question')
+        schema['required']=['query']
+        return tool
+    tools=[choice_tool('mx_index_block_finance_data','市场板块指数成交统计'),
+           choice_tool('mx_ashare_finance_data','全部A股日线行情、收盘价、涨跌幅'),
+           choice_tool('mx_bond_finance_data','全部可转债日线行情、收盘价、涨跌幅')]
+    config.write_json(home/'local/schemas/choice.json',{'tools':tools})
+    async def search():
+        found=await g.search_capabilities('收盘价及涨跌幅',provider='choice',query_scope='market',
+                                          market_kind='daily',market_hint='convertible_bond')
+        upstream=[row['tool'] for row in found['results'] if row.get('kind')=='upstream_tool']
+        assert upstream[0]=='mx_bond_finance_data'
+        assert 'mx_ashare_finance_data' not in upstream
+    asyncio.run(search())
+
+    calls=[]
+    async def invoke(provider,q,timeout):
+        tool=q['generic_call']['tool'];calls.append(tool)
+        if tool=='mx_bond_finance_data':return market_response()
+        return {'data':{'columns':[{'name':'日期范围'}],'rows':[['2026-11-20']]}}
+    monkeypatch.setattr(core,'invoke',invoke)
+    capabilities=[{'provider':'choice','tool':'mx_index_block_finance_data'},
+                  {'provider':'choice','tool':'mx_bond_finance_data'}]
+    result=asyncio.run(g.run_capabilities(market_request(),capabilities))
+    assert result['status']=='success' and result['tool']=='mx_bond_finance_data'
+    assert result['network_calls']==2 and len(calls)==2
+    assert [attempt['status'] for attempt in result['attempts']]==['needs_confirmation','success']

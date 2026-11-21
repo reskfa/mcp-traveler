@@ -66,6 +66,47 @@ def _clean(key):
     s=re.sub(r'(?:[（(]?单位\s*[:：]?\s*|[（(])'+_UNIT+r'[）)]?$', '',s)
     return compact(s)
 
+def _numeric_columns(row,units):
+    metadata={'symbol','code','ts_code','security_code','date','trade_date','end_date','period','证券代码','股票代码','代码','Wind代码','排名','名次','序号'}
+    columns=[]
+    for key,value in row.items():
+        if isinstance(value,bool) or key in metadata or any(word in str(key) for word in ['日期','报告期','报告日','交易日','截止日期']):continue
+        if number(value,_unit(key,value,units)) is not None:columns.append(key)
+    return columns
+
+def _technical_rows(raw):
+    """Expose actual vendor lines even when parameters or units need review."""
+    from .technical import body
+    rows=[]
+    try:obj=body(raw)
+    except (RuntimeError,TypeError,AttributeError):return rows
+    for stock in obj.get('data',[]) if isinstance(obj,dict) else []:
+        if not isinstance(stock,dict):continue
+        dates=stock.get('date_list',[])
+        for indicator in stock.get('indicator',[]) if isinstance(stock.get('indicator',[]),list) else []:
+            if not isinstance(indicator,dict):continue
+            lines=indicator.get('line',[]);values=indicator.get('data',[])
+            if not isinstance(lines,list) or not isinstance(values,list):continue
+            for day,items in zip(dates,values):
+                if not isinstance(items,list):continue
+                row={'symbol':stock.get('stock_code'),'date':norm_date(str(day)) or day,'period':stock.get('period'),'indicator':indicator.get('name'),'params_used':indicator.get('params_used',{})}
+                row.update(zip(lines,items))
+                if _numeric_columns(row,{}):rows.append(row)
+    return rows
+
+def _unverified_candidate(request,provider,recipe,raw,reasons):
+    """Return evidence without turning semantic differences into an empty result."""
+    if request.dataset=='technical_indicators':
+        rows=_technical_rows(raw);units=[{} for _ in rows];numeric=[_numeric_columns(row,{}) for row in rows]
+    else:
+        extracted=[]
+        for row,row_units in tables(raw):
+            columns=_numeric_columns(row,row_units)
+            if columns:extracted.append((row,row_units,columns))
+        rows=[x[0] for x in extracted];units=[x[1] for x in extracted];numeric=[x[2] for x in extracted]
+    if not rows:return None
+    return {'provider':provider,'tool':recipe.get('method'),'data':rows,'units_by_row':units,'numeric_columns_by_row':numeric,'warnings':list(dict.fromkeys(reasons)),'validation_status':'unverified','row_count':len(rows)}
+
 def validate_response(request,provider,recipe,raw):
     """Only table-owned evidence is trusted, never the echoed question."""
     if request.dataset=='technical_indicators':
@@ -170,7 +211,7 @@ async def explore(request:ExplorationRequest):
         q=core.Query(**{**request.model_dump(exclude={'name','unit','aliases','max_attempts','fields'}),'fields':known})
         return {'status':'existing','existing_field':known[0],'result':await core.query(q),'attempts':[]}
     if len(known)>1:return {'status':'needs_confirmation','matches':known,'attempts':[]}
-    started=time.monotonic();rid=uuid.uuid4().hex;attempts=[];candidate=None;raws=[];c=config.load();used=0
+    started=time.monotonic();rid=uuid.uuid4().hex;attempts=[];candidate=None;raws=[];candidates=[];c=config.load();used=0
     order=c['routes'][request.dataset] if request.provider=='auto' else [request.provider]
     budget=request.max_attempts*60
     for provider in dict.fromkeys(order):
@@ -184,16 +225,23 @@ async def explore(request:ExplorationRequest):
             raw=await invoke(provider,request,recipe,min(60,c['providers'][provider].get('timeout_seconds',60),budget-(tick-started)))
             raws.append({'provider':provider,'recipe':recipe,'raw':raw})
             candidate,reasons=validate_response(request,provider,recipe,raw)
-            attempts.append({'provider':provider,'status':'success' if candidate else 'needs_confirmation','reasons':reasons,'seconds':round(time.monotonic()-tick,2)})
+            unverified=None if candidate else _unverified_candidate(request,provider,recipe,raw,reasons)
+            if unverified:candidates.append(unverified)
+            attempts.append({'provider':provider,'status':'success' if candidate else 'needs_confirmation','reasons':reasons,'candidate_rows':unverified['row_count'] if unverified else 0,'seconds':round(time.monotonic()-tick,2)})
             core.record(provider,bool(candidate),None if candidate else '；'.join(reasons))
             if candidate:break
         except Exception as exc:
             message=config.redact(str(exc) or '探索超时');core.record(provider,False,message)
             attempts.append({'provider':provider,'status':'error','error':message,'seconds':round(time.monotonic()-tick,2)})
     folder=config.ROOT/'local/explorations';raw_path=folder/f'{rid}.raw.json'
-    answer={'id':rid,'status':'success' if candidate else ('needs_confirmation' if raws else 'failed'),'request':request.model_dump(),'network_calls':used,'attempt_limit':request.max_attempts,'attempts':attempts,'candidate':candidate,'data':candidate['data'] if candidate else [],'elapsed_seconds':round(time.monotonic()-started,2),'raw_path':str(raw_path),'notes':['来源算法允许不同；只有字段含义、单位、证券、日期及财务口径明确时可保存。']}
+    primary=candidates[0] if not candidate and candidates else None
+    answer={'id':rid,'status':'success' if candidate else ('needs_confirmation' if raws else 'failed'),'request':request.model_dump(),'network_calls':used,'attempt_limit':request.max_attempts,'attempts':attempts,'candidate':candidate,'candidates':candidates,'data':candidate['data'] if candidate else primary['data'] if primary else [],'elapsed_seconds':round(time.monotonic()-started,2),'raw_path':str(raw_path),'notes':['来源算法允许不同；自动校验差异不阻断候选展示，只有精确匹配的取法才可保存。']}
     from .coverage import coverage
-    answer['coverage']=coverage(raws,answer['data'])
+    if primary:
+        answer.update(provider=primary['provider'],tool=primary['tool'],validation_status='unverified',complete=False,coverage={'status':'unverified','note':'原始候选数据，未通过自动校验；保留原列名、证券、日期和数值，不作标准化推断。'})
+        answer['notes'].extend(primary['warnings'])
+        answer['notes'].append('已返回可解析的候选数据，可结合疑点比较或接受；本次不自动保存取法。')
+    else:answer['coverage']=coverage(raws,answer['data'])
     answer['notes'].append(answer['coverage']['note'])
     answer['saved']=False
     config.write_json(raw_path,config.redact(raws));config.write_json(folder/f'{rid}.json',config.redact(answer))

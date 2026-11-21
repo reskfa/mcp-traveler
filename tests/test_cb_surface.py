@@ -84,7 +84,7 @@ def test_saved_cb_recipe_is_scoped_and_reuses_market(tmp_path,monkeypatch):
 def test_http_cb_market_hint_contract(monkeypatch):
     import httpx
     module=importlib.import_module('gateway.app')
-    async def capability(query,provider,refresh,limit,market_hint=None):return {'market_hint':market_hint}
+    async def capability(query,provider,refresh,limit,market_hint=None,query_scope='security',market_kind=None):return {'market_hint':market_hint,'query_scope':query_scope,'market_kind':market_kind}
     async def explore(request):return request.model_dump()
     monkeypatch.setattr(module,'find_capabilities',capability)
     monkeypatch.setattr(module,'explore_generic',explore)

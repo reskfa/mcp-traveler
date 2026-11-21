@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "羊毛伞 UI 选稿",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "4173", "--bind", "127.0.0.1", "--directory", "design-prototypes"],
+      "port": 4173
+    },
+    {
+      "name": "羊毛伞正式界面",
+      "runtimeExecutable": ".venv/bin/python",
+      "runtimeArgs": ["-m", "gateway", "--port", "8766"],
+      "port": 8766
+    }
+  ]
+}

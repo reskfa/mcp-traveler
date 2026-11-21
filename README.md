@@ -93,6 +93,8 @@ MCP 端点：`http://127.0.0.1:8765/mcp`。端口冲突加 `--port 8766`。
 | `query_market_daily` | 多券或全市场日线 |
 | `query_market_returns` | 区间收益排名（如"近 5 日跌幅最大转债"） |
 
+省略 `symbols` 才是全市场，空数组会被拒绝。三个市场工具默认返回完整 JSON；`top_n` 只在完整取数、计算和排序后裁剪响应，完整结果仍保存在本地。近 5 日排名使用 `trading_days=5`、`order="asc"`，窗口包含结束日并另取前一交易日为基准。缺价格、停牌无行或混合来源不当作 0；`coverage.ranking_complete=false` 时只能称为合格输入中的 Top N。非交易日明确报错，不静默改日期。
+
 **探索与扩展**
 
 | 工具 | 用途 |
@@ -151,6 +153,7 @@ HTTP：`POST /api/query`（单券）、`POST /api/market/universe|daily|returns`
 <summary><strong>配置、账户和数据</strong></summary>
 
 - `.env`：真实密钥。`config.json`：来源开关、地址、鉴权、超时及路由。两者只保存在本机，已忽略于 Git。
+- `market`：跨券批量、并发、请求间隔、总时限、最大代码数和证券×交易日上限；旧配置自动使用默认值，无需迁移。
 - `local/results/`：原始结果和完整标准表；每次查询独立保存，无自动清理。
 - `local/account_status.json`：连接状态、本地查询次数、手动额度记录。次数是网关查询次数，一次查询可能调用多个上游工具，不能代表扣费次数。
 - **官方余额自动刷新尚未实现**。刷新入口会提示登录官网核实，允许手动记录并标明时间。
@@ -260,11 +263,11 @@ HTTP 对应 `GET /api/metrics/search?q=净息差`、`POST /api/explore`、`POST 
 
 字典未命中时，先在网关内探索，不直接转外部搜索。
 
-- `search_capabilities(query, provider="auto", ...)`：匹配缓存的供应商工具目录。
-- `explore_data(request, symbol?, ...)`：在网关内尝试取数，成功后保存可复用取法。全市场探索省略 `symbol`，传 `query_scope="market"`。
-- `query_data(query_id, ...)`：复用已保存取法。
+- `search_capabilities(query, provider="auto", query_scope="security", market_hint?, market_kind?)`：匹配缓存的供应商工具目录。
+- `explore_data(request, symbol?, ...)`：在网关内尝试取数，成功后保存可复用取法。全市场探索省略 `symbol`，传 `query_scope="market"`、`market_hint="equity|convertible_bond"`、`market_kind="universe|daily"`；名单历史时点用 `end_date`。
+- `query_data(query_id, symbol?, ...)`：复用已保存取法；旧单券取法仍传代码，市场取法省略代码并可换日期。
 
-市场探索只接受 `universe` 和 `daily`，逐行验证真实证券代码和实际日期。通用入口不等于任意工具均已适配，以返回的尝试状态为准。
+市场探索只接受 `universe` 和 `daily`，逐行验证真实证券代码、市场类型、实际日期和所请求字段，按 `(symbol,date)` 检查重复与冲突。响应不裁 100 行，但只有上游总数一致且无节选证据时才标记本次完整；保存取法不等于已经取全，保存内容不含代码清单。
 
 </details>
 

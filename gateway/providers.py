@@ -43,6 +43,9 @@ def records(df):return json.loads(df.to_json(orient='records',date_format='iso',
 def compact_date(s):return s.replace('-','') if s else None
 
 def fetch(name,q,p,key):
+    if q.get('market_call'):
+        from .market_provider import fetch as market_fetch
+        return market_fetch(name,p,key,q['market_call'])
     if q.get('generic_call'):
         from .generic_data import fetch_remote
         return fetch_remote(name,p,key,q['generic_call'])

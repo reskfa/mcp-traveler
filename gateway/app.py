@@ -15,8 +15,9 @@ from .catalog import catalog,dictionary_view
 from .dictionary import search_metrics as find_metrics,delete_user_metric
 from .exploration import ExplorationRequest,explore,save_exploration
 from .generic_data import ExploreDataRequest,DataQueryRequest,search_capabilities as find_capabilities,explore_data as explore_generic,query_data as query_generic
+from .market import MarketUniverseRequest,MarketDailyRequest,MarketReturnsRequest,query_market_universe as market_universe,query_market_daily as market_daily,query_market_returns as market_returns
 
-mcp=FastMCP('A股数据网关',stateless_http=True,json_response=True)
+mcp=FastMCP('羊毛伞',stateless_http=True,json_response=True)
 @mcp.tool()
 async def query_basic_info(symbol:str,fields:list[str]|None=None,provider:str='auto')->dict:
     """查询股票基本信息：公司档案、证券名称历史、行业归属、板块标签。文本/日期/记录列表按字典返回；不同分类体系分开。无历史时点参数，缺失字段为null，每个字段携带来源。fields=['*']查询全部。"""
@@ -45,6 +46,22 @@ def data_catalog(dataset:str|None=None,field:str|None=None)->dict:
 async def query_daily_prices(symbol:str,start_date:str,end_date:str,fields:list[str]|None=None,provider:str='auto',adjust:str='none')->dict:
     """查询 A 股历史日线。日期 YYYY-MM-DD，代码如 600519.SH。大结果返回预览和本地路径。"""
     return await core.query(core.Query(dataset='daily_prices',symbol=symbol,start_date=start_date,end_date=end_date,fields=fields,provider=provider,adjust=adjust))
+
+@mcp.tool()
+async def query_market_universe(scope:str,as_of_date:str|None=None,provider:str='auto')->dict:
+    """查询A股(stock)或可转债(convertible_bond)证券目录。as_of_date用于历史时点名单，含当时仍上市但后来退市/摘牌的证券；返回完整JSON及universe完整性、冲突和未知日期。"""
+    return await market_universe(MarketUniverseRequest(scope=scope,as_of_date=as_of_date,provider=provider))
+
+@mcp.tool()
+async def query_market_daily(scope:str,start_date:str,end_date:str,symbols:list[str]|None=None,fields:list[str]|None=None,provider:str='auto',adjust:str='none',sort_by:str|None=None,order:str='asc',top_n:int|None=None)->dict:
+    """跨券查询A股或转债日线。省略symbols查询历史时点全市场，显式symbols一次查询多只证券；fields支持OHLC、量额、pre_close、pct_change等。默认完整JSON，不用旧单券工具循环。top_n只在完整取数排序后裁剪响应；逐券缺失、失败和覆盖率见coverage。"""
+    return await market_daily(MarketDailyRequest(scope=scope,start_date=start_date,end_date=end_date,symbols=symbols,fields=fields,provider=provider,adjust=adjust,sort_by=sort_by,order=order,top_n=top_n))
+
+@mcp.tool()
+async def query_market_returns(scope:str,end_date:str,start_date:str|None=None,trading_days:int|None=None,symbols:list[str]|None=None,provider:str='auto',order:str='asc',top_n:int|None=None)->dict:
+    """查询全市场或代码列表的区间价格收益并排名。start_date/end_date与trading_days=N/end_date二选一；近5日跌幅最大用trading_days=5、order='asc'、top_n=10。股票同源前复权、转债同源不复权；缺基准或窗口价格不当作0，ranking_complete说明是否完整全市场排名。默认完整JSON。"""
+    return await market_returns(MarketReturnsRequest(scope=scope,end_date=end_date,start_date=start_date,trading_days=trading_days,symbols=symbols,provider=provider,order=order,top_n=top_n))
+
 @mcp.tool()
 async def query_technical_indicators(symbol:str,start_date:str|None=None,end_date:str|None=None,fields:list[str]|None=None,provider:str='auto',parameters:dict[str,int]|None=None,frequency:str='daily',adjust:str='native')->dict:
     """按字典查询A股技术指标。先search_metrics找字段；data_catalog查看参数、单位和复权口径。历史查询需日期范围；Wind历史用wind_history_*，MA/RSI周期可调；Wind *_native最新快照可省略日期，不能代替历史。来源可调与固定参数由字典明确，返回来源与实际日期，不在本地计算。"""
@@ -69,7 +86,7 @@ def search_metrics(query:str='',dataset:str|None=None,limit:int=10)->dict:
 
 @mcp.tool()
 async def explore_metric(name:str,dataset:str,symbol:str,auto_save:bool=True,period:str|None=None,date:str|None=None,start_date:str|None=None,end_date:str|None=None,unit:str|None=None,aliases:list[str]|None=None,provider:str='auto',max_attempts:int=2,parameters:dict[str,int]|None=None,frequency:str='daily',adjust:str|None=None)->dict:
-    """探索尚未入字典的A股数值指标。先查已有取法，再按路由尝试可能支持的MCP；每来源最多一次。名称应是一个明确指标，提供日期/报告期。成功默认自动保存到个人字典并返回saved/saved_field，告知用户即可；有歧义不保存。仅临时查询传auto_save=false。coverage独立说明数据完整性，不能把成功保存称作取全。"""
+    """探索尚未入字典的A股数值指标。先查已有取法，再按路由尝试可能支持的MCP；每来源最多一次。名称应是一个明确指标，提供日期/报告期。成功默认自动保存到个人字典并返回saved/saved_field，告知用户即可。needs_confirmation不等于无数据：可解析的上游结果会保留在data和candidates，并标注validation_status=unverified及差异；先展示和比较，不因校验疑点弃用。未确认候选不自动保存，仅临时查询传auto_save=false。coverage独立说明数据完整性，不能把成功保存称作取全。"""
     return await explore(ExplorationRequest(name=name,auto_save=auto_save,dataset=dataset,symbol=symbol,period=period,date=date,start_date=start_date,end_date=end_date,unit=unit,aliases=aliases or [],provider=provider,max_attempts=max_attempts,parameters=parameters,frequency=frequency,adjust=adjust))
 
 @mcp.tool()
@@ -78,25 +95,25 @@ async def save_metric(exploration_id:str,field:str|None=None)->dict:
     return await save_exploration(exploration_id,field)
 
 @mcp.tool()
-async def search_capabilities(query:str,provider:str='auto',refresh:bool=False,limit:int=8,market_hint:str|None=None)->dict:
-    """搜索字典与供应商能力。字典未精确命中（或只有相近字段）时继续此入口，不直接绕开网关。返回已接入、可探索或未适配状态，未适配不等于来源不支持。"""
-    return await find_capabilities(query,provider,refresh,limit,market_hint=market_hint)
+async def search_capabilities(query:str,provider:str='auto',refresh:bool=False,limit:int=8,market_hint:str|None=None,query_scope:str='security',market_kind:str|None=None)->dict:
+    """搜索字典与供应商能力。query_scope=market时不填代码，须同时给market_hint及market_kind=universe|daily。字典未精确命中（或只有相近字段）时继续此入口，不直接绕开网关。返回已接入、可探索或未适配状态，未适配不等于来源不支持。"""
+    return await find_capabilities(query,provider,refresh,limit,market_hint=market_hint,query_scope=query_scope,market_kind=market_kind)
 
 @mcp.tool()
-async def explore_data(request:str,symbol:str,period:str|None=None,start_date:str|None=None,end_date:str|None=None,provider:str='auto',max_attempts:int=2,auto_save:bool=True,market_hint:str|None=None)->dict:
-    """探索常用字典之外的信息，不要求先选数据类别。market_hint 可为 convertible_bond 或 equity，省略按代码识别；可转债不会使用股票市场提示。先发现上游能力再执行只读查询；本版验证结构化记录名单。成功默认保存个人字典取法并返回saved_query_id，复用query_data。相近字段不替代原需求，新闻全文尚未适配时明确报告，不冒充已查全。"""
-    return await explore_generic(ExploreDataRequest(request=request,symbol=symbol,market_hint=market_hint,period=period,start_date=start_date,end_date=end_date,provider=provider,max_attempts=max_attempts,auto_save=auto_save))
+async def explore_data(request:str,symbol:str|None=None,period:str|None=None,start_date:str|None=None,end_date:str|None=None,provider:str='auto',max_attempts:int=2,auto_save:bool=True,market_hint:str|None=None,query_scope:str='security',market_kind:str|None=None)->dict:
+    """探索常用字典之外的信息。默认query_scope=security并传单券symbol；query_scope=market时省略symbol，传market_hint=equity|convertible_bond及market_kind=universe|daily，市场名单以end_date为历史时点。先发现上游能力再执行只读查询。成功默认保存取法，复用query_data；市场取法不保存代码清单，响应不裁100行，保存成功不代表全市场完整。"""
+    return await explore_generic(ExploreDataRequest(request=request,symbol=symbol,market_hint=market_hint,query_scope=query_scope,market_kind=market_kind,period=period,start_date=start_date,end_date=end_date,provider=provider,max_attempts=max_attempts,auto_save=auto_save))
 
 @mcp.tool()
-async def query_data(query_id:str,symbol:str,period:str|None=None,start_date:str|None=None,end_date:str|None=None,market_hint:str|None=None)->dict:
-    """复用个人字典中探索成功的记录取法。query_id来自explore_data.saved_query_id或search_metrics，不重复探索；可换证券或报告期，仍校验本次实际返回。"""
-    return await query_generic(DataQueryRequest(query_id=query_id,symbol=symbol,market_hint=market_hint,period=period,start_date=start_date,end_date=end_date))
+async def query_data(query_id:str,symbol:str|None=None,period:str|None=None,start_date:str|None=None,end_date:str|None=None,market_hint:str|None=None,query_scope:str|None=None,market_kind:str|None=None)->dict:
+    """复用个人字典中探索成功的记录取法。旧单券取法仍需symbol；市场取法省略symbol，可换日期，query_scope和market_kind可省略并自动从保存定义恢复。不重复探索，仍校验本次实际返回；市场响应保持完整JSON。"""
+    return await query_generic(DataQueryRequest(query_id=query_id,symbol=symbol,market_hint=market_hint,query_scope=query_scope,market_kind=market_kind,period=period,start_date=start_date,end_date=end_date))
 
 mcp_app=mcp.streamable_http_app()
 @asynccontextmanager
 async def lifespan(app):
     async with mcp.session_manager.run():yield
-app=FastAPI(title='MCP Traveler',lifespan=lifespan)
+app=FastAPI(title='羊毛伞 · MCP Traveler',lifespan=lifespan)
 from .agent_access import router as agent_router
 app.include_router(agent_router)
 
@@ -148,8 +165,8 @@ def metric_delete(dataset:str,field:str):
     return delete_user_metric(dataset,field)
 
 @app.get('/api/capabilities')
-async def capability_search(query:str,provider:str='auto',refresh:bool=False,limit:int=QueryParam(8,ge=1,le=20),market_hint:str|None=None):
-    return await find_capabilities(query,provider,refresh,limit,market_hint=market_hint)
+async def capability_search(query:str,provider:str='auto',refresh:bool=False,limit:int=QueryParam(8,ge=1,le=20),market_hint:str|None=None,query_scope:str='security',market_kind:str|None=None):
+    return await find_capabilities(query,provider,refresh,limit,market_hint=market_hint,query_scope=query_scope,market_kind=market_kind)
 
 @app.post('/api/explore-data')
 async def generic_explore(request:ExploreDataRequest):return await explore_generic(request)
@@ -188,6 +205,12 @@ def refresh(name:str):
     return {'status':'login_required','message':'官方余额接口尚未接入，请登录官网核实后手动记录。','url':config.OFFICIAL[name]}
 @app.post('/api/query')
 async def query(q:core.Query):return await core.query(q)
+@app.post('/api/market/universe')
+async def market_universe_api(request:MarketUniverseRequest):return await market_universe(request)
+@app.post('/api/market/daily')
+async def market_daily_api(request:MarketDailyRequest):return await market_daily(request)
+@app.post('/api/market/returns')
+async def market_returns_api(request:MarketReturnsRequest):return await market_returns(request)
 @app.get('/api/results/{rid}/{kind}')
 def result(rid:str,kind:str):
     if not re.fullmatch(r'[0-9a-f]{32}',rid):raise HTTPException(404)
