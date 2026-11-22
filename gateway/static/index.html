@@ -23,9 +23,10 @@
     <div class="rail-label">日常使用 / DAILY</div>
     <nav aria-label="主导航">
       <button data-page="query" class="active"><b>01</b><span>取数与指标</span><i>↗</i></button>
-      <button data-page="routes"><b>02</b><span>省心路由</span><i>↗</i></button>
-      <button data-page="sources"><b>03</b><span>数据源</span><i>↗</i></button>
-      <button data-page="agent"><b>04</b><span>接入 Agent</span><i>↗</i></button>
+      <button data-page="helpers"><b>02</b><span>辅助函数</span><i>↗</i></button>
+      <button data-page="routes"><b>03</b><span>省心路由</span><i>↗</i></button>
+      <button data-page="sources"><b>04</b><span>数据源</span><i>↗</i></button>
+      <button data-page="agent"><b>05</b><span>接入 Agent</span><i>↗</i></button>
     </nav>
     <div class="rail-bottom">
       <div class="local-status"><i></i>一切留在本机</div>
@@ -109,6 +110,115 @@
           </div>
         </div>
       </div>
+    </section>
+
+    <section id="helpers" class="page" hidden>
+      <div class="eyebrow">HELPER FUNCTIONS</div>
+      <h1>基础辅助函数。</h1>
+      <p class="lede">独立于单券指标查询之外的基础工具：拉取交易日历、拉取全市场 A 股与可转债代码。多源自动路由，不锁定 Tushare。</p>
+
+      <div class="workspace-switch" role="tablist" aria-label="辅助函数">
+        <button class="active" type="button" data-helper-tab="calendar" role="tab" aria-selected="true">交易日历</button>
+        <button type="button" data-helper-tab="symbols" role="tab" aria-selected="false">全市场代码</button>
+        <button type="button" data-helper-tab="search" role="tab" aria-selected="false">搜索证券</button>
+        <span>网页与 Agent（<code>helper_trade_calendar</code> / <code>helper_market_symbols</code> / <code>helper_search_securities</code>）共用同一执行核心。</span>
+      </div>
+
+      <div class="workspace">
+        <div class="query-panel">
+          <form id="helper-calendar-form">
+            <div class="panel-title"><strong>拉取交易日历</strong><span class="auto-badge"><i></i>多源自动路由 · 原生优先</span></div>
+            <div class="query-grid">
+              <div class="two query-range">
+                <label>开始日期<input id="helper-cal-start" type="date" value="2025-11-01" required></label>
+                <label>结束日期<input id="helper-cal-end" type="date" value="2025-11-30" required></label>
+              </div>
+              <label>交易所
+                <select id="helper-cal-exchange">
+                  <option value="SSE">上交所 (SSE · A 股通用)</option>
+                  <option value="SZSE">深交所 (SZSE · A 股通用)</option>
+                </select>
+              </label>
+              <label>数据来源
+                <select id="helper-cal-provider"><option value="auto">自动 · 原生交易日历优先</option></select>
+              </label>
+            </div>
+            <div class="query-submit">
+              <p>Tushare / AKShare 原生交易日历优先。<br><span>缺失时自动回退 Wind / 通达信 / 妙想 / iFinD 上证指数历史交易日。</span></p>
+              <button class="primary" id="helper-cal-run">拉取交易日历 <span>↗</span></button>
+            </div>
+          </form>
+
+          <form id="helper-symbols-form" hidden>
+            <div class="panel-title"><strong>拉取全市场代码</strong><span class="auto-badge"><i></i>股票 / 可转债 · 覆盖透明</span></div>
+            <div class="query-grid">
+              <label>市场范围
+                <select id="helper-sym-scope">
+                  <option value="stock">全市场 A 股 (stock)</option>
+                  <option value="convertible_bond">全市场可转债 (convertible_bond)</option>
+                </select>
+              </label>
+              <label>历史时点（可选）
+                <input id="helper-sym-asof" type="date">
+                <small>留空返回当前名单；填写日期筛选该日在市证券</small>
+              </label>
+              <label>数据来源
+                <select id="helper-sym-provider"><option value="auto">自动 · 全量来源优先</option></select>
+              </label>
+              <label class="toggle">
+                <input id="helper-sym-delisted" type="checkbox">包含历史已退市 / 已摘牌证券
+              </label>
+            </div>
+            <div class="query-submit">
+              <p>返回可直接复用的代码数组与完整明细表。<br><span>若上游存在行数截断或仅含当前名单，将在结果中明确标示。</span></p>
+              <button class="primary" id="helper-sym-run">拉取代码列表 <span>↗</span></button>
+            </div>
+          </form>
+
+          <form id="helper-search-form" hidden>
+            <div class="panel-title"><strong>搜索证券（双向）</strong><span class="auto-badge"><i></i>名称 ↔ 代码 · 股票与可转债</span></div>
+            <div class="query-grid">
+              <label>关键词或代码
+                <input id="helper-search-q" type="search" placeholder="如：茅台 / 600519 / 南银转债 / 113050" required maxlength="80">
+                <small>支持名称/简称搜代码，也支持完整代码或前缀反查名称</small>
+              </label>
+              <label>证券范围
+                <select id="helper-search-scope">
+                  <option value="all">全部（A 股 + 可转债）</option>
+                  <option value="stock">仅 A 股 (stock)</option>
+                  <option value="convertible_bond">仅可转债 (convertible_bond)</option>
+                </select>
+              </label>
+              <label>返回上限
+                <input id="helper-search-limit" type="number" min="1" max="100" value="20">
+              </label>
+              <label>数据来源
+                <select id="helper-search-provider"><option value="auto">自动 · 按能力路由</option></select>
+              </label>
+              <label class="toggle">
+                <input id="helper-search-delisted" type="checkbox">包含历史已退市 / 已摘牌证券
+              </label>
+            </div>
+            <div class="query-submit">
+              <p>按精确匹配 → 前缀匹配 → 包含匹配排序。<br><span>自动跳过不支持当前品种的来源，不锁定 Tushare。</span></p>
+              <button class="primary" id="helper-search-run">搜索证券 <span>↗</span></button>
+            </div>
+          </form>
+        </div>
+
+        <div class="result-panel">
+          <div class="panel-title"><strong>辅助函数结果</strong><span id="helper-result-meta">等待调用</span></div>
+          <div id="helper-result">
+            <div class="empty"><div class="empty-mark">↗</div><h2>随时调用基础辅助函数</h2><p>拉取一段时间的交易日历，或一键拉出全市场股票／可转债代码。<br>支持复制数组、下载 CSV / JSON。</p></div>
+          </div>
+        </div>
+      </div>
+
+      <article class="agent-card" style="margin-top:1.5rem">
+        <div class="panel-title"><strong>六家数据源辅助能力矩阵</strong><span>EMPIRICAL MATRIX</span></div>
+        <p class="note">以下为各数据源（SDK 与 MCP）对辅助函数的实测能力与边界，系统按能力分层自动路由，不锁定 Tushare。</p>
+        <div id="helper-capability-matrix" class="scroll"><p class="note">正在读取能力矩阵…</p></div>
+      </article>
     </section>
 
     <section id="sources" class="page" hidden>

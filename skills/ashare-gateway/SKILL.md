@@ -9,7 +9,7 @@ description: 通过羊毛伞 MCP 查询 A 股与可转债数据；字典未命�
 
 ## 调用顺序
 
-1. **跨券或全市场行情先用专用市场工具**：名单用 `query_market_universe`，多券／全市场日线用 `query_market_daily`，区间收益排名用 `query_market_returns`，不要循环旧单券工具。`symbols=None`（省略）才是全市场，空数组无效。
+1. **跨券或全市场行情先用专用市场工具**：名单用 `query_market_universe`，多券／全市场日线用 `query_market_daily`，区间收益排名用 `query_market_returns`，不要循环旧单券工具。`symbols=None`（省略）才是全市场，空数组无效。`provider="auto"` 的市场查询优先原生全量／批量能力，不沿用旧单券逐券优先级。
 2. 单券及其他需求用 `search_metrics` 找常用字段或个人取法。只有含义匹配才复用；相近字段不能替代用户所要的名单、范围或口径。需要时用 `data_catalog(dataset, field)` 定点查定义，不读整本字典。
 3. **没有精确匹配，先在网关内探索：未知数值指标且类别明确时用 `explore_metric`；其他需求用 `explore_data`，提交原始需求、证券和时间，不必猜类别。** 无代码市场探索省略 `symbol`，并传 `query_scope="market"`、`market_hint="equity|convertible_bond"`、`market_kind="universe|daily"`；名单历史时点用 `end_date`。需要先了解来源时用 `search_capabilities`，传相同 scope。字典未收录不等于供应商没有，不能因此直接转到网上查。
 4. 探索成功查看 `saved`：`saved_query_id` 用 `query_data` 复用，`saved_field` 用对应类别工具查询。市场取法复用时不填 `symbol`，可换日期；保存的是取法，不是代码清单。告知用户是否已保存；歧义先澄清，临时查询传 `auto_save=false`。只有对应的网关探索明确失败后才考虑外部搜索；数值需求不能因 `explore_data` 未适配而跳过 `explore_metric`。
@@ -22,6 +22,13 @@ description: 通过羊毛伞 MCP 查询 A 股与可转债数据；字典未命�
 
 | 工具 | 用途 |
 | --- | --- |
+| `helper_trade_calendar` | 辅助函数：拉取 A 股交易日历（多源路由，优先 Tushare/AKShare 原生，回退各 MCP 上证指数日线，不锁定 Tushare） |
+| `helper_market_symbols` | 辅助函数：拉取全市场 A 股／可转债代码列表（返回 `symbols` 数组及明细，支持多源探测与截断标注） |
+| `helper_search_securities` | 辅助函数：按名称/简称或代码双向搜索 A 股与可转债（名称搜代码 / 代码搜名称），多源自动路由 |
+| `helper_capabilities` | 辅助函数：查看六家数据源在交易日历、全市场代码与搜索证券上的实测能力矩阵与限制 |
+| `query_market_cross_section` | 截面数据：指定日期，多券或全市场 × 一个或多个指标；返回 `index=codes, columns=fields` 及能力矩阵 |
+| `query_market_time_series` | 时序数据：日期区间（日/周/月频），多券或全市场 × 单个指标；返回 `index=dates, columns=codes` 及能力矩阵 |
+| `market_panel_capabilities` | 查看六家数据源在多券/全市场取数上属于一次性全市场、多券批量还是单券轮询 |
 | `query_market_universe` | 当前或历史时点的全市场 A 股／转债名单 |
 | `query_market_daily` | 显式多代码或全市场日线；默认完整 JSON，`top_n` 仅裁剪响应 |
 | `query_market_returns` | 同源区间价格收益及稳定排名；检查 `ranking_complete` 和排除原因 |
@@ -48,6 +55,8 @@ query_market_returns(scope="convertible_bond", end_date="2026-11-20",
   trading_days=5, order="asc", top_n=10)
 ```
 
-窗口包含结束日在内的 5 个交易日，另取前一交易日收盘价为基准。股票使用同源前复权，转债使用同源不复权；缺失、停牌无行、失败或混合来源不当作 0，也不进入排名。`ranking_complete=false` 时只能说明是合格输入中的 Top N，不能称为完整全市场排名。
+窗口包含结束日在内的 5 个交易日，另取前一交易日收盘价为基准；网关只取基准日和结束日两次全市场收盘价，不取窗口中间行情。股票使用同源前复权，转债使用同源不复权；缺失、停牌无行、失败或混合来源不当作 0，也不进入排名。`ranking_complete=false` 时只能说明是合格输入中的 Top N，不能称为完整全市场排名。
+
+市场日期自动对齐：日期范围的非交易日开始日顺延、结束日提前；单日的非交易日优先取前一交易日。`query_market_returns` 同样顺延开始日、提前结束日。原请求与实际日期见 `window`，回答必须使用实际交易日。
 
 证券代码如 `600519.SH`，日期用 `YYYY-MM-DD`。`provider="auto"` 沿用户偏好，指定来源不换源；参数以工具 schema 为准。实际记录形态和可调用范围以能力搜索、探索返回为准，不把通用入口理解为所有类型均已适配。

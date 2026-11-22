@@ -6,6 +6,11 @@ function renderProviderOptions(){
  const select=$('#provider'),previous=select.value;
  select.innerHTML='<option value="auto">自动 · 按路由顺序</option>'+Object.keys(cfg.providers||{}).map(n=>`<option value="${esc(n)}">${esc(providerLabel(n))}</option>`).join('');
  if([...select.options].some(o=>o.value===previous))select.value=previous;
+ for(const [id,autoLabel] of [['#helper-cal-provider','自动 · 原生交易日历优先'],['#helper-sym-provider','自动 · 全量来源优先'],['#helper-search-provider','自动 · 按能力路由']]){
+  const el=$(id);if(!el)continue;const prev=el.value;
+  el.innerHTML=`<option value="auto">${autoLabel}</option>`+Object.keys(cfg.providers||{}).map(n=>`<option value="${esc(n)}">${esc(providerLabel(n))}</option>`).join('');
+  if([...el.options].some(o=>o.value===prev))el.value=prev;
+ }
  const tags=$('#source-tags');if(tags)tags.textContent=Object.keys(cfg.providers||{}).map(n=>providerLabel(n).toUpperCase()).join(' · ')||'尚未配置来源';
 }
 function toast(text){$('#toast').textContent=text;$('#toast').hidden=false;setTimeout(()=>$('#toast').hidden=true,4500)}
@@ -107,7 +112,7 @@ $('#endpoint').textContent=localMcpUrl;
 $('#agent-config').textContent=JSON.stringify({mcpServers:{'ashare-gateway':{type:'http',url:localMcpUrl}}},null,2);
 document.querySelectorAll('[data-copy]').forEach(button=>button.onclick=async()=>{const text=$('#'+button.dataset.copy).textContent;try{await navigator.clipboard.writeText(text);toast('已复制')}catch{const input=document.createElement('textarea');input.value=text;document.body.append(input);input.select();const copied=document.execCommand('copy');input.remove();toast(copied?'已复制':'复制失败，请手动选择上方文本')}});
 $('#agent-open-dictionary').onclick=()=>openPage('dictionary');
-const agentTools=[['query_market_universe','全市场证券名单','当前或历史时点 A 股／转债目录，保留退市与缺日期证据。'],['query_market_daily','跨券与全市场日线','省略 symbols 查询全部证券；默认完整 JSON，支持显式多代码。'],['query_market_returns','区间收益与排名','同源收盘价收益；近5日跌幅最大用 trading_days=5、order=asc。'],['query_convertible_bond_basic','可转债基本信息','发行条款与当前档案；不冒充历史快照。'],['query_convertible_bond_daily','可转债日线与估值','历史行情及来源实际提供的转股价值、溢价率等。'],['query_convertible_bond_clauses','可转债条款公告','公告日期内的条款事件；不重建历史状态。'],['search_capabilities','发现上游能力','搜索供应商工具，区分尚未适配与没有数据。'],['explore_data','先向网关探索','直接描述需求，不必选类别；成功沉淀取法。'],['query_data','复用个人取法','使用 query_id 查询，可更换证券和时间。'],['query_basic_info','股票基本信息','公司档案、名称历史、行业与板块；不同体系分别保留。'],['search_metrics','先搜索指标','查中文名、英文代码和别名，优先使用已有定义。'],['explore_metric','探索新取法','用具体证券、日期和参数实际取数；展示候选和尝试原因。'],['save_metric','保存个人定义','成功探索默认自动保存；仅临时查询或保存重试时手动调用。'],['query_daily_prices','日线量价','查询开高低收、成交量等，支持日期区间。'],['query_valuations','每日估值','按交易日查估值、股本与交易状态。'],['query_financials','报告期财务','查询明确报告期的财务指标，区分各类口径。'],['query_technical_indicators','技术指标','按字典查询厂商日频技术指标、分量与参数。'],['data_catalog','查看字段定义','查字段单位、来源映射、取法和接口参数。'],['provider_status','查看来源状态','检查连接、本地调用次数和已记录的账户信息。']];
+const agentTools=[['helper_trade_calendar','辅助：交易日历','拉取指定区间 A 股交易日历；多源自动路由，不锁定 Tushare。'],['helper_market_symbols','辅助：全市场代码','拉取全市场 A 股或可转债代码数组及明细；明确标注是否截断。'],['helper_search_securities','辅助：搜索证券','按名称/简称或代码双向搜索 A 股与可转债，支持精确与模糊匹配。'],['helper_capabilities','辅助：能力矩阵','查看六家数据源在交易日历、全市场代码与搜索证券上的实测能力与限制。'],['query_market_cross_section','多券/全市场截面','指定日期、多券/全市场×多指标；index=codes, columns=fields，附能力矩阵。'],['query_market_time_series','多券/全市场时序','日期区间（日/周/月频）、多券/全市场×单指标；index=dates, columns=codes。'],['market_panel_capabilities','面板取数能力矩阵','查看六家数据源是一次性全市场、多券批量还是单券轮询。'],['query_market_universe','全市场证券名单','当前或历史时点 A 股／转债目录，保留退市与缺日期证据。'],['query_market_daily','跨券与全市场日线','省略 symbols 查询全部证券；默认完整 JSON，支持显式多代码。'],['query_market_returns','区间收益与排名','同源收盘价收益；近5日跌幅最大用 trading_days=5、order=asc。'],['query_convertible_bond_basic','可转债基本信息','发行条款与当前档案；不冒充历史快照。'],['query_convertible_bond_daily','可转债日线与估值','历史行情及来源实际提供的转股价值、溢价率等。'],['query_convertible_bond_clauses','可转债条款公告','公告日期内的条款事件；不重建历史状态。'],['search_capabilities','发现上游能力','搜索供应商工具，区分尚未适配与没有数据。'],['explore_data','先向网关探索','直接描述需求，不必选类别；成功沉淀取法。'],['query_data','复用个人取法','使用 query_id 查询，可更换证券和时间。'],['query_basic_info','股票基本信息','公司档案、名称历史、行业与板块；不同体系分别保留。'],['search_metrics','先搜索指标','查中文名、英文代码和别名，优先使用已有定义。'],['explore_metric','探索新取法','用具体证券、日期和参数实际取数；展示候选和尝试原因。'],['save_metric','保存个人定义','成功探索默认自动保存；仅临时查询或保存重试时手动调用。'],['query_daily_prices','日线量价','查询开高低收、成交量等，支持日期区间。'],['query_valuations','每日估值','按交易日查估值、股本与交易状态。'],['query_financials','报告期财务','查询明确报告期的财务指标，区分各类口径。'],['query_technical_indicators','技术指标','按字典查询厂商日频技术指标、分量与参数。'],['data_catalog','查看字段定义','查字段单位、来源映射、取法和接口参数。'],['provider_status','查看来源状态','检查连接、本地调用次数和已记录的账户信息。']];
 $('#agent-tool-count').textContent=agentTools.length+' TOOLS';
 $('#agent-tool-list').innerHTML=agentTools.map(([name,title,description])=>`<article><code>${name}</code><h3>${title}</h3><p>${description}</p></article>`).join('');
 
@@ -160,3 +165,53 @@ $('#data-explore-form').onsubmit=async e=>{
  catch(e){$('#data-explore-result').innerHTML=`<div class="error"><strong>查询未完成</strong><p>${esc(e.message)}</p></div>`}
  finally{button.disabled=false;$('#data-capabilities').disabled=false;button.textContent='按已保存取法查询 ↗'}
 };
+
+// Helper functions (辅助函数): trade calendar, full-market symbols & security search.
+document.querySelectorAll('[data-helper-tab]').forEach(btn=>btn.onclick=()=>{
+ const tab=btn.dataset.helperTab;
+ document.querySelectorAll('[data-helper-tab]').forEach(b=>{const on=b.dataset.helperTab===tab;b.classList.toggle('active',on);b.setAttribute('aria-selected',String(on))});
+ $('#helper-calendar-form').hidden=tab!=='calendar';
+ $('#helper-symbols-form').hidden=tab!=='symbols';
+ if($('#helper-search-form'))$('#helper-search-form').hidden=tab!=='search';
+});
+function renderHelperResult(r,kind){
+ const isCal=kind==='calendar',isSearch=kind==='search';
+ const flatList=isCal?(r.dates||[]):(r.symbols||[]);
+ const modeBadge=isCal?(r.calendar_mode==='native'?'原生交易日历':'指数推导交易日'):isSearch?`匹配 ${r.count??flatList.length} / ${r.total_matches??flatList.length}`:(r.complete?'完整名单':'部分/截断名单');
+ $('#helper-result-meta').textContent=`${(r.provider||'—').toUpperCase()} / ${r.count??flatList.length} 条 / ${r.elapsed_seconds??0}s / ${modeBadge}`;
+ const rows=(r.data||[]).slice(0,100);
+ const cols=Object.keys(r.fields||{});
+ const listText=flatList.join('\n');
+ $('#helper-result').innerHTML=`<div class="actions"><button type="button" class="secondary" id="helper-copy-list">复制全部${isCal?'日期':'代码'} (${flatList.length})</button><a href="${esc(r.download_url)}">下载 CSV ↓</a><a href="/api/results/${esc(r.id)}/json">完整 JSON ↓</a><button type="button" class="secondary" id="helper-raw-btn">查看原始返回</button></div>${rows.length?`<div class="scroll"><table><thead><tr>${cols.map(c=>`<th>${esc(r.fields[c]?.label||c)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${cols.map(c=>`<td>${esc(row[c]??'—')}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`:'<div class="empty"><h2>查询成功，暂无匹配结果</h2><p>请更换关键词、代码或调整范围。</p></div>'}<p class="note">来源：${esc(r.upstream||r.provider||'')}${r.row_count>100?`<br>表格预览前 100 行，共 ${r.row_count} 行；点击上方按钮复制全部或下载 CSV/JSON。`:''}${(r.notes||[]).length?'<br>'+r.notes.map(esc).join('<br>'):''}</p><details><summary>调用过程 (${(r.attempts||[]).length})</summary><pre>${esc(JSON.stringify(r.attempts||[],null,2))}</pre></details><pre id="helper-raw-data" hidden></pre>`;
+ $('#helper-copy-list').onclick=async()=>{try{await navigator.clipboard.writeText(listText);toast(`已复制 ${flatList.length} 条`)}catch{toast('复制失败，请下载 JSON/CSV')}};
+ $('#helper-raw-btn').onclick=async()=>{try{const raw=await api(r.raw_url);$('#helper-raw-data').hidden=false;$('#helper-raw-data').textContent=JSON.stringify(raw,null,2)}catch(e){toast(e.message)}};
+}
+if($('#helper-calendar-form'))$('#helper-calendar-form').onsubmit=async e=>{
+ e.preventDefault();const b=$('#helper-cal-run');b.disabled=true;$('#helper-result-meta').textContent='正在拉取交易日历…';$('#helper-result').innerHTML='<div class="empty"><div class="empty-mark">↗</div><p>正在请求交易日历…</p></div>';
+ try{const r=await api('/api/helpers/trade-calendar','POST',{start_date:$('#helper-cal-start').value,end_date:$('#helper-cal-end').value,exchange:$('#helper-cal-exchange').value,provider:$('#helper-cal-provider').value});renderHelperResult(r,'calendar');await loadStatus()}
+ catch(err){$('#helper-result-meta').textContent='拉取未完成';$('#helper-result').innerHTML=`<div class="error">${esc(err.message).replaceAll('\n','<br>')}</div>`}
+ finally{b.disabled=false}
+};
+if($('#helper-symbols-form'))$('#helper-symbols-form').onsubmit=async e=>{
+ e.preventDefault();const b=$('#helper-sym-run');b.disabled=true;$('#helper-result-meta').textContent='正在拉取全市场代码…';$('#helper-result').innerHTML='<div class="empty"><div class="empty-mark">↗</div><p>正在拉取全市场代码名单，分页来源可能需要数秒…</p></div>';
+ try{const body={scope:$('#helper-sym-scope').value,as_of_date:$('#helper-sym-asof').value||null,include_delisted:$('#helper-sym-delisted').checked,provider:$('#helper-sym-provider').value};const r=await api('/api/helpers/market-symbols','POST',body);renderHelperResult(r,'symbols');await loadStatus()}
+ catch(err){$('#helper-result-meta').textContent='拉取未完成';$('#helper-result').innerHTML=`<div class="error">${esc(err.message).replaceAll('\n','<br>')}</div>`}
+ finally{b.disabled=false}
+};
+if($('#helper-search-form'))$('#helper-search-form').onsubmit=async e=>{
+ e.preventDefault();const b=$('#helper-search-run');b.disabled=true;$('#helper-result-meta').textContent='正在搜索证券…';$('#helper-result').innerHTML='<div class="empty"><div class="empty-mark">↗</div><p>正在检索匹配的 A 股与可转债…</p></div>';
+ try{const body={query:$('#helper-search-q').value.trim(),scope:$('#helper-search-scope').value,limit:Number($('#helper-search-limit').value)||20,include_delisted:$('#helper-search-delisted').checked,provider:$('#helper-search-provider').value};const r=await api('/api/helpers/search-securities','POST',body);renderHelperResult(r,'search');await loadStatus()}
+ catch(err){$('#helper-result-meta').textContent='搜索未完成';$('#helper-result').innerHTML=`<div class="error">${esc(err.message).replaceAll('\n','<br>')}</div>`}
+ finally{b.disabled=false}
+};
+async function loadHelperCapabilities(){
+ const box=$('#helper-capability-matrix');if(!box)return;
+ try{
+  const res=await api('/api/helpers/capabilities');
+  const h=res.helpers||{},cal=h.trade_calendar?.providers||{},stock=h.market_symbols?.scopes?.stock||{},cb=h.market_symbols?.scopes?.convertible_bond||{},srch=h.search_securities?.providers||{};
+  const badgeMap={native:'原生完整',index_derived:'指数推导',full_historical:'全量含历史',full_current:'全量当前',screener:'筛选器',stock_only:'仅 A 股',partial:'截断样例',unsupported:'不支持'};
+  const cell=info=>info?`<span class="badge">${esc(badgeMap[info.support]||info.support)}</span><br><small>${esc(info.tool||'')}</small><br><small>${esc(info.summary||'')}</small>`:'—';
+  box.innerHTML=`<table><thead><tr><th>数据源</th><th>状态</th><th>交易日历</th><th>全市场 A 股代码</th><th>全市场可转债代码</th><th>搜索证券</th></tr></thead><tbody>${Object.keys(res.providers||{}).map(n=>{const st=res.providers[n]||{};return `<tr><td><strong>${esc(providerLabel(n))}</strong></td><td><span class="badge">${st.available?'可用':st.enabled?'未配置':'已停用'}</span></td><td>${cell(cal[n])}</td><td>${cell(stock[n])}</td><td>${cell(cb[n])}</td><td>${cell(srch[n])}</td></tr>`}).join('')}</tbody></table>`;
+ }catch(e){box.innerHTML=`<p class="note">${esc(e.message)}</p>`}
+}
+loadHelperCapabilities();

@@ -35,7 +35,7 @@ def load():
         c['global_route']=list(c['routes']['valuations'])
         c['route_overrides']={k:v for k,v in c['routes'].items() if v!=c['global_route']}
     c['routes']={k:c.get('route_overrides',{}).get(k,c['global_route']) for k in ['daily_prices','valuations','financials','technical_indicators','basic_info']}
-    c['market']={'batch_size':50,'max_concurrency':4,'per_provider_concurrency':2,'min_request_interval_seconds':0.25,'max_elapsed_seconds':900,'max_symbols':10000,'max_symbol_days':250000,**c.get('market',{})}
+    c['market']={'batch_size':50,'max_concurrency':4,'per_provider_concurrency':2,'min_request_interval_seconds':0.25,'max_elapsed_seconds':900,'max_symbols':10000,'max_symbol_days':250000,'panel_route':['tushare','choice','ifind','tdx','wind','akshare'],**c.get('market',{})}
     return c
 
 def secrets():

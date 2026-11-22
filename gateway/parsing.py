@@ -69,6 +69,20 @@ def choice_date(header):
         if m:return f'{m[1]}-{month_day}'
     return norm_date(s)
 
+CHOICE_ROW_TABLE_COLUMNS = {'序号', '代码', '证券代码', '股票代码', '债券代码', '名称', '股票简称', '证券简称', '债券简称'}
+
+def is_choice_row_table(block):
+    columns=block.get('columns') if isinstance(block,dict) else None
+    items=block.get('items') if isinstance(block,dict) else None
+    if not (isinstance(columns,list) and len(columns)>=2 and all(isinstance(c,str) for c in columns)
+            and isinstance(items,list) and items and all(isinstance(item,list) for item in items)):
+        return False
+    if choice_identity(columns[0]):
+        return False
+    if any(choice_date(h) for h in columns[1:]):
+        return False
+    return bool(set(columns) & CHOICE_ROW_TABLE_COLUMNS)
+
 def is_choice_sheet(block):
     columns=block.get('columns') if isinstance(block,dict) else None
     items=block.get('items') if isinstance(block,dict) else None
@@ -77,6 +91,9 @@ def is_choice_sheet(block):
 
 def unpivot_choice_sheet(sheet):
     """Turn Choice data-browser sheets (indicator rows × date columns) into record rows."""
+    if is_choice_row_table(sheet):
+        columns=list(sheet.get('columns') or [])
+        return [dict(zip(columns, item)) for item in (sheet.get('items') or [])]
     columns=list(sheet.get('columns') or [])
     identity=choice_identity(columns[0] if columns else '') or choice_identity(sheet.get('sheetName',''))
     headers=columns[1:] if len(columns)>1 else ['值']
@@ -116,6 +133,11 @@ def tables(obj):
             if 'rows' in x and isinstance(x['rows'],list) and all(isinstance(r,dict) for r in x['rows']):
                 result.extend((r,{}) for r in x['rows']);return
             if isinstance(x.get('answer'),str): result.extend((r,{'__indicator_params__':x.get('indicators_params',{})}) for r in markdown_rows(x['answer']));return
+            if isinstance(x.get('answer'),dict):
+                for key,val in x['answer'].items():
+                    if isinstance(val,str) and '|' in val:
+                        result.extend((r,{'__sub_answer__':key}) for r in markdown_rows(val))
+                return
             if isinstance(x.get('text'),str):
                 if x['text'].startswith('[MCP App'):return
                 for o in json_objects(x['text']):visit(o)

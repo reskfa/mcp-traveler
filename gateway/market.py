@@ -177,7 +177,21 @@ def _route(c, scope, provider):
     if provider != 'auto':
         return [provider]
     dataset = 'daily_prices' if scope == 'stock' else 'cb_daily'
-    return c['routes'].get(dataset, c.get('global_route', config.PROVIDERS))
+    route = c['routes'].get(dataset, c.get('global_route', config.PROVIDERS))
+
+    def priority(name):
+        capability = CAPABILITIES.get(name, {})
+        if capability.get('native_full'):
+            return 0
+        if capability.get('native_batch'):
+            return 1
+        if capability.get('scalar'):
+            return 2
+        return 3
+
+    # Single-security route preferences must not put hundreds of scalar calls
+    # ahead of a provider that can fetch the whole market in one request.
+    return sorted(route, key=priority)
 
 
 def _query_fields(fields):
@@ -233,13 +247,23 @@ async def _run_tasks(tasks, deadline, settings):
 
 
 async def _calendar(start_date, end_date, provider, c, deadline, settings):
-    candidates = ['tushare'] if provider == 'auto' or provider != 'tushare' else ['tushare']
+    if provider != 'auto':
+        candidates = [provider]
+    else:
+        base = list(c.get('global_route') or config.PROVIDERS)
+        for name in config.PROVIDERS:
+            if name not in base:
+                base.append(name)
+        candidates = sorted(base, key=lambda n: 0 if CAPABILITIES.get(n, {}).get('calendar_mode') == 'native' else 1)
     attempts = []
     raws = []
     for name in candidates:
         p = c['providers'][name]
         if not core.available(name, p):
             attempts.append({'provider': name, 'operation': 'calendar', 'status': 'skipped', 'error': '未启用或配置未完成'})
+            continue
+        if not CAPABILITIES.get(name, {}).get('calendar'):
+            attempts.append({'provider': name, 'operation': 'calendar', 'status': 'unsupported', 'error': '未接入交易日历'})
             continue
         call = {'operation': 'calendar', 'scope': 'stock', 'start_date': start_date, 'end_date': end_date}
         outcome = (await _run_tasks([{'provider': name, 'call': call, 'timeout': p.get('timeout_seconds', 60)}], deadline, settings))[0]
@@ -249,7 +273,7 @@ async def _calendar(start_date, end_date, provider, c, deadline, settings):
             raws.append({'provider': name, 'query': call, 'raw': result['raw']})
             return result['dates'], attempts, raws, name
         attempts.append({'provider': name, 'operation': 'calendar', 'status': outcome['status'], 'error': outcome.get('error')})
-    raise ValueError('市场查询需要可用的Tushare交易日历；请配置Tushare或缩小为已有日历支持的请求')
+    raise ValueError('市场查询需要可用的交易日历；请配置至少一个可用数据源（如 AKShare / Tushare / MCP）')
 
 
 def _filter_universe(data, start_date, end_date):
@@ -262,6 +286,25 @@ def _filter_universe(data, start_date, end_date):
         if row['list_date'] <= end_date and (not row.get('delist_date') or row['delist_date'] >= start_date):
             selected.append(row['symbol'])
     return selected, unknown
+
+
+def _align_daily_dates(start_date, end_date, dates):
+    """Roll range starts forward and ends backward; a single date rolls back."""
+    if start_date == end_date and start_date not in dates:
+        previous = [day for day in dates if day <= start_date]
+        following = [day for day in dates if day >= start_date]
+        if previous:
+            start_date = end_date = previous[-1]
+        elif following:
+            start_date = end_date = following[0]
+        else:
+            raise ValueError('附近没有可用交易日')
+    else:
+        start_date = next((day for day in dates if day >= start_date), None)
+        end_date = next((day for day in reversed(dates) if day <= end_date), None)
+    if not start_date or not end_date or start_date > end_date:
+        raise ValueError('请求日期范围内没有可用交易日')
+    return start_date, end_date, [day for day in dates if start_date <= day <= end_date]
 
 
 async def _load_universe(request, c, deadline, settings):
@@ -404,14 +447,19 @@ def _sort_daily(rows, provenance, request):
     return present + missing
 
 
-async def _daily_data(request, c, deadline, settings):
-    calendar, calendar_attempts, calendar_raws, calendar_provider = await _calendar(
-        request.start_date, request.end_date, request.provider, c, deadline, settings)
-    if request.start_date == request.end_date and request.start_date not in calendar:
-        raise ValueError(f'{request.start_date}不是交易日；不会自动切换到相邻交易日')
+async def _daily_data(request, c, deadline, settings, only_dates=None):
+    requested_start, requested_end = request.start_date, request.end_date
+    calendar_start = (date.fromisoformat(requested_start) - timedelta(days=31)).isoformat()
+    calendar_end = (date.fromisoformat(requested_end) + timedelta(days=31)).isoformat()
+    all_dates, calendar_attempts, calendar_raws, calendar_provider = await _calendar(
+        calendar_start, calendar_end, request.provider, c, deadline, settings)
+    actual_start, actual_end, calendar = _align_daily_dates(requested_start, requested_end, all_dates)
+    notes = [f'交易日历来源：{calendar_provider}']
+    if (actual_start, actual_end) != (requested_start, requested_end):
+        notes.append(f'非交易日自动对齐：{requested_start}至{requested_end} → {actual_start}至{actual_end}（开始日顺延、结束日提前；单日优先提前）')
+    request = request.model_copy(update={'start_date': actual_start, 'end_date': actual_end})
     attempts = list(calendar_attempts)
     raws = list(calendar_raws)
-    notes = [f'交易日历来源：{calendar_provider}']
     adjustment_anchor_date = None
     tushare = c['providers'].get('tushare', {})
     if (request.scope == 'stock' and request.adjust == 'qfq'
@@ -443,6 +491,11 @@ async def _daily_data(request, c, deadline, settings):
         attempts.extend(directory['attempts']); raws.extend(directory['raws']); notes.extend(directory['notes'])
         if not symbols:
             raise core.QueryFailure(attempts)
+    if only_dates is not None:
+        selected_dates = set(only_dates)
+        calendar = [day for day in calendar if day in selected_dates]
+        if set(calendar) != selected_dates:
+            raise ValueError('收益端点不在已解析的交易日历中')
     if len(symbols) > settings['max_symbols']:
         raise ValueError(f'证券数量超过market.max_symbols={settings["max_symbols"]}')
     if len(symbols) * max(1, len(calendar)) > settings['max_symbol_days']:
@@ -530,7 +583,8 @@ async def _daily_data(request, c, deadline, settings):
                 'symbols': per_symbol, 'ranking_complete': False}
     return {'status': 'success' if complete else 'empty' if not data else 'partial', 'complete': complete,
             'scope': request.scope, 'universe': universe_info,
-            'window': {'requested_start': request.start_date, 'requested_end': request.end_date,
+            'window': {'requested_start': requested_start, 'requested_end': requested_end,
+                       'actual_start': actual_start, 'actual_end': actual_end,
                        'actual_trade_dates': actual_dates, 'calendar_trade_dates': calendar, 'baseline_date': None},
             'data': data, 'field_sources': data_sources, 'coverage': coverage, 'attempts': attempts, 'raws': raws,
             'fields': _query_fields(request.fields), 'notes': list(dict.fromkeys(notes))}
@@ -551,9 +605,10 @@ async def _returns_window(request, c, deadline, settings):
     if request.start_date:
         start = (date.fromisoformat(request.start_date) - timedelta(days=20)).isoformat()
     dates, attempts, raws, provider = await _calendar(start, request.end_date, request.provider, c, deadline, settings)
-    if request.end_date not in dates:
-        raise ValueError(f'{request.end_date}不是交易日；不会自动切换到相邻交易日')
     through_end = [day for day in dates if day <= request.end_date]
+    if not through_end:
+        raise ValueError('结束日期之前没有可用交易日')
+    actual_end = through_end[-1]
     if request.trading_days:
         if len(through_end) < request.trading_days + 1:
             raise ValueError('交易日历不足以构造请求窗口和基准日')
@@ -561,9 +616,10 @@ async def _returns_window(request, c, deadline, settings):
         baseline = selected[0]
         window = selected[1:]
     else:
-        if request.start_date not in through_end:
-            raise ValueError(f'{request.start_date}不是交易日；不会自动切换到相邻交易日')
-        index = through_end.index(request.start_date)
+        actual_start = next((day for day in through_end if day >= request.start_date), None)
+        if not actual_start:
+            raise ValueError('开始日期顺延之后晚于实际结束交易日')
+        index = through_end.index(actual_start)
         if index == 0:
             raise ValueError('交易日历缺少窗口前一交易日基准')
         baseline = through_end[index - 1]
@@ -576,11 +632,14 @@ async def query_market_returns(request):
     c = config.load(); settings = _settings(c); start = time.monotonic()
     deadline = start + settings['max_elapsed_seconds']
     baseline, window, calendar_attempts, calendar_raws, calendar_provider = await _returns_window(request, c, deadline, settings)
+    actual_end = window[-1]
     daily_request = MarketDailyRequest(scope=request.scope, symbols=request.symbols, provider=request.provider,
-                                       start_date=baseline, end_date=request.end_date, fields=['close'],
+                                       start_date=baseline, end_date=actual_end, fields=['close'],
                                        adjust='qfq' if request.scope == 'stock' else 'none', sort_by='date')
-    daily = await _daily_data(daily_request, c, deadline, settings)
-    required = [baseline] + window
+    # A close-to-close return needs only its baseline and end, not every row
+    # in between. The full trading window remains in response metadata.
+    daily = await _daily_data(daily_request, c, deadline, settings, only_dates=[baseline, actual_end])
+    required = [baseline, actual_end]
     by_symbol = {}
     for row, sources in zip(daily['data'], daily['field_sources']):
         by_symbol.setdefault(row['symbol'], {})[row['date']] = (row.get('close'), sources.get('close'))
@@ -600,12 +659,12 @@ async def query_market_returns(request):
         if len(providers) != 1 or None in providers:
             excluded[symbol] = {'reason': 'mixed_or_unknown_provider', 'providers': sorted(str(value) for value in providers)}
             continue
-        base = observations[baseline][0]; end = observations[request.end_date][0]
+        base = observations[baseline][0]; end = observations[actual_end][0]
         if not all(math.isfinite(value) and value > 0 for value in (base, end)):
             excluded[symbol] = {'reason': 'invalid_close'}
             continue
         provider = next(iter(providers))
-        output.append({'symbol': symbol, 'date': request.end_date,
+        output.append({'symbol': symbol, 'date': actual_end,
                        'return_pct': 100 * (end / base - 1),
                        'return_method': 'close_to_close_qfq' if request.scope == 'stock' else 'close_to_close_none',
                        'window_start': window[0], 'window_end': window[-1], 'baseline_date': baseline,
@@ -622,16 +681,23 @@ async def query_market_returns(request):
                 'ranking_complete': ranking_complete, 'eligible_symbols': len(output), 'excluded_symbols': excluded,
                 'returned_rows': len(output), 'returned_symbols': len(output)}
     fields = ('return_pct', 'return_method', 'window_start', 'window_end', 'baseline_date', 'close_baseline', 'close_end', 'provider', 'rank')
+    alignment_notes = []
+    if request.start_date and window[0] != request.start_date:
+        alignment_notes.append(f'非交易日开始日自动顺延：{request.start_date} → {window[0]}')
+    if actual_end != request.end_date:
+        alignment_notes.append(f'非交易日结束日自动提前：{request.end_date} → {actual_end}')
     payload = {'status': 'success' if ranking_complete else 'empty' if not output else 'partial', 'complete': ranking_complete,
                'scope': request.scope, 'universe': daily['universe'],
                'window': {'requested_start': request.start_date, 'requested_end': request.end_date,
+                          'actual_start': window[0], 'actual_end': actual_end,
                           'actual_trade_dates': window, 'baseline_date': baseline, 'trading_days': len(window)},
                'data': output, 'field_sources': provenance, 'coverage': coverage,
                'attempts': calendar_attempts + daily['attempts'], 'raws': calendar_raws + daily['raws'],
                'fields': _query_fields(fields),
-               'notes': list(dict.fromkeys(daily['notes'] + [
+               'notes': list(dict.fromkeys(daily['notes'] + alignment_notes + [
                    '收益为同源收盘价价格收益；股票使用前复权，转债不复权，不含现金分红或利息再投资。',
                    f'收益窗口交易日历来源：{calendar_provider}；基准日为{baseline}。',
-                   '缺窗口价格或跨来源序列的证券不进入排名，缺失不当作0。'])),
+                   f'仅提取基准日{baseline}和结束日{actual_end}两次收盘价，不提取窗口中间行情。',
+                   '缺基准日或结束日价格、跨来源序列的证券不进入排名，缺失不当作0。'])),
                'elapsed_seconds': round(time.monotonic() - start, 2)}
     return _store('returns', request, payload, request.top_n)

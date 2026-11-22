@@ -85,15 +85,29 @@ MCP 端点：`http://127.0.0.1:8765/mcp`。端口冲突加 `--port 8766`。
 | `data_catalog` | 查字典定义 |
 | `search_metrics` | 按中文名/代码搜索字段 |
 
-**跨券与全市场**（优先用这三个，不要让 Agent 循环单券接口）
+**基础辅助函数**（独立于单券查询的公共基础能力，多源自动路由，不锁定 Tushare）
 
 | 工具 | 用途 |
-|------|------|
+|---|---|
+| `helper_trade_calendar` | 拉取 A 股交易日历（优先 Tushare / AKShare 原生，自动回退 Wind / 通达信 / 东方财富妙想 / iFinD 上证指数历史交易日） |
+| `helper_market_symbols` | 拉取全市场 A 股（`stock`）或可转债（`convertible_bond`）代码列表与简称、上市／退市日期（覆盖六家来源，截断明确标注） |
+| `helper_search_securities` | 双向搜索 A 股与可转债：输入名称/简称搜代码，或输入代码反查名称与类型（`scope="all|stock|convertible_bond"`） |
+| `helper_capabilities` | 查看辅助函数在六家数据源上的实测能力矩阵与边界 |
+
+HTTP：`GET /api/helpers/capabilities`、`POST /api/helpers/trade-calendar`、`POST /api/helpers/market-symbols`、`POST /api/helpers/search-securities`。网页端也在主导航提供独立的「辅助函数」工作台。
+
+**跨券与全市场**（优先用截面 / 时序面板工具，不要让 Agent 循环单券接口）
+
+| 工具 | 用途 |
+|---|---|
+| `query_market_cross_section` | **截面数据**：指定日期、多券或全市场 × 一个或多个指标（`index=codes, columns=fields`），附六家能力矩阵；默认多券路由 `tushare > choice > ifind > tdx > wind > akshare` |
+| `query_market_time_series` | **时序数据**：日期区间（`daily/weekly/monthly`）、多券或全市场 × 单个指标（`index=dates, columns=codes`），附六家能力矩阵 |
+| `market_panel_capabilities` | 查看六家数据源在多券/全市场取数上的实测能力矩阵（全市场 / 多券批量 / 单券轮询） |
 | `query_market_universe` | A 股/可转债名单（含历史退市） |
-| `query_market_daily` | 多券或全市场日线 |
+| `query_market_daily` | 多券或全市场日线（长表格式） |
 | `query_market_returns` | 区间收益排名（如"近 5 日跌幅最大转债"） |
 
-省略 `symbols` 才是全市场，空数组会被拒绝。三个市场工具默认返回完整 JSON；`top_n` 只在完整取数、计算和排序后裁剪响应，完整结果仍保存在本地。近 5 日排名使用 `trading_days=5`、`order="asc"`，窗口包含结束日并另取前一交易日为基准。缺价格、停牌无行或混合来源不当作 0；`coverage.ranking_complete=false` 时只能称为合格输入中的 Top N。非交易日明确报错，不静默改日期。
+省略 `symbols` 才是全市场，空数组会被拒绝。三个市场工具默认返回完整 JSON；`top_n` 只在完整取数、计算和排序后裁剪响应，完整结果仍保存在本地。`provider="auto"` 对市场查询优先原生全量／批量能力，不让旧单券路由触发数百次逐券请求。非交易日开始日自动顺延、结束日自动提前，单日优先取前一交易日；原请求与实际日期都见 `window`。近 5 日排名使用 `trading_days=5`、`order="asc"`，只提取基准日和结束日两次收盘价，不提取中间行情。缺端点价格、停牌无行或混合来源不当作 0；`coverage.ranking_complete=false` 时只能称为合格输入中的 Top N。
 
 **探索与扩展**
 
