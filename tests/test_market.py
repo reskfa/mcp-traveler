@@ -72,6 +72,12 @@ def test_request_scope_and_symbol_validation():
         m.MarketDailyRequest(scope='stock', start_date='2026-11-20', end_date='2026-11-20', symbols=['T600018.SH'])
 
 
+def test_market_auto_route_prefers_native_full_over_scalar_preferences():
+    c = {'global_route': ['wind', 'ifind', 'tdx', 'akshare', 'tushare', 'choice'], 'routes': {}}
+    assert m._route(c, 'convertible_bond', 'auto') == ['tushare', 'choice', 'wind', 'ifind', 'tdx', 'akshare']
+    assert m._route(c, 'convertible_bond', 'wind') == ['wind']
+
+
 def test_historical_universe_and_unknown_dates(home, monkeypatch):
     universe = [
         {'symbol': '000001.SZ', 'name': 'current', 'list_date': '2020-01-01', 'delist_date': None},
@@ -107,6 +113,32 @@ def test_complete_json_and_top_n_projection(home, monkeypatch):
     assert stored['row_count'] == len(stored['data']) == len(stored['field_sources']) == 120
     assert response['data'] == stored['data'][:5]
     assert response['projection'] == {'type': 'top_n', 'top_n': 5, 'full_row_count': 120, 'returned_row_count': 5}
+
+
+def test_daily_rolls_non_trading_dates_and_reports_actual_window(home, monkeypatch):
+    dates = ['2026-10-30', '2026-11-02', '2026-11-20']
+    calls = []
+
+    def daily(name, call):
+        return result([{'symbol': '118027.SH', 'date': day, 'close': 100, 'pct_change': 0}
+                       for day in call['trade_dates']])
+
+    install_market_fake(monkeypatch, dates, ['118027.SH'], daily, calls=calls)
+    single = asyncio.run(m.query_market_daily(m.MarketDailyRequest(
+        scope='convertible_bond', symbols=['118027.SH'], start_date='2026-11-21',
+        end_date='2026-11-21', provider='tushare')))
+    assert [row['date'] for row in single['data']] == ['2026-11-20']
+    assert single['window']['requested_start'] == single['window']['requested_end'] == '2026-11-21'
+    assert single['window']['actual_start'] == single['window']['actual_end'] == '2026-11-20'
+
+    period = asyncio.run(m.query_market_daily(m.MarketDailyRequest(
+        scope='convertible_bond', symbols=['118027.SH'], start_date='2026-11-01',
+        end_date='2026-11-21', provider='tushare')))
+    assert period['window']['actual_start'] == '2026-11-02'
+    assert period['window']['actual_end'] == '2026-11-20'
+    daily_calls = [call for name, call in calls if call['operation'] == 'daily']
+    assert [call['trade_dates'] for call in daily_calls] == [
+        ['2026-11-20'], ['2026-11-02'], ['2026-11-20']]
 
 
 def test_full_market_scalar_receives_resolved_universe(home, monkeypatch):
@@ -150,19 +182,20 @@ def test_returns_window_stable_ranking_and_exclusions(home, monkeypatch):
     dates = ['2026-11-16', '2026-11-17', '2026-11-18', '2026-11-19', '2026-11-20']
     symbols = ['000001.SZ', '000002.SZ', '000003.SZ', '000004.SZ']
     closes = {'000001.SZ': 8, '000002.SZ': 9, '000003.SZ': 8}
+    calls = []
 
     def daily(name, call):
         assert call['adjust'] == 'qfq'
         rows = []
         for symbol in symbols:
             for day in call['trade_dates']:
-                if symbol == '000004.SZ' and day == '2026-11-18':
+                if symbol == '000004.SZ' and day == '2026-11-20':
                     continue
-                close = 10 if day == '2026-11-16' else closes.get(symbol, 10) if day == '2026-11-20' else 10
+                close = 10 if day == '2026-11-16' else closes.get(symbol, 10)
                 rows.append({'symbol': symbol, 'date': day, 'close': close})
         return result(rows)
 
-    install_market_fake(monkeypatch, dates, symbols, daily)
+    install_market_fake(monkeypatch, dates, symbols, daily, calls=calls)
     request = m.MarketReturnsRequest(scope='stock', symbols=symbols, trading_days=4,
                                      end_date='2026-11-20', provider='tushare', top_n=2)
     response = asyncio.run(m.query_market_returns(request))
@@ -170,6 +203,8 @@ def test_returns_window_stable_ranking_and_exclusions(home, monkeypatch):
     assert response['window']['actual_trade_dates'] == dates[1:]
     assert [row['symbol'] for row in response['data']] == ['000001.SZ', '000003.SZ']
     assert [row['rank'] for row in response['data']] == [1, 2]
+    daily_calls = [call for name, call in calls if call['operation'] == 'daily']
+    assert len(daily_calls) == 1 and daily_calls[0]['trade_dates'] == ['2026-11-16', '2026-11-20']
     stored = json.loads(open(response['data_path']).read())
     assert [row['symbol'] for row in stored['data']] == ['000001.SZ', '000003.SZ', '000002.SZ']
     assert stored['data'][0]['return_pct'] == pytest.approx(-20)
@@ -177,12 +212,26 @@ def test_returns_window_stable_ranking_and_exclusions(home, monkeypatch):
     assert not stored['coverage']['ranking_complete']
 
 
-def test_returns_reject_non_trading_end_date(home, monkeypatch):
-    install_market_fake(monkeypatch, ['2026-11-20'], [], lambda *args: None)
-    request = m.MarketReturnsRequest(scope='convertible_bond', symbols=['118027.SH'], trading_days=1,
-                                     end_date='2026-11-21', provider='tushare')
-    with pytest.raises(ValueError, match='不是交易日'):
-        asyncio.run(m.query_market_returns(request))
+def test_returns_roll_non_trading_dates_and_fetch_only_endpoints(home, monkeypatch):
+    dates = ['2026-10-30', '2026-11-02', '2026-11-19', '2026-11-20']
+    calls = []
+
+    def daily(name, call):
+        return result([{'symbol': '118027.SH', 'date': day, 'close': 100 if day == '2026-10-30' else 90}
+                       for day in call['trade_dates']])
+
+    install_market_fake(monkeypatch, dates, ['118027.SH'], daily, calls=calls)
+    request = m.MarketReturnsRequest(scope='convertible_bond', symbols=['118027.SH'],
+                                     start_date='2026-11-01', end_date='2026-11-21', provider='tushare')
+    response = asyncio.run(m.query_market_returns(request))
+    assert response['window']['requested_end'] == '2026-11-21'
+    assert response['window']['actual_start'] == '2026-11-02'
+    assert response['window']['actual_end'] == '2026-11-20'
+    assert response['window']['baseline_date'] == '2026-10-30'
+    assert response['data'][0]['date'] == '2026-11-20'
+    assert response['data'][0]['return_pct'] == pytest.approx(-10)
+    daily_calls = [call for name, call in calls if call['operation'] == 'daily']
+    assert [call['trade_dates'] for call in daily_calls] == [['2026-10-30'], ['2026-11-20']]
 
 
 def test_tushare_conversions_and_shared_adjustment_anchor():
