@@ -11,12 +11,12 @@ description: 通过羊毛伞 MCP 查询 A 股与可转债数据；字典未命�
 
 1. **跨券或全市场行情先用专用市场工具**：名单用 `query_market_universe`，多券／全市场日线用 `query_market_daily`，区间收益排名用 `query_market_returns`，不要循环旧单券工具。`symbols=None`（省略）才是全市场，空数组无效。`provider="auto"` 的市场查询优先原生全量／批量能力，不沿用旧单券逐券优先级。
 2. 单券及其他需求用 `search_metrics` 找常用字段或个人取法。只有含义匹配才复用；相近字段不能替代用户所要的名单、范围或口径。需要时用 `data_catalog(dataset, field)` 定点查定义，不读整本字典。
-3. **没有精确匹配，先在网关内探索：未知数值指标且类别明确时用 `explore_metric`；其他需求用 `explore_data`，提交原始需求、证券和时间，不必猜类别。** 无代码市场探索省略 `symbol`，并传 `query_scope="market"`、`market_hint="equity|convertible_bond"`、`market_kind="universe|daily"`；名单历史时点用 `end_date`。需要先了解来源时用 `search_capabilities`，传相同 scope。字典未收录不等于供应商没有，不能因此直接转到网上查。
-4. 探索成功查看 `saved`：`saved_query_id` 用 `query_data` 复用，`saved_field` 用对应类别工具查询。市场取法复用时不填 `symbol`，可换日期；保存的是取法，不是代码清单。告知用户是否已保存；歧义先澄清，临时查询传 `auto_save=false`。只有对应的网关探索明确失败后才考虑外部搜索；数值需求不能因 `explore_data` 未适配而跳过 `explore_metric`。
-5. `needs_confirmation` 不等于无数据：有 `data` 或 `candidates` 就向用户展示并标注疑点、实际来源和日期，用户或 Agent 可核对后接受；不要称为已核实，也不要仅因未自动保存就弃用或反复付费重试。
+3. **没有精确匹配时，统一使用多源探针 `explore_field`**：直接传入需求描述、证券（单券 `symbol` / 多券 `symbols` / 省略即全市场）与时间参数。`explore_field` **不重查字典、不早停**，按路由受控并发探查全部可用来源（4 家 MCP + Tushare Pro 目录 + AKShare 本地索引）。若想指定某来源的工具或 SDK 接口，传 `tool_overrides={"tushare": "cb_daily"}`。
+4. **预览 + `describe` + 本地 CSV（防爆 Token）**：`explore_field`、`query_market_cross_section`、`query_market_time_series`、`helper_market_symbols` 在大结果时只返回前 20~50 行预览 + `describe`（总行数、列数、日期范围、非空统计、数值均值/极值）+ 完整本地 **`csv_path`**。需要做统计计算（均值、排名、汇总、画图）时，**直接用 Python/`pandas.read_csv(csv_path)` 读取本地 CSV**，不要在上下文中硬塞全市场裸 JSON。
+5. **由 Agent 汇总口径并决定入库**：收到 `explore_field` 对比包后，横向比较各家来源的列名、单位、数值与口径差异，自行判断或请用户拍板；确认后调用 `save_explored_field(exploration_id, label, sources=[...])`，**一次将一家或多家来源同时写入个人字典**，后续走常规查询自动补齐复用。
 6. 回答注明实际来源、日期和单位，保留缺值。查看 `coverage` 与完整结果路径，不把前100行预览、搜索片段或保存成功说成已经取全。市场探索响应不裁100行，但仍须看上游总数与截断证据；基本信息当前档案不能冒充历史时点资料。
 
-可转债与股票分开：代码如 `113050.SH`、`123001.SZ`。用 `cb_basic` 搜当前档案，`cb_daily` 搜历史行情与估值，`cb_clauses` 搜条款公告事件。未知指标或名单用 `explore_data(..., market_hint="convertible_bond")`，能力搜索也传该提示；不拿股票估值或财务接口试可转债。个人取法按证券类型保存，不能跨市场套用。条款公告日期不是历史时点状态，当前转股价和余额也不能回填历史。
+可转债与股票分开：代码如 `113050.SH`、`123001.SZ`。用 `cb_basic` 搜当前档案，`cb_daily` 搜历史行情与估值，`cb_clauses` 搜条款公告事件。未知指标或名单直接用 `explore_field(..., scope="convertible_bond")`，不拿股票估值或财务接口试可转债。个人取法按证券类型保存，不能跨市场套用。条款公告日期不是历史时点状态，当前转股价和余额也不能回填历史。
 
 ## 工具
 
@@ -34,8 +34,10 @@ description: 通过羊毛伞 MCP 查询 A 股与可转债数据；字典未命�
 | `query_market_returns` | 同源区间价格收益及稳定排名；检查 `ranking_complete` 和排除原因 |
 | `search_metrics` | 搜常用字段和个人取法；返回 `query_tool` / `query_id` 时按提示复用 |
 | `search_capabilities` | 搜上游工具能力，区分已适配、尚未适配和未验证 |
-| `explore_data` | 不指定类别探索原始需求；支持已适配的记录表，成功默认保存取法 |
-| `query_data` | 按 `query_id` 复用个人取法，可更换证券和时间 |
+| `explore_field` | 统一多源探针：并发查全六家来源（MCP+SDK），返回预览、`describe` 与本地 `csv_path` |
+| `save_explored_field` | 基于 `exploration_id` 一次将一家或多家来源入库到个人字典 |
+| `sync_sdk_catalog` | 刷新 Tushare 官方 skills 目录与本地 AKShare 函数索引 |
+| `query_data` | 按 `query_id` 复用已保存的记录型个人取法，可更换证券和时间 |
 | `data_catalog` | 查字段定义、单位、来源与参数 |
 | `query_convertible_bond_basic` | 可转债基本信息当前档案 |
 | `query_convertible_bond_daily` | 可转债日期区间行情及估值 |
@@ -45,7 +47,6 @@ description: 通过羊毛伞 MCP 查询 A 股与可转债数据；字典未命�
 | `query_valuations` | 指定交易日估值，省略日期查最新 |
 | `query_financials` | 指定报告期财务 |
 | `query_technical_indicators` | 按字典定义的周期、日期和复权查技术指标 |
-| `explore_metric` / `save_metric` | 已明确类别的数值指标探索、手动保存候选 |
 | `provider_status` | 来源连接状态、本地统计与账户记录 |
 
 近 5 个交易日跌幅最大的转债：

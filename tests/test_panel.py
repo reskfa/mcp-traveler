@@ -166,7 +166,7 @@ def test_cross_section_and_time_series_shapes_weekly_and_http(home, monkeypatch)
         assert cs['index'] == ['600519.SH', '000001.SZ']
         assert cs['columns'] == ['close', 'pct_change']
         assert cs['matrix']['rows'] == [[1450.0, 1.4], [11.6, 1.0]]
-        assert 'capabilities' in cs and 'tushare' in cs['capabilities']
+        assert 'capabilities' not in cs  # omitted by default to save tokens
 
         cs_csv = client.get(cs['download_url']).text
         assert 'symbol,close,pct_change' in cs_csv
@@ -176,12 +176,14 @@ def test_cross_section_and_time_series_shapes_weekly_and_http(home, monkeypatch)
             'scope': 'stock', 'start_date': '2025-11-03', 'end_date': '2025-11-14',
             'field': 'close', 'frequency': 'weekly',
             'symbols': ['000001.SZ', '600519.SH'],
+            'include_capabilities': True,
         }).json()
         assert ts['shape'] == 'time_series'
         assert ts['frequency'] == 'weekly'
         assert ts['index'] == ['2025-11-07', '2025-11-14']
         assert ts['columns'] == ['000001.SZ', '600519.SH']
         assert ts['matrix']['rows'] == [[11.6, 1450.0], [12.0, 1480.0]]
+        assert ts['describe']['unique_symbols'] == 2
         assert 'capabilities' in ts
 
         ts_csv = client.get(ts['download_url']).text

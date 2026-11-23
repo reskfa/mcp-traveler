@@ -16,6 +16,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from . import config, core
 from .market import _filter_universe, _run_tasks, _settings
+from .tabular import PREVIEW_ROW_LIMIT, preview_notice, write_csv_and_describe
 
 Provider = Literal['auto', 'tushare', 'akshare', 'wind', 'ifind', 'tdx', 'choice']
 Scope = Literal['stock', 'convertible_bond']
@@ -226,7 +227,8 @@ class MarketSymbolsRequest(BaseModel):
 
 
 class SearchSecuritiesRequest(BaseModel):
-    query: str
+    query: str | None = None
+    queries: list[str] | None = None
     scope: SearchScope = 'all'
     limit: int = Field(default=20, ge=1, le=100)
     include_delisted: bool = False
@@ -234,11 +236,21 @@ class SearchSecuritiesRequest(BaseModel):
 
     @model_validator(mode='after')
     def valid(self):
-        self.query = (self.query or '').strip()
-        if not self.query:
-            raise ValueError('搜索关键词不能为空（可输入证券名称、简称或代码）')
-        if len(self.query) > 80:
-            raise ValueError('搜索关键词过长')
+        if self.queries is not None:
+            cleaned = [str(q).strip() for q in self.queries if str(q).strip()]
+            if not cleaned:
+                raise ValueError('queries 不能为空列表')
+            if len(cleaned) > 50:
+                raise ValueError('单次批量搜索最多支持 50 个关键词')
+            self.queries = list(dict.fromkeys(cleaned))
+            if not self.query:
+                self.query = self.queries[0]
+        else:
+            self.query = (self.query or '').strip()
+            if not self.query:
+                raise ValueError('搜索关键词不能为空（可输入证券名称、简称或代码，或传 queries 批量搜索）')
+            if len(self.query) > 80:
+                raise ValueError('搜索关键词过长')
         return self
 
 
@@ -278,6 +290,9 @@ def _store_helper(helper_name, request, payload):
     rid = uuid.uuid4().hex
     folder = config.ROOT / 'local/results'
     folder.mkdir(parents=True, exist_ok=True)
+    rows = payload.get('data') or []
+    csv_cols = list((payload.get('fields') or {}).keys()) or None
+    csv_path, desc = write_csv_and_describe(rows, folder / f'{rid}.csv', csv_cols)
     answer = {
         **{k: v for k, v in payload.items() if k != 'raws'},
         'id': rid,
@@ -286,6 +301,8 @@ def _store_helper(helper_name, request, payload):
         'query': request.model_dump(),
         'requested_provider': request.provider,
         'fetched_at': core.now(),
+        'describe': desc,
+        'csv_path': csv_path,
         'raw_path': str(folder / f'{rid}.raw.json'),
         'data_path': str(folder / f'{rid}.json'),
         'download_url': f'/api/results/{rid}/csv',
@@ -293,6 +310,19 @@ def _store_helper(helper_name, request, payload):
     }
     config.write_json(folder / f'{rid}.raw.json', config.redact(payload.get('raws', [])))
     config.write_json(folder / f'{rid}.json', config.redact(answer))
+    if helper_name == 'market_symbols' and len(rows) > PREVIEW_ROW_LIMIT:
+        trimmed = dict(answer)
+        trimmed['data'] = rows[:PREVIEW_ROW_LIMIT]
+        trimmed['symbols_preview'] = (trimmed.get('symbols') or [])[:PREVIEW_ROW_LIMIT]
+        trimmed['symbols'] = trimmed['symbols_preview']
+        trimmed['symbols_truncated'] = True
+        if 'field_sources' in trimmed and isinstance(trimmed['field_sources'], list):
+            trimmed['field_sources'] = trimmed['field_sources'][:PREVIEW_ROW_LIMIT]
+        trimmed['preview_only'] = True
+        trimmed['preview_row_count'] = PREVIEW_ROW_LIMIT
+        trimmed['full_row_count'] = len(rows)
+        trimmed['preview_notice'] = preview_notice(PREVIEW_ROW_LIMIT, len(rows), csv_path)
+        return trimmed
     return answer
 
 
@@ -542,6 +572,37 @@ def _search_route(c, scope, provider):
 
 async def search_securities(request: SearchSecuritiesRequest):
     request = SearchSecuritiesRequest.model_validate(request.model_dump())
+    if request.queries and len(request.queries) > 1:
+        import asyncio
+        start = time.monotonic()
+        sub_reqs = [
+            SearchSecuritiesRequest(
+                query=q, scope=request.scope, limit=request.limit,
+                include_delisted=request.include_delisted, provider=request.provider,
+            )
+            for q in request.queries
+        ]
+        sub_results = await asyncio.gather(*(search_securities(sr) for sr in sub_reqs))
+        by_query = {sr.query: {'symbols': res['symbols'], 'top': res['data'][0] if res['data'] else None, 'count': res['count'], 'provider': res['provider']}
+                    for sr, res in zip(sub_reqs, sub_results)}
+        merged_data = []
+        seen = set()
+        for res in sub_results:
+            for row in res['data']:
+                if row['symbol'] not in seen:
+                    seen.add(row['symbol'])
+                    merged_data.append(row)
+        return {
+            'status': 'success' if merged_data else 'empty',
+            'helper': 'search_securities',
+            'batch': True,
+            'queries': request.queries,
+            'by_query': by_query,
+            'symbols': [r['symbol'] for r in merged_data],
+            'count': len(merged_data),
+            'data': merged_data,
+            'elapsed_seconds': round(time.monotonic() - start, 2),
+        }
     c = config.load()
     settings = _settings(c)
     start = time.monotonic()

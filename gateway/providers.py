@@ -49,6 +49,8 @@ def fetch(name,q,p,key):
     if q.get('generic_call'):
         from .generic_data import fetch_remote
         return fetch_remote(name,p,key,q['generic_call'])
+    if q.get('sdk_probe'):
+        return _sdk_probe(name,q['sdk_probe'],key)
     if q.get('probe'):
         if name in config.MCP_PROVIDERS:
             r=Remote(name,p,key).rpc('tools/list',{})
@@ -79,3 +81,28 @@ def akshare_fetch(q):
 def remote_fetch(name,q,p,key):
     from .acquisition import acquire
     return acquire(name,q,remote=Remote(name,p,key))
+
+
+def _sdk_probe(name, call, key):
+    api_name = str(call.get('api_name') or '')
+    if not api_name.isidentifier() or api_name.startswith('_'):
+        raise ValueError(f'非法的 SDK 接口名：{api_name}')
+    kwargs = dict(call.get('kwargs') or {})
+    if name == 'tushare':
+        import tushare as ts
+        pro = ts.pro_api(key)
+        fn = getattr(pro, api_name, None)
+        if not callable(fn):
+            raise ValueError(f'Tushare 不存在接口：{api_name}')
+        df = fn(**kwargs)
+        rows = records(df) if df is not None and hasattr(df, 'to_json') else []
+        return {'rows': rows, 'columns': list(df.columns) if hasattr(df, 'columns') else [], 'row_count': len(rows)}
+    if name == 'akshare':
+        import akshare as ak
+        fn = getattr(ak, api_name, None)
+        if not callable(fn):
+            raise ValueError(f'AKShare 不存在函数：{api_name}')
+        df = fn(**kwargs)
+        rows = records(df) if df is not None and hasattr(df, 'to_json') else []
+        return {'rows': rows, 'columns': list(df.columns) if hasattr(df, 'columns') else [], 'row_count': len(rows)}
+    raise ValueError(f'{name} 不支持 SDK 探查')

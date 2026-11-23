@@ -159,7 +159,7 @@ def test_http_and_mcp_tool_contract(home,monkeypatch):
         assert client.post('/api/explore-data',json={},headers={'Origin':'https://other.example'}).status_code==403
     from gateway.app import mcp
     names=[t.name for t in asyncio.run(mcp.list_tools())]
-    assert {'explore_data','query_data','search_capabilities'}<=set(names)
+    assert {'explore_field','save_explored_field','query_data','search_capabilities'}<=set(names)
 
 
 def test_parenthetical_and_long_request_match_topic():

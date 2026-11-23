@@ -14,10 +14,12 @@ from . import config,core
 from .catalog import catalog,dictionary_view
 from .dictionary import search_metrics as find_metrics,delete_user_metric
 from .exploration import ExplorationRequest,explore,save_exploration
+from .explorer import ExploreFieldRequest,SaveExploredFieldRequest,explore_field as run_explore_field,save_explored_field as run_save_explored_field
 from .generic_data import ExploreDataRequest,DataQueryRequest,search_capabilities as find_capabilities,explore_data as explore_generic,query_data as query_generic
 from .helpers import TradeCalendarRequest,MarketSymbolsRequest,SearchSecuritiesRequest,query_trade_calendar as run_trade_calendar,query_market_symbols as run_market_symbols,search_securities as run_search_securities,get_helper_capabilities
 from .market import MarketUniverseRequest,MarketDailyRequest,MarketReturnsRequest,query_market_universe as market_universe,query_market_daily as market_daily,query_market_returns as market_returns
 from .panel import CrossSectionRequest,TimeSeriesRequest,query_market_cross_section as market_cross_section,query_market_time_series as market_time_series,get_panel_capabilities
+from .sdk_catalog import load_akshare_catalog,sync_tushare_skills_catalog
 
 mcp=FastMCP('羊毛伞',stateless_http=True,json_response=True)
 @mcp.tool()
@@ -60,9 +62,9 @@ async def helper_market_symbols(scope:str,as_of_date:str|None=None,include_delis
     return await run_market_symbols(MarketSymbolsRequest(scope=scope,as_of_date=as_of_date,include_delisted=include_delisted,provider=provider))
 
 @mcp.tool()
-async def helper_search_securities(query:str,scope:str='all',limit:int=20,include_delisted:bool=False,provider:str='auto')->dict:
-    """辅助函数：双向搜索 A 股与可转债（名称/简称搜代码，或代码搜名称）。scope 可选 all（默认，同时搜股票和转债）、stock、convertible_bond；支持 Tushare、AKShare、Wind、通达信（A股）、iFinD、东方财富妙想多源自动路由，不锁定 Tushare。"""
-    return await run_search_securities(SearchSecuritiesRequest(query=query,scope=scope,limit=limit,include_delisted=include_delisted,provider=provider))
+async def helper_search_securities(query:str|None=None,queries:list[str]|None=None,scope:str='all',limit:int=20,include_delisted:bool=False,provider:str='auto')->dict:
+    """辅助函数：双向搜索 A 股与可转债（名称/简称搜代码，或代码搜名称）。支持单关键词 query，或传 queries=['贵州茅台','平安银行'] 一次并发批量解析。scope 可选 all（默认）、stock、convertible_bond。"""
+    return await run_search_securities(SearchSecuritiesRequest(query=query,queries=queries,scope=scope,limit=limit,include_delisted=include_delisted,provider=provider))
 
 @mcp.tool()
 def helper_capabilities()->dict:
@@ -70,14 +72,14 @@ def helper_capabilities()->dict:
     return get_helper_capabilities()
 
 @mcp.tool()
-async def query_market_cross_section(scope:str,date:str,symbols:list[str]|None=None,fields:list[str]|None=None,adjust:str='none',provider:str='auto',sort_by:str|None=None,order:str='asc',top_n:int|None=None)->dict:
-    """多券/全市场截面数据：取指定日期多个券（省略 symbols 为全市场）的一个或多个指标。返回二维表结构（index=codes, columns=fields，含 matrix 与 data），并附六家数据源能力矩阵 capabilities。非交易日自动对齐至前一交易日。"""
-    return await market_cross_section(CrossSectionRequest(scope=scope,date=date,symbols=symbols,fields=fields,adjust=adjust,provider=provider,sort_by=sort_by,order=order,top_n=top_n))
+async def query_market_cross_section(scope:str,date:str,symbols:list[str]|None=None,fields:list[str]|None=None,adjust:str='none',provider:str='auto',sort_by:str|None=None,order:str='asc',top_n:int|None=None,include_capabilities:bool=False)->dict:
+    """多券/全市场截面数据：取指定日期多个券（省略 symbols 为全市场）的一个或多个指标。scope 为 stock 或 convertible_bond；fields 支持 open/high/low/close/volume/amount/turnover_rate/pre_close/pct_change。返回二维表（index=codes, columns=fields）及本地 csv_path 与 describe；超过 50 行仅返回前 50 行预览。需要能力矩阵时调 market_panel_capabilities 或传 include_capabilities=true。"""
+    return await market_cross_section(CrossSectionRequest(scope=scope,date=date,symbols=symbols,fields=fields,adjust=adjust,provider=provider,sort_by=sort_by,order=order,top_n=top_n,include_capabilities=include_capabilities))
 
 @mcp.tool()
-async def query_market_time_series(scope:str,start_date:str,end_date:str,field:str='close',frequency:str='daily',symbols:list[str]|None=None,adjust:str='none',provider:str='auto')->dict:
-    """多券/全市场时序数据：取日期区间（支持 daily/weekly/monthly 频率）多个券（省略 symbols 为全市场）的单个指标。返回二维表结构（index=dates, columns=codes，含 matrix 与 data），并附六家数据源能力矩阵 capabilities。"""
-    return await market_time_series(TimeSeriesRequest(scope=scope,start_date=start_date,end_date=end_date,field=field,frequency=frequency,symbols=symbols,adjust=adjust,provider=provider))
+async def query_market_time_series(scope:str,start_date:str,end_date:str,field:str='close',frequency:str='daily',symbols:list[str]|None=None,adjust:str='none',provider:str='auto',include_capabilities:bool=False)->dict:
+    """多券/全市场时序数据：取日期区间（frequency 支持 daily/weekly/monthly）多个券（省略 symbols 为全市场）的单个指标。scope 为 stock 或 convertible_bond；field 支持 open/high/low/close/volume/amount/turnover_rate/pre_close/pct_change。返回二维表（index=dates, columns=codes）及本地 csv_path 与 describe；超过 50 行仅返回前 50 行预览。"""
+    return await market_time_series(TimeSeriesRequest(scope=scope,start_date=start_date,end_date=end_date,field=field,frequency=frequency,symbols=symbols,adjust=adjust,provider=provider,include_capabilities=include_capabilities))
 
 @mcp.tool()
 def market_panel_capabilities()->dict:
@@ -118,32 +120,37 @@ def provider_status()->dict:
 
 @mcp.tool()
 def search_metrics(query:str='',dataset:str|None=None,limit:int=10)->dict:
-    """搜索A股与可转债字段及已保存通用取法的中文名称、字段代码、别名和来源列；优先使用此工具，不必读取完整目录。返回个人及内置字典的紧凑结果。未精确命中时继续search_capabilities或explore_data，不能据此判断上游没有数据。"""
+    """搜索A股与可转债内置字段及已保存个人取法的中文名称、字段代码、别名和来源列；优先使用此工具，不必读取完整目录。未精确命中时直接使用 explore_field 并发探查全部数据源，不能据此判断上游没有数据。"""
     return find_metrics(query,dataset,limit)
 
 @mcp.tool()
-async def explore_metric(name:str,dataset:str,symbol:str,auto_save:bool=True,period:str|None=None,date:str|None=None,start_date:str|None=None,end_date:str|None=None,unit:str|None=None,aliases:list[str]|None=None,provider:str='auto',max_attempts:int=2,parameters:dict[str,int]|None=None,frequency:str='daily',adjust:str|None=None)->dict:
-    """探索尚未入字典的A股数值指标。先查已有取法，再按路由尝试可能支持的MCP；每来源最多一次。名称应是一个明确指标，提供日期/报告期。成功默认自动保存到个人字典并返回saved/saved_field，告知用户即可。needs_confirmation不等于无数据：可解析的上游结果会保留在data和candidates，并标注validation_status=unverified及差异；先展示和比较，不因校验疑点弃用。未确认候选不自动保存，仅临时查询传auto_save=false。coverage独立说明数据完整性，不能把成功保存称作取全。"""
-    return await explore(ExplorationRequest(name=name,auto_save=auto_save,dataset=dataset,symbol=symbol,period=period,date=date,start_date=start_date,end_date=end_date,unit=unit,aliases=aliases or [],provider=provider,max_attempts=max_attempts,parameters=parameters,frequency=frequency,adjust=adjust))
+async def explore_field(request:str,symbol:str|None=None,symbols:list[str]|None=None,scope:str|None=None,date:str|None=None,start_date:str|None=None,end_date:str|None=None,period:str|None=None,providers:list[str]|None=None,tool_overrides:dict[str,str]|None=None,stop_on_first:bool=False,per_provider_timeout:int=25)->dict:
+    """统一多源探针：字典未命中或口径不符时，直接按路由受控并发探查全部可用来源（4 家 MCP + Tushare Pro 目录 + AKShare 本地索引），不重查字典、不早停。时间参数说明：交易日用 date（YYYY-MM-DD），区间用 start_date+end_date，财报报告期（如年报 2024-12-31）用 period。支持单券 symbol、多券 symbols、全市场（均省略）及 tool_overrides={provider: tool_or_api}。每源返回前 10 行 preview + describe + 完整本地 csv_path，确认后调 save_explored_field 入库。"""
+    return await run_explore_field(ExploreFieldRequest(request=request,symbol=symbol,symbols=symbols,scope=scope,date=date,start_date=start_date,end_date=end_date,period=period,providers=providers,tool_overrides=tool_overrides,stop_on_first=stop_on_first,per_provider_timeout=per_provider_timeout))
 
 @mcp.tool()
-async def save_metric(exploration_id:str,field:str|None=None)->dict:
-    """将成功探索的取法保存到本机个人字典，之后搜索及常规查询立即可用。field可选，填写稳定英文代码；不保存无法核实的候选，不覆盖内置字典。"""
-    return await save_exploration(exploration_id,field)
+def save_explored_field(exploration_id:str,label:str,sources:list[dict],kind:str='metric',dataset:str|None=None,field_id:str|None=None,unit:str='未注明',description:str='',aliases:list[str]|None=None)->dict:
+    """将 explore_field 真实证据中经 Agent/用户确认的取法写入本机个人字典。支持一次同时入库一家或多家来源（sources=[{provider, tool, columns, source_unit, multiplier, prompt, note}, ...]），入库后立即热加载复用。"""
+    return run_save_explored_field(SaveExploredFieldRequest(exploration_id=exploration_id,kind=kind,dataset=dataset,field_id=field_id,label=label,unit=unit,description=description,aliases=aliases or [],sources=sources))
+
+@mcp.tool()
+def sync_sdk_catalog(refresh_tushare:bool=True,refresh_akshare:bool=True)->dict:
+    """刷新本地 SDK 接口索引：从 Tushare 官方 skills 仓库同步 220+ Pro 接口目录，并反射本地已安装的 AKShare 函数签名与文档。"""
+    out={}
+    if refresh_tushare:out['tushare']=sync_tushare_skills_catalog()
+    if refresh_akshare:
+        ak_apis=load_akshare_catalog(force_refresh=True)
+        out['akshare']={'count':len(ak_apis)}
+    return out
 
 @mcp.tool()
 async def search_capabilities(query:str,provider:str='auto',refresh:bool=False,limit:int=8,market_hint:str|None=None,query_scope:str='security',market_kind:str|None=None)->dict:
-    """搜索字典与供应商能力。query_scope=market时不填代码，须同时给market_hint及market_kind=universe|daily。字典未精确命中（或只有相近字段）时继续此入口，不直接绕开网关。返回已接入、可探索或未适配状态，未适配不等于来源不支持。"""
+    """搜索字典与供应商能力。query_scope=market时不填代码，须同时给market_hint及market_kind=universe|daily。返回已接入、可探索或未适配状态。"""
     return await find_capabilities(query,provider,refresh,limit,market_hint=market_hint,query_scope=query_scope,market_kind=market_kind)
 
 @mcp.tool()
-async def explore_data(request:str,symbol:str|None=None,period:str|None=None,start_date:str|None=None,end_date:str|None=None,provider:str='auto',max_attempts:int=2,auto_save:bool=True,market_hint:str|None=None,query_scope:str='security',market_kind:str|None=None)->dict:
-    """探索常用字典之外的信息。默认query_scope=security并传单券symbol；query_scope=market时省略symbol，传market_hint=equity|convertible_bond及market_kind=universe|daily，市场名单以end_date为历史时点。先发现上游能力再执行只读查询。成功默认保存取法，复用query_data；市场取法不保存代码清单，响应不裁100行，保存成功不代表全市场完整。"""
-    return await explore_generic(ExploreDataRequest(request=request,symbol=symbol,market_hint=market_hint,query_scope=query_scope,market_kind=market_kind,period=period,start_date=start_date,end_date=end_date,provider=provider,max_attempts=max_attempts,auto_save=auto_save))
-
-@mcp.tool()
 async def query_data(query_id:str,symbol:str|None=None,period:str|None=None,start_date:str|None=None,end_date:str|None=None,market_hint:str|None=None,query_scope:str|None=None,market_kind:str|None=None)->dict:
-    """复用个人字典中探索成功的记录取法。旧单券取法仍需symbol；市场取法省略symbol，可换日期，query_scope和market_kind可省略并自动从保存定义恢复。不重复探索，仍校验本次实际返回；市场响应保持完整JSON。"""
+    """复用个人字典中已保存的记录型取法。旧单券取法需传 symbol；市场取法省略 symbol 并可换日期。"""
     return await query_generic(DataQueryRequest(query_id=query_id,symbol=symbol,market_hint=market_hint,query_scope=query_scope,market_kind=market_kind,period=period,start_date=start_date,end_date=end_date))
 
 mcp_app=mcp.streamable_http_app()
@@ -188,6 +195,16 @@ class SaveMetricRequest(BaseModel):
 @app.get('/api/metrics/search')
 def metric_search(q:str='',dataset:str|None=None,limit:int=QueryParam(10,ge=1,le=50)):
     return find_metrics(q,dataset,limit)
+
+@app.post('/api/explore-field')
+async def field_explore_api(request:ExploreFieldRequest):return await run_explore_field(request)
+
+@app.post('/api/explore-field/save')
+def field_explore_save_api(request:SaveExploredFieldRequest):return run_save_explored_field(request)
+
+@app.post('/api/helpers/sync-sdk-catalog')
+def sync_sdk_catalog_api(refresh_tushare:bool=True,refresh_akshare:bool=True):
+    return sync_sdk_catalog(refresh_tushare=refresh_tushare,refresh_akshare=refresh_akshare)
 
 @app.post('/api/explore')
 async def metric_explore(request:ExplorationRequest):

@@ -75,16 +75,21 @@ def _safe_user(base, user):
         if scope not in ['security','market']:raise ValueError('Invalid personal query scope')
         if scope=='market' and (market_kind not in ['universe','daily'] or definition.get('schema_version',1)<2):raise ValueError('Invalid personal market query')
         if scope=='security' and market_kind is not None:raise ValueError('Security query cannot have a market kind')
-        if definition.get('provider') not in config.MCP_PROVIDERS or not isinstance(definition.get('tool'),str) or not definition['tool'].isidentifier():
+        if definition.get('provider') not in config.PROVIDERS or not isinstance(definition.get('tool'),str) or not definition['tool'].isidentifier():
             raise ValueError('Invalid personal data source/tool')
         if not all(isinstance(definition.get(k),str) and definition[k].strip() for k in ['label','request']):
             raise ValueError('Invalid personal data request')
         if not isinstance(definition.get('columns'),dict):raise ValueError('Invalid personal record columns')
-    # Personal recipes reuse an approved acquisition template, never a new SDK
-    # method, endpoint, parameter or executable expression.
+    # Personal recipes reuse an approved acquisition template or an evidence-verified
+    # read-only recipe created by save_explored_field, never an arbitrary expression.
     for rid, recipe in user.get('recipes', {}).items():
         if not re.fullmatch(r'[A-Za-z][A-Za-z0-9_]*', rid):
             raise ValueError('Invalid recipe ID')
+        if recipe.get('explored') is True and recipe.get('kind') in {'mcp_nl', 'sdk'} and recipe.get('provider') in config.PROVIDERS:
+            method = recipe.get('method', '')
+            if not isinstance(method, str) or not method.isidentifier() or method.startswith('_'):
+                raise ValueError('Invalid explored recipe method')
+            continue
         operational = {k:v for k,v in recipe.items() if k not in {'notes', 'upstream'}}
         exploration = (recipe.get('kind') == 'mcp_nl' and recipe.get('template') == EXPLORATION_TEMPLATE
                        and recipe.get('qualifier') == EXPLORATION_QUALIFIER)

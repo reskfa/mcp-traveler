@@ -32,6 +32,7 @@ from .market import (
     _settings,
 )
 from .market_provider import MARKET_FIELDS, normalize_symbol
+from .tabular import PREVIEW_ROW_LIMIT, preview_notice, write_csv_and_describe
 
 Provider = Literal['auto', 'tushare', 'akshare', 'wind', 'ifind', 'tdx', 'choice']
 Scope = Literal['stock', 'convertible_bond']
@@ -185,6 +186,7 @@ class CrossSectionRequest(BaseModel):
     sort_by: str | None = None
     order: Literal['asc', 'desc'] = 'asc'
     top_n: int | None = Field(default=None, ge=1, le=1000)
+    include_capabilities: bool = False
 
     @model_validator(mode='after')
     def valid(self):
@@ -193,8 +195,9 @@ class CrossSectionRequest(BaseModel):
         if self.scope == 'convertible_bond' and self.adjust != 'none':
             raise ValueError('转债不接受复权参数')
         self.fields = list(dict.fromkeys(self.fields or ['close', 'pct_change']))
-        if set(self.fields) - set(MARKET_FIELDS):
-            raise ValueError('包含不支持的截面字段')
+        bad = sorted(set(self.fields) - set(MARKET_FIELDS))
+        if bad:
+            raise ValueError(f'包含不支持的截面字段：{", ".join(bad)}；当前支持：{", ".join(MARKET_FIELDS)}')
         if self.sort_by and self.sort_by not in self.fields and self.sort_by != 'symbol':
             raise ValueError('sort_by 必须是已请求的字段或 symbol')
         return self
@@ -209,6 +212,7 @@ class TimeSeriesRequest(BaseModel):
     symbols: list[str] | None = None
     adjust: Literal['none', 'qfq', 'hfq'] = 'none'
     provider: Provider = 'auto'
+    include_capabilities: bool = False
 
     @model_validator(mode='after')
     def valid(self):
@@ -220,7 +224,7 @@ class TimeSeriesRequest(BaseModel):
         if self.scope == 'convertible_bond' and self.adjust != 'none':
             raise ValueError('转债不接受复权参数')
         if self.field not in MARKET_FIELDS:
-            raise ValueError(f'不支持的时序字段：{self.field}')
+            raise ValueError(f'不支持的时序字段：{self.field}；当前支持：{", ".join(MARKET_FIELDS)}')
         return self
 
 
@@ -378,6 +382,9 @@ def _store_panel(kind, request, payload):
     rid = uuid.uuid4().hex
     folder = config.ROOT / 'local/results'
     folder.mkdir(parents=True, exist_ok=True)
+    rows = payload.get('data') or []
+    csv_cols = ([payload.get('index_name', 'symbol')] + list(payload.get('columns') or [])) if rows else None
+    csv_path, desc = write_csv_and_describe(rows, folder / f'{rid}.csv', csv_cols)
     answer = {
         **{k: v for k, v in payload.items() if k != 'raws'},
         'id': rid,
@@ -385,6 +392,8 @@ def _store_panel(kind, request, payload):
         'query': request.model_dump(),
         'requested_provider': request.provider,
         'fetched_at': core.now(),
+        'describe': desc,
+        'csv_path': csv_path,
         'raw_path': str(folder / f'{rid}.raw.json'),
         'data_path': str(folder / f'{rid}.json'),
         'download_url': f'/api/results/{rid}/csv',
@@ -392,6 +401,24 @@ def _store_panel(kind, request, payload):
     }
     config.write_json(folder / f'{rid}.raw.json', config.redact(payload.get('raws', [])))
     config.write_json(folder / f'{rid}.json', config.redact(answer))
+    if len(rows) > PREVIEW_ROW_LIMIT:
+        trimmed = dict(answer)
+        trimmed['data'] = rows[:PREVIEW_ROW_LIMIT]
+        if 'index' in trimmed:
+            trimmed['index'] = trimmed['index'][:PREVIEW_ROW_LIMIT]
+        if 'matrix' in trimmed and isinstance(trimmed['matrix'], dict):
+            trimmed['matrix'] = {
+                **trimmed['matrix'],
+                'index': trimmed['matrix']['index'][:PREVIEW_ROW_LIMIT],
+                'rows': trimmed['matrix']['rows'][:PREVIEW_ROW_LIMIT],
+            }
+        if 'field_sources' in trimmed and isinstance(trimmed['field_sources'], list):
+            trimmed['field_sources'] = trimmed['field_sources'][:PREVIEW_ROW_LIMIT]
+        trimmed['preview_only'] = True
+        trimmed['preview_row_count'] = PREVIEW_ROW_LIMIT
+        trimmed['full_row_count'] = len(rows)
+        trimmed['preview_notice'] = preview_notice(PREVIEW_ROW_LIMIT, len(rows), csv_path)
+        return trimmed
     return answer
 
 
@@ -555,7 +582,7 @@ async def query_market_cross_section(request: CrossSectionRequest):
             'missing_cells': missing_cells,
         },
         'fields': {f: {'label': FIELD_META.get(f, (f, ''))[0], 'unit': FIELD_META.get(f, (f, ''))[1]} for f in columns},
-        'capabilities': get_panel_capabilities()['providers'],
+        **({'capabilities': get_panel_capabilities()['providers']} if request.include_capabilities else {}),
         'attempts': attempts,
         'raws': raws,
         'notes': list(dict.fromkeys(notes)),
@@ -648,7 +675,7 @@ async def query_market_time_series(request: TimeSeriesRequest):
             'missing_cells': missing_cells,
         },
         'fields': {sym: {'label': sym, 'unit': FIELD_META.get(request.field, ('', ''))[1]} for sym in columns},
-        'capabilities': get_panel_capabilities()['providers'],
+        **({'capabilities': get_panel_capabilities()['providers']} if request.include_capabilities else {}),
         'attempts': attempts,
         'raws': raws,
         'notes': list(dict.fromkeys(notes)),

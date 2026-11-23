@@ -112,10 +112,11 @@ HTTP：`GET /api/helpers/capabilities`、`POST /api/helpers/trade-calendar`、`P
 **探索与扩展**
 
 | 工具 | 用途 |
-|------|------|
-| `explore_metric` | 字典没有的指标，让网关尝试取数 |
-| `save_metric` | 探索成功后保存取法到个人字典 |
-| `explore_data` / `query_data` | 通用取数探索与复用 |
+|---|---|
+| `explore_field` | **统一多源探针（推荐）**：不重查字典、不早停，并发探查全部六家来源（MCP + Tushare/AKShare SDK 目录）并返回横向对比包 |
+| `save_explored_field` | 基于 `exploration_id` 一次将一家或多家确认通过的来源入库到个人字典 |
+| `sync_sdk_catalog` | 同步 Tushare 官方 skills 接口目录与本地 AKShare 函数索引 |
+| `explore_metric` / `save_metric` / `explore_data` / `query_data` | 旧版探索工具（过渡兼容保留） |
 | `search_capabilities` | 搜索供应商工具目录 |
 
 ## 🐍 Python / HTTP

@@ -125,11 +125,11 @@ async def ensure_tools(provider,refresh=False):
 
 def runnable(tool):
     name=tool.get('name','')
-    readonly=tool.get('annotations',{}).get('readOnlyHint') is True or bool(re.match(r'^(get_|search_|wenda_.*_query$|mx_)',name))
+    readonly=tool.get('annotations',{}).get('readOnlyHint') is True or bool(re.match(r'^(get_|search_|wenda_.*_query$|mx_|tdx_indicator_select$|tdx_screener$)',name))
     schema=tool.get('inputSchema',{});props=schema.get('properties',{})
-    nl=next((k for k in ('question','query') if props.get(k,{}).get('type')=='string'),None)
+    nl=next((k for k in ('question','query','message') if props.get(k,{}).get('type')=='string'),None)
     required=set(schema.get('required',[]))
-    supported={nl,'market','size','time_start','time_end','symbol','name','bdate','edate','keywords'}
+    supported={nl,'market','rang','size','time_start','time_end','symbol','name','bdate','edate','keywords'}
     # Document/snippet tools are discoverable, but this iteration only verifies
     # structured records. Do not advertise a news search as a working parser.
     documents=bool(re.search(r'news|notice|report_query',name,re.I))
