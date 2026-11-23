@@ -10,7 +10,7 @@ from pydantic import BaseModel
 from fastapi.responses import FileResponse,JSONResponse,Response
 from fastapi.staticfiles import StaticFiles
 from mcp.server.fastmcp import FastMCP
-from . import config,core
+from . import accounts,config,core
 from .catalog import catalog,dictionary_view
 from .dictionary import search_metrics as find_metrics,delete_user_metric
 from .exploration import ExplorationRequest,explore,save_exploration
@@ -115,8 +115,8 @@ async def query_financials(symbol:str,period:str,fields:list[str]|None=None,prov
     return await core.query(core.Query(dataset='financials',symbol=symbol,period=period,fields=fields,provider=provider))
 @mcp.tool()
 def provider_status()->dict:
-    """查看连接状态、手动账户记录、本地调用统计；不会自动读取官方余额。"""
-    return config.redact(config.status())
+    """查看连接状态、官网同步或手动记录的账户积分/额度、本地调用统计；不暴露任何密钥或会话凭证。"""
+    return config.redact(accounts.enrich_status(config.status()))
 
 @mcp.tool()
 def search_metrics(query:str='',dataset:str|None=None,limit:int=10)->dict:
@@ -231,7 +231,7 @@ async def generic_query(request:DataQueryRequest):return await query_generic(req
 @app.get('/api/config')
 def get_config():return config.public()
 @app.get('/api/status')
-def get_status():return config.redact(config.status())
+def get_status():return config.redact(accounts.enrich_status(config.status()))
 @app.patch('/api/providers/{name}')
 def save_provider(name:str,patch:dict):
     if name not in config.PROVIDERS:raise HTTPException(404)
@@ -251,12 +251,41 @@ def account(name:str,patch:dict):
         if k in values and values[k] is not None:
             values[k]=float(values[k])
             if not __import__('math').isfinite(values[k]) or values[k]<0:raise ValueError('额度应为非负数字')
-    values.update({'source':'manual','account_updated_at':core.now()})
-    return config.update_status(name,values)
+    values.update({'source':'manual','account_updated_at':core.now(),'last_sync_error':None})
+    return config.redact(accounts.enrich_status(config.update_status(name,values)))
+@app.post('/api/accounts/refresh-all')
+async def refresh_all():
+    return await accounts.refresh_all_accounts()
 @app.post('/api/accounts/{name}/refresh')
-def refresh(name:str):
+async def refresh(name:str):
     if name not in config.PROVIDERS:raise HTTPException(404)
-    return {'status':'login_required','message':'官方余额接口尚未接入，请登录官网核实后手动记录。','url':config.OFFICIAL[name]}
+    res=await accounts.refresh_account(name)
+    res['state']=config.redact(accounts.enrich_status(config.status()))
+    return res
+@app.post('/api/accounts/{name}/login')
+async def start_account_login(name:str):
+    if name not in config.PROVIDERS:raise HTTPException(404)
+    return accounts.start_login(name)
+@app.get('/api/accounts/{name}/login')
+def get_account_login(name:str):
+    if name not in config.PROVIDERS:raise HTTPException(404)
+    return accounts.login_state(name)
+@app.post('/api/accounts/{name}/login/cancel')
+def cancel_account_login(name:str):
+    if name not in config.PROVIDERS:raise HTTPException(404)
+    return accounts.cancel_login(name)
+@app.post('/api/accounts/{name}/login/confirm')
+def confirm_account_login(name:str):
+    if name not in config.PROVIDERS:raise HTTPException(404)
+    return accounts.confirm_login(name)
+@app.post('/api/accounts/{name}/session-import')
+async def import_account_session(name:str,payload:dict):
+    if name not in config.PROVIDERS:raise HTTPException(404)
+    return await accounts.import_session(name,str(payload.get('raw_text') or ''))
+@app.delete('/api/accounts/{name}/session')
+def delete_account_session(name:str):
+    if name not in config.PROVIDERS:raise HTTPException(404)
+    return config.redact(accounts.clear_session(name))
 @app.post('/api/query')
 async def query(q:core.Query):return await core.query(q)
 @app.get('/api/helpers/capabilities')

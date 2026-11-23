@@ -14,6 +14,7 @@ Homepage = "https://github.com/reskfa/mcp-traveler"
 Issues = "https://github.com/reskfa/mcp-traveler/issues"
 [project.optional-dependencies]
 test = ["pytest>=8"]
+account-sync = ["playwright>=1.48"]
 [project.scripts]
 mcp-traveler = "gateway.__main__:main"
 [tool.setuptools.packages.find]

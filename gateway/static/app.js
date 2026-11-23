@@ -1,5 +1,5 @@
 const $=s=>document.querySelector(s), esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let cfg,cat,states,routes,selectedSource=null;const labels={daily_prices:'日线量价',valuations:'估值指标',financials:'基础财务',technical_indicators:'技术指标',basic_info:'股票基本信息',cb_basic:'可转债档案与合同条款',cb_daily:'可转债日线与估值',cb_clauses:'可转债历史公告事件'};
+let cfg,cat,states,routes,selectedSource=null;const sourceTabs={},loginPollers={};const labels={daily_prices:'日线量价',valuations:'估值指标',financials:'基础财务',technical_indicators:'技术指标',basic_info:'股票基本信息',cb_basic:'可转债档案与合同条款',cb_daily:'可转债日线与估值',cb_clauses:'可转债历史公告事件'};
 const providerNames={tushare:'Tushare',akshare:'AKShare',wind:'Wind',ifind:'iFinD',tdx:'通达信',choice:'妙想'};
 function providerLabel(name){return cfg?.providers?.[name]?.label||providerNames[name]||name}
 function renderProviderOptions(){
@@ -31,7 +31,244 @@ document.querySelectorAll('nav button, [data-open-page]').forEach(b=>b.onclick=(
 $('#dataset').onchange=fields;
 $('#query-form').onsubmit=async e=>{e.preventDefault();const ds=$('#dataset').value;let q={dataset:ds,symbol:$('#symbol').value.trim().toUpperCase(),provider:$('#provider').value,fields:[...document.querySelectorAll('#fields input:checked')].map(x=>x.value)};if(!q.fields.length){toast('至少选择一个字段');return}if(['cb_daily','cb_clauses'].includes(ds))Object.assign(q,{start_date:$('#start').value,end_date:$('#end').value});if(ds==='daily_prices')Object.assign(q,{start_date:$('#start').value,end_date:$('#end').value,adjust:$('#adjust').value});if(ds==='technical_indicators'){Object.assign(q,{frequency:'daily',adjust:technicalAdjustment('query'),parameters:technicalParameters('query')});if(!technicalSnapshot('query'))Object.assign(q,{start_date:$('#start').value,end_date:$('#end').value})}if(ds==='valuations')q.date=$('#value-date').value||null;if(ds==='financials')q.period=$('#period').value;$('#run').disabled=true;$('#result-meta').textContent='正在连接来源…';$('#result').innerHTML='<div class="empty"><div class="empty-mark">↗</div><p>正在取数。上游响应可能需要一些时间。</p></div>';try{const r=await api('/api/query','POST',q);if(r.status==='unsupported'){$('#result-meta').textContent=`${q.provider.toUpperCase()} / ${labels[q.dataset]} / 尚未接入`;$('#result').innerHTML=`<div class="empty"><h2>此来源尚未接入所选历史公告</h2><p>${r.notes.map(esc).join('<br>')}</p><button type="button" class="secondary" id="show-contract">改查当前合同条款</button></div><details><summary>来源检查</summary><pre>${esc(JSON.stringify(r.attempts,null,2))}</pre></details>`;$('#show-contract').onclick=()=>{$('#dataset').value='cb_basic';$('#provider').value='auto';fields();$('#contract-fields').click()};return}$('#result-meta').textContent=`${(r.providers||[r.provider]).join(' + ').toUpperCase()} / ${r.row_count} 行 / ${r.elapsed_seconds}s / ${r.complete===false?'仍有缺项':'查询完成'}`;const cols=['symbol','date',...Object.keys(r.fields)];$('#result').innerHTML=`<div class="actions"><a href="${esc(r.download_url)}">下载 CSV ↓</a><a href="/api/results/${esc(r.id)}/json">完整 JSON ↓</a><button class="secondary" id="raw-button">查看原始返回</button></div>${r.dataset==='basic_info'?renderBasicInfo(r):r.row_count?`<div class="scroll"><table><thead><tr>${cols.map(c=>`<th>${esc(r.fields[c]?r.fields[c].label+' / '+r.fields[c].unit:c==='symbol'?'证券':'日期')}</th>`).join('')}</tr></thead><tbody>${r.data.map((row,i)=>`<tr>${cols.map(c=>`<td>${esc(typeof row[c]==='object'&&row[c]!==null?JSON.stringify(row[c]):row[c]??'—')}${r.field_sources?.[i]?.[c]?`<small class="cell-source">${esc(r.field_sources[i][c])}</small>`:''}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`:'<div class="empty"><h2>查询成功，暂无数据</h2><p>当前日期可能是非交易日，或来源没有该报告期。</p></div>'}<p class="note">来源：${esc(r.upstream)}<br>${r.notes.map(esc).join('<br>')}<br>${r.row_count>100?'显示前 100 行，下载获取完整数据。':''}</p><details><summary>调用过程</summary><pre>${esc(JSON.stringify(r.attempts,null,2))}</pre></details><pre id="raw-data" hidden></pre>`;$('#raw-button').onclick=async()=>{try{const raw=await api(r.raw_url);$('#raw-data').hidden=false;$('#raw-data').textContent=JSON.stringify(raw,null,2)}catch(e){toast(e.message)}};await loadStatus()}catch(err){$('#result-meta').textContent=`${q.provider.toUpperCase()} / ${labels[q.dataset]} / 查询未完成`; $('#result').innerHTML=`<div class="error">${esc(err.message).replaceAll('\n','<br>')}</div>`}finally{$('#run').disabled=false}};
 async function loadStatus(){states=await api('/api/status');renderSources()}
-function renderSources(){$('#source-list').innerHTML=Object.entries(cfg.providers||{}).map(([n,p])=>{const label=providerLabel(n),s=(states.providers||{})[n]||{},server=Object.values(p.mcp_servers||{})[0];return `<details class="source-card" data-provider="${n}" ${selectedSource===n?'open':''}><summary><span class="source-monogram">${esc(label).slice(0,2)}</span><strong>${esc(label)}</strong><span class="badge">${!p.enabled?'已停用':s.status==='connected'?'已连接':p.configured?'已配置':'待配置'}</span><small>本地调用 ${s.local_calls||0} 次 · 点击配置 ↗</small></summary><div class="source-expanded"><div><h2 class="source-name">${esc(label)}</h2><span class="badge">${esc(s.status==='connected'?'已连接':s.status==='error'?'连接异常':p.configured?'已配置 · 待验证':'待配置')}</span><p class="note">${esc((cat.providers||{})[n]||'')}</p><a href="${esc(p.official_url)}" target="_blank" rel="noopener">打开官网 ↗</a></div><div><form class="source-form"><label class="toggle wide"><input name="enabled" type="checkbox" ${p.enabled?'checked':''}>启用此来源</label>${n!=='akshare'?`<label>密钥 <small>${esc(p.key_hint||'尚未配置')}</small><input name="key" type="password" autocomplete="new-password" placeholder="留空保留现有密钥"></label>`:''}<label>请求超时 / 秒<input name="timeout_seconds" type="number" min="5" max="180" value="${p.timeout_seconds}"></label>${server?`<label class="wide">MCP 地址<input name="url" value="${esc(server.url)}"></label><label>鉴权请求头<input name="auth_header" value="${esc(server.auth_header)}"></label><label>密钥前缀<input name="auth_prefix" value="${esc(server.auth_prefix)}"><small>Bearer 后需要保留一个空格</small></label>`:''}<div class="actions wide"><button class="secondary" type="submit">保存配置</button><button class="secondary test" type="button">测试连接</button></div></form><div class="account">${esc(s.connection_note||'尚未测试连接')}<br>本地查询：${s.local_calls||0} 次 · 成功 ${s.local_successes||0} 次<br>官方额度：${s.remaining_credits!=null?esc(s.remaining_credits)+' 积分':'未获取'}${s.remaining_calls!=null?' / '+esc(s.remaining_calls)+' 次':''}${s.permission_points!=null?' · 权限积分 '+esc(s.permission_points):''}<br>记录来源：${esc(s.source||'未获取')} · 更新：${esc(s.account_updated_at||'未记录')}<details><summary>手动记录账户信息</summary><form class="account-form source-form"><label>剩余积分<input name="remaining_credits" type="number" min="0" step="any" value="${esc(s.remaining_credits)}"></label><label>剩余次数<input name="remaining_calls" type="number" min="0" value="${esc(s.remaining_calls)}"></label><label>套餐到期<input name="expires_at" type="date" value="${esc(s.expires_at)}"></label><label>请求限额说明<input name="rate_limit" value="${esc(s.rate_limit)}"></label><div class="actions wide"><button class="secondary">保存记录</button><button class="secondary refresh" type="button">官方额度刷新</button></div></form></details><small>手动记录与本地调用统计均不代表实时官方余额。</small></div></div></div></details>`}).join('');document.querySelectorAll('.source-card').forEach(card=>{const n=card.dataset.provider,form=card.querySelector('form');card.addEventListener('toggle',()=>{if(card.open){selectedSource=n;document.querySelectorAll('.source-card').forEach(other=>{if(other!==card)other.open=false})}else if(selectedSource===n)selectedSource=null});form.onsubmit=async e=>{e.preventDefault();const data=Object.fromEntries(new FormData(form));data.enabled=form.elements.enabled.checked;try{cfg=await api('/api/providers/'+n,'PATCH',data);renderProviderOptions();renderSources();toast('已保存；下一次查询使用新配置')}catch(e){toast(e.message)}};card.querySelector('.test').onclick=async e=>{const b=e.target;b.disabled=true;b.textContent='连接中…';try{const r=await api('/api/providers/'+n+'/test','POST',{});toast(r.ok?'连接成功':r.error);await loadStatus()}catch(e){toast(e.message)}finally{b.disabled=false;b.textContent='测试连接'}};card.querySelector('.account-form').onsubmit=async e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.target));for(const k in data)if(!data[k])data[k]=null;try{states=await api('/api/accounts/'+n,'PATCH',data);renderSources();toast('已保存手动记录')}catch(e){toast(e.message)}};card.querySelector('.refresh').onclick=async()=>{try{const r=await api('/api/accounts/'+n+'/refresh','POST',{});toast(r.message)}catch(e){toast(e.message)}}})}
+const _numFmt=new Intl.NumberFormat('zh-CN',{maximumFractionDigits:2});
+function fmtNum(v){return v==null||Number.isNaN(Number(v))?'—':_numFmt.format(Number(v))}
+function relTime(iso){
+ if(!iso)return '未同步';
+ const t=Date.parse(iso);if(Number.isNaN(t))return String(iso).slice(0,16);
+ const diff=Math.max(0,Math.floor((Date.now()-t)/1000));
+ if(diff<60)return '刚刚';
+ if(diff<3600)return Math.floor(diff/60)+' 分钟前';
+ if(diff<86400)return Math.floor(diff/3600)+' 小时前';
+ return new Date(t).toLocaleDateString('zh-CN');
+}
+function sourceOriginLabel(src){
+ return {official_web:'官网同步',official_sdk:'SDK 同步',builtin_free:'内置免费',manual:'手动记录',user_provided:'手动记录'}[src]||'未同步';
+}
+function sessionBadgeInfo(n,s){
+ const meta=s.account_meta||{},st=s.session_state||'unbound';
+ if(n==='akshare'||meta.account_mode==='free')return {text:'开源免费',cls:'ok'};
+ if(s.login_in_progress||loginPollers[n])return {text:'等待登录…',cls:'info'};
+ if(st==='active')return {text:'官网已绑定',cls:'ok'};
+ if(st==='not_needed'&&s.source==='official_sdk')return {text:'SDK 直连',cls:'ok'};
+ if(st==='expired')return {text:'会话过期',cls:'warn'};
+ return {text:'未绑定登录',cls:'muted'};
+}
+function quotaHeroInfo(n,s){
+ const meta=s.account_meta||{};
+ if(n==='akshare'||meta.account_mode==='free'){
+  return {main:'开源免费',unit:'无积分消耗',sub:'本地 Python 库直连，无需账号或额度',pct:null,warn:false};
+ }
+ if(s.remaining_credits!=null){
+  const total=s.total_credits,used=s.used_credits;
+  const pct=total&&total>0?Math.max(0,Math.min(100,Math.round((s.remaining_credits/total)*100))):null;
+  const subs=[];
+  if(total!=null)subs.push(`总额 ${fmtNum(total)} · 已用 ${fmtNum(used??Math.max(0,total-s.remaining_credits))}`);
+  if(s.estimated_days_left!=null)subs.push(`预计可用 ${fmtNum(s.estimated_days_left)} 天`);
+  if(s.recent_usage_note)subs.push(s.recent_usage_note);
+  if(s.expires_at)subs.push(`到期 ${s.expires_at}`);
+  if(s.plan_name)subs.push(s.plan_name);
+  return {main:fmtNum(s.remaining_credits),unit:meta.unit_label||'积分',sub:subs.join(' · ')||'可用积分余额',pct,warn:(pct!==null&&pct<=15)||s.remaining_credits<=0};
+ }
+ if(s.remaining_calls!=null){
+  const total=s.total_calls,used=s.used_calls;
+  const pct=total&&total>0?Math.max(0,Math.min(100,Math.round((s.remaining_calls/total)*100))):null;
+  const subs=[];
+  if(total!=null)subs.push(`总额 ${fmtNum(total)} 次 · 已用 ${fmtNum(used??Math.max(0,total-s.remaining_calls))} 次`);
+  if(s.plan_name)subs.push(s.plan_name);
+  if(s.expires_at)subs.push(`到期 ${s.expires_at}`);
+  return {main:fmtNum(s.remaining_calls),unit:'剩余次数',sub:subs.join(' · ')||'套餐剩余调用次数',pct,warn:(pct!==null&&pct<=15)||s.remaining_calls<=0};
+ }
+ if(s.permission_points!=null){
+  const subs=[];
+  if(s.account_label)subs.push(`账号 ${s.account_label}`);
+  if(s.expires_at)subs.push(`到期 ${s.expires_at}`);
+  if(s.rate_limit)subs.push(s.rate_limit);
+  return {main:fmtNum(s.permission_points),unit:'权限积分',sub:subs.join(' · ')||'按积分阶梯开放接口权限',pct:null,warn:false};
+ }
+ return {main:'未同步',unit:'',sub:s.session_state==='expired'?'官网登录会话已过期，点击重新登录同步':'点击「登录绑定」或「刷新」获取实时积分',pct:null,warn:s.session_state==='expired'};
+}
+function stopLoginPoll(n){if(loginPollers[n]){clearInterval(loginPollers[n]);delete loginPollers[n]}}
+async function startProviderLogin(n){
+ try{
+  const r=await api(`/api/accounts/${n}/login`,'POST',{});
+  if(r.status==='playwright_missing'||r.status==='not_needed'){toast(r.message);return}
+  toast(r.message||'已打开 Chrome 登录窗口');
+  stopLoginPoll(n);
+  loginPollers[n]=setInterval(async()=>{
+   try{
+    const st=await api(`/api/accounts/${n}/login`);
+    if(['success','failed','cancelled','timeout','idle'].includes(st.status)){
+     stopLoginPoll(n);
+     if(st.status==='success')toast(`${providerLabel(n)}：${st.message}`);
+     else if(st.status==='failed')toast(`${providerLabel(n)} 登录同步未完成：${st.message}`);
+     else if(st.status==='cancelled')toast(`${providerLabel(n)} 已取消登录`);
+     await loadStatus();
+    }
+   }catch(e){stopLoginPoll(n);renderSources()}
+  },1500);
+  await loadStatus();
+ }catch(e){toast(e.message)}
+}
+function renderSourcesSummary(){
+ const el=$('#sources-summary');if(!el||!cfg)return;
+ const entries=Object.entries(cfg.providers||{}),ps=states?.providers||{};
+ const connected=entries.filter(([n,p])=>p.enabled&&ps[n]?.status==='connected').length;
+ const synced=entries.filter(([n])=>{const s=ps[n]||{};return ['official_web','official_sdk','builtin_free'].includes(s.source)&&(s.remaining_credits!=null||s.remaining_calls!=null||s.permission_points!=null||n==='akshare')}).length;
+ const alerts=[];
+ for(const [n,p] of entries){
+  if(!p.enabled)continue;
+  const s=ps[n]||{},hero=quotaHeroInfo(n,s);
+  if(s.session_state==='expired')alerts.push(`${providerLabel(n)} 会话过期`);
+  else if(hero.warn&&hero.main!=='未同步')alerts.push(`${providerLabel(n)} 额度偏低`);
+  else if(s.status==='error')alerts.push(`${providerLabel(n)} 连接异常`);
+ }
+ const totalCalls=entries.reduce((acc,[n])=>acc+(ps[n]?.local_calls||0),0);
+ const totalOk=entries.reduce((acc,[n])=>acc+(ps[n]?.local_successes||0),0);
+ const rate=totalCalls?Math.round((totalOk/totalCalls)*100)+'%':'—';
+ el.innerHTML=`<div class="summary-stat"><span>已连接数据源</span><strong>${connected} <small>/ ${entries.length}</small></strong></div><div class="summary-stat"><span>已同步官方额度</span><strong>${synced} <small>/ ${entries.length}</small></strong></div><div class="summary-stat"><span>本机累计取数</span><strong>${fmtNum(totalCalls)} <small>成功率 ${rate}</small></strong></div><div class="summary-stat ${alerts.length?'alert':''}"><span>状态提醒</span><strong>${alerts.length?esc(alerts.join(' · ')):'全部正常'}</strong></div>`;
+}
+function renderSources(){
+ renderSourcesSummary();
+ $('#source-list').innerHTML=Object.entries(cfg.providers||{}).map(([n,p])=>{
+  const label=providerLabel(n),s=(states.providers||{})[n]||{},meta=s.account_meta||{},server=Object.values(p.mcp_servers||{})[0];
+  const open=selectedSource===n,tab=sourceTabs[n]||'account';
+  const connText=!p.enabled?'已停用':s.status==='connected'?'已连接':s.status==='error'?'连接异常':p.configured?'待验证':'待配置';
+  const connCls=!p.enabled?'muted':s.status==='connected'?'ok':s.status==='error'?'err':'info';
+  const sess=sessionBadgeInfo(n,s),hero=quotaHeroInfo(n,s);
+  const calls=s.local_calls||0,okCalls=s.local_successes||0,okRate=calls?Math.round((okCalls/calls)*100)+'%':'—';
+  const loggingIn=Boolean(s.login_in_progress||loginPollers[n]);
+  const canRefresh=n==='tushare'||meta.has_saved_session;
+  const needsLogin=meta.supports_web_login&&(!meta.has_saved_session||s.session_state==='expired');
+  const syncLine=n==='akshare'?'内置免费 · 无需同步':(!s.source&&!s.account_updated_at)?'尚未同步官方额度':`${sourceOriginLabel(s.source)}${s.account_updated_at?' · '+relTime(s.account_updated_at):''}`;
+  const breakdown=Array.isArray(s.breakdown)?s.breakdown:[];
+  return `<article class="source-card ${open?'is-open':''} ${!p.enabled?'is-disabled':''}" data-provider="${n}">
+   <div class="source-card-top">
+    <div class="source-card-head">
+     <span class="source-monogram">${esc(label).slice(0,2)}</span>
+     <div class="source-title-wrap">
+      <div class="source-title-row"><strong>${esc(label)}</strong><span class="pill pill-${connCls}">${esc(connText)}</span><span class="pill pill-${sess.cls}">${esc(sess.text)}</span></div>
+      <small class="source-desc">${esc((cat.providers||{})[n]||meta.auth_note||'')}</small>
+     </div>
+    </div>
+    <div class="quota-hero ${hero.warn?'is-warn':''}">
+     <div class="quota-main"><strong>${esc(hero.main)}</strong>${hero.unit?`<span>${esc(hero.unit)}</span>`:''}</div>
+     ${hero.pct!==null?`<div class="quota-bar"><i style="width:${hero.pct}%"></i></div>`:''}
+     <div class="quota-sub">${esc(hero.sub)}</div>
+    </div>
+    ${loggingIn?`<div class="login-banner"><span><i></i>已打开 Chrome 登录窗口，请在官网完成登录，成功后将自动抓取积分并关闭窗口…</span><div class="login-banner-actions"><button type="button" class="secondary confirm-login">我已登录，立即读取</button><button type="button" class="text-button cancel-login">取消</button></div></div>`:''}
+    ${s.last_sync_error&&!loggingIn?`<div class="sync-error-line">${esc(s.last_sync_error)}</div>`:''}
+    <div class="source-card-foot">
+     <div class="source-meta-line"><span>${esc(syncLine)}</span><span>本机 ${fmtNum(calls)} 次 · 成功率 ${okRate}</span></div>
+     <div class="card-quick-actions">
+      ${canRefresh?`<button type="button" class="secondary quick-refresh" ${loggingIn?'disabled':''}>${n==='tushare'?'刷新积分':'刷新额度'}</button>`:''}
+      ${needsLogin&&meta.supports_session_import?`<button type="button" class="${s.session_state==='expired'||n==='ifind'||n==='choice'?'primary':'secondary'} quick-import">导入官网会话</button>`:''}
+      ${needsLogin&&!meta.supports_session_import&&meta.supports_browser_popup?`<button type="button" class="${s.session_state==='expired'?'primary':'secondary'} quick-login" ${loggingIn?'disabled':''}>${s.session_state==='expired'?'重新登录':'登录绑定'}</button>`:''}
+      <button type="button" class="secondary toggle-expand">${open?'收起 ▴':'详情与配置 ▾'}</button>
+     </div>
+    </div>
+   </div>
+   ${open?`<div class="source-expanded">
+    <div class="source-tabs" role="tablist">
+     <button type="button" class="${tab==='account'?'active':''}" data-tab="account">账户与额度</button>
+     <button type="button" class="${tab==='config'?'active':''}" data-tab="config">连接与密钥</button>
+     <a class="tab-official-link" href="${esc(meta.overview_url||p.official_url)}" target="_blank" rel="noopener">打开官网 ↗</a>
+    </div>
+    <div class="source-tab-panel" ${tab!=='account'?'hidden':''}>
+     <div class="account-metrics-grid">
+      <div><small>可用额度</small><strong>${s.remaining_credits!=null?fmtNum(s.remaining_credits)+' '+(meta.unit_label||'积分'):s.remaining_calls!=null?fmtNum(s.remaining_calls)+' 次':s.permission_points!=null?fmtNum(s.permission_points)+' 权限积分':n==='akshare'?'开源免费':'未获取'}</strong></div>
+      <div><small>账号 / 套餐</small><strong>${esc([s.account_label,s.plan_name].filter(Boolean).join(' · ')||'—')}</strong></div>
+      <div><small>到期 / 预计可用</small><strong>${esc([s.expires_at,s.estimated_days_left!=null?`预计 ${fmtNum(s.estimated_days_left)} 天`:null].filter(Boolean).join(' · ')||'—')}</strong></div>
+      <div><small>数据来源与更新</small><strong>${esc(sourceOriginLabel(s.source))} · ${esc(relTime(s.account_updated_at))}</strong></div>
+     </div>
+     ${breakdown.length?`<div class="breakdown-wrap"><div class="breakdown-title">官方额度明细</div><div class="scroll"><table><thead><tr><th>项目 / 套餐</th><th>已用</th><th>总额</th><th>剩余</th><th>有效期 / 周期</th></tr></thead><tbody>${breakdown.map(item=>`<tr><td>${esc(item.name||'—')}</td><td>${item.used!=null?fmtNum(item.used):'—'}</td><td>${item.limit!=null?fmtNum(item.limit):'—'}</td><td>${item.remaining!=null?fmtNum(item.remaining)+' '+esc(item.unit||''):'—'}</td><td>${esc(item.expires_at||item.period||'—')}</td></tr>`).join('')}</tbody></table></div></div>`:''}
+     <p class="note">${esc(meta.auth_note||'')}</p>
+     <div class="actions">
+      <button type="button" class="secondary detail-refresh" ${loggingIn?'disabled':''}>立即刷新额度</button>
+      ${meta.supports_browser_popup?`<button type="button" class="secondary detail-login" ${loggingIn?'disabled':''}>${meta.has_saved_session?'浏览器重新登录':'浏览器窗口登录（备选）'}</button>`:''}
+      ${meta.has_saved_session?`<button type="button" class="text-button detail-logout">退出并清除本地会话</button>`:''}
+     </div>
+     ${meta.supports_session_import?`<details class="session-import-box" ${needsLogin||n==='ifind'||n==='choice'?'open':''}><summary>导入官网会话（在你自己的浏览器登录并粘贴 Copy as cURL）· 推荐</summary><p class="note">无需弹窗、零风控拦截，只需粘贴一次即可日常一键刷新：<br>1. 在你日常浏览器打开 <a href="${esc(meta.overview_url||p.official_url)}" target="_blank" rel="noopener">${esc(meta.overview_url||p.official_url)}</a> 并登录账号；<br>2. 按 F12 打开开发者工具 → Network（网络），找到 <strong>${esc(meta.import_target||'余额接口请求')}</strong> → 右键 <strong>Copy as cURL</strong>；<br>3. 粘贴到下方并点击导入，凭证仅加密保存在本机 <code>0600</code> 受限文件中。</p><form class="session-import-form"><textarea name="raw_text" rows="3" placeholder="在此粘贴从浏览器 DevTools 复制的 Copy as cURL 命令${n==='choice'?'':'或 Cookie 字符串'}…" required></textarea><div class="actions"><button type="submit" class="primary">导入并立即刷新 <span>↗</span></button></div></form></details>`:''}
+     <details class="manual-fallback"><summary>手动记录账户信息（兜底）</summary><form class="account-form source-form"><label>剩余积分<input name="remaining_credits" type="number" min="0" step="any" value="${esc(s.remaining_credits)}"></label><label>剩余次数<input name="remaining_calls" type="number" min="0" value="${esc(s.remaining_calls)}"></label><label>权限积分<input name="permission_points" type="number" min="0" step="any" value="${esc(s.permission_points)}"></label><label>套餐到期<input name="expires_at" type="date" value="${esc(s.expires_at)}"></label><label class="wide">请求限额说明<input name="rate_limit" value="${esc(s.rate_limit)}"></label><div class="actions wide"><button class="secondary">保存手动记录</button></div></form></details>
+    </div>
+    <div class="source-tab-panel" ${tab!=='config'?'hidden':''}>
+     <form class="source-form">
+      <label class="toggle wide"><input name="enabled" type="checkbox" ${p.enabled?'checked':''}>启用此来源</label>
+      ${n!=='akshare'?`<label>密钥 <small>${esc(p.key_hint||'尚未配置')}</small><input name="key" type="password" autocomplete="new-password" placeholder="留空保留现有密钥"></label>`:''}
+      <label>请求超时 / 秒<input name="timeout_seconds" type="number" min="5" max="180" value="${p.timeout_seconds}"></label>
+      ${server?`<label class="wide">MCP 地址<input name="url" value="${esc(server.url)}"></label><label>鉴权请求头<input name="auth_header" value="${esc(server.auth_header)}"></label><label>密钥前缀<input name="auth_prefix" value="${esc(server.auth_prefix)}"><small>Bearer 后需要保留一个空格</small></label>`:''}
+      <div class="actions wide"><button class="secondary" type="submit">保存配置</button><button class="secondary test" type="button">测试连接</button></div>
+     </form>
+     <p class="note">连接状态：${esc(s.connection_note||'尚未测试连接')} · 本机查询 ${fmtNum(calls)} 次（成功 ${fmtNum(okCalls)} 次）</p>
+    </div>
+   </div>`:''}
+  </article>`;
+ }).join('');
+ document.querySelectorAll('.source-card').forEach(card=>{
+  const n=card.dataset.provider;
+  const doRefresh=async btn=>{
+   const prev=btn.textContent;btn.disabled=true;btn.textContent='刷新中…';
+   try{
+    const r=await api(`/api/accounts/${n}/refresh`,'POST',{});
+    if(r.state)states=r.state;
+    renderSources();
+    toast(r.message||'已刷新');
+   }catch(e){toast(e.message);btn.disabled=false;btn.textContent=prev}
+  };
+  card.querySelector('.toggle-expand').onclick=()=>{selectedSource=selectedSource===n?null:n;renderSources()};
+  const qr=card.querySelector('.quick-refresh');if(qr)qr.onclick=()=>doRefresh(qr);
+  const qi=card.querySelector('.quick-import');if(qi)qi.onclick=()=>{selectedSource=n;sourceTabs[n]='account';renderSources()};
+  const ql=card.querySelector('.quick-login');if(ql)ql.onclick=()=>startProviderLogin(n);
+  const cfl=card.querySelector('.confirm-login');if(cfl)cfl.onclick=async()=>{try{cfl.disabled=true;cfl.textContent='正在读取…';await api(`/api/accounts/${n}/login/confirm`,'POST',{});toast('已触发立即读取，请稍候…')}catch(e){toast(e.message);cfl.disabled=false;cfl.textContent='我已登录，立即读取'}};
+  const cl=card.querySelector('.cancel-login');if(cl)cl.onclick=async()=>{try{await api(`/api/accounts/${n}/login/cancel`,'POST',{});stopLoginPoll(n);await loadStatus();toast('已取消登录')}catch(e){toast(e.message)}};
+  const impForm=card.querySelector('.session-import-form');
+  if(impForm)impForm.onsubmit=async e=>{
+   e.preventDefault();
+   const btn=impForm.querySelector('button[type="submit"]');const prev=btn.innerHTML;btn.disabled=true;btn.textContent='正在导入并验证…';
+   try{
+    const raw_text=impForm.elements.raw_text.value;
+    const r=await api(`/api/accounts/${n}/session-import`,'POST',{raw_text});
+    if(r.state)states=r.state;
+    renderSources();
+    toast(r.message||'已导入会话并完成刷新');
+   }catch(err){toast(err.message);btn.disabled=false;btn.innerHTML=prev}
+  };
+  card.querySelectorAll('[data-tab]').forEach(tb=>tb.onclick=()=>{sourceTabs[n]=tb.dataset.tab;renderSources()});
+  const dr=card.querySelector('.detail-refresh');if(dr)dr.onclick=()=>doRefresh(dr);
+  const dl=card.querySelector('.detail-login');if(dl)dl.onclick=()=>startProviderLogin(n);
+  const dlo=card.querySelector('.detail-logout');if(dlo)dlo.onclick=async()=>{
+   try{states=await api(`/api/accounts/${n}/session`,'DELETE');renderSources();toast(`已清除 ${providerLabel(n)} 本地官网会话`)}catch(e){toast(e.message)}
+  };
+  const cfgForm=card.querySelector('.source-tab-panel:last-child form.source-form');
+  if(cfgForm){
+   cfgForm.onsubmit=async e=>{e.preventDefault();const data=Object.fromEntries(new FormData(cfgForm));data.enabled=cfgForm.elements.enabled.checked;try{cfg=await api('/api/providers/'+n,'PATCH',data);renderProviderOptions();renderSources();toast('已保存；下一次查询使用新配置')}catch(e){toast(e.message)}};
+   const testBtn=cfgForm.querySelector('.test');
+   if(testBtn)testBtn.onclick=async e=>{const b=e.target;b.disabled=true;b.textContent='连接中…';try{const r=await api('/api/providers/'+n+'/test','POST',{});toast(r.ok?'连接成功':r.error);await loadStatus()}catch(e){toast(e.message)}finally{b.disabled=false;b.textContent='测试连接'}};
+  }
+  const accForm=card.querySelector('.account-form');
+  if(accForm)accForm.onsubmit=async e=>{e.preventDefault();const data=Object.fromEntries(new FormData(accForm));for(const k in data)if(!data[k])data[k]=null;try{states=await api('/api/accounts/'+n,'PATCH',data);renderSources();toast('已保存手动记录')}catch(e){toast(e.message)}};
+ });
+}
+if($('#refresh-all-accounts'))$('#refresh-all-accounts').onclick=async e=>{
+ const b=e.currentTarget;b.disabled=true;const prev=b.innerHTML;b.textContent='正在批量刷新…';
+ try{
+  const r=await api('/api/accounts/refresh-all','POST',{});
+  if(r.status)states=r.status;
+  renderSources();
+  const exp=r.expired_providers?.length?`；${r.expired_providers.map(providerLabel).join('、')} 会话已过期需重登`:'';
+  toast(`已刷新 ${r.refreshed_count||0} 家账户额度${exp}`);
+ }catch(err){toast(err.message)}finally{b.disabled=false;b.innerHTML=prev}
+};
+if($('#test-all-providers'))$('#test-all-providers').onclick=async e=>{
+ const b=e.currentTarget;b.disabled=true;const prev=b.textContent;b.textContent='批量测活中…';
+ try{
+  const names=Object.entries(cfg?.providers||{}).filter(([,p])=>p.enabled&&p.configured).map(([n])=>n);
+  const res=await Promise.all(names.map(n=>api('/api/providers/'+n+'/test','POST',{}).then(r=>({n,ok:r.ok})).catch(()=>({n,ok:false}))));
+  await loadStatus();
+  const ok=res.filter(x=>x.ok).length;
+  toast(`连接测试完成：${ok} / ${res.length} 家连通`);
+ }catch(err){toast(err.message)}finally{b.disabled=false;b.textContent=prev}
+};
 function renderRoutes(){
  const tileList=(key,order)=>`<div class="route-tiles" data-order="${key}">${order.map((n,i)=>`<div class="route-tile" draggable="true" data-key="${key}" data-index="${i}"><small>优先 ${i+1} · ⠿</small><strong>${esc(n.toUpperCase())}</strong><div><button data-move="-1" aria-label="前移 ${n}" ${i===0?'disabled':''}>←</button><button data-move="1" aria-label="后移 ${n}" ${i===order.length-1?'disabled':''}>→</button></div></div>`).join('')}</div>`;
  $('#route-list').innerHTML=`<article class="global-order"><h2>整体偏好</h2><p class="note">拖动方格调整优先级，从左到右依次尝试。</p>${tileList('global_route',routes.global_route)}</article><details class="category-orders"><summary>按数据类别单独设置 <small>可选 · 未设置时沿用整体偏好</small></summary>${Object.entries(labels).map(([k,label])=>`<article><label class="toggle"><input type="checkbox" data-override="${k}" ${routes.route_overrides[k]?'checked':''}>${label} · 单独排序</label>${routes.route_overrides[k]?tileList(k,routes.route_overrides[k]):'<p class="note">沿用整体偏好</p>'}</article>`).join('')}</details>`;

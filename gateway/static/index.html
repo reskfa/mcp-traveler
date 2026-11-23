@@ -222,9 +222,18 @@
     </section>
 
     <section id="sources" class="page" hidden>
-      <div class="eyebrow">CONNECTED SOURCES</div>
-      <h1>你的数据来源。</h1>
-      <p class="lede">连接、试用、记录额度。空白密钥输入框表示保留已保存的值。</p>
+      <div class="sources-head">
+        <div>
+          <div class="eyebrow">CONNECTED SOURCES &amp; QUOTAS</div>
+          <h1>你的数据来源与账户额度。</h1>
+          <p class="lede">登录一次官网即可同步各家积分与剩余次数，日常一键刷新不再盲猜。所有会话与密钥均仅留在本机。</p>
+        </div>
+        <div class="sources-toolbar">
+          <button type="button" class="primary" id="refresh-all-accounts">全部刷新额度 <span>↻</span></button>
+          <button type="button" class="secondary" id="test-all-providers">全部测试连接</button>
+        </div>
+      </div>
+      <div id="sources-summary" class="sources-summary"></div>
       <div id="source-list"></div>
     </section>
 

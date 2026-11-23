@@ -11,7 +11,20 @@ PROVIDERS = ['tushare', 'akshare', 'wind', 'ifind', 'tdx', 'choice']
 MCP_PROVIDERS = ['wind', 'ifind', 'tdx', 'choice']
 HANDSHAKE_MCP = ['tdx', 'choice']
 KEYS = {'tushare': 'TUSHARE_TOKEN', 'wind': 'WIND_API_KEY', 'ifind': 'IFIND_API_KEY', 'tdx': 'TDX_API_KEY', 'choice': 'CHOICE_MX_KEY'}
-OFFICIAL = {'tushare': 'https://tushare.pro/', 'akshare': 'https://akshare.akfamily.xyz/', 'wind': 'https://market.windalice.com/', 'ifind': 'https://mcp.51ifind.com/', 'tdx': 'https://vip.tdx.com.cn/', 'choice': 'https://mxapi.eastmoney.com/mxds/doc/mcp-install.md'}
+OFFICIAL = {
+    'tushare': 'https://tushare.pro/user/token',
+    'akshare': 'https://akshare.akfamily.xyz/',
+    'wind': 'https://market.windalice.com/#/user/overview',
+    'ifind': 'https://mcp.51ifind.com/',
+    'tdx': 'https://vip.tdx.com.cn/site/app/pc-mall/main.html#/aiKey',
+    'choice': 'https://choice.eastmoney.com/mcp/case',
+}
+
+def account_sessions_dir():
+    return ROOT / 'local/account_sessions'
+
+def browser_profiles_dir():
+    return ROOT / 'local/browser_sessions'
 
 def atomic(path, text):
     path = Path(path)
@@ -41,9 +54,37 @@ def load():
 def secrets():
     return {k: v or '' for k, v in dotenv_values(ROOT / '.env').items()}
 
+def _session_secret_values():
+    values = []
+    folder = account_sessions_dir()
+    if not folder.exists():
+        return values
+    for path in folder.glob('*.json'):
+        try:
+            data = json.loads(path.read_text())
+        except Exception:
+            continue
+        if not isinstance(data, dict):
+            continue
+        for k in ('session_id', 'token', 'cookie_header'):
+            v = data.get(k)
+            if isinstance(v, str) and len(v) >= 8:
+                values.append(v)
+        headers = data.get('headers')
+        if isinstance(headers, dict):
+            for v in headers.values():
+                if isinstance(v, str) and len(v) >= 8:
+                    values.append(v)
+        cookies = data.get('cookies')
+        if isinstance(cookies, dict):
+            for v in cookies.values():
+                if isinstance(v, str) and len(v) >= 8:
+                    values.append(v)
+    return values
+
 def redact(value):
     text = json.dumps(value, ensure_ascii=False, default=str)
-    for secret in secrets().values():
+    for secret in list(secrets().values()) + _session_secret_values():
         if secret: text = text.replace(secret, '[REDACTED]')
     return json.loads(text)
 
